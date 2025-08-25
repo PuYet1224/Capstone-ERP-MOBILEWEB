@@ -1,0 +1,164 @@
+<div class="body-container" *ngIf="typePart">
+    <!-- BREADCRUM -->
+    <div class="breadcrum">
+        <ps-toolbar-top>
+            <ps-kendo-button theme="error" *ngIf="typePart.Code && detailCanModify" (click)="isShowDeleteDialog = true">
+                Xóa phân loại
+            </ps-kendo-button>
+
+            <ps-kendo-button theme="primary" *ngIf="typePart.Code && canModify" (click)="addNewTypePart()">
+                Tạo mới
+            </ps-kendo-button>
+        </ps-toolbar-top>
+    </div>
+
+    <!-- BODY: BLOCK 1 -->
+    <div class="body">
+        <div class="body-head">
+            <h1>thông tin phân loại phụ tùng</h1>
+            <span class="open-close" (click)="OpenBlock1()">
+                {{ isBlock1 ? 'Thu gọn' : 'Mở rộng' }}
+            </span>
+        </div>
+
+        <div class="block-1">
+            <div class="block-1-content">
+                <!-- HÀNG 1 -->
+                <div class="content-col-1">
+                    <ps-kendo-textbox class="receipt" [label]="'Phân loại phụ tùng (*)'"
+                        [(ngModel)]="typePart.TypeOfPart" (blur)="onFieldChanged(typePart, ['TypeOfPart'])"
+                        [disabled]="!(canModify && typePart.IsModify)"></ps-kendo-textbox>
+
+                    <ps-kendo-dropdown-list *ngIf="isBlock1" class="storage" [label]="'Phân nhóm phụ tùng (*)'"
+                        [data]="listCategory" textField="text" valueField="id" [valuePrimitive]="true"
+                        [(ngModel)]="typePart.Category" (valueChange)="onFieldChanged(typePart, ['Category'])"
+                        [disabled]="!(canModify && typePart.IsModify)">
+                    </ps-kendo-dropdown-list>
+
+                    <ps-kendo-numeric-textbox *ngIf="isBlock1" class="col" [label]="'Thứ tự hiển thị'"
+                        [(ngModel)]="typePart.OrderBy" (blur)="onFieldChanged(typePart, ['OrderBy'])" [format]="'0'"
+                        [decimals]="0" [min]="0" [disabled]="!(canModify && typePart.IsModify)">
+                    </ps-kendo-numeric-textbox>
+                </div>
+                <div class="content-col-2" [class.collapsed]="!isBlock1">
+                    <div class="datepicker" style="width: 100%; height: 100%;">
+                        <ps-kendo-textarea #descriptionTextarea class="input-textarea" [label]="'Diễn giải'"
+                            [(ngModel)]="typePart.Description" [rows]="isBlock1 ? 3 : 1" resizable="none"
+                            (blur)="onFieldChanged(typePart, ['Description'])"
+                            [disabled]="!(canModify && typePart.IsModify)">
+                        </ps-kendo-textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BLOCK DETAIL -->
+        <div class="block-detail-container"
+            *ngIf="typeTouched && typePart.TypeOfPart && typePart.TypeOfPart.trim() !== ''">
+            <div class="body-head">
+                <h1>CHI TIẾT PHÂN LOẠI</h1>
+            </div>
+
+            <div class="block-detail" [class.no-add-btn]="!detailCanModify">
+                <ng-container *ngIf="detailCanModify">
+                    <button class="add-btn" (click)="onAddNewSpec()">+ Thêm mới</button>
+                </ng-container>
+
+                <ps-kendo-grid class="grid" [data]="partSpecs" [hasColumnAction]="false">
+                    <!-- Cột Phân loại chi tiết -->
+                    <kendo-grid-column class="part-group-col" [width]="200" title="Phân loại chi tiết (*)">
+                        <ng-template kendoGridCellTemplate let-item let-rowIndex="rowIndex">
+                            <div [title]="item.TypeOfPartSpecs"
+                                (dblclick)="detailCanModify && startEditDetail(rowIndex,'TypeOfPartSpecs')">
+                                <ng-container *ngIf="isEditingDetail(rowIndex,'TypeOfPartSpecs'); else readOnlySpecs">
+                                    <input id="input-TypeOfPartSpecs-{{ rowIndex }}" [(ngModel)]="item.TypeOfPartSpecs"
+                                        (focus)="getDetailFocus(item)"
+                                        (blur)="saveDetail(item, 'TypeOfPartSpecs', rowIndex)"
+                                        (keydown.enter)="saveDetail(item, 'TypeOfPartSpecs', rowIndex)" />
+                                </ng-container>
+                                <ng-template #readOnlySpecs>
+                                    <div class="category-name" [ngClass]="{
+                    'view-text': !detailCanModify,
+                    'edit-text': detailCanModify
+                  }">
+                                        {{ item.TypeOfPartSpecs || '\u00A0' }}
+                                    </div>
+                                </ng-template>
+                            </div>
+                        </ng-template>
+                    </kendo-grid-column>
+
+                    <!-- Cột Mô tả -->
+                    <kendo-grid-column class="description-col" [width]="900" title="Mô tả">
+                        <ng-template kendoGridCellTemplate let-item let-rowIndex="rowIndex">
+                            <div [title]="item.Description || 'Nhấp đúp để nhập mô tả'"
+                                (dblclick)="canModify && typePart.IsModify && startEditDetail(rowIndex, 'Description')">
+                                <ng-container *ngIf="isEditingDetail(rowIndex, 'Description'); else readOnlyDesc">
+                                    <input [(ngModel)]="tempDescription" (focus)="getDetailFocus(item)"
+                                        (blur)="saveDetail(item, 'Description', rowIndex)"
+                                        (keydown.enter)="saveDetail(item, 'Description', rowIndex)"
+                                        placeholder="Nhập mô tả" autofocus />
+                                </ng-container>
+                                <ng-template #readOnlyDesc>
+                                    <div *ngIf="item.Description || (canModify && typePart.IsModify)"
+                                        class="catplaceholder-textegory-name" [ngClass]="{
+                                           'view-text': !detailCanModify,
+                                           'edit-text': detailCanModify,
+                                           '': !item.Description && detailCanModify
+                                         }">
+                                        {{ item.Description || (detailCanModify ? 'Nhấp đúp để nhập mô tả…' : '') }}
+                                    </div>
+                                </ng-template>
+                            </div>
+                        </ng-template>
+                    </kendo-grid-column>
+
+                    <!-- Cột xóa -->
+                    <kendo-grid-column *ngIf="detailCanModify" [sticky]="true" class="delete-col" [width]="40" title="">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                            <span class="k-icon k-font-icon k-i-trash clickable"
+                                (click)="onDeleteDetail(dataItem)"></span>
+                        </ng-template>
+                    </kendo-grid-column>
+                </ps-kendo-grid>
+            </div>
+        </div>
+    </div>
+
+    <!-- DELETE‐CONFIRM POPUP -->
+    <ps-dialog-confirm [theme]="'error'" [open]="isShowDeleteDialog">
+        <div psDialogConfirmHeader>Xóa phân loại phụ tùng</div>
+        <div psDialogConfirmBody>
+            <div class="main-title">
+                <span>Bạn có chắc chắn muốn xoá phân loại phụ tùng</span><br />
+                <div class="hightline">{{ typePart?.TypeOfPart }}</div>
+            </div>
+            <p class="sub-title">
+                Phân loại phụ tùng bị xoá sẽ <span>KHÔNG</span> thể phục hồi
+            </p>
+        </div>
+        <div psDialogConfirmFooter>
+            <ps-kendo-button class="cancel-button" (click)="isShowDeleteDialog = false">Hủy</ps-kendo-button>
+            <ps-kendo-button theme="error" *ngIf="typePart.Code && detailCanModify" (click)="confirmDeleteTypePart()">
+                Xóa
+            </ps-kendo-button>
+        </div>
+    </ps-dialog-confirm>
+
+    <ps-dialog-confirm [theme]="'error'" [open]="popupConfirmOpen">
+        <div psDialogConfirmHeader>Xóa chi tiết phân loại phụ tùng</div>
+        <div psDialogConfirmBody>
+            <div class="main-title">
+                <span>Bạn có chắc chắn muốn xóa phân loại chi tiết phụ tùng</span><br />
+                <div class="hightline">{{ specsActive?.TypeOfPartSpecs }}</div>
+            </div>
+            <p class="sub-title">
+                Chi tiết phân loại bị xoá sẽ <span>KHÔNG</span> thể phục hồi
+            </p>
+        </div>
+        <div psDialogConfirmFooter>
+            <ps-kendo-button class="cancel-button" (click)="popupConfirmOpen = false">Hủy</ps-kendo-button>
+            <ps-kendo-button theme="error" (click)="confirmDeleteDetail()">Xóa</ps-kendo-button>
+        </div>
+    </ps-dialog-confirm>
+</div>

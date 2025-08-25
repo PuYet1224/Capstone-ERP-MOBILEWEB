@@ -1,0 +1,191 @@
+<div class="body-container" *ngIf="iomaster">
+
+  <!-- BREADCRUM -->
+  <div class="breadcrum">
+    <ps-toolbar-top class="breadcrumb-content">
+      <ps-kendo-button [theme]="'error'" *ngIf="iomaster?.Status == whiomasterstatusenum.NEW && iomaster.Code != 0"
+                       (onClick)="isShowDialog = true">
+        xóa phiếu
+      </ps-kendo-button>
+
+      <ps-kendo-button *ngIf="iomaster.Status==whiomasterstatusenum.SENT || (iomaster.Status==whiomasterstatusenum.NEW && iomaster.Code != 0)"
+                       (onClick)="isShowDialogDoneFunc()" [theme]="'primary-outline'">
+        xác nhận
+      </ps-kendo-button>
+
+      <ps-kendo-button [theme]="'primary'" *ngIf="iomaster.Code != 0" (onClick)="addNewIOMaster()">
+        tạo mới
+      </ps-kendo-button>
+    </ps-toolbar-top>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+    <!-- BLOCK 1 -->
+    <div class="body-head">
+      <h1>thông tin phiếu xuất hàng |
+        <span>{{iomasterCache.TypeOfMasterName}}</span>
+      </h1>
+      <span class="open-close" (click)="OpenBlock1()">
+        {{isBlock1 ? 'Thu gọn' : 'Mở rộng'}}
+      </span>
+    </div>
+    <div class="block-1">
+      <div class="block-1-content">
+        <div class="content-col-1">
+          <ps-kendo-textbox class="receipt" [disabled]="true" [(ngModel)]="iomaster.DocumentID"
+                            [label]="'Số phiếu xuất hàng'"></ps-kendo-textbox>
+
+          <ps-kendo-dropdown-list class="storage" [label]="'Kho xuất (*)'" [data]="listWHOut" [textField]="'WHName'"
+                                  [valueField]="'Code'" [(ngModel)]="iomaster.OutWH" [valuePrimitive]="true"
+                                  (valueChange)="onFieldChanged(iomaster, ['OutWH'])"
+                                  [disabled]="iomaster.Status !== whiomasterstatusenum.NEW">
+          </ps-kendo-dropdown-list>
+
+          <div *ngIf="isBlock1" class="datepicker">
+            <label>Ngày nhập kho</label>
+            <kendo-datepicker [value]="iomaster?.IOWHDate" [ngClass]="{'readonly-mode': isTab4}"
+                              [ngClass]="{'disable-block' : iomaster.Status !== whiomasterstatusenum.RECEIVING}"
+                              placeholder="dd/MM/yyyy" format="dd/MM/yyyy" [readOnlyInput]="true" calendarType="classic"
+                              [disabled]="iomaster.InWH == null" (valueChange)="onMasterDateChange($event)"
+                              (blur)="onFieldChanged(iomaster, ['IOWHDate'])">
+            </kendo-datepicker>
+          </div>
+          <div *ngIf="isBlock1" class="datepicker">
+            <label>Tình trạng</label>
+            <div class="status"
+                 [innerHTML]="{ Status: iomaster.Status, StatusName: iomaster?.StatusName } | WHIOMasterStatus">
+            </div>
+          </div>
+        </div>
+        <div class="content-col-2">
+          <div class="col-2-row-1">
+            <div class="search-supplier" [ngClass]="{ 'other-tab': isTab3 }">
+              <div class="outputunit-storage" *ngIf="isTab1">
+                <ps-kendo-dropdown-list *ngIf="isTab1" class="outputunit" [(ngModel)]="iomaster.InHead"
+                                        [label]="'Đơn vị nhập (*)'" [data]="listHead" [textField]="'BriefName'"
+                                        [valueField]="'Code'" [valuePrimitive]="true"
+                                        (valueChange)="onInWHChanged($event)"
+                                        [disabled]="iomaster.Status !== whiomasterstatusenum.NEW">
+                </ps-kendo-dropdown-list>
+                <ps-kendo-dropdown-list class="storage" [label]="'Kho nhập (*)'" *ngIf="isTab1" [data]="listWH"
+                                        [textField]="'WHName'" [valueField]="'Code'" [(ngModel)]="iomaster.InWH"
+                                        [valuePrimitive]="true" (valueChange)="onFieldChanged(iomaster, ['InWH'])"
+                                        [disabled]="!iomaster.InHead || iomaster.Status !== whiomasterstatusenum.NEW">
+                </ps-kendo-dropdown-list>
+                <ps-kendo-textbox class="receipt outputunit" *ngIf="isTab1" [(ngModel)]="iomaster.RefDocumentID"
+                                  disabled="true" [label]="'Số tham chiếu'"></ps-kendo-textbox>
+              </div>
+              <ps-kendo-textarea *ngIf="isTab3" class="interpretation interpretation2" [height]="171" [maxHeight]="171"
+                                 [(ngModel)]="iomaster.Description" [label]="'Diễn giải'"
+                                 [disabled]="iomaster.Status != whiomasterstatusenum.NEW"
+                                 (blur)="onFieldChanged(iomaster, ['Description'])"></ps-kendo-textarea>
+              <ps-kendo-textbox class="receipt outputunit" *ngIf="isTab3" [(ngModel)]="iomaster.RefDocumentID"
+                                [disabled]="iomaster.TypeOfMaster == whiomastertypeofmasterenum.Internal"
+                                [label]="'Số tham chiếu'"></ps-kendo-textbox>
+            </div>
+          </div>
+          <ps-kendo-textarea *ngIf="!isTab3 && isBlock1" [height]="103" [maxHeight]="103"
+                             [disabled]="iomaster.Status == whiomasterstatusenum.DONE || iomaster.Status == whiomasterstatusenum.SENT || iomaster.Status == whiomasterstatusenum.RECEIVING || iomaster.Status == whiomasterstatusenum.PENDING"
+                             class="interpretation" [(ngModel)]="iomaster.Description"
+                             (blur)="onFieldChanged(iomaster, ['Description'])" [label]="'Diễn giải'">
+          </ps-kendo-textarea>
+          <div *ngIf="isBlock1" class="owner-receiver">
+            <div *ngIf="iomaster.CreatedBy || iomaster.CreatedTime" class="log-status">
+              <label>Người lập</label>
+              <span class="name">{{iomaster.CreatedBy}} | {{ iomaster.CreatedTime | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <div *ngIf="iomaster.SentBy || iomaster.SentTime" class="log-status">
+              <label>Người gửi</label>
+              <span class="name">{{iomaster.SentBy}} | {{ iomaster.SentTime | date:'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- START: BLOCK DETAIL -->
+    <div class="block-2-container" *ngIf="iomaster.Code != 0">
+      <prt-io-detail [Master]="iomaster" (CheckQuantity)="checkQuantity($event)"></prt-io-detail>
+    </div>
+    <!-- END: BLOCK DETAIL -->
+
+    <!-- START: DIALOG DELETE POPUP -->
+    <ps-dialog-confirm [theme]="'error'" [open]="isShowDialog">
+      <div psDialogConfirmHeader>xoá phiếu xuất</div>
+      <div psDialogConfirmBody>
+        <div class="main-title">
+          <span>Bạn có chắc chắn muốn xoá phiếu xuất</span>
+          <br>
+          <div class="hightline">{{iomaster.DocumentID}}</div>
+        </div>
+        <div class="sub-title">
+          Phiếu nhập bị xoá sẽ <span>KHÔNG</span> thể phục hồi
+        </div>
+      </div>
+      <div psDialogConfirmFooter>
+        <ps-kendo-button (onClick)="isShowDialog = !isShowDialog">huỷ</ps-kendo-button>
+        <ps-kendo-button (onClick)="DeleteIOMaster()" [theme]="'error'">xoá</ps-kendo-button>
+      </div>
+    </ps-dialog-confirm>
+    <!-- END: DIALOG DELETE POPUP -->
+
+    <!-- START: DIALOG DONE DIALOG -->
+    <ps-dialog-confirm [theme]="'warning'" [open]="isShowDialogDone">
+      <div psDialogConfirmHeader>xác nhận hoàn tất</div>
+      <div psDialogConfirmBody>
+        <div class="main-title main-title-done">
+          <div class="done">
+            Có &nbsp;<div class="hightline">{{notEqualQuantity}} phụ tùng chênh lệch</div>
+          </div>
+          <div>so với số lượng xác nhận</div>
+        </div>
+        <div class="sub-title">
+          Bạn có chắc chắn muốn hoàn tất nhận hàng?
+        </div>
+      </div>
+      <div psDialogConfirmFooter>
+        <ps-kendo-button (onClick)="isShowDialogDone  = !isShowDialogDone">huỷ</ps-kendo-button>
+        <ps-kendo-button (onClick)="UpdateIOMasterStatus(whiomasterstatusenum.PENDING)" [theme]="'warning'">xác
+          nhận</ps-kendo-button>
+      </div>
+    </ps-dialog-confirm>
+    <!-- <ps-dialog-confirm *ngIf="showConfirm" [theme]="'warning'" [open]="true">
+      <div psDialogConfirmHeader>
+        {{ nextStatus === whiomasterstatusenum.DONE ? 'xác nhận hoàn tất'
+                                                    : 'xác nhận gửi khi còn chênh lệch' }}
+      </div>
+    
+      <div psDialogConfirmBody>
+        <div class="main-title main-title-done">
+          <div class="done">
+            Có&nbsp;<div class="hightline">{{ getDiff() }} phụ tùng chênh lệch</div>
+          </div>
+          <div>so với số lượng xác nhận</div>
+        </div>
+        <div class="sub-title">
+          Bạn có chắc chắn muốn tiếp tục?
+        </div>
+      </div>
+    
+      <div psDialogConfirmFooter>
+        <ps-kendo-button (onClick)="showConfirm=false">huỷ</ps-kendo-button>
+        <ps-kendo-button [theme]="'warning'" (onClick)="confirm()">xác nhận</ps-kendo-button>
+      </div>
+    </ps-dialog-confirm>     -->
+    <!-- END: DIALOG DONE DIALOG -->
+  </div>
+
+  <!-- NEW → PENDING
+<ps-kendo-button *ngIf="iomaster.Status==whiomasterstatusenum.NEW"
+(onClick)="tryChangeStatus(whiomasterstatusenum.PENDING)"
+[theme]="'error'">gửi phiếu</ps-kendo-button>
+
+SENT → PENDING
+<ps-kendo-button *ngIf="iomaster.Status==whiomasterstatusenum.SENT"
+(onClick)="tryChangeStatus(whiomasterstatusenum.PENDING)"
+[theme]="'error'">xác nhận</ps-kendo-button>
+
+RECEIVING → DONE
+<ps-kendo-button *ngIf="iomaster.Status==whiomasterstatusenum.RECEIVING"
+(onClick)="tryChangeStatus(whiomasterstatusenum.DONE)"
+[theme]="'primary-outline'">hoàn tất</ps-kendo-button> -->

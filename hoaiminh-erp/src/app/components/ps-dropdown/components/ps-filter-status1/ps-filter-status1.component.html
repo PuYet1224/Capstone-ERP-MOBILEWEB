@@ -1,0 +1,11 @@
+<div class="card-content-column k-flex-1">
+  <div class="col-2">
+    <kendo-label [text]="label"></kendo-label>
+    <kendo-multiselecttree [class.k-open]="isOpen" (open)="isOpen = true" (close)="isOpen = false" class="dropdown-list"
+                           [kendoMultiSelectTreeHierarchyBinding]="data" childrenField="ListStatus"
+                           [textField]="'StatusName'" [valueField]="valueField" [(ngModel)]="value"
+                           [tagMapper]="tagMapper" (valueChange)="fChange($event)"
+                           [popupSettings]="{ appendTo: 'component' }" [ngClass]="{'hasSelect': !(value.length > 0)}">
+    </kendo-multiselecttree>
+  </div>
+</div>

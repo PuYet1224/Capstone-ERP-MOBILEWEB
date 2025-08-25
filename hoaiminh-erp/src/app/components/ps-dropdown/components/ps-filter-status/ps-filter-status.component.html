@@ -1,0 +1,33 @@
+<div class="card-content-column k-flex-1">
+  <div class="col-2">
+    <kendo-multiselecttree [class.k-open]="isOpen" (open)="isOpen = true" (close)="isOpen = false" class="dropdown-list"
+                           [kendoMultiSelectTreeHierarchyBinding]="data" childrenField="children" textField="text"
+                           valueField="id" [(ngModel)]="value" [tagMapper]="tagMapper" (valueChange)="fChange($event)"
+                           [popupSettings]="{ appendTo: 'component' }" [ngClass]="{'hasSelect': !(value.length > 0)}">
+    </kendo-multiselecttree>
+  </div>
+  <div class="col-3-4-container">
+    <div class="col-3">
+      <div class="btn-group">
+        <ps-kendo-button class="button" [disabled]="resetDisabled" (onClick)="resetStatus()"><img
+               src="../../../../../assets/images/icons/reset-filter.icon.png" alt></ps-kendo-button>
+        <ps-kendo-button class="button" [disabled]="clearDisabled" (onClick)="clearStatus()"><img
+               src="../../../../../assets/images/icons/remove-filter.icon.png" alt></ps-kendo-button>
+      </div>
+    </div>
+    <div class="col-4" *ngIf="value.length > 0">
+      <kendo-label class="label" text="Lọc theo:">
+      </kendo-label>
+      <div class="status-btn">
+        <ng-container *ngFor="let item of value">
+          <div class="status" *ngIf="item.id !== 0">
+            <span class="custom-tag">
+              {{ item.text }}
+            </span>
+            <span class="k-icon k-font-icon k-i-x" (click)="removeItem(item)"></span>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

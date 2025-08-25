@@ -1,0 +1,445 @@
+<ps-kendo-drawer-container [title]="title" [expanded]="isDrawerOpen" (collapse)="ondrawercollapse($event)">
+    <div class="body-container">
+        <!-- BREADCRUM -->
+        <div class="breadcrum">
+            <ps-toolbar-top class="breadcrumb-content">
+                <ps-kendo-button [theme]="'error'"
+                                 *ngIf="(dataactive === 'vehicle' && vehicle_active.IsModify || dataactive === 'type' && type_active.IsModify) && (perdto.master || perdto.creator)"
+                                 (onClick)="showpopup = true">
+                    xoá {{typedrawer == 'type' ? 'dòng xe' :  'loại xe'}}
+                </ps-kendo-button>
+
+                <ps-kendo-button [theme]="'primary'" *ngIf="dataactive === 'vehicle' && vehicle_active.Status != enumstt.Stop" (onClick)="onAddNewColor()">
+                    tạo mới màu xe
+                </ps-kendo-button>
+
+                <ps-kendo-button [theme]="'primary'" *ngIf="((dataactive === 'type' && type_active.Status != enumstt.Stop) || 
+                    (dataactive === 'vehicle' && vehicle_active.TypeOfVehicleStatus != enumstt.Stop)) 
+                    && (perdto.master || perdto.creator)"
+                                 (onClick)="onAddNewVehicle()">
+                    tạo mới loại xe
+                </ps-kendo-button>
+
+                <ps-kendo-button [theme]="'primary'" *ngIf="(dataactive === 'type' || dataactive == null) && (perdto.master || perdto.creator)"
+                                 (onClick)="onAddNewType()">
+                    tạo mới dòng xe
+                </ps-kendo-button>
+            </ps-toolbar-top>
+        </div>
+
+        <!-- START: FILTER -->
+        <div class="ps-filter-bar">
+            <ps-filter-textbox [placeholder]="'Tìm kiếm lệnh dòng xe, loại xe'" [listField]="listfiltertext" (onFilter)="textFilterChange($event)">
+            </ps-filter-textbox>
+
+            <ps-kendo-dropdown-list [label]="'Dòng xe'" [(ngModel)]="typedataactive.Code" [data]="listtypedata"
+                                    [textField]="'TypeOfVehicle'" (selectChange)="dropdownchange('vehicle', $event)" [valueField]="'Code'"
+                                    [valuePrimitive]="true" class="filter-type">
+            </ps-kendo-dropdown-list>
+
+            <ps-kendo-dropdown-list [label]="'Màu xe'" [(ngModel)]="coloractive" [data]="listcolor" (selectChange)="dropdownchange('color', $event)"
+                                    [valuePrimitive]="true" class="filter-color">
+            </ps-kendo-dropdown-list>
+
+            <ps-filter-button [clearDisabled]="isDisabledClear" [resetDisabled]="isDisabledReset" (reload)="onReload()"
+                              (clear)="statusFilterClear()" (reset)="statusFilterClear()">
+            </ps-filter-button>
+        </div>
+
+        <div class="body">
+            <!-- START: LIST -->
+            <div class="list">
+                <!-- dòng xe -->
+                <ps-kendo-grid [data]="data" [pageable]="false" [hasColumnAction]="true" [actionColumnSticky]="false"
+                               [actionColumnData]="actionColumn" (btnActionFocus)="onActionColumnFocus($event, 'type')"
+                               [selectable]="{ mode: 'single' }" (selectionChange)="ontypeselectionchange($event)" [rowSelected]="istypeactive"
+                               (actionSelected)="onActionClick($event, 'type')" [resizable]="true">
+
+                    <!-- mã, tên dòng xe -->
+                    <kendo-grid-column field="TypeOfVehicleName" title="Dòng xe" [width]="150" class="text-hightline">
+                        <ng-template kendoGridCellTemplate let-item>
+                            {{item.ID}} | {{item.TypeOfVehicle}}
+                        </ng-template>
+                    </kendo-grid-column>
+
+                    <!-- phân loại dòng xe -->
+                    <kendo-grid-column field="CategoryName" title="Phân loại" class="type-vehicle" [width]="150">
+                    </kendo-grid-column>
+
+                    <!-- thứ tự hiển thị -->
+                    <kendo-grid-column field="OrderBy" title="Thứ tự hiển thị" class="text-center" headerClass="text-center" [width]="100">
+                    </kendo-grid-column>
+
+                    <!-- tổng số loại xe -->
+                    <kendo-grid-column field="TotalVehicle" title="Tổng số loại xe" class="text-center" headerClass="text-center" [width]="100">
+                    </kendo-grid-column>
+
+                    <!-- Trạng thái -->
+                    <kendo-grid-column [width]="135" title="Trạng thái" class="statuscolumn" headerClass="statuscolumn">
+                        <ng-template kendoGridCellTemplate let-item>
+                            <div [innerHTML]="{ Status: item.Status, StatusName: item.StatusName } | LSVehicleConfigStatus"></div>
+                        </ng-template>
+                    </kendo-grid-column>
+
+                    <!-- loại xe -->
+                    <ng-template kendoGridDetailTemplate let-dataItem>
+                        <ps-kendo-grid [data]="dataItem.ListVehicle" [pageable]="false" [hasColumnAction]="true" [actionColumnSticky]="false" [header]="false"
+                                       [actionColumnData]="actionColumn" (btnActionFocus)="onActionColumnFocus($event, 'vehicle')"
+                                       [selectable]="{ mode: 'single' }" (selectionChange)="onvehicleselectionchange($event)" [rowSelected]="isvehicleactive"
+                                       (actionSelected)="onActionClick($event, 'vehicle')">
+
+                            <!-- mã, tên loại xe -->
+                            <kendo-grid-column [width]="250" class=" vehicle">
+                                <ng-template kendoGridCellTemplate let-item>
+                                    <div [title]="item.ID + ' | ' + item.VehicleName" class="text-hightline">
+                                        <span class="text-darkline">Loại xe:</span><br> {{item.ID}} |
+                                        {{item.VehicleName}}
+                                    </div>
+                                </ng-template>
+                            </kendo-grid-column>
+
+                            <!-- đời xe -->
+                            <kendo-grid-column [width]="70">
+                                <ng-template kendoGridCellTemplate let-item>
+                                    <span class="text-darkline">Đời xe:</span><br> {{item.Version}}
+                                </ng-template>
+                            </kendo-grid-column>
+
+                            <!-- động cơ -->
+                            <kendo-grid-column [width]="200" class=" vehicle">
+                                <ng-template kendoGridCellTemplate let-item>
+                                    <div [title]="item.Engine" class="text-hightline">
+                                        <span class="text-darkline">Động cơ:</span><br> {{item.Engine}}
+                                    </div>
+                                </ng-template>
+                            </kendo-grid-column>
+
+                            <!-- dung tích xi lanh  -->
+                            <kendo-grid-column [width]="130">
+                                <ng-template kendoGridCellTemplate let-item>
+                                    <span class="text-darkline">Dung tích xi lanh:</span><br> {{item.Cylinder}} CC
+                                </ng-template>
+                            </kendo-grid-column>
+
+                            <!-- mo men xoắn -->
+                            <kendo-grid-column [width]="170" class=" vehicle">
+                                <ng-template kendoGridCellTemplate let-item>
+                                    <span class="text-darkline">Mô-men xoắn:</span><br> {{item.Torque}}
+                                </ng-template>
+                            </kendo-grid-column>
+
+                            <!-- bảo hành -->
+                            <kendo-grid-column [width]="150">
+                                <ng-template kendoGridCellTemplate let-item>
+                                    <span class="text-darkline">Bảo hành:</span><br> {{item.InsurancePeriod}} tháng - {{item.InsuranceKM | number}}KM
+                                </ng-template>
+                            </kendo-grid-column>
+
+                            <!-- bảo trì -->
+                            <kendo-grid-column [width]="70">
+                                <ng-template kendoGridCellTemplate let-item>
+                                    <span class="text-darkline">Bảo trì:</span><br> {{item.InsuranceTime}} lần
+                                </ng-template>
+                            </kendo-grid-column>
+
+                            <!-- số màu xe -->
+                            <kendo-grid-column [width]="70">
+                                <ng-template kendoGridCellTemplate let-item>
+                                    <span class="text-darkline">Màu xe:</span><br> {{item.TotalVehicleColor}} màu
+                                </ng-template>
+                            </kendo-grid-column>
+
+                            <!-- Trạng thái -->
+                            <kendo-grid-column [width]="135" class="statuscolumn" headerClass="statuscolumn">
+                                <ng-template kendoGridCellTemplate let-item>
+                                    <div [innerHTML]="{ Status: item.Status, StatusName: item.StatusName } | LSVehicleConfigStatus"></div>
+                                </ng-template>
+                            </kendo-grid-column>
+
+                            <!-- màu xe -->
+                            <ng-template kendoGridDetailTemplate let-dataItem class="aaa">
+                                <div class="frame-detail">
+                                    <div class="detail-item" *ngFor="let color of dataItem.ListVehicleColor">
+                                        <div class="item-header">
+                                            <div class="header-label">
+                                                <div>
+                                                    <span>{{color.ID}}</span> <br>
+                                                    {{color.ColorName}}
+                                                </div>
+                                                <img [src]="color.ColorCode" alt="">
+                                            </div>
+                                            <div class="header-action">
+                                                <ps-kendo-button [theme]="'primary-outline'" [icon]="'edit'" (onClick)="oneditcolor(color)">
+                                                </ps-kendo-button>
+                                                <!-- <ps-kendo-button [icon]="'eye'" *ngIf="!color.IsModify" [disabled]="color.IsModify"
+                                                                 (onClick)="onviewcolor(color)">
+                                                </ps-kendo-button> -->
+                                                <ps-kendo-button [theme]="'error-outline'" [icon]="'trash'" [disabled]="!color.IsModify"
+                                                                 (onClick)="onclickdeletecolor(color)">
+                                                </ps-kendo-button>
+                                            </div>
+                                        </div>
+                                        <div class="item-body">
+                                            <img [src]="color.ImageSetting1" alt="">
+                                        </div>
+                                        <div class="item-price">
+                                            <span class="text-darkline">Giá bán lẻ: </span>
+                                            <span class="text-redline">{{color.Price | number}} VNĐ</span>
+                                        </div>
+                                    </div>
+                                    <div class="detail-item item-add" *ngIf="dataItem.Status != enumstt.Stop">
+                                        <ps-kendo-button class="add-button" [theme]="'primary-outline'" (onClick)="onAddNewColor(dataItem)">
+                                            <span class="k-font-icon k-icon k-i-plus-outline"></span>
+                                            thêm mới
+                                        </ps-kendo-button>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </ps-kendo-grid>
+                    </ng-template>
+                </ps-kendo-grid>
+            </div>
+        </div>
+
+        <!-- START: DELETE DIALOG -->
+        <ps-dialog-confirm [theme]="'error'" [open]="showpopup">
+            <div psDialogConfirmHeader>xoá {{dataactive == 'type' ? 'dòng xe' : (dataactive == 'vehicle' ? 'loại xe' : 'màu xe')}}</div>
+            <div psDialogConfirmBody>
+                <div class="main-title">
+                    <span>Bạn có chắc chắn muốn xoá {{dataactive == 'type' ? 'dòng xe' : (dataactive == 'vehicle' ? 'loại xe' : 'màu xe')}}</span>
+                    <br>
+                    <div class="hightline">
+                        {{dataactive == 'type' ? type_active.TypeOfVehicle : (dataactive == 'vehicle' ? vehicle_active.VehicleName : color_active.ColorName)}}
+                    </div>
+                </div>
+                <div class="sub-title">
+                    {{dataactive == 'type' ? 'Dòng xe' : (dataactive == 'vehicle' ? 'Loại xe' : 'Màu xe')}} bị xoá sẽ <span>KHÔNG</span> thể phục hồi
+                </div>
+            </div>
+            <div psDialogConfirmFooter>
+                <ps-kendo-button (onClick)="showpopup = false">huỷ</ps-kendo-button>
+                <ps-kendo-button (onClick)="onpopupconfirmdelete()" [theme]="'error'">xoá</ps-kendo-button>
+            </div>
+        </ps-dialog-confirm>
+        <!-- END: DELETE DIALOG -->
+
+        <!-- START: UPDATE STATUS DIALOG -->
+        <ps-dialog-confirm [theme]="'warning'" [open]="showpopupwarining" class="confirmpopup">
+            <div psDialogConfirmHeader>ngưng dòng xe</div>
+            <div psDialogConfirmBody>
+                <div class="main-title">
+                    <span>Bạn có chắc chắn muốn ngưng dòng</span>
+                    <br>
+                    <div class="hightline">
+                        {{type_active.TypeOfVehicle}}
+                    </div>
+                </div>
+                <div class="sub-title">
+                    {{type_active.TotalVehicle}} loại xe trong dòng xe {{type_active.TypeOfVehicle}} đều sẽ ngưng kinh doanh
+                </div>
+            </div>
+            <div psDialogConfirmFooter>
+                <ps-kendo-button (onClick)="showpopupwarining = false">huỷ</ps-kendo-button>
+                <ps-kendo-button (onClick)="updatetypeofvehicle()" [theme]="'warning'">ngưng kinh doanh</ps-kendo-button>
+            </div>
+        </ps-dialog-confirm>
+        <!-- END: UPDATE STATUS DIALOG -->
+
+        <!-- popup upload -->
+        <ps-dialog-upload [(open)]="isOpen" [files]="listimage"
+                          [keyPathUpload]="uploadtype == 'code' ? key.LSVehicleColorColorCode : key.LSVehicleColorImageSetting"
+                          (fileDoubleClick)="onFileChosen($event)" (upload)="onFileChange()" (delete)="onFileChange()">
+        </ps-dialog-upload>
+    </div>
+
+    <!-- drawer -->
+    <ng-container psKendoDrawerTemplate>
+        <!-- drawer type -->
+        <div class="body-drawer" *ngIf="typedrawer === 'type'">
+            <!-- <ps-kendo-textbox [label]="'Mã số (*)'" [(ngModel)]="typeupdate.ID" [disabled]="actiontype == 'view'">
+            </ps-kendo-textbox>
+            <ps-kendo-textbox [label]="'Dòng xe (*)'" [(ngModel)]="typeupdate.TypeOfVehicle" [disabled]="!typeupdate.IsModify || actiontype == 'view'">
+            </ps-kendo-textbox>
+            <ps-kendo-dropdown-list [label]="'Phân loại (*)'" [data]="listcatrgory" [(ngModel)]="typeupdate.Category"
+                                    [textField]="'Category'" [valueField]="'Code'" [valuePrimitive]="true"
+                                    [disabled]="!typeupdate.IsModify || actiontype == 'view'">
+            </ps-kendo-dropdown-list>
+            <ps-kendo-numeric-textbox [label]="'Thứ tự hiển thị'" [format]="'n0'" [(ngModel)]="typeupdate.OrderBy" [min]="0"
+                                      [disabled]="!typeupdate.IsModify || actiontype == 'view'">
+            </ps-kendo-numeric-textbox>
+            <ps-kendo-dropdown-list [label]="'Trạng thái (*)'" [data]="liststatus" [(ngModel)]="typeupdate.Status"
+                                    [textField]="'StatusName'" [valueField]="'TypeOfStatus'" [valuePrimitive]="true"
+                                    [disabled]="!perdto.master && !perdto.approver">
+            </ps-kendo-dropdown-list> -->
+            <ps-kendo-textbox [label]="'Mã số (*)'" [(ngModel)]="typeupdate.ID" [disabled]="!perdto.master && !perdto.creator">
+            </ps-kendo-textbox>
+            <ps-kendo-textbox [label]="'Mã số (*)'" [(ngModel)]="typeupdate.ID" [disabled]="!perdto.master && !perdto.creator">
+            </ps-kendo-textbox>
+            <ps-kendo-textbox [label]="'Dòng xe (*)'" [(ngModel)]="typeupdate.TypeOfVehicle" [disabled]="!perdto.master && !perdto.creator">
+            </ps-kendo-textbox>
+            <ps-kendo-dropdown-list [label]="'Phân loại (*)'" [data]="listcatrgory" [(ngModel)]="typeupdate.Category"
+                                    [textField]="'Category'" [valueField]="'Code'" [valuePrimitive]="true"
+                                    [disabled]="!perdto.master && !perdto.creator">
+            </ps-kendo-dropdown-list>
+            <ps-kendo-numeric-textbox [label]="'Thứ tự hiển thị'" [format]="'n0'" [(ngModel)]="typeupdate.OrderBy" [min]="0"
+                                      [disabled]="!perdto.master && !perdto.creator">
+            </ps-kendo-numeric-textbox>
+            <ps-kendo-dropdown-list [label]="'Trạng thái (*)'" [data]="liststatus" [(ngModel)]="typeupdate.Status"
+                                    [textField]="'StatusName'" [valueField]="'TypeOfStatus'" [valuePrimitive]="true"
+                                    [disabled]="!perdto.master && !perdto.approver">
+            </ps-kendo-dropdown-list>
+        </div>
+
+        <!-- drawer vehicle -->
+        <div class="body-drawer" *ngIf="typedrawer === 'vehicle'">
+            <ps-kendo-textbox [label]="'Phân loại'" [(ngModel)]="vehicleupdate.CategoryName" [disabled]="true">
+            </ps-kendo-textbox>
+            <ps-kendo-textbox [label]="'Dòng xe'" [(ngModel)]="vehicleupdate.TypeOfVehicleName" [disabled]="true">
+            </ps-kendo-textbox>
+            <!-- <ps-kendo-textbox [label]="'Mã loại xe (*)'" [(ngModel)]="vehicleupdate.ID" [disabled]="!vehicleupdate.IsModify || actiontype == 'view'">
+            </ps-kendo-textbox>
+            <ps-kendo-textbox [label]="'Loại xe (*)'" [(ngModel)]="vehicleupdate.VehicleName" [disabled]="!vehicleupdate.IsModify || actiontype == 'view'">
+            </ps-kendo-textbox>
+            <ps-kendo-textbox [label]="'Đời xe (*)'" [(ngModel)]="vehicleupdate.Version" [disabled]="!vehicleupdate.IsModify || actiontype == 'view'">
+            </ps-kendo-textbox>
+            <ps-kendo-textbox [label]="'Động cơ (*)'" [(ngModel)]="vehicleupdate.Engine" [disabled]="!vehicleupdate.IsModify || actiontype == 'view'">
+            </ps-kendo-textbox>
+            <ps-kendo-textbox [label]="'Dung tích xi lanh (*)'" [(ngModel)]="vehicleupdate.Cylinder"
+                              [disabled]="!vehicleupdate.IsModify || actiontype == 'view'">
+            </ps-kendo-textbox>
+            <ps-kendo-textbox [label]="'Mô-men xoắn (*)'" [(ngModel)]="vehicleupdate.Torque" [disabled]="!vehicleupdate.IsModify || actiontype == 'view'">
+            </ps-kendo-textbox>
+            <div class="group-input">
+                <ps-kendo-numeric-textbox [label]="'Thời gian bảo hiểm (tháng (*) - km (*))'" [(ngModel)]="vehicleupdate.InsurancePeriod" [format]="'n0'"
+                                          [min]="0" [disabled]="!vehicleupdate.IsModify || actiontype == 'view'">
+                </ps-kendo-numeric-textbox>
+                <ps-kendo-numeric-textbox [label]="' '" [(ngModel)]="vehicleupdate.InsuranceKM" [format]="'n0'"
+                                          [disabled]="!vehicleupdate.IsModify || actiontype == 'view'">
+                </ps-kendo-numeric-textbox>
+            </div>
+            <ps-kendo-numeric-textbox [label]="'Số lần bảo trì (*)'" [(ngModel)]="vehicleupdate.InsuranceTime" [format]="'n0'"
+                                      [disabled]="!vehicleupdate.IsModify || actiontype == 'view'">
+            </ps-kendo-numeric-textbox> -->
+            <ps-kendo-textbox [label]="'Mã loại xe (*)'" [(ngModel)]="vehicleupdate.ID" [disabled]="!perdto.master && !perdto.creator">
+            </ps-kendo-textbox>
+            <ps-kendo-textbox [label]="'Loại xe (*)'" [(ngModel)]="vehicleupdate.VehicleName" [disabled]="!perdto.master && !perdto.creator">
+            </ps-kendo-textbox>
+            <ps-kendo-textbox [label]="'Đời xe (*)'" [(ngModel)]="vehicleupdate.Version" [disabled]="!perdto.master && !perdto.creator">
+            </ps-kendo-textbox>
+            <ps-kendo-textbox [label]="'Động cơ (*)'" [(ngModel)]="vehicleupdate.Engine" [disabled]="!perdto.master && !perdto.creator">
+            </ps-kendo-textbox>
+            <ps-kendo-textbox [label]="'Dung tích xi lanh (*)'" [(ngModel)]="vehicleupdate.Cylinder"
+                              [disabled]="!perdto.master && !perdto.creator">
+            </ps-kendo-textbox>
+            <ps-kendo-textbox [label]="'Mô-men xoắn (*)'" [(ngModel)]="vehicleupdate.Torque" [disabled]="!perdto.master && !perdto.creator">
+            </ps-kendo-textbox>
+            <div class="group-input">
+                <ps-kendo-numeric-textbox [label]="'Thời gian bảo hiểm (tháng (*) - km (*))'" [(ngModel)]="vehicleupdate.InsurancePeriod" [format]="'n0'"
+                                          [min]="0" [disabled]="!perdto.master && !perdto.creator">
+                </ps-kendo-numeric-textbox>
+                <ps-kendo-numeric-textbox [label]="' '" [(ngModel)]="vehicleupdate.InsuranceKM" [format]="'n0'"
+                                          [disabled]="!perdto.master && !perdto.creator">
+                </ps-kendo-numeric-textbox>
+            </div>
+            <ps-kendo-numeric-textbox [label]="'Số lần bảo trì (*)'" [(ngModel)]="vehicleupdate.InsuranceTime" [format]="'n0'"
+                                      [disabled]="!perdto.master && !perdto.creator">
+            </ps-kendo-numeric-textbox>
+            <ps-kendo-dropdown-list [label]="'Trạng thái (*)'" [data]="liststatus" [(ngModel)]="vehicleupdate.Status"
+                                    [textField]="'StatusName'" [valueField]="'TypeOfStatus'" [valuePrimitive]="true"
+                                    [disabled]="(!perdto.master && !perdto.approver) || vehicleupdate.TypeOfVehicleStatus == enumstt.Stop"
+                                    [popupSettings]="{ popupAlign: {  vertical: 'top' } }">
+            </ps-kendo-dropdown-list>
+        </div>
+
+        <!-- drawer color -->
+        <div class="body-drawer" *ngIf="typedrawer === 'color'">
+            <ps-kendo-textbox [label]="'Phân loại'" [(ngModel)]="colorupdate.CategoryName" [disabled]="true">
+            </ps-kendo-textbox>
+            <ps-kendo-textbox [label]="'Dòng xe'" [(ngModel)]="colorupdate.TypeOfVehicleName" [disabled]="true">
+            </ps-kendo-textbox>
+            <ps-kendo-textbox [label]="'Loại xe'" [(ngModel)]="colorupdate.VehicleName" [disabled]="true">
+            </ps-kendo-textbox>
+            <!-- <ps-kendo-textbox [label]="'Mã màu xe (*)'" [(ngModel)]="colorupdate.ID" [disabled]="!colorupdate.IsModify || actiontype == 'view'">
+            </ps-kendo-textbox>
+            <div class="group-input">
+                <ps-kendo-textbox [label]="'Màu xe (*) - hình hiển thị trên website (*)'" [(ngModel)]="colorupdate.ColorName"
+                                  [disabled]="!colorupdate.IsModify || actiontype == 'view'">
+                </ps-kendo-textbox>
+                <div class="color" [class.height]="isCodeHeight">
+                    <img [src]="colorupdate.ColorCode" alt="">
+                    <ps-kendo-button [theme]="'primary-outline'" (onClick)="onOpen('code')" [disabled]="!colorupdate.IsModify || actiontype == 'view'">
+                        <img src="../../../../../assets/images/icons/import.png" alt />
+                    </ps-kendo-button>
+                </div>
+            </div>
+            <ps-kendo-numeric-textbox [label]="'Giá bán lẻ  (*)'" [(ngModel)]="colorupdate.Price" [format]="'n0'"
+                                      [disabled]="!colorupdate.IsModify || actiontype == 'view'">
+            </ps-kendo-numeric-textbox>
+            <ps-kendo-numeric-textbox [label]="'Tiền đặt cọc (*)'" [(ngModel)]="colorupdate.AmountPaid" [format]="'n0'"
+                                      [disabled]="!colorupdate.IsModify || actiontype == 'view'">
+            </ps-kendo-numeric-textbox>
+            <ps-kendo-textbox [label]="'Đường dẫn hình đại diện (*)'" [(ngModel)]="colorupdate.ImageSetting1"
+                              [disabled]="!colorupdate.IsModify || actiontype == 'view'">
+            </ps-kendo-textbox>
+            <div class="color ImageSetting1" [class.height]="isImageHeight">
+                <img [src]="colorupdate.ImageSetting1" alt="">
+                <ps-kendo-button [theme]="'primary-outline'" (onClick)="onOpen('image')" [disabled]="!colorupdate.IsModify || actiontype == 'view'">
+                    <img src="../../../../../assets/images/icons/import.png" alt />
+                </ps-kendo-button>
+            </div> -->
+            <ps-kendo-textbox [label]="'Mã màu xe (*)'" [(ngModel)]="colorupdate.ID" [disabled]="!perdto.master && !perdto.creator">
+            </ps-kendo-textbox>
+            <div class="group-input">
+                <ps-kendo-textbox [label]="'Màu xe (*) - hình hiển thị trên website (*)'" [(ngModel)]="colorupdate.ColorName"
+                                  [disabled]="!perdto.master && !perdto.creator">
+                </ps-kendo-textbox>
+                <div class="color" [class.height]="isCodeHeight">
+                    <img [src]="colorupdate.ColorCode" alt="">
+                    <ps-kendo-button [theme]="'primary-outline'" (onClick)="onOpen('code')" [disabled]="!perdto.master && !perdto.creator">
+                        <img src="../../../../../assets/images/icons/import.png" alt />
+                    </ps-kendo-button>
+                </div>
+            </div>
+            <ps-kendo-numeric-textbox [label]="'Giá bán lẻ  (*)'" [(ngModel)]="colorupdate.Price" [format]="'n0'"
+                                      [disabled]="!perdto.master && !perdto.creator">
+            </ps-kendo-numeric-textbox>
+            <ps-kendo-numeric-textbox [label]="'Tiền đặt cọc (*)'" [(ngModel)]="colorupdate.AmountPaid" [format]="'n0'"
+                                      [disabled]="!perdto.master && !perdto.creator">
+            </ps-kendo-numeric-textbox>
+            <ps-kendo-textbox [label]="'Đường dẫn hình đại diện (*)'" [(ngModel)]="colorupdate.ImageSetting1"
+                              [disabled]="!perdto.master && !perdto.creator">
+            </ps-kendo-textbox>
+            <div class="color ImageSetting1" [class.height]="isImageHeight">
+                <img [src]="colorupdate.ImageSetting1" alt="">
+                <ps-kendo-button [theme]="'primary-outline'" (onClick)="onOpen('image')" [disabled]="!perdto.master && !perdto.creator">
+                    <img src="../../../../../assets/images/icons/import.png" alt />
+                </ps-kendo-button>
+            </div>
+        </div>
+    </ng-container>
+    <ng-container psKendoDrawerFooterTemplate>
+        <ps-kendo-button [theme]="'error'" (onClick)="showpopup = true"
+                         *ngIf="(perdto.master || perdto.creator) && ((typedrawer == 'type' && typeupdate.Code != 0 && typeupdate.IsModify) || 
+                         (typedrawer == 'vehicle' && vehicleupdate.Code != 0 && vehicleupdate.IsModify) || 
+                         (typedrawer == 'color' && colorupdate.Code != 0 && colorupdate.IsModify))">
+            xoá
+        </ps-kendo-button>
+        <!-- <ps-kendo-button [theme]="'primary'" (onClick)="onupdate(typedrawer)"
+                         *ngIf="(typedrawer == 'color' && colorupdate.Code != 0 && colorupdate.IsModify) || 
+                         (typedrawer == 'vehicle' && vehicleupdate.TypeOfVehicleStatus != enumstt.Stop && vehicleupdate.Code != 0) || 
+                         (typedrawer == 'type' && typeupdate.Code != 0)">
+            cập nhật
+        </ps-kendo-button> -->
+        <ps-kendo-button [theme]="'primary'" (onClick)="onupdate(typedrawer)"
+                         *ngIf="(perdto.master || perdto.creator) && ((typedrawer == 'color' && colorupdate.Code != 0) || 
+                                 (typedrawer == 'vehicle' &&  vehicleupdate.Code != 0) || 
+                                 (typedrawer == 'type' && typeupdate.Code != 0))">
+            cập nhật
+        </ps-kendo-button>
+        <ps-kendo-button [theme]="'primary'" (onClick)="onupdate(typedrawer)"
+                         *ngIf="(perdto.master || perdto.creator) && ((typedrawer == 'type' && typeupdate.Code == 0) || 
+                         (typedrawer == 'vehicle' && vehicleupdate.Code == 0) || (typedrawer == 'color' && colorupdate.Code == 0))">
+            tạo mới
+        </ps-kendo-button>
+    </ng-container>
+</ps-kendo-drawer-container>

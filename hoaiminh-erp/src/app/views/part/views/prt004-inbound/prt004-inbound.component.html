@@ -1,0 +1,170 @@
+<div class="prt004">
+
+  <!-- NAVIGATION BAR -->
+  <ps-toolbar-top>
+    <ps-kendo-dropdown-button class="dropdown-primary" [data]="inboundTypeList" textField="text"
+                              (itemClick)="createInbound($event)">
+      TẠO MỚI
+    </ps-kendo-dropdown-button>
+  </ps-toolbar-top>
+
+  <!-- START: FILTER-BAR -->
+  <div class="ps-filter-bar">
+    <ps-filter-textbox [placeholder]="'Tìm kiếm dữ liệu nhập hàng'" [listField]="listfiltertext"
+                       (onFilter)="textFilterChange($event)">
+    </ps-filter-textbox>
+    <div class="io-type-container">
+      <kendo-label text="Cách nhập hàng"></kendo-label>
+      <ps-kendo-dropdown-list class="filter-iotype" [data]="typeMasterList" textField="text" valueField="id"
+                              [valuePrimitive]="true" (valueChange)="onIOMasterTypeSelect($event)"
+                              [(ngModel)]="selectedTypeId">
+      </ps-kendo-dropdown-list>
+    </div>
+    <ps-filter-status class="filter-bar" [field]="'Status'" [type]="LSStatusTypeDataEnum.IO"
+                      [clearDisabled]="isDisabledClear" [resetDisabled]="isDisabledReset"
+                      (statusChanged)="statusFilterChange($event)" (statusClear)="statusFilterClear($event)"
+                      (statusReset)="statusFilterClear($event, 'reset')">
+    </ps-filter-status>
+  </div>
+  <!-- END: FILTER-BAR -->
+
+  <!-- LIST -->
+  <div class="list">
+    <ps-kendo-grid [data]="data | async" [actionColumnWidth]="50" [actionColumnData]="actionColumn"
+                   (btnActionFocus)="onActionColumnFocus($event)" [hasColumnAction]="true"
+                   (actionSelected)="onActionClick($event)" (pageChanged)="onPageChanged($event)" [skip]="skip">
+
+      <kendo-grid-column [width]="250" title="Phiếu nhập hàng">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <div class="inb ound-name">{{ dataItem.DocumentID }}</div>
+          <div class="inbound-group inbound-date" *ngIf="dataItem.CreatedTime">
+            <div class="content-label group-b">Ngày lập</div>
+            <div class="content-content group-b">
+              : {{ dataItem.CreatedTime | date:'dd/MM/yyyy' }}
+            </div>
+          </div>
+        </ng-template>
+      </kendo-grid-column>
+
+      <kendo-grid-column [width]="220" title="Loại phiếu nhập hàng">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <div class="type-name">{{ dataItem.TypeOfMasterName }}</div>
+          <div class="type-ref" *ngIf="dataItem.RefDocumentID">
+            Ref.&nbsp;|&nbsp;{{ dataItem.RefDocumentID }}
+          </div>
+        </ng-template>
+      </kendo-grid-column>
+
+      <kendo-grid-column [width]="300" title="Đơn vị">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <div class="inbound-group inbound-staff" *ngIf="dataItem.InWHName">
+            <div class="content-label">Kho nhập</div>:&nbsp;
+            <div class="content-content">
+              {{ dataItem.InWHName }}
+            </div>
+          </div>
+          <div class="inbound-group inbound-staff" *ngIf="dataItem.OutHeadName">
+            <div class="content-label">Đơn vị xuất</div>:&nbsp;
+            <div class="content-content group-b">
+              {{ dataItem.OutHeadName }}
+            </div>
+          </div>
+          <div class="inbound-group inbound-staff" *ngIf="dataItem.SupplierName">
+            <div class="content-label">Nhà cung cấp</div>:&nbsp;
+            <div class="content-content group-b">
+              {{ dataItem.SupplierName }}
+            </div>
+          </div>
+        </ng-template>
+      </kendo-grid-column>
+
+      <kendo-grid-column [width]="150" title="Số lượng">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <div class="inbound-group inbound-quantity" *ngIf="dataItem.TotalSKU">
+            <span class="group-label">SKU</span>:
+            <span class="group-content">&nbsp;{{ dataItem.TotalSKU }}</span>
+          </div>
+          <div class="inbound-group inbound-quantity" *ngIf="dataItem.TotalQuantity">
+            <span class="group-label">Số lượng</span>:
+            <span class="group-content">&nbsp;{{ dataItem.TotalQuantity }}</span>
+          </div>
+        </ng-template>
+      </kendo-grid-column>
+
+      <kendo-grid-column [width]="200" title="Thời gian">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <div class="inbound-group inbound-point" *ngIf="dataItem.SentTime">
+            <div class="group-label">Gửi</div>:&nbsp;
+            <div class="group-content group-b">
+              {{ dataItem.SentTime | date:'dd/MM/yyyy HH:mm' }}
+            </div>
+          </div>
+          <div class="inbound-group inbound-point" *ngIf="dataItem.ReceiveTime">
+            <div class="group-label">Nhập</div>:&nbsp;
+            <div class="group-content hightline">
+              {{ dataItem.ReceiveTime | date:'dd/MM/yyyy HH:mm' }}
+            </div>
+          </div>
+        </ng-template>
+      </kendo-grid-column>
+
+      <kendo-grid-column [width]="400" field="Description" title="Diễn giải" class="col-description">
+      </kendo-grid-column>
+
+      <kendo-grid-column [width]="140" [sticky]="true" class="inbound-status">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <div [innerHTML]="{ Status: dataItem.Status, StatusName: dataItem.StatusName } | WHIOMasterStatus">
+          </div>
+        </ng-template>
+      </kendo-grid-column>
+    </ps-kendo-grid>
+  </div>
+
+  <!-- DELETE DIALOG -->
+  <ps-dialog-confirm theme="error" [open]="popupConfirmOpen">
+    <div psDialogConfirmHeader>xoá phiếu nhập/xuất</div>
+    <div psDialogConfirmBody>
+      <div class="main-title">
+        <span>Bạn có chắc chắn muốn xoá phiếu</span><br />
+        <div class="hightline">{{ itemAction?.DocumentID }}</div>
+      </div>
+      <div class="sub-title">
+        Phiếu bị xoá sẽ <span>KHÔNG</span> thể phục hồi
+      </div>
+    </div>
+    <div psDialogConfirmFooter>
+      <ps-kendo-button class="cancel-button" (onClick)="popupConfirmOpen = false">huỷ</ps-kendo-button>
+      <ps-kendo-button theme="error" (onClick)="DeleteIOMaster([itemAction!])">
+        xoá
+      </ps-kendo-button>
+    </div>
+  </ps-dialog-confirm>
+  <!-- DELETE DIALOG -->
+
+  <!-- START: DIALOG DONE DIALOG -->
+  <ps-dialog-confirm [theme]="'warning'" [open]="isShowDialogDone">
+    <div psDialogConfirmHeader>xác nhận hoàn tất</div>
+    <div psDialogConfirmBody>
+      <div class="main-title main-title-done">
+        <div class="done">
+          Có &nbsp;<div class="hightline">{{itemAction?.TotalSKUNotEqual}} phụ tùng chênh lệch</div>
+        </div>
+        <div>
+          so với số lượng
+          {{ itemAction?.TypeOfMaster !== WHIOMasterTypeOfMasterEnum.Internal ? 'đề nghị' : 'xác nhận' }}
+        </div>
+
+      </div>
+      <div class="sub-title">
+        Bạn có chắc chắn muốn hoàn tất nhận hàng?
+      </div>
+    </div>
+    <div psDialogConfirmFooter>
+      <ps-kendo-button (onClick)="isShowDialogDone = !isShowDialogDone">huỷ</ps-kendo-button>
+      <ps-kendo-button (onClick)="onUpdateIOMasterStatus(itemAction , whStatus.DONE)" [theme]="'warning'">
+        xác nhận
+      </ps-kendo-button>
+    </div>
+  </ps-dialog-confirm>
+  <!-- END: DIALOG DONE DIALOG -->
+</div>

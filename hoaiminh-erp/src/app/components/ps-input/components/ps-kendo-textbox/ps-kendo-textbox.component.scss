@@ -1,0 +1,70 @@
+@import '../../../../../assets/scss/colors';
+
+::ng-deep
+{
+  ps-kendo-textbox
+  {
+    .kendo-textbox
+    {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+
+      kendo-label
+      {
+        line-height: 1;
+
+        .k-label
+        {
+          line-height: 1;
+          color: $secondary;
+          font-size: 13px;
+        }
+      }
+
+      .k-textbox
+      {
+        height: 35px;
+        border-color: $border;
+        border-radius: 5px;
+        padding: 0 8px;
+        opacity: 1;
+
+        &.hasPrefix
+        {
+          padding-left: 0;
+        }
+
+        &.k-forcus,
+        &:focus-within,
+        &:hover
+        {
+          box-shadow: none;
+          border-color: $primary;
+        }
+
+        &.k-disabled
+        {
+          opacity: 1;
+          background-color: $disable-input;
+        }
+
+        .k-input-inner
+        {
+          &::placeholder
+          {
+            font-style: italic;
+            color: $placeholder;
+          }
+
+          font-size: 13px;
+          color: $secondary;
+          padding: 0;
+        }
+
+        .k-input-suffix
+        {}
+      }
+    }
+  }
+}

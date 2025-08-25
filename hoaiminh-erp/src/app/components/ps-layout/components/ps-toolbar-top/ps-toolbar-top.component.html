@@ -1,0 +1,11 @@
+<div class="toolbar">
+  <div class="toolbar-top">
+    <div class="top-breadcrumb">
+      <kendo-breadcrumb [items]="items" [collapseMode]="'none'" (itemClick)="onMenuClickItem($event)">
+      </kendo-breadcrumb>
+    </div>
+    <div class="top-action">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

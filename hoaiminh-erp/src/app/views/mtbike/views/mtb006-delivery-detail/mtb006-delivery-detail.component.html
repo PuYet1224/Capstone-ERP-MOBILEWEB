@@ -1,0 +1,275 @@
+<ps-kendo-drawer-container [title]="'THÔNG TIN XE'" [expanded]="isDrawerOpen" (collapse)="onDrawerCollapse()">
+  <div class="body-container">
+    <!-- BREADCRUM -->
+    <div class="breadcrum">
+      <ps-toolbar-top class="breadcrumb-content">
+        <ps-kendo-button [theme]="'warning'"
+          *ngIf="(FPDTO.approver || FPDTO.master) && domaster.Code != 0 && domaster.StatusID == enumstt.NEW"
+          (onClick)="onupdatedomasterstatus(enumstt.WAITINGDELIVERY, 'Chờ giao nhận')">
+          chờ giao nhận
+        </ps-kendo-button>
+        <ps-kendo-button [theme]="'error'"
+          *ngIf="(FPDTO.creator || FPDTO.master) && domaster.Code != 0 && domaster.StatusID == enumstt.NEW"
+          (onClick)="onshowpopup()">
+          xoá
+        </ps-kendo-button>
+        <ps-kendo-button [theme]="'primary'" *ngIf="(FPDTO.creator || FPDTO.master) && domaster.Code != 0"
+          (onClick)="addnewitem()">
+          tạo mới
+        </ps-kendo-button>
+      </ps-toolbar-top>
+    </div>
+
+    <!-- BODY -->
+    <div class="body">
+      <!-- BLOCK 1 -->
+      <div class="block1-container">
+        <div class="body-head">
+          <h1>THÔNG TIN GIAO HÀNG</h1>
+          <span class="open-close" (click)="OpenBlock1()">
+            {{isExpand ? 'Thu gọn' : 'Mở rộng'}}
+          </span>
+        </div>
+        <div class="block-1">
+          <div class="block-1-content">
+            <div class="content-col-1">
+              <!-- Mã lệnh giao hàng (DO) -->
+              <ps-kendo-textbox [label]="'Mã lệnh giao hàng (DO) (*)'" [(ngModel)]="domaster.DO" (focus)="onFocus('DO')"
+                [disabled]="checkdisabled('DO')" (blur)="onupdatedomaster('DO')" class="hightline">
+              </ps-kendo-textbox>
+              <!-- Ngày dự kiến giao -->
+              <div class="datetime-picker" *ngIf="isExpand">
+                <kendo-label text="Ngày dự kiến giao (*)"></kendo-label>
+                <kendo-datepicker placeholder="dd/MM/yyyy" format="dd/MM/yyyy" [readOnlyInput]="true"
+                  calendarType="classic" [value]="domaster.EstEffDate" [disabled]="checkdisabled('EstEffDate')"
+                  (valueChange)="onupdatedate('EstEffDate', $event)" (blur)="onupdatedomaster('EstEffDate')"
+                  [min]="domaster.PODate">
+                </kendo-datepicker>
+              </div>
+              <div class="status" *ngIf="isExpand">
+                <kendo-label [text]="'Tình trạng'"></kendo-label>
+                <div [innerHTML]="{ Status: domaster.StatusID, StatusName: domaster.StatusName } | PURDOMasterStatus">
+                </div>
+              </div>
+            </div>
+            <div class="content-col-2">
+              <div class="col-2-row-1">
+                <!-- Cửa hàng đặt hàng -->
+                <ps-kendo-dropdown-list [label]="'Cửa hàng đặt hàng  (*)'" [data]="listhead" [textField]="'BriefName'"
+                  [valueField]="'Code'" [valuePrimitive]="true" [(ngModel)]="domaster.POHead"
+                  [disabled]="checkdisabled('POHead')" (valueChange)="onupdatedomaster('POHead')" class="hightline">
+                </ps-kendo-dropdown-list>
+                <!-- Mã đơn hàng -->
+                <ps-kendo-textbox [label]="'Mã đơn hàng  (*)'" [(ngModel)]="domaster.PONo" (focus)="onFocus('PONo')"
+                  [disabled]="checkdisabled('PONo')" (blur)="onupdatedomaster('PONo')">
+                </ps-kendo-textbox>
+                <!-- Ngày đặt hàng -->
+                <div class="datetime-picker">
+                  <kendo-label text="Ngày đặt hàng (*)"></kendo-label>
+                  <kendo-datepicker placeholder="dd/MM/yyyy" format="dd/MM/yyyy" [readOnlyInput]="true"
+                    calendarType="classic" [value]="domaster.PODate" [disabled]="checkdisabled('PODate')"
+                    (valueChange)="onupdatedate('PODate', $event)" (blur)="onupdatedomaster('PODate')"
+                    [max]="domaster.EstEffDate">
+                  </kendo-datepicker>
+                </div>
+              </div>
+              <!-- Nhà cung cấp -->
+              <ps-kendo-dropdown-list [label]="'Nhà cung cấp  (*)'" [data]="listsupplier" [textField]="'Name'"
+                [valueField]="'Code'" [valuePrimitive]="true" [(ngModel)]="domaster.POSupplier"
+                [disabled]="checkdisabled('POSupplier')" (valueChange)="onupdatedomaster('POSupplier')" *ngIf="isExpand"
+                class="hightline">
+              </ps-kendo-dropdown-list>
+              <!-- Diễn giải -->
+              <ps-kendo-textbox *ngIf="isExpand" [label]="'Diễn giải'" [(ngModel)]="domaster.Remark"
+                (focus)="onFocus('Remark')" [disabled]="checkdisabled('Remark')" (blur)="onupdatedomaster('Remark')">
+              </ps-kendo-textbox>
+            </div>
+            <div class="content-col-3">
+              <!-- Tổng số lượng xe -->
+              <ps-kendo-textbox [label]="'Tổng số lượng xe'" [disabled]="true" [(ngModel)]="domaster.TotalDetail">
+              </ps-kendo-textbox>
+              <div class="col-3-row-3">
+                <!-- Dòng xe -->
+                <ps-kendo-textbox [label]="'Dòng xe'" *ngIf="isExpand" [disabled]="true"
+                  [(ngModel)]="domaster.TotalTypeOfVehicle" class="hightline">
+                </ps-kendo-textbox>
+                <!-- Xe -->
+                <ps-kendo-textbox [label]="'Loại xe'" *ngIf="isExpand" [disabled]="true"
+                  [(ngModel)]="domaster.TotalVehicle">
+                </ps-kendo-textbox>
+              </div>
+              <!-- Tổng số head nhập kho -->
+              <ps-kendo-textbox [label]="'Tổng số head nhập kho'" *ngIf="isExpand" [disabled]="true"
+                [(ngModel)]="domaster.TotalHead">
+              </ps-kendo-textbox>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOCK 2 -->
+      <div class="block2-container" *ngIf="domaster.Code != 0">
+        <div class="body-head body-head1">
+          <h1>chi tiết đơn hàng
+          </h1>
+        </div>
+        <div class="block-2">
+          <div class="block-2-content">
+            <div class="head-btn" *ngIf="domaster.StatusID == enumstt.NEW && (FPDTO.creator || FPDTO.master)">
+              <ps-group-button-import [actionUpName]="'import chi tiết'" [actionDownName]="''"
+                [fileName]="'PURDODetailTemplate.xlsx'" (selectFile)="uploadEventHandler($event)">
+              </ps-group-button-import>
+              <ps-kendo-button [theme]="'primary'" (onClick)="onCreateNew()">
+                tạo mới
+              </ps-kendo-button>
+            </div>
+            <!-- LIST -->
+            <div class="list">
+              <ps-kendo-grid [data]="data" [pageable]="false">
+                <!-- Cột dữ liệu -->
+                <kendo-grid-column field="TypeOfVehicleName" title="Dòng xe" [width]="150"></kendo-grid-column>
+                <kendo-grid-column field="VehicleName" title="Loại xe" class="type-vehicle"
+                  [width]="250"></kendo-grid-column>
+                <kendo-grid-column field="VehicleColorName" title="Màu xe" [width]="150"></kendo-grid-column>
+                <kendo-grid-column field="Version" title="Đời xe" [width]="50"></kendo-grid-column>
+                <kendo-grid-column field="Quantity" title="Số lượng" [width]="45"
+                  class="centercolumn"></kendo-grid-column>
+
+                <!-- 🟩 Detail Template chính -->
+                <ng-template kendoGridDetailTemplate let-dataItem>
+                  <div class="list-detail">
+                    <div class="image-dateil">
+                      <img [src]="dataItem.VehicleImage" alt="Vehicle" />
+                    </div>
+                    <ps-kendo-grid [data]="dataItem.ListDetail" [pageable]="false" [actionColumnWidth]="50"
+                      [actionColumnData]="actionColumn" [header]="false" [hasColumnAction]="true"
+                      (btnActionFocus)="onActionColumnFocus($event)" (actionSelected)="onActionClick($event)">
+                      <kendo-grid-column field="FrameSeri" class="first-column" [width]="250">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                          <span>Số khung | </span> {{ dataItem.FrameSeri }}
+                        </ng-template>
+                      </kendo-grid-column>
+                      <kendo-grid-column field="EngineSeri" [width]="250">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                          <span>Số máy | </span> {{ dataItem.EngineSeri }}
+                        </ng-template>
+                      </kendo-grid-column>
+                      <kendo-grid-column field="InsuranceNumber" [width]="250">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                          <span *ngIf="dataItem.InsuranceNumber != null && dataItem.InsuranceNumber != ''">Số bảo hiểm |
+                          </span> {{ dataItem.InsuranceNumber }}
+                        </ng-template>
+                      </kendo-grid-column>
+                      <kendo-grid-column field="InHeadName" [width]="250">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                          <span *ngIf="dataItem.InHeadName != null && dataItem.InHeadName != ''">CH nhận xe | </span> {{
+                          dataItem.InHeadName }}
+                        </ng-template>
+                      </kendo-grid-column>
+                    </ps-kendo-grid>
+                  </div>
+                </ng-template>
+              </ps-kendo-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- START: DELETE DIALOG -->
+    <ps-dialog-confirm [theme]="'error'" [open]="showpopup">
+      <div psDialogConfirmHeader>xoá phiếu giao nhận</div>
+      <div psDialogConfirmBody>
+        <div class="main-title">
+          <span>Bạn có chắc chắn muốn xoá phiếu giao nhận</span>
+          <br>
+          <div class="hightline">{{domaster.DO}}</div>
+        </div>
+        <div class="sub-title">
+          Phiếu giao nhận bị xoá sẽ <span>KHÔNG</span> thể phục hồi
+        </div>
+      </div>
+      <div psDialogConfirmFooter>
+        <ps-kendo-button (onClick)="showpopup = false">huỷ</ps-kendo-button>
+        <ps-kendo-button (onClick)="deletedomaster(domaster)" [theme]="'error'">xoá</ps-kendo-button>
+      </div>
+    </ps-dialog-confirm>
+    <!-- END: DELETE DIALOG -->
+
+    <!-- START: DELETE DIALOG -->
+    <ps-dialog-confirm [theme]="'error'" [open]="showpopupdetail">
+      <div psDialogConfirmHeader>xoá thông tin xe</div>
+      <div psDialogConfirmBody>
+        <div class="main-title">
+          <span>Bạn có chắc chắn muốn xoá thông tin xe</span>
+          <br>
+          <div class="hightline">{{detailactive.VehicleName}}</div>
+          <div class="hightline-detail mt-2">SỐ KHUNG: {{detailactive.FrameSeri}}</div>
+          <div class="hightline-detail">SỐ MÁY: {{detailactive.EngineSeri}}</div>
+        </div>
+        <div class="sub-title">
+          Thông tin xe bị xoá sẽ <span>KHÔNG</span> thể phục hồi
+        </div>
+      </div>
+      <div psDialogConfirmFooter>
+        <ps-kendo-button (onClick)="showpopupdetail = false">huỷ</ps-kendo-button>
+        <ps-kendo-button (onClick)="deletedodetail(detailactive)" [theme]="'error'">xoá</ps-kendo-button>
+      </div>
+    </ps-dialog-confirm>
+    <!-- END: DELETE DIALOG -->
+  </div>
+
+  <ng-container psKendoDrawerTemplate>
+    <div class="body-drawer">
+      <ps-kendo-dropdown-list class="tb_id" [label]="'Dòng xe'" [data]="listtypedata" [textField]="'TypeOfVehicle'"
+        [valueField]="'Code'" [valuePrimitive]="true" [(ngModel)]="detailactive.TypeOfVehicle"
+        (selectChange)="dropdownvehiclechange('type', $event)" [disabled]="actiontype == 'view'">
+      </ps-kendo-dropdown-list>
+      <ps-kendo-dropdown-list class="tb_name" [label]="'Loại xe (*)'" [data]="listvehicle" [textField]="'VehicleName'"
+        [valueField]="'Code'" [valuePrimitive]="true" [(ngModel)]="detailactive.Vehicle"
+        [disabled]="!detailactive.TypeOfVehicle || actiontype == 'view'"
+        (selectChange)="dropdownvehiclechange('vehicle', $event)">
+      </ps-kendo-dropdown-list>
+      <ps-kendo-textbox class="tb_trade" [label]="'Đời xe'" [disabled]="true" [(ngModel)]="detailactive.Version">
+      </ps-kendo-textbox>
+      <ps-kendo-dropdown-list [label]="'Màu xe (*)'" [(ngModel)]="detailactive.VehicleColor" [data]="listcolor"
+        [textField]="'ColorName'" [valueField]="'Code'" [valuePrimitive]="true"
+        [disabled]="!detailactive.Vehicle || actiontype == 'view'"
+        (selectChange)="dropdownvehiclechange('color', $event)">
+      </ps-kendo-dropdown-list>
+      <ps-kendo-textbox [label]="'Số khung (*)'" [(ngModel)]="detailactive.FrameSeri" [disabled]="actiontype == 'view'">
+      </ps-kendo-textbox>
+      <ps-kendo-textbox [label]="'Số máy (*)'" [(ngModel)]="detailactive.EngineSeri" [disabled]="actiontype == 'view'">
+      </ps-kendo-textbox>
+      <ps-kendo-textbox class="tb_trade" [label]="'Số bảo hành'" [(ngModel)]="detailactive.InsuranceNumber"
+        [disabled]="actiontype == 'view'">
+      </ps-kendo-textbox>
+      <ps-kendo-textbox class="tb_trade" [label]="'Thời gian bảo hiểm'" [disabled]="true"
+        [(ngModel)]="detailactive.InsurancePeriod">
+      </ps-kendo-textbox>
+      <ps-kendo-textbox class="tb_trade" [label]="'Số lần bảo trì'" [disabled]="true"
+        [(ngModel)]="detailactive.InsuranceTime">
+      </ps-kendo-textbox>
+      <div class="location-map">
+        <img [src]="detailactive.VehicleImage" alt="">
+      </div>
+    </div>
+  </ng-container>
+  <ng-container psKendoDrawerFooterTemplate>
+    <ps-kendo-button [theme]="'error'"
+      *ngIf="detailactive.Code != 0 && (FPDTO.creator || FPDTO.master) && domaster.StatusID == enumstt.NEW"
+      (onClick)="ondeletedetail()">
+      xoá
+    </ps-kendo-button>
+    <ps-kendo-button [theme]="'primary'"
+      *ngIf="(detailactive.Code != 0 && (FPDTO.creator || FPDTO.master) && domaster.StatusID == enumstt.NEW) && actiontype != 'view'"
+      (onClick)="updatedodetail(detailactive)">
+      cập nhật
+    </ps-kendo-button>
+    <ps-kendo-button [theme]="'primary'"
+      *ngIf="(detailactive.Code == 0 && (FPDTO.creator || FPDTO.master) && domaster.StatusID == enumstt.NEW) && actiontype != 'view'"
+      (onClick)="updatedodetail(detailactive)">
+      tạo mới
+    </ps-kendo-button>
+  </ng-container>
+</ps-kendo-drawer-container>

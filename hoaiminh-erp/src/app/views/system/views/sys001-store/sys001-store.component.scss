@@ -1,0 +1,434 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep
+{
+  sys001-store
+  {
+    ps-dialog-confirm
+    {
+      .k-overlay
+      {
+        z-index: 1001 !important;
+      }
+
+      .main-title
+      {
+        text-align: center;
+
+        .hightline
+        {
+          font-weight: 700;
+          font-size: 16px;
+          line-height: 1;
+          color: $primary;
+        }
+      }
+
+      .sub-title
+      {
+        span
+        {
+          text-transform: uppercase;
+          color: $error;
+        }
+      }
+    }
+
+    ps-kendo-drawer-container
+    {
+      .k-drawer-container
+      {
+        .k-overlay
+        {
+          z-index: 1000;
+        }
+
+        .k-drawer
+        {
+          z-index: 1001;
+
+          .k-drawer-wrapper
+          {
+            .drawer-body
+            {
+              .body-container
+              {
+                .body-drawer
+                {
+                  display: flex;
+                  flex-direction: column;
+                  gap: 15px;
+
+                  .tb_trade .k-input-inner,
+                  .tb_id .k-input-inner
+                  {
+                    color: $primary;
+                    font-weight: 700;
+                  }
+
+                  .group-input
+                  {
+                    display: flex;
+                    gap: 10px;
+
+                    .tb_id
+                    {
+                      width: 150px;
+                    }
+
+                    .group-name-setting
+                    {
+                      width: calc(100% - 160px);
+                      position: relative;
+
+                      .setting-lable
+                      {
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        font-style: italic;
+
+                        label
+                        {
+                          color: $info;
+                          cursor: pointer;
+                        }
+                      }
+                    }
+
+                    .tb_contact
+                    {
+                      width: calc(100% / 2 - 5px);
+                    }
+                  }
+
+                  kendo-label,
+                  label
+                  {
+                    font-size: 13px;
+                    line-height: 1;
+                  }
+
+                  .location-map
+                  {
+                    .map
+                    {
+                      width: 100%;
+                      height: 200px;
+                      margin-top: 5px;
+                      border: 1px dotted $secondary;
+                      border-radius: 5px;
+                      overflow: hidden;
+                      position: relative;
+                      display: flex;
+                      align-items: center;
+
+                      .map-image
+                      {
+                        width: 100%;
+                      }
+
+                      ps-kendo-button
+                      {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+
+                        .k-button-text
+                        {
+                          img
+                          {
+                            width: 16px;
+                            height: 16px;
+                          }
+                        }
+                      }
+
+                    }
+                  }
+
+                  .status-name
+                  {
+                    div
+                    {
+                      margin-top: 5px;
+                    }
+                  }
+                }
+              }
+            }
+
+            .drawer-footer
+            {
+              .group-drawer-button
+              {
+                .group-button
+                {
+                  .status-group
+                  {
+                    display: flex;
+                    gap: 10px;
+                    overflow-x: auto;
+                    height: 100%;
+                    align-items: center;
+                  }
+
+                  .edit-group
+                  {
+                    display: flex;
+                    align-items: center;
+                    padding-right: 10px;
+                    border-right: 1px solid #3c4858;
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        .k-drawer-content
+        {
+          height: 100%;
+          width: 100%;
+          padding-right: 10px;
+
+          .ps-filter-bar
+          {
+            ps-filter-textbox
+            {
+              ps-kendo-textbox
+              {
+                min-width: 210px;
+              }
+            }
+
+            ps-filter-status
+            {
+              .card-content-column
+              {
+                .col-3-4-container
+                {
+                  .col-4
+                  {
+                    .status-btn
+                    {
+                      min-width: 245px;
+                      width: fit-content;
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          .list
+          {
+            height: calc(100% - 121px);
+            width: 100%;
+
+            .k-grid
+            {
+              margin-top: 6px;
+
+              .actionColumn
+              {
+                border-left: none !important;
+              }
+
+              .k-grid-container
+              {
+                .k-grid-content
+                {
+                  .k-grid-table-wrap
+                  {
+                    .k-grid-table
+                    {
+                      .k-table-tbody
+                      {
+                        .k-table-row
+                        {
+                          .k-table-td
+                          {
+                            .store-infor
+                            {
+                              span
+                              {
+                                color: $primary;
+                                font-weight: 700;
+                                font-size: 13px;
+                              }
+
+                              .infor-detail
+                              {
+                                display: flex;
+                                gap: 10px;
+                              }
+                            }
+
+                            .address-infor
+                            {
+                              .infor-full-address
+                              {
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                              }
+
+                              .infor-contact
+                              {
+                                display: flex;
+                                gap: 50px;
+
+                                span
+                                {
+                                  font-weight: 700;
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          .ps-kendo-dialog
+          {
+            z-index: 10000;
+
+            .kendo-dialog
+            {
+              width: 520px;
+
+              .k-popup
+              {
+                .header
+                {
+                  color: $primary;
+                }
+
+                .body
+                {
+                  gap: 8px;
+                  padding: 10px 0px;
+
+                  .body-title
+                  {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 4px;
+                    padding: 0 16px;
+
+                    .title
+                    {
+                      color: $info;
+                      text-transform: uppercase;
+                      font-weight: bold;
+                    }
+                  }
+
+                  .body-content
+                  {
+                    height: calc(100% - 76px);
+                    display: flex;
+                    flex-direction: column;
+                    overflow-y: auto;
+
+                    .content-item
+                    {
+                      display: flex;
+                      justify-content: space-between;
+                      padding: 4px 62px;
+
+                      .item-name
+                      {
+                        width: 55%;
+
+                        .item-name-text,
+                        .item-id-text
+                        {
+                          color: $primary;
+                          font-weight: bold;
+                        }
+
+                        .grop-name .item-name-text
+                        {
+                          color: $secondary;
+                          font-weight: 400;
+                        }
+                      }
+
+                      .status
+                      {
+                        width: 35%;
+                        display: flex;
+                        align-items: center;
+                      }
+
+                      .content-input
+                      {
+                        width: 48px;
+                        display: flex;
+                        align-items: center;
+
+                        input
+                        {
+                          text-align: end;
+                        }
+                      }
+                    }
+
+                    .active
+                    {
+                      background-color: $background-primary;
+                    }
+                  }
+                }
+
+                .footer
+                {
+                  justify-content: flex-start;
+                  padding: 0;
+                  gap: 0;
+                  border: none;
+
+                  & > *
+                  {
+                    width: 50%;
+                    height: 100%;
+
+                    button
+                    {
+                      width: 100%;
+                      height: 100%;
+                      border: none;
+                      border-radius: 0;
+
+                      &:first-child
+                      {
+                        border-top: 1px solid $border;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      ps-dialog-upload
+      {
+        .k-overlay
+        {
+          z-index: 10000 !important;
+        }
+      }
+    }
+  }
+}

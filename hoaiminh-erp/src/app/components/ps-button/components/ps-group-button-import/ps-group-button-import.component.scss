@@ -1,0 +1,92 @@
+@import '../../../../../assets/scss/colors';
+
+::ng-deep
+{
+  ps-group-button-import
+  {
+    .ps-group-button-import
+    {
+      display: flex;
+      gap: 10px;
+
+      ps-kendo-button
+      {
+        display: flex;
+        align-items: center;
+
+        .k-button
+        {
+          .k-button-text
+          {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            line-height: 0;
+
+            img
+            {
+              width: 16px;
+              height: 16px;
+            }
+          }
+        }
+      }
+
+      .import-action
+      {
+        position: relative;
+
+        .k-upload
+        {
+          position: absolute;
+          right: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background-color: transparent;
+          border: none;
+
+          .k-dropzone
+          {
+            padding: 0;
+            background-color: transparent;
+            width: 100%;
+
+            .k-upload-button-wrap
+            {
+              width: 100%;
+
+              .k-upload-button
+              {
+                min-width: 0;
+                width: 100%;
+                border: none;
+                height: 33px;
+
+                &:hover
+                {
+                  background-color: transparent;
+                }
+
+                .k-button-text
+                {
+                  display: none;
+                }
+              }
+            }
+
+            .k-dropzone-hint
+            {
+              display: none;
+            }
+          }
+
+          .k-upload-files
+          {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}

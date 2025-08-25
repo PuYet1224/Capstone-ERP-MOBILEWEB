@@ -1,0 +1,14 @@
+<div class="kendo-dropdown-list">
+  <kendo-label *ngIf="label != ''" class="k-display-block" [for]="dropdownlist" [text]="label">
+  </kendo-label>
+
+  <kendo-dropdownlist #dropdownlist [data]="data1" textField="{{textField}}" valueField="{{valueField}}"
+                      [(ngModel)]="value" (valueChange)="handleValueChange($event)" [valuePrimitive]="valuePrimitive"
+                      (selectionChange)="onSelectChange($event)" (focus)="onFocus()" [itemDisabled]="itemDisabled"
+                      [popupSettings]="popupSettings" [disabled]="disabled" [filterable]="filterable"
+                      (filterChange)="handleFilter($event)">
+    <ng-template kendoDropDownListNoDataTemplate>
+      Không có lựa chọn nào
+    </ng-template>
+  </kendo-dropdownlist>
+</div>

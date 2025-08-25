@@ -1,0 +1,196 @@
+@import './assets/scss/colors';
+
+*
+{
+  font-family: "Mulish", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  color: $secondary;
+
+  &::-webkit-scrollbar
+  {
+    width: 2px !important;
+    height: 2px !important;
+  }
+
+  &::-webkit-scrollbar-track
+  {
+    background: transparent !important;
+  }
+
+  &::-webkit-scrollbar-thumb
+  {
+    background-color: transparent !important;
+    border-radius: 5px !important;
+  }
+
+  &:hover::-webkit-scrollbar-thumb
+  {
+    background-color: $primary !important;
+  }
+
+  .datetime-picker
+  {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    .k-datepicker
+    {
+      height: 35px;
+      border-color: $border;
+      border-radius: 5px;
+      padding-left: 15px;
+      background-color: $disable-input;
+
+      input
+      {
+        font-size: 13px;
+        color: $secondary;
+        font-weight: 400;
+      }
+
+      .k-dateinput
+      {
+        pointer-events: none;
+      }
+
+      .k-input-button
+      {
+        width: 33px;
+        background-color: white;
+      }
+    }
+
+    .k-datepicker:has(kendo-popup)
+    {
+      border: 1px solid $primary;
+    }
+
+    .k-input-solid.k-focus
+    {
+      box-shadow: none;
+    }
+
+    .k-disabled
+    {
+      border-color: $border;
+      background-color: $disable-input;
+      opacity: 1;
+
+      .k-input-button
+      {
+        border-left: none;
+        background-color: transparent;
+      }
+    }
+
+    kendo-label
+    {
+      line-height: 1;
+
+      label
+      {
+        font-size: 13px;
+        font-weight: 400;
+        color: $secondary;
+        line-height: 1;
+      }
+    }
+  }
+
+  .ps-filter-bar
+  {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    border-bottom: 1px solid $border;
+    overflow-x: auto;
+  }
+}
+
+body
+{
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.k-animation-container
+{
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+
+  .k-popup
+  {
+    border: 1px solid $primary;
+    border-radius: 5px;
+    overflow: hidden;
+
+    .k-list
+    {
+      background-color: transparent;
+
+      .k-list-content
+      {
+        overflow: hidden;
+
+        &:hover
+        {
+          overflow: auto;
+        }
+
+        .k-list-ul
+        {
+          .k-list-item
+          {
+            height: 35px;
+
+            &.k-focus
+            {
+              box-shadow: none;
+            }
+
+            &:hover
+            {
+              background-color: $gray-light;
+              z-index: 1;
+            }
+
+            &.k-selected
+            {
+              background-color: $primary;
+              z-index: 0;
+
+              .k-list-item-text
+              {
+                color: $white;
+              }
+            }
+
+            .k-list-item-text
+            {
+              font-size: 13px;
+            }
+          }
+        }
+      }
+    }
+
+    .k-no-data
+    {
+      color: $secondary;
+      font-size: 13px;
+      font-weight: 400;
+      text-transform: uppercase;
+    }
+  }
+}
+
+.required-icons
+{
+  color: $error;
+  font-size: 8px;
+}

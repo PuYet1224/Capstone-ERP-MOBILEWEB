@@ -1,0 +1,11 @@
+<div class="ps-dialog-confirm" *ngIf="open">
+  <div class="k-overlay"></div>
+  <kendo-popup [class]="'confirm-dialog ' + (theme !== '' ? 'ps-dialog-' + theme : '')" [animate]="{
+        type: 'fade',
+        duration: 0,
+      }">
+    <ng-content select="[psDialogConfirmHeader]"></ng-content>
+    <ng-content select="[psDialogConfirmBody]"></ng-content>
+    <ng-content select="[psDialogConfirmFooter]"></ng-content>
+  </kendo-popup>
+</div>

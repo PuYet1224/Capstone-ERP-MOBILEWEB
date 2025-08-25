@@ -1,0 +1,6 @@
+<div class="radio-checkbox">
+  <label [for]="id" *ngIf="labelPosition == 'left'">{{label}}</label>
+  <input type="radio" [disabled]="disabled" [name]="name" [id]="id" [value]="value" [checked]="isChecked()"
+         (change)="setValue()">
+  <label [for]="id" *ngIf="labelPosition == 'right'">{{label}}</label>
+</div>

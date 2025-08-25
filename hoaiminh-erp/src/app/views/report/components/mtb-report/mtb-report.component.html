@@ -1,0 +1,89 @@
+<div class="mtb-report">
+    <!-- START: HEADER TOOL -->
+    <ps-toolbar-top> </ps-toolbar-top>
+    <!-- END: HEADER TOOL -->
+
+    <!-- START: FILTER -->
+    <div class="ps-filter-bar">
+        <ps-filter-textbox [placeholder]="'Tìm kiếm mã báo cáo bán hàng'" [listField]="listfiltertext"
+            (onFilter)="textFilterChange($event)">
+        </ps-filter-textbox>
+    </div>
+
+    <!-- LIST -->
+    <div class="list">
+        <ps-kendo-grid [data]="data | async" [actionColumnWidth]="50" [actionColumnData]="actionColumn"
+            (btnActionFocus)="onActionColumnFocus($event)" [hasColumnAction]="true"
+            (actionSelected)="onActionClick($event)" [pageable]="false">
+            <!-- Mã báo cáo -->
+            <kendo-grid-column [width]="100" field="ID" title="Mã báo cáo" class="hightline">
+            </kendo-grid-column>
+
+            <!-- Tên báo cáo -->
+            <kendo-grid-column [width]="250" field="Name" title="Tên báo cáo" class="hightline">
+            </kendo-grid-column>
+
+            <!-- Diễn giải -->
+            <kendo-grid-column [width]="400" field="Description" title="Diễn giải" class="col-description">
+            </kendo-grid-column>
+        </ps-kendo-grid>
+    </div>
+    <!-- END: FILTER -->
+
+    <!-- EXPORT DIALOG -->
+    <ps-dialog-confirm [open]="showpopup">
+        <div psDialogConfirmHeader>ĐIỀU KIỆN XUẤT BÁO CÁO</div>
+        <div psDialogConfirmBody class="confirm-dialog-body">
+            <ps-kendo-dropdown-list
+                *ngIf="typeOfpopup != SysDataTypePopupEnum.NoneHead && typeOfpopup == itemAction.TypePopup"
+                [label]="'Cửa hàng xuất báo cáo'" [data]="listhead" [textField]="'BriefName'" [valueField]="'Code'"
+                [valuePrimitive]="true" [popupSettings]="{ appendTo: 'root' }" (valueChange)="onstorechange($event)"
+                [(ngModel)]="selectedStore">
+            </ps-kendo-dropdown-list>
+            <div class="row-2">
+                <ps-kendo-dropdown-list [label]="'Kỳ xuất báo cáo'" [data]="listTypeOfReport" [textField]="'Name'"
+                    [valueField]="'Code'" [valuePrimitive]="true" [(ngModel)]="selectedTypeOfReport"
+                    [popupSettings]="{ appendTo: 'root' }" (valueChange)="onTypeOfReportChanged($event)"
+                    [disabled]="typeOfpopup == 4 && typeOfpopup == itemAction.TypePopup || typeOfpopup == 5 && typeOfpopup == itemAction.TypePopup|| typeOfpopup == 6 && typeOfpopup == itemAction.TypePopup|| typeOfpopup == 7 && typeOfpopup == itemAction.TypePopup">
+                </ps-kendo-dropdown-list>
+                <div class="time">
+                    <kendo-label text="Thời gian ">
+                        <span *ngIf="isDay">(ngày)</span>
+                        <span *ngIf="isMonth">(năm - tháng)</span>
+                        <span *ngIf="isQuarter">(năm - quý)</span>
+                        <span *ngIf="isYear">(năm)</span>
+                    </kendo-label>
+                    <div class="datetime-picker">
+                        <kendo-datepicker *ngIf="selectedTypeOfReport == TypeDuration.DAY" placeholder="dd/MM/yyyy"
+                            format="dd/MM/yyyy" [readOnlyInput]="true" calendarType="classic"
+                            (valueChange)="ondatechange($event)" [(ngModel)]="selectedDay"
+                            [popupSettings]="{ appendTo: 'root' }" [max]="maxDate">
+                        </kendo-datepicker>
+                    </div>
+                    <div class="box-time">
+                        <ps-kendo-dropdown-list
+                            *ngIf="selectedTypeOfReport == TypeDuration.MONTH || selectedTypeOfReport == TypeDuration.QUARTER || selectedTypeOfReport == TypeDuration.YEAR"
+                            [data]="listYear" [textField]="'Name'" [valueField]="'Code'" [valuePrimitive]="true"
+                            [(ngModel)]="selectedYear" [popupSettings]="{ appendTo: 'root' }"
+                            (valueChange)="onYearChange($event)">
+                        </ps-kendo-dropdown-list>
+
+                        <ps-kendo-dropdown-list
+                            *ngIf="selectedTypeOfReport == TypeDuration.MONTH || selectedTypeOfReport == TypeDuration.QUARTER"
+                            [data]=" listDataMonthAndQuarterFilter" [textField]="'Name'" [valueField]="'Code'"
+                            [valuePrimitive]="true" [(ngModel)]="selectedMonthOrQuarter"
+                            [popupSettings]="{ appendTo: 'root' }">
+                        </ps-kendo-dropdown-list>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div psDialogConfirmFooter class="confirm-dialog-footer">
+            <ps-kendo-button class="cancel-button" (onClick)="showpopup = false">huỷ</ps-kendo-button>
+            <ps-kendo-button class="export-button" [theme]="'primary'"
+                (onClick)="uploadScan(action == 'pdf' ? 'ExportExcelPDF' : 'ExportExcel')">xuất báo
+                cáo</ps-kendo-button>
+        </div>
+    </ps-dialog-confirm>
+    <!-- EXPORT DIALOG -->
+</div>

@@ -1,0 +1,45 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep
+{
+  ps-filter-button
+  {
+    .card-content-column
+    {
+      display: flex;
+      gap: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      height: 56px;
+      width: 100%;
+
+      .btn-group
+      {
+        display: flex;
+        gap: 10px;
+        padding-top: 21px;
+
+        ps-kendo-button
+        {
+          button
+          {
+            width: 35px;
+          }
+        }
+      }
+
+      .button
+      {
+        width: 35px;
+
+        .k-button
+        {
+          box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+          border: none;
+          background: $white;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+<div class="kendo-datepicker">
+  <kendo-label *ngIf="label != ''" class="k-display-block" [for]="datepicker" text="{{label}}"></kendo-label>
+  <kendo-datepicker #datepicker [readOnlyInput]="true" (keydown.Enter)="onKeydownEnter()" [format]="'dd/MM/yyyy'"
+    (valueChange)="handleDateChange($event)" placeholder="{{placeholder}}" (blur)="onBlur()" (focus)="onFocus()"
+    [(ngModel)]="value" [disabled]="disabled" [style.width.px]="width" [ngClass]="{'hasPrefix': hasPrefix}">
+    <ng-template kendoTextBoxPrefixTemplate *ngIf="hasPrefix">
+      <ng-content select="[kendoTextBoxPrefixTemplate]"></ng-content>
+    </ng-template>
+  </kendo-datepicker>
+</div>

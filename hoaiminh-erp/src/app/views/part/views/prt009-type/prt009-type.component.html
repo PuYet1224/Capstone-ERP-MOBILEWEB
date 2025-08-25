@@ -1,0 +1,90 @@
+<div class="prt009">
+  <!-- NAVIGATION BAR -->
+  <ps-toolbar-top>
+    <ps-kendo-button *ngIf="isMaster || isCreator" [theme]="'primary'" (onClick)="createCategory()">
+      tạo mới
+    </ps-kendo-button>
+
+  </ps-toolbar-top>
+  <!-- START: FILTER-BAR -->
+  <div class="ps-filter-bar">
+    <ps-filter-textbox [placeholder]="'Tìm kiếm dữ liệu phân loại phụ tùng'" [listField]="listfiltertext"
+                       (onFilter)="textFilterChange($event)">
+    </ps-filter-textbox>
+    <div class="io-type-container">
+      <kendo-label text="Phân nhóm"></kendo-label>
+      <ps-kendo-dropdown-list class="filter-iotype" [data]="typeMasterList" textField="Category"
+                              [(ngModel)]='selectedCategoryId' (valueChange)="onCategoryChange($event)">
+      </ps-kendo-dropdown-list>
+    </div>
+    <ps-filter-button (reset)="resetFilter()" (clear)="resetFilter()"></ps-filter-button>
+  </div>
+  <!-- END: FILTER-BAR -->
+
+  <!-- LIST -->
+  <div class="list">
+    <ps-kendo-grid #grid [data]="data | async" [actionColumnWidth]="50" [actionColumnData]="actionColumn"
+                   (btnActionFocus)="onActionColumnFocus($event)" [hasColumnAction]="true"
+                   (actionSelected)="onActionClick($event)" (pageChanged)="onPageChanged($event)" [skip]="skip">
+
+      <kendo-grid-column [width]="200" title="Phân loại phụ tùng">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <div class="outbound-name">{{ dataItem.TypeOfPart }}</div>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column [width]="120" title="Phân nhóm">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <div class="type-name">{{ dataItem.CategoryName }}</div>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column [width]="120" title="Phân loại chi tiết">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <div class="type-name">
+            {{ dataItem.ListSpecs?.join(', ') }}
+          </div>
+        </ng-template>
+      </kendo-grid-column>
+
+
+      <kendo-grid-column [width]="75" title="Thứ tự hiển thị" class="orderby-display">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <div class="type-name">{{ dataItem.OrderBy }}</div>
+        </ng-template>
+      </kendo-grid-column>
+
+      <kendo-grid-column [width]="400" title="Diễn giải" class="col-description">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <div class="type-description">{{ dataItem.Description }}</div>
+        </ng-template>
+      </kendo-grid-column>
+
+      <kendo-grid-column title="Ngày tạo" [width]="100" [sticky]="true" class="col-created-time-column">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <span class="created-cell">
+            {{ dataItem.CreateTime | date:'dd/MM/yyyy' }}
+          </span>
+        </ng-template>
+      </kendo-grid-column>
+    </ps-kendo-grid>
+  </div>
+
+  <!-- DELETE DIALOG -->
+  <ps-dialog-confirm theme="error" [open]="popupConfirmOpen">
+    <div psDialogConfirmHeader>xoá phân loại phụ tùng</div>
+    <div psDialogConfirmBody>
+      <div class="main-title">
+        <span>Bạn có chắc chắn muốn xoá phân loại phụ tùng</span><br />
+        <div class="hightline">{{ deleteItem?.TypeOfPart }}</div>
+      </div>
+      <div class="sub-title">
+        Phân loại phụ tùng bị xoá sẽ <span>KHÔNG</span> thể phục hồi
+      </div>
+    </div>
+    <div psDialogConfirmFooter>
+      <ps-kendo-button class="cancel-button" (onClick)="popupConfirmOpen = false">huỷ</ps-kendo-button>
+      <ps-kendo-button theme="error" (onClick)="DeleteTypeOfPart([deleteItem!])">
+        xoá
+      </ps-kendo-button>
+    </div>
+  </ps-dialog-confirm>
+</div>

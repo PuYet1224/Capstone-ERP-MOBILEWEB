@@ -1,0 +1,82 @@
+@import '../assets/scss/colors';
+
+::ng-deep
+{
+  kendo-notification-container
+  {
+    .k-notification-group
+    {
+      bottom: 10px !important;
+      left: 10px !important;
+      width: 50%;
+      max-width: 500px;
+
+      .k-notification-container
+      {
+        .k-notification
+        {
+          min-height: 35px;
+          background-color: $white;
+          box-shadow: 2px 2px 0px 0px $secondary;
+          border-color: $secondary;
+
+          .k-notification-status,
+          .k-notification-content
+          {
+            font-size: 13px;
+            line-height: 1;
+            color: $secondary;
+          }
+
+          &.k-notification-success
+          {
+            box-shadow: 2px 2px 0px 0px $success;
+            border-color: $success;
+
+            .k-notification-status,
+            .k-notification-content
+            {
+              color: $success;
+            }
+          }
+
+          &.k-notification-error
+          {
+            box-shadow: 2px 2px 0px 0px $error;
+            border-color: $error;
+
+            .k-notification-status,
+            .k-notification-content
+            {
+              color: $error;
+            }
+          }
+
+          &.k-notification-warning
+          {
+            box-shadow: 2px 2px 0px 0px $warning;
+            border-color: $warning;
+
+            .k-notification-status,
+            .k-notification-content
+            {
+              color: $warning;
+            }
+          }
+
+          &.k-notification-info
+          {
+            box-shadow: 2px 2px 0px 0px $info;
+            border-color: $info;
+
+            .k-notification-status,
+            .k-notification-content
+            {
+              color: $info;
+            }
+          }
+        }
+      }
+    }
+  }
+}

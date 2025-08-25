@@ -1,0 +1,131 @@
+@import '../../../../../assets/scss/colors';
+
+::ng-deep
+{
+  ps-kendo-button
+  {
+    .k-button
+    {
+      &:hover
+      {
+        filter: brightness(1.1)
+      }
+
+      &:focus
+      {
+        box-shadow: none;
+      }
+
+      height: 35px;
+      border-color: $secondary;
+      box-shadow: none;
+      background-color: transparent;
+      padding: 0 10px;
+      border-radius: 5px;
+
+      .k-button-text
+      {
+        font-size: 13px;
+        font-weight: 700;
+        color: $secondary;
+        text-transform: uppercase;
+        line-height: 1;
+        display: flex;
+      }
+    }
+
+    .primary,
+    .primary:hover
+    {
+      border-color: $primary;
+      background-color: $primary;
+
+      .k-button-text
+      {
+        color: $white;
+      }
+    }
+
+    .primary-outline,
+    .primary-outline:hover
+    {
+      border-color: $primary;
+
+      .k-button-text,
+      .k-icon-wrapper-host .k-button-icon
+      {
+        color: $primary;
+      }
+    }
+
+    .error,
+    .error:hover
+    {
+      border-color: $error;
+      background-color: $error;
+
+      .k-button-text
+      {
+        color: $white;
+      }
+    }
+
+    .error-outline:hover,
+    .error-outline
+    {
+      border-color: $error;
+
+      .k-button-text,
+      .k-icon-wrapper-host .k-button-icon
+      {
+        color: $error;
+      }
+    }
+
+    .warning,
+    .warning:hover
+    {
+      border-color: $warning;
+      background-color: $warning;
+
+      .k-button-text
+      {
+        color: $white;
+      }
+    }
+
+    .warning-outline,
+    .warning-outline:hover
+    {
+      border-color: $warning;
+
+      .k-button-text
+      {
+        color: $warning;
+      }
+    }
+
+    .info,
+    .info:hover
+    {
+      border-color: $info;
+      background-color: $info;
+
+      .k-button-text
+      {
+        color: $white;
+      }
+    }
+
+    .info-outline,
+    .info-outline:hover
+    {
+      border-color: $info;
+
+      .k-button-text
+      {
+        color: $info;
+      }
+    }
+  }
+}

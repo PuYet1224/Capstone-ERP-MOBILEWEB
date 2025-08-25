@@ -1,0 +1,62 @@
+@import '../../../../../assets/scss/colors';
+
+::ng-deep
+{
+    ps-footer
+    {
+        .footer
+        {
+            height: 25px;
+            display: flex;
+            padding-left: 15px;
+            justify-content: space-between;
+            font-size: 12px;
+            color: $secondary;
+            position: relative;
+
+            // &::after
+            // {
+            //     height: 1px;
+            //     width: 230px;
+            //     top: 0;
+            //     content: "";
+            //     position: absolute;
+            //     background-color: $border;
+            // }
+
+            &.footer-collapse
+            {
+                &::after
+                {
+                    width: 50px;
+                }
+            }
+
+            .footer-right,
+            .footer-left
+            {
+                display: flex;
+                align-items: center;
+
+                a
+                {
+                    color: $info;
+                    text-decoration: none;
+
+                    span
+                    {
+                        &:first-child
+                        {
+                            color: $logo-primary;
+                        }
+
+                        &:last-child
+                        {
+                            color: $primary;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

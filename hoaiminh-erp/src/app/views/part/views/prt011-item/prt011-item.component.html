@@ -1,0 +1,131 @@
+<div class="prt011">
+    <!-- NAVIGATION BAR -->
+    <ps-toolbar-top>
+        <ps-kendo-button *ngIf="FunctionPermissionDTO.master || FunctionPermissionDTO.creator" [theme]="'primary'"
+                         (onClick)="createPartItem()">
+            tạo mới
+        </ps-kendo-button>
+
+    </ps-toolbar-top>
+
+
+    <!-- START: FILTER-BAR -->
+    <div class="ps-filter-bar">
+        <ps-filter-textbox [placeholder]="'Tìm kiếm dữ liệu phụ tùng'" [listField]="listfiltertext"
+                           (onFilter)="textFilterChange($event)">
+        </ps-filter-textbox>
+        <div class="io-type-container">
+            <kendo-label text="Phân nhóm phụ tùng"></kendo-label>
+            <ps-kendo-dropdown-list [data]="typeMasterList" textField="Category" valueField="Code"
+                                    [(ngModel)]="selectedCategoryId" (valueChange)="onCategoryChange($event)" [filterable]="true">
+            </ps-kendo-dropdown-list>
+        </div>
+        <div class="io-type-container">
+            <kendo-label text="Phân loại phụ tùng"></kendo-label>
+            <ps-kendo-dropdown-list [data]="filteredTypes" textField="TypeOfPart" valueField="Code"
+                                    [(ngModel)]="selectedTypeOfPartId" (valueChange)="onTypeOfPartChange($event)"
+                                    [disabled]="!selectedCategoryId?.Code" [filterable]="true">
+            </ps-kendo-dropdown-list>
+        </div>
+
+        <div class="io-type-container">
+            <kendo-label text="Phụ tùng theo xe"></kendo-label>
+            <ps-kendo-dropdown-list [data]="vehicleDropdown" textField="text" valueField="id"
+                                    [(ngModel)]="selectedVehicleId" (valueChange)="onVehicleChange($event)" [valuePrimitive]="true">
+            </ps-kendo-dropdown-list>
+
+        </div>
+
+        <div class="io-type-container">
+            <kendo-label text="Tình trạng kinh doanh"></kendo-label>
+            <ps-kendo-dropdown-list class="business-status-dropdown" [data]="businessStatuses" textField="text"
+                                    valueField="id" [valuePrimitive]="true" [(ngModel)]="selectedBusinessStatus"
+                                    (valueChange)="onStatusChange($event)">
+            </ps-kendo-dropdown-list>
+        </div>
+
+
+        <div class="io-type-container status-checkbox">
+            <kendo-label text="Lọc theo" class="k-display-block"></kendo-label>
+            <div class="filters-wrapper">
+                <input type="checkbox" id="official" [checked]="filterOfficial" (change)="onOfficialChange($event)"
+                       class="filter-checkbox" />
+                <label for="official" class="filter-text">Chính hãng</label>
+                <input type="checkbox" id="external" [checked]="filterExternal" (change)="onExternalChange($event)"
+                       class="filter-checkbox" />
+                <label for="external" class="filter-text">Phụ kiện ngoài</label>
+            </div>
+        </div>
+
+    </div>
+    <!-- LIST -->
+    <div class="list">
+        <ps-kendo-grid #grid [data]="data | async" [actionColumnWidth]="50" [actionColumnData]="actionColumn"
+                       (btnActionFocus)="onActionColumnFocus($event)" [hasColumnAction]="true"
+                       (actionSelected)="onActionClick($event)" (pageChanged)="onPageChanged($event)" [skip]="skip">
+
+            <kendo-grid-column [width]="254" title="Phụ tùng" filter="text">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    <div class="part-item-cell">
+                        <div class="part-thumb-spacer"></div>
+                        <div class="part-info">
+                            <div class="part-name">{{ dataItem.TypePartItemName }}</div>
+                            <div class="part-code text-muted">
+                                {{ dataItem.Barcode }}
+                                <ng-container *ngIf="dataItem.Poscode">
+                                    | {{ dataItem.Poscode }}
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column title="Phân loại" [width]="170">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ dataItem.TypeOfPartName }}
+                </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column title="Phân nhóm" [width]="150">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ dataItem.PartCategoryName}}
+                </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column title="Đơn vị tính" [width]="100">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ dataItem.BaseUnit }}
+                </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column title="Nhà sản xuất" [width]="200">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ dataItem.Manufacturer }}
+                </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column field="IsHonda" title="Chính hãng" [width]="120">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ dataItem.IsHonda === true
+                    ? 'Chính hãng'
+                    : dataItem.IsHonda === false
+                    ? 'Phụ kiện ngoài'
+                    : ''}}
+                </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column title="Loại xe phù hợp" [width]="360" filter="text">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ dataItem.ListVehicleName?.join(', ') }}
+                </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column title="Tình trạng kinh doanh" [width]="207" [sticky]="true">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    <div
+                        [innerHTML]="{StatusWhole: dataItem.StatusWhole,StatusWholeName: dataItem.StatusWholeName} | LSTypeOfPartOfStatus">
+                    </div>
+                </ng-template>
+            </kendo-grid-column>
+        </ps-kendo-grid>
+    </div>
+</div>

@@ -1,0 +1,197 @@
+@import '../../../../../assets/scss/colors';
+
+::ng-deep
+{
+  ps-kendo-dropdown-list
+  {
+    .kendo-dropdown-list
+    {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+
+      kendo-label
+      {
+        line-height: 1;
+
+        .k-label
+        {
+          line-height: 1;
+          color: $secondary;
+          font-size: 13px;
+        }
+      }
+
+      .k-dropdownlist
+      {
+        height: 35px;
+        border-color: $border;
+        background-color: $white;
+        border-radius: 5px;
+        opacity: 1;
+        background-image: none;
+
+        &.k-forcus,
+        &:focus-within,
+        &:hover
+        {
+          box-shadow: none;
+          border-color: $primary;
+        }
+
+        &.k-disabled
+        {
+          opacity: 1;
+          background-color: $disable-input;
+        }
+
+        .k-input-inner
+        {
+          .k-input-value-text
+          {
+            font-size: 13px;
+            color: $secondary;
+            padding: 0;
+          }
+        }
+
+        .k-button
+        {
+          width: 25px;
+
+          .k-icon-wrapper-host
+          {
+            .k-icon
+            {
+              color: transparent;
+              background-image: url(../../../../../assets/images/icons/arrow_dropdown.icon.png);
+              transform: rotate(180deg)
+            }
+          }
+        }
+
+        &:has(.k-animation-container)
+        {
+          .k-button
+          {
+            .k-icon-wrapper-host
+            {
+              .k-icon
+              {
+                transform: rotate(0deg)
+              }
+            }
+          }
+        }
+
+        .k-animation-container
+        {
+          background-color: transparent;
+
+          .k-popup
+          {
+            border: 1px solid $primary;
+            border-radius: 5px;
+
+            .k-list-filter
+            {
+              height: 45px;
+              padding: 5px;
+
+              .k-searchbox
+              {
+                height: 100%;
+                border-color: $border;
+                box-shadow: none;
+
+                .k-icon
+                {
+                  width: 33px;
+                  height: 33px;
+                }
+              }
+
+              .k-input-solid:focus-within,
+              .k-input-solid:hover
+              {
+                border-color: $primary;
+              }
+            }
+
+            .k-list
+            {
+              background-color: transparent;
+
+              .k-list-content
+              {
+                overflow: hidden;
+
+                &:hover
+                {
+                  overflow: auto;
+                }
+
+                .k-list-ul
+                {
+                  gap: 5px;
+                  display: flex;
+                  flex-direction: column;
+
+                  .k-list-item
+                  {
+                    height: 35px;
+
+                    &:first-child
+                    {
+                      margin-top: 0;
+                    }
+
+                    &.k-focus
+                    {
+                      box-shadow: none;
+                    }
+
+                    &:hover
+                    {
+                      background-color: $gray-light;
+                      z-index: 1;
+                    }
+
+                    &.k-selected
+                    {
+                      background-color: $primary;
+                      z-index: 0;
+
+                      .k-list-item-text
+                      {
+                        color: $white;
+                      }
+                    }
+
+                    .k-list-item-text
+                    {
+                      font-size: 13px;
+                    }
+                  }
+
+                  kendo-resize-sensor
+                  {
+                    display: none;
+                  }
+                }
+              }
+            }
+
+            .k-no-data
+            {
+              color: $secondary;
+              font-size: 13px;
+              font-weight: 400;
+              text-transform: uppercase;
+            }
+          }
+        }
+      }
+    }
+  }
+}

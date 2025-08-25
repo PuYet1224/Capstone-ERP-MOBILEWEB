@@ -1,0 +1,17 @@
+<div class="main-layout">
+    <div class="layout-header">
+        <ps-header [data]="datamodule" (selectModule)="onSelectModule($event)"></ps-header>
+    </div>
+    <div class="layout-content">
+        <ps-sub-layout [data]="datadrawer">
+            <router-outlet *ngIf="isLoaded"></router-outlet>
+        </ps-sub-layout>
+        <div class="content-loader" *ngIf="!isLoaded">
+            <div class="k-overlay"></div>
+            <kendo-loader [type]="'converging-spinner'" [themeColor]="'secondary'"></kendo-loader>
+        </div>
+    </div>
+    <div class="layout-footer">
+        <ps-footer></ps-footer>
+    </div>
+</div>

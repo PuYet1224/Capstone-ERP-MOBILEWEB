@@ -1,0 +1,141 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep {
+  mtb005-delivery {
+    ps-dialog-confirm {
+      .main-title {
+        text-align: center;
+
+        .hightline {
+          font-weight: 700;
+          font-size: 16px;
+          line-height: 1;
+          color: $primary;
+        }
+      }
+
+      .sub-title {
+        span {
+          text-transform: uppercase;
+          color: $error;
+        }
+      }
+    }
+
+    .mtb005-delivery {
+      width: 100%;
+      height: 100%;
+      padding-right: 10px;
+
+      .ps-filter-bar {
+        ps-filter-textbox {
+          .filter-textbox {
+            ps-kendo-textbox {
+              .kendo-textbox {
+                min-width: 270px;
+              }
+            }
+          }
+        }
+
+        ps-kendo-dropdown-list {
+          min-width: 200px;
+        }
+      }
+
+      .list {
+        position: relative;
+        height: calc(100% - 121px);
+
+        ps-kendo-grid {
+          .actionColumn {
+            border-left: none !important;
+          }
+
+          kendo-grid {
+            margin-top: 6px;
+
+            .k-grid-aria-root {
+              .k-grid-header {
+                .k-grid-header-wrap {
+                  .k-grid-header-table {
+                    .k-table-thead {
+                      tr {
+
+                        th:nth-of-type(3),
+                        th:nth-of-type(5) {
+                          justify-content: center;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+
+              kendo-grid-list {
+                .k-grid-content {
+                  .k-grid-table-wrap {
+                    table {
+                      tbody {
+                        tr {
+
+                          .list-col-3,
+                          .list-col-5 {
+                            text-align: center;
+                          }
+
+                          .list-col-1 {
+                            .delivery-code {
+                              font-weight: bold;
+                              color: $primary;
+                            }
+                          }
+
+                          .list-col-2 {
+                            .order-partner {
+                              font-weight: bold;
+                              color: $primary;
+                            }
+
+                            .cus-name {
+                              font-weight: bold;
+                              color: $primary;
+                            }
+                          }
+
+                          .list-col-3 {
+                            .order-store {
+                              font-weight: bold;
+                              color: $primary;
+                            }
+                          }
+
+                          .list-col-4 {
+
+                            .total-detail:first-child,
+                            .total-detail:first-child .line-infor {
+                              font-weight: bold;
+                              color: $primary;
+                            }
+
+                            .total-detail {
+                              display: flex;
+
+                              .line-infor {
+                                width: 55px;
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+<div class="ps-group-button-import">
+  <ps-kendo-button [theme]="'primary-outline'" (onClick)="onGetTemplate()" [disabled]="disabledDown">
+    <img src="../../../../../assets/images/icons/template.png" alt />
+    {{actionDownName}}
+  </ps-kendo-button>
+  <ps-kendo-button [theme]="'primary-outline'" [disabled]="disabledUp" class="import-action">
+    <img src="../../../../../assets/images/icons/import.png" alt />
+    {{actionUpName}}
+    <kendo-fileselect accept=".xls,.xlsx" [multiple]="false" [showFileList]="false"
+                      [restrictions]="{ allowedExtensions: ['.xls', '.xlsx']}" (select)="onSelectFile($event)">
+    </kendo-fileselect>
+  </ps-kendo-button>
+</div>

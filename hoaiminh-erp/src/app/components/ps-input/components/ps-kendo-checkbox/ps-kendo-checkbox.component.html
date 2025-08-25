@@ -1,0 +1,6 @@
+<div class="checkbox">
+  <label [for]="id" *ngIf="labelPosition == 'left'">{{label}}</label>
+  <input type="checkbox" [disabled]="disabled" [name]="name" [id]="id" [checked]="innerValue"
+         (change)="setValue()">
+  <label [for]="id" *ngIf="labelPosition == 'right'">{{label}}</label>
+</div>

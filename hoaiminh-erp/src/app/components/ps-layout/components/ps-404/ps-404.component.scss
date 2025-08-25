@@ -1,0 +1,39 @@
+@import '../../../../../assets/scss/colors';
+
+::ng-deep
+{
+    ps-404
+    {
+        .page-404
+        {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: bold;
+            color: $gray-300;
+
+            div
+            {
+                width: 80%;
+                height: 80%;
+                display: flex;
+                justify-content: center;
+
+                img
+                {
+                    margin-top: -10px;
+                    height: 100%;
+                }
+            }
+
+            p
+            {
+                font-size: 50px;
+                color: $gray-300;
+            }
+        }
+    }
+}
