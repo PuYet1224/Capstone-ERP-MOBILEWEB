@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ResponseDTO } from 'src/app/models/dtos/reponse.dto';
-import { PSAPIService } from '../core/ps-api.service';
 import { SystemApiStaticService } from './layout-api-static.service';
 import { FunctionPermissionDTO } from 'src/app/models/dtos/function-permission.dto';
-import { PSCache } from '../utilities/ps-cache';
 import { KeyLocalStorageEnum } from 'src/app/models/enums/key-local-storage.enum';
 import { ConfigDTO } from 'src/app/models/dtos/config.dto';
+import { APIService } from '../core/api.service';
+import { PsCache } from '../utilities/ps-cache';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class LayoutApiService {
-  constructor(public api: PSAPIService, private cache: PSCache) { }
+  constructor(public api: APIService, private cache: PsCache) { }
 
   public GetHead() {
     let that = this;

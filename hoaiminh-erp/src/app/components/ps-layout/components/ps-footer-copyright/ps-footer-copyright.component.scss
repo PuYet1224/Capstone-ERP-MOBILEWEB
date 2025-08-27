@@ -1,0 +1,40 @@
+@import '../../../../../assets/scss/colors';
+
+::ng-deep
+{
+    ps-footer-copyright
+    {
+        .footer-copyright
+        {
+            width: 100%;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            padding-top: 4px;
+
+            .right-copyright
+            {
+                font-size: 13px;
+
+                a
+                {
+                    color: $info;
+                    text-decoration: none;
+
+                    span
+                    {
+                        &:first-child
+                        {
+                            color: $logo-primary;
+                        }
+
+                        &:last-child
+                        {
+                            color: $primary;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

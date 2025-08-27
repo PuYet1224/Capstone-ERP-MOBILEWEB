@@ -1,5 +1,21 @@
 @import './assets/scss/colors';
 
+input:-webkit-autofill
+{
+  background-color: white !important;
+  /* hoặc màu bạn muốn */
+  -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+  -webkit-text-fill-color: #000 !important;
+  /* màu chữ */
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+input:-webkit-autofill:focus
+{
+  -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+  -webkit-text-fill-color: #000 !important;
+}
+
 *
 {
   font-family: "Mulish", serif;
@@ -20,13 +36,8 @@
 
   &::-webkit-scrollbar-thumb
   {
-    background-color: transparent !important;
-    border-radius: 5px !important;
-  }
-
-  &:hover::-webkit-scrollbar-thumb
-  {
     background-color: $primary !important;
+    border-radius: 5px !important;
   }
 
   .datetime-picker
@@ -98,24 +109,19 @@
       }
     }
   }
-
-  .ps-filter-bar
-  {
-    height: 70px;
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    border-bottom: 1px solid $border;
-    overflow-x: auto;
-  }
 }
 
-body
+html
 {
-  height: 100vh;
-  width: 100vw;
-  margin: 0;
-  overflow-x: hidden;
+  height: 100%;
+
+  body
+  {
+    height: 100%;
+    width: 100vw;
+    margin: 0;
+    overflow-x: hidden;
+  }
 }
 
 .k-animation-container

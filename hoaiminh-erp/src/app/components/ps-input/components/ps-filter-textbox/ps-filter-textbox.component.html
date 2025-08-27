@@ -1,7 +1,0 @@
-<div class="filter-textbox">
-  <ps-kendo-textbox (keydownEnter)="onKeydownEnter()" [label]="hasLabel ? 'Bộ lọc dữ liệu' : ''" [(ngModel)]="value"
-                    [hasPrefix]="true" [placeholder]="placeholder">
-    <span kendoTextBoxPrefixTemplate class="k-icon k-font-icon k-i-search"></span>
-  </ps-kendo-textbox>
-  <ps-kendo-button [ngClass]="{ 'not-label': !hasLabel }" [theme]="'info'" (onClick)="oFilter()">lọc</ps-kendo-button>
-</div>

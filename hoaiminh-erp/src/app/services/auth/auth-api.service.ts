@@ -1,14 +1,14 @@
 import { HttpParams, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import { PSAPIService } from '../core/ps-api.service';
+import { APIService } from '../core/api.service';
 import { PSObject } from '../utilities/ps-object';
-import { PSCache } from '../utilities/ps-cache';
 import { KeyLocalStorageEnum } from 'src/app/models/enums/key-local-storage.enum';
 import { ConfigDTO } from 'src/app/models/dtos/config.dto';
 import { TokenDTO } from 'src/app/models/dtos/token.dto';
 import { AuthApiStaticService } from './auth-api-static.service';
 import { PSDate } from '../utilities/ps-date';
+import { PsCache } from '../utilities/ps-cache';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +16,8 @@ import { PSDate } from '../utilities/ps-date';
 export class AuthApiService {
   public isRefreshing = false;
 
-  constructor(private apiService: PSAPIService,
-    private cache: PSCache
+  constructor(private apiService: APIService,
+    private cache: PsCache
   ) { }
 
   public token(username, password): Observable<any> {

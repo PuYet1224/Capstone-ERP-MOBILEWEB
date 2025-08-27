@@ -1,7 +1,35 @@
 @import '../assets/scss/colors';
+@import url("../assets/scss/bb19d54e8524292edf3d62bc2a5e3ba2.css");
 
 ::ng-deep
 {
+  .app
+  {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+  }
+
+  .background-cus
+  {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    section
+    {
+      padding: 40px 0 !important;
+
+      svg
+      {
+        width: 100vw !important;
+        height: 30% !important;
+      }
+    }
+  }
+
   kendo-notification-container
   {
     .k-notification-group

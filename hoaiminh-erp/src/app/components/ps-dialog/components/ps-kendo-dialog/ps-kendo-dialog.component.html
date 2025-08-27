@@ -1,9 +1,0 @@
-<div class="ps-kendo-dialog" [hidden]="!open">
-  <div class="k-overlay"></div>
-  <kendo-popup class="kendo-dialog" [class]="'ps-kendo-dialog ' + (theme !== '' ? 'ps-dialog-' + theme : '')"
-               [animate]="{ type: 'fade', duration: 0 }">
-    <ng-content select="[psKendoDialogHeader]"></ng-content>
-    <ng-content select="[psKendoDialogBody]"></ng-content>
-    <ng-content select="[psKendoDialogFooter]"></ng-content>
-  </kendo-popup>
-</div>

@@ -27,53 +27,11 @@ import { PSString } from './services/utilities/ps-string';
   ]
 })
 export class AppComponent {
-  private resizeHandler = this.checkScreenSize.bind(this);
-
   prepareRoute(outlet: RouterOutlet) {
     return outlet?.activatedRouteData?.['animation'];
   }
 
   ngAfterViewInit() {
     PSString.highlightRequiredLabels();
-  }
-
-  ngOnInit() {
-    this.checkScreenSize();
-    window.addEventListener('resize', this.resizeHandler);
-
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', this.resizeHandler);
-    }
-  }
-
-  ngOnDestroy() {
-    window.removeEventListener('resize', this.resizeHandler);
-
-    if (window.visualViewport) {
-      window.visualViewport.removeEventListener('resize', this.resizeHandler);
-    }
-  }
-
-  checkScreenSize() {
-    const isMobile = window.innerWidth <= 768; // tùy breakpoint mobile
-    const currentUrl = window.location.href;
-
-    // --- Trường hợp desktop -> mobile ---
-    // URL có hash (#/) và chưa có /m/
-    if (isMobile && currentUrl.includes('#/') && !currentUrl.includes('/m/')) {
-      // Lấy phần sau #/
-      const path = currentUrl.split('#/')[1] || '';
-      const newUrl = `${window.location.origin}/m/${path}`;
-      window.location.href = 'https://chatgpt.com/c/68ac1b10-e88c-832b-b74e-3e6280c04db1';
-      return;
-    }
-
-    // --- Trường hợp mobile -> desktop ---
-    // URL có /m/ và màn hình đủ lớn
-    if (!isMobile && currentUrl.includes('/m/')) {
-      const path = currentUrl.split('/m/')[1] || '';
-      const newUrl = `${window.location.origin}/#/` + path;
-      window.location.href = newUrl;
-    }
   }
 }

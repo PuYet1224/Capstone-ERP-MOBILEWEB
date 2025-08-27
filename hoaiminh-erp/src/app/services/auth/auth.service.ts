@@ -3,13 +3,13 @@ import { Router } from '@angular/router';
 import { ConfigDTO } from '../../models/dtos/config.dto';
 import { PSObject } from '../utilities/ps-object';
 import { PSString } from '../utilities/ps-string';
-import { PSCache } from '../utilities/ps-cache';
 import { KeyLocalStorageEnum } from '../../models/enums/key-local-storage.enum';
 import { HttpRequest } from '@angular/common/http';
 import { PSGetConfigService } from '../core/ps-get-config.service';
 import { TokenDTO } from 'src/app/models/dtos/token.dto';
 import { FunctionPermissionDTO } from 'src/app/models/dtos/function-permission.dto';
 import { PSArray } from '../utilities/ps-array';
+import { PsCache } from '../utilities/ps-cache';
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +17,7 @@ import { PSArray } from '../utilities/ps-array';
 
 export class AuthService {
     constructor(
-        private cache: PSCache,
+        private cache: PsCache,
         private router: Router,
         private config: PSGetConfigService,
     ) { }

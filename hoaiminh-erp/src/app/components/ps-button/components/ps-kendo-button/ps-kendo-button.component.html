@@ -1,3 +1,4 @@
-<button kendoButton title="{{title}}" [ngClass]="theme" (click)="click()" [disabled]="disabled" [icon]="icon">
+<button kendoButton title="{{title}}" [class.ontouch]="ontouch" [ngClass]="theme" (click)="click()" [disabled]="disabled" [icon]="icon"
+        (touchstart)="touchstart()" (touchend)="touchend()">
   <ng-content></ng-content>
 </button>

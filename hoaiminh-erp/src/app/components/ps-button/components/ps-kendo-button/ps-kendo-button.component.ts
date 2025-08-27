@@ -13,9 +13,21 @@ export class PsKendoButtonComponent {
   @Input() theme: 'primary' | 'primary-outline' | 'error' | 'error-outline' | 'warning' | 'warning-outline' | 'info' | 'info-outline' | '' = '';
   @Output() onClick = new EventEmitter<any>()
 
+  public ontouch: boolean = false;
+
   public click() {
+    console.log('click');
+
     if (!this.disabled) {
       this.onClick.emit();
     }
+  }
+
+  public touchstart() {
+    this.ontouch = true;
+  }
+
+  public touchend() {
+    this.ontouch = false;
   }
 }

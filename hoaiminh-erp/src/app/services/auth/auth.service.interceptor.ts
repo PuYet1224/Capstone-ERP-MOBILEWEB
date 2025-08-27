@@ -6,7 +6,6 @@ import { PSObject } from '../utilities/ps-object';
 import { PSString } from '../utilities/ps-string';
 import { AuthApiService } from './auth-api.service';
 import { PSGetConfigService } from '../core/ps-get-config.service';
-import { PsLayoutLoaderService } from 'src/app/layouts/main-layout/services/ps-layout-loader.service';
 import { PSDate } from '../utilities/ps-date';
 
 @Injectable()
@@ -17,8 +16,6 @@ export class PS_AuthInterceptorService implements HttpInterceptor {
     constructor(
         private auth: AuthService,
         private authapi: AuthApiService,
-        private subLoader: PsLayoutLoaderService,
-        private loader: PsLayoutLoaderService,
         private config: PSGetConfigService,
     ) { }
 
@@ -38,7 +35,6 @@ export class PS_AuthInterceptorService implements HttpInterceptor {
                         // this.subLoader.loader(false);
                         return next.handle(this.auth.setHeader(req));
                     }, error => {
-                        this.subLoader.loader(false);
                         this.auth.logout();
                         return throwError(error);
                     })
@@ -56,7 +52,6 @@ export class PS_AuthInterceptorService implements HttpInterceptor {
 
         return next.handle(req).pipe(
             catchError(err => {
-                this.loader.reset();
                 // if (err.status !== 401) {
                 let error = "";
                 if (!PSObject.isNullOfUndefined(err)) {

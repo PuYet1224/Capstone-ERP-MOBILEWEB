@@ -5,7 +5,7 @@ import { KeyLocalStorageEnum } from 'src/app/models/enums/key-local-storage.enum
     providedIn: 'root'
 })
 
-export class PSCache {
+export class PsCache {
     public setItem(key: KeyLocalStorageEnum, value: any) {
         var saveItem = { date: new Date(), value: value };
         localStorage.setItem(key, JSON.stringify(saveItem));

@@ -1,0 +1,32 @@
+@import '../../../../../assets/scss/colors';
+
+::ng-deep
+{
+    ps-header-main
+    {
+        .header-main
+        {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 72px;
+            padding: 0 16px;
+            background: linear-gradient(to right, $logo-primary, $error);
+
+            .right
+            {
+                display: flex;
+                gap: 8px;
+
+                ps-kendo-button
+                {
+                    button
+                    {
+                        border-color: transparent;
+                        width: 36px;
+                    }
+                }
+            }
+        }
+    }
+}

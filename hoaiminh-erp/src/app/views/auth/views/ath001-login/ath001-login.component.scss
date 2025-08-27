@@ -1,0 +1,192 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep
+{
+  body:has(ath001-login)
+  {
+    .background-cus
+    {
+      .elementor:first-child
+      {
+        top: 25% !important;
+      }
+
+      .group-bg
+      {
+        display: none;
+      }
+    }
+  }
+
+  .auth-layout
+  {
+    height: 100%;
+    width: 100vw;
+
+    .header
+    {
+      height: 25%;
+      width: 100%;
+      position: relative;
+
+      .owl-stage-outer
+      {
+        height: 100% !important;
+
+        .owl-stage
+        {
+          height: 100%;
+
+          .owl-item
+          {
+            height: 100%;
+
+            .item
+            {
+              height: 100%;
+
+              img
+              {
+                height: 100%;
+              }
+            }
+          }
+        }
+      }
+
+      .owl-dots
+      {
+        position: absolute;
+        top: 85%;
+        left: calc(50% - 38px);
+
+        .owl-dot
+        {
+          span
+          {
+            width: 5px;
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.5);
+          }
+
+          &.active
+          {
+            span
+            {
+              background-color: $white;
+              width: 25px;
+            }
+          }
+        }
+      }
+    }
+
+    .body
+    {
+      height: calc(75% - 32px);
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 10%;
+
+      .form-header
+      {
+        width: 100%;
+        height: 20%;
+        display: flex;
+        justify-content: center;
+
+        img
+        {
+          height: 100%;
+        }
+      }
+
+      form
+      {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        .k-textbox
+        {
+          height: 50px;
+          border: none;
+          border-bottom: 1px solid $border;
+          border-radius: 0;
+          opacity: 1;
+
+          &.hasPrefix
+          {
+            padding-left: 0;
+          }
+
+          &.k-input-solid.k-focus,
+          &.k-forcus,
+          &:focus-within,
+          &:hover
+          {
+            box-shadow: none !important;
+            border-color: $primary;
+          }
+
+          &.k-disabled
+          {
+            opacity: 1;
+            background-color: $disable-input;
+          }
+
+          .k-input-inner
+          {
+            &::placeholder
+            {
+              font-style: italic;
+              color: $placeholder;
+            }
+
+            font-size: 18px;
+            line-height: 1;
+            color: $secondary;
+            padding: 0;
+          }
+
+          .k-input-suffix
+          {
+            .k-button
+            {
+              height: 50px;
+
+              .k-button-icon
+              {
+                .k-button-icon
+                {
+                  color: $secondary;
+                  font-size: 18px;
+                }
+              }
+
+              &.k-focus,
+              &.k-button-clear-base:focus::after
+              {
+                background-color: $white !important;
+              }
+            }
+          }
+        }
+
+        ps-kendo-button,
+        ps-kendo-button button
+        {
+          width: 100%;
+          height: 50px;
+        }
+
+        ps-kendo-button
+        {
+          margin-top: 20px;
+        }
+      }
+    }
+  }
+}

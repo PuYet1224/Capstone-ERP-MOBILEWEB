@@ -6,32 +6,44 @@
   {
     .k-button
     {
-      &:hover
-      {
-        filter: brightness(1.1)
-      }
-
-      &:focus
-      {
-        box-shadow: none;
-      }
-
-      height: 35px;
+      height: 36px;
       border-color: $secondary;
       box-shadow: none;
       background-color: transparent;
-      padding: 0 10px;
-      border-radius: 5px;
+      padding: 0 8px;
+      border-radius: 4px;
 
       .k-button-text
       {
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 700;
         color: $secondary;
         text-transform: uppercase;
         line-height: 1;
         display: flex;
       }
+
+      .k-focus
+      {
+        box-shadow: none;
+      }
+    }
+
+    .k-button-solid-base.k-focus
+    {
+      box-shadow: none !important;
+    }
+
+    .k-button:hover,
+    .k-focus
+    {
+      background-color: transparent;
+      box-shadow: none;
+    }
+
+    .ontouch
+    {
+      background-color: rgb(0, 0, 0, 0.1) !important;
     }
 
     .primary,

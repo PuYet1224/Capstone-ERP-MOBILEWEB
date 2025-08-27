@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ResponseDTO } from 'src/app/models/dtos/reponse.dto';
-import { PSAPIService } from './core/ps-api.service';
+import { PSAPIService } from './core/api.service';
 import { PSCoreApiStaticService } from './ps-core-api-static.service';
 import { LSDistrictDTO } from '../models/dtos/e-dtos/ls-district.dto';
 import { LSProvinceDTO } from '../models/dtos/e-dtos/ls-province.dto';

@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { PSCache } from "../utilities/ps-cache";
 import { LSHeadCusDTO } from "src/app/models/dtos/e-dtos/ls-head.dto";
 import { PSObject } from "../utilities/ps-object";
 import { ConfigDTO } from "src/app/models/dtos/config.dto";
@@ -8,6 +7,7 @@ import { TokenDTO } from "src/app/models/dtos/token.dto";
 import { PSString } from "../utilities/ps-string";
 import { AuthApiService } from "../auth/auth-api.service";
 import { map, Observable, of } from "rxjs";
+import { PsCache } from "../utilities/ps-cache";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ import { map, Observable, of } from "rxjs";
 
 export class PSGetConfigService {
   constructor(
-    private cache: PSCache,
+    private cache: PsCache,
     private apiauth: AuthApiService,
   ) { }
 
