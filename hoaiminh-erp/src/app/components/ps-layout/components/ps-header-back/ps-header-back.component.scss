@@ -1,0 +1,38 @@
+@import '../../../../../assets/scss/colors';
+
+::ng-deep {
+    ps-header-back {
+        .ps-header {
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: $white;
+            height: 56px;
+            gap: 8px;
+
+            .back-button {
+                height: 100%;
+                width: 36px;
+
+                button {
+                    height: 100%;
+                    width: 100%;
+                    border: none;
+                    background: $background-primary;
+                    border-radius: 8px;
+
+                    .k-button-text .material-icons {
+                        color: $primary;
+                        font-size: 24px;
+                    }
+                }
+            }
+
+            .header-right {
+                height: 100%;
+                width: 100%;
+            }
+        }
+    }
+}

@@ -1,0 +1,381 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep
+{
+    mtb017-sal-consultant-promotion
+    {
+        font-size: 13px;
+        height: 100%;
+
+        .mtb017-sal-consutant-promotion
+        {
+            height: 100%;
+
+            ps-header-back
+            {
+                .ps-header
+                {
+                    .header-right
+                    {
+                        height: fit-content;
+                        display: flex;
+                        width: calc(100% - 44px);
+                        justify-content: space-between;
+                        align-items: center;
+                        gap: 8px;
+
+                        .left-side
+                        {
+                            min-width: 128px;
+                            width: 128px;
+
+                            .func-title1
+                            {
+                                font-weight: bold;
+                                text-transform: uppercase;
+                                color: $primary;
+                            }
+                        }
+
+
+                        .right-side
+                        {
+                            text-align: end;
+                            width: calc(100% - 136px);
+
+                            div
+                            {
+
+                                span,
+                                .marquee-content
+                                {
+                                    font-weight: bold;
+                                }
+
+                                span
+                                {
+                                    color: $error;
+                                }
+
+                                .marquee-content
+                                {
+                                    color: $info;
+                                }
+                            }
+
+                            .marquee-wrapper
+                            {
+                                width: 100%;
+                                overflow: hidden;
+                                white-space: nowrap;
+                                position: relative;
+
+                                .marquee-content
+                                {
+                                    display: inline-block;
+                                    white-space: nowrap;
+                                    transform: translateX(0);
+                                }
+
+                                .marquee-content.running
+                                {
+                                    transform: translateX(70%);
+                                    animation: slide-left 8s linear infinite;
+                                }
+
+                                @keyframes slide-left
+                                {
+                                    from
+                                    {
+                                        transform: translateX(70%);
+                                    }
+
+                                    to
+                                    {
+                                        transform: translateX(-100%);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            main
+            {
+                padding: 8px;
+                padding-right: 0;
+                height: calc(100% - 108px);
+
+                .main-body
+                {
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                    overflow: hidden;
+                    overflow-y: auto;
+                    padding-right: 8px;
+
+                    section
+                    {
+                        background-color: $white;
+                        border-radius: 8px;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                        padding: 8px;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 8px;
+
+                        .group-services
+                        {
+                            // display: flex;
+                            // align-items: center;
+                            // justify-content: space-between;
+                            // gap: 8px;
+
+                            // .service-checkbox .checkbox label
+                            // {
+                            //     color: $primary;
+                            //     font-weight: bold;
+                            // }
+
+                            label
+                            {
+                                display: flex;
+                                width: 100%;
+                                gap: 8px;
+                                align-items: center;
+
+                                .group-checkbox
+                                {
+                                    display: flex;
+                                    flex: 1;
+                                    align-items: center;
+                                    gap: 8px;
+
+                                    ps-kendo-checkbox label
+                                    {
+                                        display: none;
+                                    }
+
+                                    .group-text
+                                    {
+                                        span
+                                        {
+                                            font-weight: bold;
+                                        }
+                                    }
+                                }
+
+                                .promotion-percent
+                                {
+                                    min-width: 24px;
+                                    display: flex;
+                                    flex-direction: column;
+                                    justify-content: center;
+                                    align-items: center;
+
+                                    .sub-title
+                                    {
+                                        font-size: 10px;
+
+                                        span
+                                        {
+                                            color: $error;
+                                            font-style: italic;
+                                            font-weight: 400 !important;
+                                        }
+                                    }
+                                }
+
+                                .promotion-cost
+                                {
+                                    color: $error;
+                                    font-weight: bold;
+                                    flex: 0 0 auto;
+                                    min-width: 112px;
+                                    text-align: right;
+                                    font-size: 14px;
+                                    display: flex;
+                                    justify-content: flex-end;
+                                    align-items: center;
+                                }
+
+                                > span
+                                {
+                                    height: fit-content;
+                                    line-height: 1;
+                                    font-size: 10px;
+                                    background-color: rgba($secondary, 0.2);
+                                    padding: 4px 8px;
+                                    border-radius: 8px;
+                                }
+                            }
+                        }
+
+                        .section-group
+                        {
+                            padding-left: 17px;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+
+                            .price
+                            {
+                                font-weight: bold;
+                                color: $error;
+                                line-height: 1;
+                            }
+
+                            .group-vehicle
+                            {
+                                display: flex;
+                                gap: 8px;
+                                width: 100%;
+
+                                .vehicle-image
+                                {
+                                    min-width: 112px;
+                                    width: 112px;
+                                    position: relative;
+                                    border: 1px dotted $border;
+                                    border-radius: 8px;
+                                    overflow: hidden;
+
+                                    .tag
+                                    {
+                                        display: block;
+                                        height: 24px;
+                                        font-size: 10px;
+                                        font-weight: bold;
+                                        font-style: italic;
+                                        line-height: 1;
+                                        color: $white;
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;
+                                        position: absolute;
+                                        padding: 0 24px;
+                                        rotate: -45deg;
+                                        top: 4px;
+                                        left: -24px;
+                                    }
+
+                                    .available
+                                    {
+                                        background-color: $primary;
+                                    }
+
+                                    .allocated
+                                    {
+                                        background-color: $warning;
+                                    }
+
+                                    .booked
+                                    {
+                                        background-color: $secondary;
+                                    }
+
+                                    img
+                                    {
+                                        width: 100%;
+                                    }
+                                }
+
+                                .vehicle-info
+                                {
+                                    display: flex;
+                                    flex-direction: column;
+                                    gap: 8px;
+
+                                    .vehicle-name
+                                    {
+                                        line-height: 1.2;
+                                        display: -webkit-box;
+                                        -webkit-line-clamp: 2;
+                                        -webkit-box-orient: vertical;
+                                        overflow: hidden;
+
+                                        b
+                                        {
+                                            color: $info;
+                                        }
+                                    }
+
+                                    .info-group
+                                    {
+                                        display: flex;
+                                        flex-direction: column;
+
+                                        .vehicle-color,
+                                        .vehicle-price
+                                        {
+                                            display: flex;
+                                            align-items: center;
+                                            gap: 4px;
+                                        }
+
+                                        .vehicle-price
+                                        {
+                                            color: $error;
+                                            font-weight: bold;
+                                            font-size: 16px;
+                                        }
+                                    }
+                                }
+
+                                .chill_checked .vehicle-color,
+                                .chill_checked .vehicle-name
+                                {
+                                    font-weight: bolder;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            ps-footer-action
+            {
+                .footer-action
+                {
+                    display: flex;
+                    gap: 8px;
+                    height: 52px;
+                    padding: 8px;
+
+                    ps-kendo-button
+                    {
+                        width: calc(50% - 4px);
+                        height: 36px;
+                        border-radius: 8px;
+
+                        button
+                        {
+                            height: 100%;
+                            width: 100%;
+                            padding: 0;
+
+                            .k-button-text
+                            {
+                                height: 100%;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                gap: 4px;
+                                padding: 4px 0;
+                                justify-content: center;
+
+                                .material-icons
+                                {
+                                    font-size: 22px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

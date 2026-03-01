@@ -1,0 +1,465 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep
+{
+    .vehicledropdownlist .k-list-item-text
+    {
+        color: $primary;
+    }
+
+    mtb030-sal-payment-receipt
+    {
+        font-size: 13px;
+        height: 100%;
+
+        .mtb030-sal-payment-receipt
+        {
+            height: 100%;
+
+            ps-header-back
+            {
+                .ps-header
+                {
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    height: 56px;
+                    font-size: 13px;
+
+                    .header-right
+                    {
+                        height: fit-content;
+                        display: flex;
+                        width: 100%;
+                        justify-content: space-between;
+                        align-items: center;
+
+                        section .main-title
+                        {
+                            font-weight: bold;
+                            text-transform: uppercase;
+                            color: $primary;
+                        }
+
+                        .right
+                        {
+                            display: flex;
+                            flex-direction: column;
+
+                            span
+                            {
+                                span
+                                {
+                                    font-weight: bold;
+                                }
+                            }
+
+                            span:last-child
+                            {
+                                span
+                                {
+                                    color: $error;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            main
+            {
+                height: calc(100% - 112px);
+                width: 100%;
+                padding: 0 8px;
+                margin: 8px 0;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                overflow-y: auto;
+                padding-bottom: 4px;
+
+                .section-form
+                {
+                    background-color: $white;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+
+                    .form-title
+                    {
+                        padding: 8px;
+                        font-weight: bold;
+                        border-bottom: 1px solid $border;
+                    }
+
+                    .form
+                    {
+                        padding: 8px;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 8px;
+
+                        .datetime-picker label
+                        {
+                            line-height: 1;
+                        }
+
+                        .numeric-textbox input
+                        {
+                            text-align: end;
+                            font-weight: bold;
+                        }
+
+                        .numeric-textbox1 input
+                        {
+                            color: $primary;
+                        }
+
+                        .numeric-textbox2 input
+                        {
+                            color: $warning;
+                        }
+
+                        .numeric-textbox3 input
+                        {
+                            color: $primary;
+                        }
+
+                        .form-group
+                        {
+                            display: flex;
+                            gap: 8px;
+
+                            ps-kendo-dropdown-list,
+                            .status,
+                            .signature,
+                            ps-kendo-numeric-textbox
+                            {
+                                width: calc(50% - 4px);
+                            }
+
+                            .label-group
+                            {
+                                line-height: 1;
+                                display: block;
+
+                                label
+                                {
+                                    line-height: 1;
+                                    font-size: 13px;
+                                }
+                            }
+                        }
+
+                        .signature
+                        {
+                            display: flex;
+                            justify-content: flex-end;
+
+                            div
+                            {
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                width: 160px;
+
+                                kendo-label,
+                                img
+                                {
+                                    width: 100%;
+                                }
+                            }
+                        }
+
+                        .status
+                        {
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: space-between;
+                            gap: 4px;
+                            height: fit-content;
+
+                            div
+                            {
+                                height: fit-content;
+                                display: flex;
+                                align-items: center;
+
+                                span
+                                {
+                                    height: 25px;
+                                }
+                            }
+                        }
+
+                        ps-kendo-checkbox .checkbox input
+                        {
+                            background-color: $white;
+                        }
+
+                        ps-kendo-checkbox .checkbox input:disabled
+                        {
+                            background-color: transparent;
+                        }
+                    }
+
+                    .form-list
+                    {
+                        .form-item
+                        {
+                            display: flex;
+                            background-color: $background-primary;
+                            border-radius: 8px;
+                            padding: 8px;
+                            height: 148px;
+
+                            .item-left
+                            {
+                                height: 100%;
+                                display: flex;
+                                align-items: center;
+                                padding-right: 8px;
+                                border-right: 1px solid $border;
+
+                                .checkbox label
+                                {
+                                    display: none;
+                                }
+                            }
+
+                            .item-right
+                            {
+                                flex: 1;
+                                width: calc(100% - 23px);
+
+                                & > div
+                                {
+                                    padding-left: 8px;
+                                }
+
+                                hr
+                                {
+                                    margin: 4px 0;
+                                }
+
+                                .left-top
+                                {
+                                    display: flex;
+
+                                    .infor
+                                    {
+                                        flex: 1;
+                                        font-weight: bold;
+                                        white-space: nowrap;
+                                        overflow: hidden;
+                                        text-overflow: ellipsis;
+                                    }
+
+                                    span
+                                    {
+                                        color: $primary;
+                                        font-style: italic;
+                                    }
+                                }
+
+                                .left-middle
+                                {
+                                    display: flex;
+                                    justify-content: space-between;
+                                    margin-top: 4px;
+
+                                    span
+                                    {
+                                        font-size: 9px;
+                                        font-weight: bold;
+                                    }
+                                }
+
+                                .left-bottom
+                                {
+                                    display: flex;
+                                    flex-direction: column;
+                                    gap: 4px;
+                                    margin-top: 4px;
+
+                                    .bottom-group
+                                    {
+                                        display: flex;
+                                        gap: 8px;
+
+                                        .group-infor
+                                        {
+                                            display: flex;
+                                            flex-direction: column;
+                                            width: calc(50% - 4px);
+                                            gap: 4px;
+
+                                            kendo-label,
+                                            kendo-label label
+                                            {
+                                                line-height: 1;
+                                            }
+
+                                            span
+                                            {
+                                                margin-left: 4px;
+                                                font-weight: bold;
+                                                height: 24px;
+                                                display: flex;
+                                                align-items: center;
+                                            }
+
+                                            .price-1
+                                            {
+                                                color: $error;
+                                            }
+
+                                            .price-2
+                                            {
+                                                color: $warning;
+                                            }
+                                        }
+
+                                        ps-kendo-numeric-textbox
+                                        {
+                                            width: calc(50% - 4px);
+
+                                            .custom-numeric-textbox
+                                            {
+                                                kendo-numerictextbox
+                                                {
+                                                    border: none;
+                                                    height: 24px;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        .smallitem
+                        {
+                            height: 100px !important;
+                        }
+                    }
+                }
+
+                .section-group
+                {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+
+                    ps-kendo-button button
+                    {
+                        width: 100%;
+                    }
+                }
+            }
+
+            ps-footer-action
+            {
+                .footer-action
+                {
+                    ps-kendo-button
+                    {
+                        button
+                        {
+                            height: 40px;
+                            border-radius: 0;
+                            padding: 0;
+                            width: 25%;
+                            border: none;
+
+                            .k-button-text
+                            {
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                gap: 4px;
+                                padding: 4px 0;
+                                text-transform: none;
+                                justify-content: center;
+                                width: 100%;
+                                height: 65%;
+
+                                svg
+                                {
+                                    width: 24px;
+                                    height: 24px;
+                                }
+
+                                .text
+                                {
+                                    font-size: 13px;
+                                }
+                            }
+                        }
+
+                        // &:first-child,
+                        // &:nth-child(2),
+                        // &:nth-child(3)
+                        // {
+                        //     button
+                        //     {
+                        //         
+
+
+                        //     }
+                        // }
+
+                        &:first-child
+                        {
+                            button .k-button-text
+                            {
+                                border-right: 1px solid $border !important;
+                            }
+                        }
+
+                        &:nth-child(3) button .text
+                        {
+                            color: $white;
+                        }
+                    }
+                }
+            }
+
+            ps-dialog-confirm
+            {
+                .ps-dialog-confirm
+                {
+                    .confirm-dialog
+                    {
+                        width: 75%;
+                        height: auto;
+
+                        .k-popup
+                        {
+                            .body
+                            {
+                                height: 100%;
+                                padding: 24px;
+                                align-items: flex-start;
+                                justify-content: flex-start;
+                                gap: 16px;
+
+                                .title-out
+                                {
+                                    font-size: 24px;
+                                    font-weight: bold;
+                                }
+
+                                .group-buttom
+                                {
+                                    width: 100%;
+                                    display: flex;
+                                    justify-content: flex-end;
+                                    gap: 8px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

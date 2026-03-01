@@ -14,7 +14,17 @@ import { LabelModule } from '@progress/kendo-angular-label';
 import { NotificationModule } from '@progress/kendo-angular-notification';
 import { PopupModule } from '@progress/kendo-angular-popup';
 import { PS_AuthInterceptorService } from './services/auth/auth.service.interceptor';
+import { LoaderModule, IndicatorsModule } from '@progress/kendo-angular-indicators'
 import 'hammerjs';
+import * as Hammer from 'hammerjs';
+import { LucideAngularModule } from 'lucide-angular';
+import { HAMMER_GESTURE_CONFIG, HammerGestureConfig, HammerModule } from '@angular/platform-browser';
+
+export class MyHammerConfig extends HammerGestureConfig {
+  override overrides = {
+    swipe: { direction: Hammer.DIRECTION_ALL }, // Cho phép vuốt 4 hướng
+  };
+}
 
 @NgModule({
   imports: [
@@ -33,6 +43,10 @@ import 'hammerjs';
     ReactiveFormsModule,
     NotificationModule,
     PopupModule,
+    LoaderModule,
+    IndicatorsModule,
+    LucideAngularModule,
+    HammerModule
   ],
   declarations: [
     AppComponent
@@ -48,6 +62,10 @@ import 'hammerjs';
       provide: HTTP_INTERCEPTORS,
       useClass: PS_AuthInterceptorService,
       multi: true
+    },
+    {
+      provide: HAMMER_GESTURE_CONFIG,
+      useClass: MyHammerConfig, // ✅ cấu hình swipe
     },
   ],
   bootstrap: [AppComponent],

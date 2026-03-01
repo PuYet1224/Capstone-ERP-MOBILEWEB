@@ -9,6 +9,46 @@
     width: 100%;
     position: absolute;
     top: 0;
+
+    .content-loader
+    {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100000;
+
+      .k-overlay
+      {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
+        background-color: transparent;
+      }
+
+      .k-loader
+      {
+        width: 50px;
+        height: 50px;
+
+        .k-loader-canvas
+        {
+          width: 100%;
+          height: 100%;
+
+          .k-loader-segment
+          {
+            width: 15px;
+            height: 15px;
+          }
+        }
+      }
+    }
   }
 
   .background-cus
@@ -26,83 +66,10 @@
       {
         width: 100vw !important;
         height: 30% !important;
-      }
-    }
-  }
 
-  kendo-notification-container
-  {
-    .k-notification-group
-    {
-      bottom: 10px !important;
-      left: 10px !important;
-      width: 50%;
-      max-width: 500px;
-
-      .k-notification-container
-      {
-        .k-notification
+        path
         {
-          min-height: 35px;
-          background-color: $white;
-          box-shadow: 2px 2px 0px 0px $secondary;
-          border-color: $secondary;
-
-          .k-notification-status,
-          .k-notification-content
-          {
-            font-size: 13px;
-            line-height: 1;
-            color: $secondary;
-          }
-
-          &.k-notification-success
-          {
-            box-shadow: 2px 2px 0px 0px $success;
-            border-color: $success;
-
-            .k-notification-status,
-            .k-notification-content
-            {
-              color: $success;
-            }
-          }
-
-          &.k-notification-error
-          {
-            box-shadow: 2px 2px 0px 0px $error;
-            border-color: $error;
-
-            .k-notification-status,
-            .k-notification-content
-            {
-              color: $error;
-            }
-          }
-
-          &.k-notification-warning
-          {
-            box-shadow: 2px 2px 0px 0px $warning;
-            border-color: $warning;
-
-            .k-notification-status,
-            .k-notification-content
-            {
-              color: $warning;
-            }
-          }
-
-          &.k-notification-info
-          {
-            box-shadow: 2px 2px 0px 0px $info;
-            border-color: $info;
-
-            .k-notification-status,
-            .k-notification-content
-            {
-              color: $info;
-            }
-          }
+          fill: $background-primary !important;
         }
       }
     }

@@ -1,0 +1,96 @@
+<div class="mtb019-sal-payment">
+    <!-- START: HEADER -->
+    <ps-header-back>
+        <div class="left-side">
+            <div class="func-title1">Tiếp nhận thông tin</div>
+            <div class="func-title2">Xe yêu cầu thanh toán</div>
+        </div>
+    </ps-header-back>
+    <!-- END: HEADER -->
+
+    <!-- START: SEARCH -->
+    <!-- <div class="k-overlay" *ngIf="isOpenedFilter" (click)="openFilterPopup(false)"></div>
+    <div class="filter-popup" [class.open]="isOpenedFilter">
+        <div class="popup-header">
+            <div class="header-filter">
+                <span>TÌM KIẾM PHIẾU BÁN HÀNG</span>
+            </div>
+        </div>
+        <div class="popup-body">
+            <div class="body-top">
+                <ps-kendo-textbox [label]="'Tra cứu phiếu bán hàng'"
+                    [placeholder]="'Tìm theo mã phiếu, tên, số điện thoại khách hàng'" [(ngModel)]="searchKeyword">
+                </ps-kendo-textbox>
+                <ps-kendo-dropdown-list [data]="liststtpayment" [textField]="'text'" [valueField]="'enum'"
+                    [valuePrimitive]="true" [(ngModel)]="selectedstt" [label]="'Trạng thái xe thanh toán'">
+                </ps-kendo-dropdown-list>
+            </div>
+            <div class="body-bottom">
+                <ps-kendo-button [theme]="'primary-outline'" (click)="openFilterPopup(false)">quay về</ps-kendo-button>
+                <ps-kendo-button [theme]="'primary'" (onClick)="onSearchTask()">tìm</ps-kendo-button>
+            </div>
+        </div>
+    </div> -->
+    <ps-dialog-confirm-bottom [open]="isOpenedFilter" [title]="'tìm kiếm phiếu bán hàng'" (close)="openFilterPopup(false)">
+        <div psDialogConfirmBottomBody>
+            <div class="body-top">
+                <ps-kendo-textbox [label]="'Tra cứu phiếu bán hàng'"
+                                  [placeholder]="'Tìm theo mã phiếu, tên, số điện thoại khách hàng'" [(ngModel)]="searchKeyword">
+                </ps-kendo-textbox>
+                <ps-kendo-dropdown-list [data]="liststtpayment" [textField]="'text'" [valueField]="'enum'"
+                                        [valuePrimitive]="true" [(ngModel)]="selectedstt" [label]="'Trạng thái xe thanh toán'">
+                </ps-kendo-dropdown-list>
+            </div>
+        </div>
+        <div psDialogConfirmBottomFooter>
+            <ps-kendo-button [theme]="''" (click)="openFilterPopup(false)">quay về</ps-kendo-button>
+            <ps-kendo-button [theme]="'primary'" (onClick)="onSearchTask()">tìm</ps-kendo-button>
+        </div>
+    </ps-dialog-confirm-bottom>
+    <!-- END: SEARCH -->
+
+    <!-- START: BODY -->
+    <div class="repair-body">
+        <div class="action-tabs">
+            <div class="tab" *ngFor="let action of actiontab" [class.active]="actionactive === action.type"
+                 (click)="onChangeType(action.type)">
+                {{action.text}}
+            </div>
+        </div>
+
+        <div class="body-list" #bodyList>
+            <div class="item white" *ngFor="let vehicle of data" (click)="onSetItem(vehicle)">
+                <div class="item-left">
+                    <div class="customer">
+                        No.:<span class="retail-no"> {{vehicle.ID}} </span>
+                        <span *ngIf="vehicle.CustomerName">| {{vehicle.CustomerName}}</span>
+                        <span *ngIf="vehicle.CustomerPhone"> | {{vehicle.CustomerPhone}} </span>
+                    </div>
+                    <div class="vehicle">
+                        <div class="vehicle-buy">
+                            Xe:&nbsp;<span class="vehicle-buy-name">{{ vehicle.VehicleName }}&nbsp;</span>
+                            | Màu: <span class="vehicle-color">&nbsp;{{ vehicle.VehicleColorName }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="item-right"
+                     [innerHTML]="{Status: vehicle.Status, StatusName: vehicle.StatusName} | SALOrderDetailStatus">
+                </div>
+            </div>
+            <div #anchor></div> <!-- sentinel -->
+        </div>
+    </div>
+    <!-- END: BODY -->
+
+    <!-- START: FOOTER -->
+    <ps-footer-action>
+        <ps-kendo-button (onClick)="onNavigate('/menu')">
+            <span class="material-icons">arrow_back</span>
+        </ps-kendo-button>
+
+        <ps-kendo-button (onClick)="openFilterPopup(true)">
+            <span class="material-icons">search</span>
+        </ps-kendo-button>
+    </ps-footer-action>
+    <!-- END: FOOTER -->
+</div>

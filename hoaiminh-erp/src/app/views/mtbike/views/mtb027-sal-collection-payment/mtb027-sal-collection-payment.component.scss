@@ -1,0 +1,256 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep
+{
+    mtb027-sal-collection-payment
+    {
+        font-size: 13px;
+        height: 100%;
+
+        .mtb027-sal-collection-payment
+        {
+            height: 100%;
+
+            ps-header-back
+            {
+                .ps-header
+                {
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+                    .header-right
+                    {
+                        height: fit-content;
+                        display: flex;
+                        width: calc(100% - 44px);
+                        justify-content: space-between;
+                        align-items: center;
+
+                        .left-side
+                        {
+                            min-width: 152px;
+                            width: 152px;
+
+                            .func-title1
+                            {
+                                font-weight: bold;
+                                text-transform: uppercase;
+                                color: $primary;
+                            }
+                        }
+
+                        .right-side
+                        {
+                            text-align: end;
+                            width: calc(100% - 160px);
+
+                            div
+                            {
+
+                                span,
+                                .marquee-content
+                                {
+                                    font-weight: bold;
+                                }
+
+                                span
+                                {
+                                    color: $error;
+                                }
+
+                                .marquee-content
+                                {
+                                    span
+                                    {
+                                        color: $secondary;
+                                    }
+
+                                    .infomation
+                                    {
+                                        color: $info;
+                                    }
+                                }
+                            }
+
+                            div
+                            {
+
+                                span,
+                                .marquee-content
+                                {
+                                    font-weight: bold;
+                                }
+
+                                span
+                                {
+                                    color: $error;
+                                }
+                            }
+
+                            .marquee-wrapper
+                            {
+                                width: 100%;
+                                overflow: hidden;
+                                white-space: nowrap;
+                                position: relative;
+
+                                .marquee-content
+                                {
+                                    display: inline-block;
+                                    white-space: nowrap;
+                                    transform: translateX(0);
+                                }
+
+                                .marquee-content.running
+                                {
+                                    transform: translateX(70%);
+                                    animation: slide-left 8s linear infinite;
+                                }
+
+                                @keyframes slide-left
+                                {
+                                    from
+                                    {
+                                        transform: translateX(70%);
+                                    }
+
+                                    to
+                                    {
+                                        transform: translateX(-100%);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            main
+            {
+                height: calc(100% - 112px);
+                width: 100%;
+                padding: 0 8px;
+                margin: 8px 0;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                overflow-y: auto;
+                padding-bottom: 4px;
+
+                .section-form
+                {
+                    background-color: $white;
+                    padding: 8px;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+
+                    .form-group
+                    {
+                        display: flex;
+                        gap: 8px;
+
+                        ps-kendo-numeric-textbox
+                        {
+                            width: calc(50% - 4px);
+
+                            input
+                            {
+                                text-align: end;
+                            }
+                        }
+                    }
+                }
+            }
+
+            ps-footer-action
+            {
+                .footer-action
+                {
+                    display: flex;
+
+                    ps-kendo-button
+                    {
+                        button
+                        {
+                            height: 100%;
+                            border-radius: 0;
+                            width: 100%;
+                            border: none;
+                            padding: 0;
+
+                            .k-button-text
+                            {
+                                height: 100%;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                gap: 4px;
+                                padding: 4px 0;
+                                justify-content: center;
+                                font-size: 13px;
+                                text-transform: none;
+                                font-weight: normal;
+
+                                svg
+                                {
+                                    width: 24px;
+                                    height: 24px;
+                                }
+
+                                .text
+                                {
+                                    font-size: 13px;
+                                    text-transform: none;
+                                }
+                            }
+                        }
+
+                        &:last-child
+                        {
+                            width: 50%;
+
+                            .text
+                            {
+                                color: $white;
+                            }
+                        }
+
+                        &:first-child
+                        {
+                            width: 25%;
+                            border: none;
+                            align-items: center;
+
+                            .k-button-text
+                            {
+                                border-right: 1px solid $border !important;
+                                width: 100%;
+                                height: 65%;
+                            }
+                        }
+
+                        &:nth-of-type(2)
+                        {
+                            width: 25%;
+                            border: none;
+                        }
+                    }
+
+                }
+
+                &.active
+                {
+                    .footer-action
+                    {
+                        ps-kendo-button
+                        {
+                            width: 50%;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,8 @@
+<div class="kendo-textarea">
+  <kendo-label *ngIf="label != ''" class="k-display-block" [for]="textarea" text="{{label}}"></kendo-label>
+
+  <kendo-textarea #textarea [style.height.px]="height" [style.maxHeight.px]="maxHeight" resizable="auto" [value]="value"
+                  [title]="title" [(ngModel)]="value" [disabled]="disabled" (valueChange)="onValueChange($event)"
+                  placeholder="{{placeholder}}" (blur)="onBlur()" (focus)="onFocus()">
+  </kendo-textarea>
+</div>

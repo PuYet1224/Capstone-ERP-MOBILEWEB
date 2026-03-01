@@ -1,7 +1,74 @@
 @import './assets/scss/colors';
 
-input:-webkit-autofill
-{
+kendo-notification-container {
+  width: 100%;
+
+  .k-notification-group {
+    top: 8px !important;
+    max-width: calc(100% - 16px);
+    width: fit-content;
+    margin-left: 0 !important;
+    transform: translate(-50%, 0);
+
+    .k-notification-container {
+      .k-notification {
+        min-height: fit-content;
+        background-color: $white;
+        box-shadow: 2px 2px 0px 0px $secondary;
+        border-color: $secondary;
+
+        .k-notification-status,
+        .k-notification-content {
+          font-size: 13px;
+          line-height: 1;
+          color: $secondary;
+        }
+
+        &.k-notification-success {
+          box-shadow: 2px 2px 0px 0px $success;
+          border-color: $success;
+
+          .k-notification-status,
+          .k-notification-content {
+            color: $success;
+          }
+        }
+
+        &.k-notification-error {
+          box-shadow: 2px 2px 0px 0px $error;
+          border-color: $error;
+
+          .k-notification-status,
+          .k-notification-content {
+            color: $error;
+          }
+        }
+
+        &.k-notification-warning {
+          box-shadow: 2px 2px 0px 0px $warning;
+          border-color: $warning;
+
+          .k-notification-status,
+          .k-notification-content {
+            color: $warning;
+          }
+        }
+
+        &.k-notification-info {
+          box-shadow: 2px 2px 0px 0px $info;
+          border-color: $info;
+
+          .k-notification-status,
+          .k-notification-content {
+            color: $info;
+          }
+        }
+      }
+    }
+  }
+}
+
+input:-webkit-autofill {
   background-color: white !important;
   /* hoặc màu bạn muốn */
   -webkit-box-shadow: 0 0 0px 1000px white inset !important;
@@ -10,98 +77,82 @@ input:-webkit-autofill
   transition: background-color 5000s ease-in-out 0s;
 }
 
-input:-webkit-autofill:focus
-{
+input:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0px 1000px white inset !important;
   -webkit-text-fill-color: #000 !important;
 }
 
-*
-{
+* {
   font-family: "Mulish", serif;
   font-optical-sizing: auto;
   font-weight: 400;
   color: $secondary;
 
-  &::-webkit-scrollbar
-  {
+  &::-webkit-scrollbar {
     width: 2px !important;
     height: 2px !important;
   }
 
-  &::-webkit-scrollbar-track
-  {
+  &::-webkit-scrollbar-track {
     background: transparent !important;
   }
 
-  &::-webkit-scrollbar-thumb
-  {
+  &::-webkit-scrollbar-thumb {
     background-color: $primary !important;
     border-radius: 5px !important;
   }
 
-  .datetime-picker
-  {
+  .datetime-picker {
     display: flex;
     flex-direction: column;
     gap: 5px;
 
-    .k-datepicker
-    {
+    .k-datepicker {
       height: 35px;
       border-color: $border;
       border-radius: 5px;
       padding-left: 15px;
       background-color: $disable-input;
 
-      input
-      {
+      input {
         font-size: 13px;
         color: $secondary;
         font-weight: 400;
       }
 
-      .k-dateinput
-      {
+      .k-dateinput {
         pointer-events: none;
       }
 
-      .k-input-button
-      {
+      .k-input-button {
         width: 33px;
         background-color: white;
       }
     }
 
-    .k-datepicker:has(kendo-popup)
-    {
+    .k-datepicker:has(kendo-popup) {
       border: 1px solid $primary;
     }
 
-    .k-input-solid.k-focus
-    {
+    .k-input-solid.k-focus {
       box-shadow: none;
     }
 
-    .k-disabled
-    {
+    .k-disabled {
       border-color: $border;
       background-color: $disable-input;
       opacity: 1;
 
-      .k-input-button
-      {
+      .k-input-button {
         border-left: none;
         background-color: transparent;
       }
     }
 
-    kendo-label
-    {
+    kendo-label {
       line-height: 1;
 
-      label
-      {
+      label {
         font-size: 13px;
         font-weight: 400;
         color: $secondary;
@@ -111,73 +162,60 @@ input:-webkit-autofill:focus
   }
 }
 
-html
-{
+html {
   height: 100%;
 
-  body
-  {
+  body {
     height: 100%;
     width: 100vw;
     margin: 0;
     overflow-x: hidden;
+    background-color: $background-primary;
   }
 }
 
-.k-animation-container
-{
+.k-animation-container {
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.5);
   border-radius: 5px;
 
-  .k-popup
-  {
+  .k-popup {
     border: 1px solid $primary;
     border-radius: 5px;
     overflow: hidden;
 
-    .k-list
-    {
+    .k-list {
       background-color: transparent;
 
-      .k-list-content
-      {
+      .k-list-content {
         overflow: hidden;
 
-        &:hover
-        {
+        &:hover {
           overflow: auto;
         }
 
-        .k-list-ul
-        {
-          .k-list-item
-          {
+        .k-list-ul {
+          .k-list-item {
             height: 35px;
 
-            &.k-focus
-            {
+            &.k-focus {
               box-shadow: none;
             }
 
-            &:hover
-            {
+            &:hover {
               background-color: $gray-light;
               z-index: 1;
             }
 
-            &.k-selected
-            {
+            &.k-selected {
               background-color: $primary;
               z-index: 0;
 
-              .k-list-item-text
-              {
+              .k-list-item-text {
                 color: $white;
               }
             }
 
-            .k-list-item-text
-            {
+            .k-list-item-text {
               font-size: 13px;
             }
           }
@@ -185,8 +223,7 @@ html
       }
     }
 
-    .k-no-data
-    {
+    .k-no-data {
       color: $secondary;
       font-size: 13px;
       font-weight: 400;
@@ -195,8 +232,23 @@ html
   }
 }
 
-.required-icons
-{
+.required-icons {
   color: $error;
   font-size: 8px;
+}
+
+.pipe-class {
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 10px;
+  border: 1px solid;
+  width: fit-content;
+  text-align: center;
+}
+
+hr {
+  margin: 0;
+  color: $border;
+  opacity: 1;
 }

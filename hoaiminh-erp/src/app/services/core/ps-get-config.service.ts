@@ -1,22 +1,19 @@
 import { Injectable } from "@angular/core";
-import { LSHeadCusDTO } from "src/app/models/dtos/e-dtos/ls-head.dto";
-import { PSObject } from "../utilities/ps-object";
 import { ConfigDTO } from "src/app/models/dtos/config.dto";
-import { KeyLocalStorageEnum } from "src/app/models/enums/key-local-storage.enum";
+import { LSHeadCusDTO } from "src/app/models/dtos/e-dtos/ls-head.dto";
 import { TokenDTO } from "src/app/models/dtos/token.dto";
-import { PSString } from "../utilities/ps-string";
-import { AuthApiService } from "../auth/auth-api.service";
-import { map, Observable, of } from "rxjs";
+import { KeyLocalStorageEnum } from "src/app/models/enums/key-local-storage.enum";
 import { PsCache } from "../utilities/ps-cache";
+import { PSObject } from "../utilities/ps-object";
+import { PsString } from "../utilities/ps-string";
 
 @Injectable({
   providedIn: 'root'
 })
 
-export class PSGetConfigService {
+export class GetConfigService {
   constructor(
-    private cache: PsCache,
-    private apiauth: AuthApiService,
+    private cache: PsCache
   ) { }
 
   public GetHead(): LSHeadCusDTO {
@@ -29,7 +26,7 @@ export class PSGetConfigService {
   }
 
   // public GetTokenHeader(): Observable<TokenDTO> {
-  //   if (PSObject.isNullOfUndefined(ConfigDTO.token) || PSString.isNullOrWhitespace(ConfigDTO.token.access_token)) {
+  //   if (PSObject.isNullOfUndefined(ConfigDTO.token) || PsString.isNullOrWhitespace(ConfigDTO.token.access_token)) {
   //     var cachetoken = this.cache.getItem(KeyLocalStorageEnum.BEARER_TOKEN);
   //     if (!PSObject.isNullOfUndefined(cachetoken))
   //       ConfigDTO.token = this.cache.parseValue(cachetoken);
@@ -47,7 +44,7 @@ export class PSGetConfigService {
   // }
 
   public GetToken(): TokenDTO {
-    if (PSObject.isNullOfUndefined(ConfigDTO.token) || PSString.isNullOrWhitespace(ConfigDTO.token.access_token)) {
+    if (PSObject.isNullOfUndefined(ConfigDTO.token) || PsString.isNullOrWhitespace(ConfigDTO.token.access_token)) {
       var cachetoken = this.cache.getItem(KeyLocalStorageEnum.BEARER_TOKEN);
       if (!PSObject.isNullOfUndefined(cachetoken))
         ConfigDTO.token = this.cache.parseValue(cachetoken);
@@ -56,7 +53,7 @@ export class PSGetConfigService {
   }
 
   public GetUser() {
-    if (PSObject.isNullOfUndefined(ConfigDTO.userinfo) || PSObject.isNullOfUndefined(ConfigDTO.userinfo.staffID)) {
+    if (PSObject.isNullOfUndefined(ConfigDTO.userinfo) || PSObject.isNullOfUndefined(ConfigDTO.userinfo.Code)) {
       var cacheuser = this.cache.getItem(KeyLocalStorageEnum.USER_INFOR);
       if (!PSObject.isNullOfUndefined(cacheuser))
         ConfigDTO.userinfo = this.cache.parseValue(cacheuser);
@@ -65,7 +62,7 @@ export class PSGetConfigService {
   }
 
   public GetDLL() {
-    if (PSString.isNullOrWhitespace(ConfigDTO.dllpackage)) {
+    if (PsString.isNullOrWhitespace(ConfigDTO.dllpackage)) {
       var item = this.cache.getItem(KeyLocalStorageEnum.DLLPACKAGE);
       if (!PSObject.isNullOfUndefined(item))
         ConfigDTO.dllpackage = this.cache.parseValue(item);

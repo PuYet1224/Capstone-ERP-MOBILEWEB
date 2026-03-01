@@ -1,0 +1,55 @@
+<div class="mtb006">
+    <div class="k-overlay" *ngIf="isOpenedFilter" (click)="openFilterPopup(false)"></div>
+    <!-- HEADER -->
+    <ps-header-back>
+        <div class="func-title">Bảo trì - sửa chữa xe</div>
+        <div class="sub-title">
+            <div class="title-left">Tư vấn khách hàng</div>
+            <div class="title-right">No.: {{workMaster.WorkOrderNo}}</div>
+        </div>
+    </ps-header-back>
+    <!-- START: MAIN -->
+    <div class="main-content">
+        <div class="main-content-block-1">
+            <h1>Yêu cầu rửa xe</h1>
+            <div class="content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Công việc</th>
+                            <th>Lựa chọn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let task of mainTasks; let i = index" [class.alt-row]="i % 2 === 0">
+                            <td>{{ task.TaskName }}</td>
+                            <td>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" [disabled]="workMaster.Progress == WOMStatusEnum.DONE"
+                                        [(ngModel)]="task.StatusChecked" (ngModelChange)="onSwitch(task)">
+
+                                    <span class="slider"></span>
+                                </label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- END: MAIN -->
+
+    </div>
+    <!-- START: FOOTER -->
+    <ps-footer-action>
+        <ps-kendo-button (onClick)="onNavigate('back')">
+            <span class="material-icons">arrow_back</span>
+        </ps-kendo-button>
+        <ps-kendo-button (onClick)="onNavigate('to-list')">
+            <span class="material-icons">list_alt</span>
+        </ps-kendo-button>
+        <ps-kendo-button [theme]="'primary'" (onClick)="onNavigate('continue')">
+            <span class="text">Tiếp tục</span>
+        </ps-kendo-button>
+    </ps-footer-action>
+    <!-- END: FOOTER -->

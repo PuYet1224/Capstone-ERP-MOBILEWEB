@@ -1,0 +1,419 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep {
+  mtb008-cs-wo-sign {
+    .mtb008-cs-wo-sign {
+      height: 100%;
+      background-color: $gray-light;
+      display: flex;
+      flex-direction: column;
+
+      ps-header-back {
+        .header-right {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 4px;
+
+          .func-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: $primary;
+            text-transform: uppercase;
+          }
+
+          .sub-title {
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+
+            .title-right {
+              color: $error;
+              font-weight: bold;
+            }
+          }
+        }
+      }
+
+      .background {
+        height: calc(100% - 96px);
+        overflow-y: auto;
+
+        .main-content {
+          background: $white;
+          margin: 8px;
+          padding: 8px;
+          border-radius: 8px;
+
+          .company-info {
+            padding-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+
+            .company-logo {
+              display: flex;
+              align-items: center;
+              gap: 4px;
+
+              .logo {
+                img {
+                  width: 50px;
+                  height: 40px;
+                  object-fit: cover;
+                }
+              }
+
+              .company-details {
+                .company-name {
+                  font-weight: bold;
+                  font-size: 14px;
+                  color: $secondary;
+                }
+
+                .branch {
+                  font-size: 12px;
+                  color: $gray-color;
+                  text-wrap: nowrap;
+                }
+              }
+            }
+
+            .form-number {
+              font-size: 12px;
+              color: $secondary;
+              text-wrap: nowrap;
+            }
+          }
+
+          .main-title {
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            color: $secondary;
+            text-transform: uppercase;
+          }
+
+          .info-section {
+            overflow: hidden;
+
+            .section-header {
+              background: $primary;
+              color: white;
+              padding: 8px;
+              font-weight: bold;
+              font-size: 13px;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+
+              span,
+              .section-total {
+                color: white;
+                font-weight: bold;
+                font-size: 13px;
+              }
+            }
+
+            .section-content {
+              display: flex;
+              flex-direction: column;
+              gap: 12px;
+              padding: 12px 8px;
+
+              .info-row {
+                display: flex;
+                align-items: center;
+
+                &:last-child {
+                  border-bottom: none;
+                }
+
+                .label {
+                  font-size: 13px;
+                  min-width: 100px;
+                  color: $gray-color;
+                }
+
+                .value {
+                  font-size: 13px;
+                  color: $secondary;
+
+                  .value-km,
+                  .value-soh {
+                    color: $secondary;
+                    font-weight: bold;
+
+                    .number-of-km {
+                      font-weight: bold;
+                    }
+                  }
+                }
+              }
+
+              .cus-row {
+                span:last-child {
+                  font-weight: bold;
+                }
+              }
+
+              .task-item {
+                display: flex;
+                align-items: center;
+                padding: 10px;
+
+                &:nth-of-type(even) {
+                  background-color: $gray-100;
+                }
+
+                .task-number {
+                  font-size: 13px;
+                  color: $gray-color;
+                  width: 10px;
+                  margin-right: 8px;
+                }
+
+                .task-description {
+                  font-size: 13px;
+                  color: $secondary;
+                  flex: 1;
+                }
+
+                .task-action {
+                  font-size: 13px;
+                  color: $primary;
+                  font-weight: 500;
+                }
+              }
+
+              .parts-item {
+                display: flex;
+                align-items: center;
+                padding: 6px;
+
+                &:last-child {
+                  border-bottom: none;
+                }
+
+                &:nth-of-type(even) {
+                  background-color: $gray-100;
+                }
+
+                .parts-number {
+                  font-size: 13px;
+                  color: $gray-color;
+                  width: 20px;
+                  margin-right: 8px;
+                }
+
+                .parts-description {
+                  font-size: 13px;
+                  color: $secondary;
+                  flex: 1;
+                }
+
+                .parts-unit {
+                  font-size: 13px;
+                  color: $gray-color;
+                  width: 40px;
+                  text-align: center;
+                  margin-right: 10px;
+                }
+
+                .parts-price {
+                  font-size: 13px;
+                  color: $secondary;
+                  font-weight: 500;
+                  width: 80px;
+                  text-align: right;
+                }
+              }
+
+              .labor-item {
+                display: flex;
+                align-items: center;
+                padding: 10px;
+
+                &:last-child {
+                  border-bottom: none;
+                }
+
+                &:nth-of-type(even) {
+                  background-color: $gray-100;
+                }
+
+                .labor-number {
+                  font-size: 13px;
+                  color: $gray-color;
+                  width: 20px;
+                  margin-right: 8px;
+                }
+
+                .labor-description {
+                  font-size: 13px;
+                  color: $secondary;
+                  flex: 1;
+                }
+
+                .labor-price {
+                  font-size: 13px;
+                  color: $secondary;
+                  font-weight: 500;
+                  width: 80px;
+                  text-align: right;
+                }
+              }
+            }
+          }
+
+          .total-section {
+            .total-header {
+              background-color: $red-a200 !important;
+
+              .total-amount {
+                font-weight: bold;
+                font-size: 13px;
+              }
+            }
+          }
+
+          .signature-section {
+            margin-top: 12px;
+            padding: 12px;
+            background: $white;
+            border: 1px solid $gray-light;
+            border-radius: 8px;
+
+            .signature-label {
+              font-size: 14px;
+              color: $secondary;
+              margin-bottom: 12px;
+              font-weight: 500;
+            }
+
+            .signature-area {
+              height: 100px;
+              border: 1px dashed $gray-color;
+              border-radius: 4px;
+              background: $gray-100;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: $gray-color;
+              font-size: 12px;
+
+              .signature-placeholder {
+                color: $gray-color;
+                font-style: italic;
+              }
+            }
+
+            .signature-display {
+              height: 100px;
+              border: 1px solid $gray-light;
+              border-radius: 4px;
+              background: $background-primary;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              overflow: hidden;
+
+              .signature-image {
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: contain;
+              }
+            }
+          }
+        }
+      }
+
+      .dev-toggle {
+        display: flex;
+        gap: 8px;
+        padding: 0 12px 12px 12px;
+
+        .test-btn {
+          &:focus {
+            background: $primary;
+            color: $white;
+          }
+
+          padding: 8px 12px;
+          border: 1px solid $primary;
+          background: $white;
+          color: $primary;
+          border-radius: 4px;
+          font-size: 12px;
+        }
+      }
+
+      ps-footer-action {
+        .footer-action {
+          display: flex;
+
+          ps-kendo-button {
+            button {
+              height: 100%;
+              border-radius: 0;
+              width: 100%;
+              border: none;
+              padding: 0;
+
+              .k-button-text {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+                padding: 4px 0;
+                justify-content: center;
+
+                svg {
+                  width: 24px;
+                  height: 24px;
+                }
+
+                .text {
+                  font-size: 13px;
+                  text-transform: none;
+                }
+              }
+            }
+
+            &:last-child {
+              width: 50%;
+
+              .text {
+                color: $white;
+              }
+            }
+
+            &:first-child {
+              width: 25%;
+              border: none;
+              align-items: center;
+
+              .k-button-text {
+                border-right: 1px solid $border !important;
+                width: 100%;
+                height: 65%;
+              }
+            }
+
+            &:nth-of-type(2) {
+              width: 25%;
+              border: none;
+            }
+
+            &:nth-of-type(3) {
+              width: 50%;
+              border: none;
+            }
+          }
+        }
+      }
+    }
+  }
+}

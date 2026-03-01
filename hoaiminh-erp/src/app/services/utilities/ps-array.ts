@@ -1,5 +1,5 @@
 
-export class PSArray {
+export class PsArray {
   public static isNullOrEmpty<T>(arr?: Array<T>): boolean {
     return arr == null || arr == undefined || arr.length == 0;
   }

@@ -1,0 +1,300 @@
+<div class="mtb030-sal-payment-receipt">
+    <!-- START: HEADER -->
+    <ps-header-back>
+        <section>
+            <div class="main-title">Thanh toán bán lẻ</div>
+            <div class="sub-title">Chi tiết phiếu thu</div>
+        </section>
+        <section class="right">
+            <span *ngIf="womMaster.ID">
+                No.: <span>{{womMaster.ID}}</span>
+            </span>
+            <span *ngIf="receipt.ReceiptNo">
+                Số PT: <span>{{receipt.ReceiptNo}}</span>
+            </span>
+        </section>
+
+    </ps-header-back>
+    <!-- END: HEADER -->
+
+    <main>
+        <!-- START: PHIẾU THU -->
+        <section class="section-form">
+            <div class="form-title">Thông tin phiếu thu</div>
+            <div class="form">
+                <!-- Ký hiệu phiếu thu -->
+                <!-- <ps-kendo-textbox [label]="'Ký hiệu'" [(ngModel)]="receipt.ReceiptSerial"
+                                  (blur)="onValueChange('ReceiptSerial')"
+                                  [disabled]=" receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled">
+                </ps-kendo-textbox> -->
+
+                <!-- xe thanh toán -->
+                <!-- <ps-kendo-dropdown-list [popupSettings]="{ popupClass: 'vehicledropdownlist' }"
+                                        [disabled]=" receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled"
+                                        [label]="'Thu tiền theo xe'" [(ngModel)]="receipt.OrderDetail" [data]="listvehicle"
+                                        [valuePrimitive]="true" (valueChange)="onValueChange('OrderDetail')" [textField]="'VehicleName'"
+                                        [valueField]="'Code'">
+                </ps-kendo-dropdown-list> -->
+
+                <!-- Hình thức thanh toán -->
+                <!-- <ps-kendo-textbox [label]="'Hình thức thanh toán'" [ngModel]="receipt.PaymentTypeName" [disabled]="true">
+                </ps-kendo-textbox> -->
+
+                <!-- số điện thoại khách hàng -->
+                <ps-kendo-masked-textbox
+                    [disabled]=" receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled"
+                    [label]="'Số điện thoại khách hàng (*)'" [mask]="'000 000 0000'" [(ngModel)]="receipt.CellPhone"
+                    [type]="'tel'" (blur)="onValueChange('CellPhone')">
+                </ps-kendo-masked-textbox>
+
+                <!-- họ và tên khách hàng -->
+                <ps-kendo-textbox
+                    [disabled]=" receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone"
+                    [label]="'Họ và tên khách hàng (*)'" [(ngModel)]="receipt.CustomerName"
+                    (blur)="onValueChange('CustomerName')">
+                </ps-kendo-textbox>
+
+                <!-- địa chỉ khách hàng -->
+                <ps-kendo-textarea
+                    [disabled]=" receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone"
+                    [label]="'Địa chỉ'" [(ngModel)]="receipt.Address" (blur)="onValueChange('Address')">
+                </ps-kendo-textarea>
+
+                <!-- ngày hiệu lực -->
+                <div class="datetime-picker">
+                    <label>Ngày hiệu lực (*)</label>
+                    <kendo-datepicker
+                        [disabled]=" receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code"
+                        format="dd/MM/yyyy" placeholder="dd/MM/yyyy" [readOnlyInput]="true" calendarType="classic"
+                        [(ngModel)]="receipt.EffDate" (valueChange)="onValueChange('EffDate')">
+                    </kendo-datepicker>
+                </div>
+
+                <!-- nội dung thu tiền -->
+                <ps-kendo-textarea
+                    [disabled]=" receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone"
+                    [label]="'Nội dung thu tiền (*)'" [(ngModel)]="receipt.Description"
+                    (blur)="onValueChange('Description')">
+                </ps-kendo-textarea>
+
+                <!-- <div class="form-group"> -->
+                <!-- phương thức thanh toán -->
+                <!-- <ps-kendo-dropdown-list
+                                            [disabled]=" receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone"
+                                            [label]="'Phương thức thanh toán (*)'" [(ngModel)]="receipt.PaymentMethod" name="PaymentMethod"
+                                            [data]="listpaymentmethod" [textField]="'ListName'" [valueField]="'TypeOfList'"
+                                            [valuePrimitive]="true" (valueChange)="onValueChange('PaymentMethod')">
+                    </ps-kendo-dropdown-list> -->
+
+                <!-- số tiền thu -->
+                <!-- <ps-kendo-numeric-textbox
+                                              [disabled]="!receipt.OrderDetail || (receipt.OrderDetail && receipt.PaymentType == enumpayment.LUMPSUM) || receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone"
+                                              [label]="'Số tiền thu (VNĐ) (*)'" [(ngModel)]="receipt.CollectedAmount" name="CollectedAmount"
+                                              class="numeric-textbox" [format]="'n0'" (blur)="onValueChange('CollectedAmount')">
+                    </ps-kendo-numeric-textbox>
+                </div> -->
+
+                <!-- tổng tiền -->
+                <!-- <ps-kendo-numeric-textbox [disabled]="true" [label]="'Tổng tiền (VNĐ)'" [(ngModel)]="receipt.TotalAmount"
+                                          class="numeric-textbox numeric-textbox1" [format]="'n0'">
+                </ps-kendo-numeric-textbox> -->
+
+                <!-- còn lại -->
+                <!-- <ps-kendo-numeric-textbox [disabled]="true" [label]="'Còn lại (VNĐ)'" [(ngModel)]="receipt.RemainingAmount"
+                                          class="numeric-textbox numeric-textbox2" [class.numeric-textbox3]="receipt.RemainingAmount == 0" [format]="'n0'">
+                </ps-kendo-numeric-textbox> -->
+
+                <!-- <div class="form-group"> -->
+                <div class="status">
+                    <kendo-label class="label-group" [text]="'Tình trạng'"></kendo-label>
+                    <div class="item-right"
+                        [innerHTML]="{Status: receipt.Status, StatusName: receipt.StatusName} | SALOrderReceiptStatus">
+                    </div>
+                </div>
+                <!-- <div class="signature">
+                        <kendo-label class="label-group" [text]="'Khách hàng ký xác nhận (*)'"></kendo-label>
+                        <img src="{{receipt.Signature}}" alt="">
+                        <span>{{receipt.CustomerName}}</span>
+                    </div>
+                </div> -->
+            </div>
+        </section>
+        <!-- END: PHIẾU THU -->
+
+        <!-- START:CHI TIẾT PHIẾU THU -->
+        <section class="section-form" *ngIf="receipt.Code != 0">
+            <div class="form-title">Chi tiết phiếu thu</div>
+            <div class="form form-list">
+                <div class="form-item" *ngFor="let item of listvehicle"
+                    [class.smallitem]="item.PaymentType == enumpayment.LUMPSUM">
+                    <div class="item-left">
+                        <ps-kendo-checkbox [(ngModel)]="item.IsChecked" (onchecked)="oncheckdetail(item, $event)"
+                            [disabled]="receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver">
+                        </ps-kendo-checkbox>
+                    </div>
+                    <div class="item-right">
+                        <div class="left-top">
+                            <div class="infor">
+                                {{item.TypeOfVehicleName}} - {{item.VehicleName}} - {{item.VehicleColorName}}
+                            </div>
+                            <span>
+                                {{item.PaymentTypeName}}
+                            </span>
+                        </div>
+                        <div class="left-middle">
+                            <span>{{item.TotalService}} dịch vụ</span>
+                            <span>{{item.TotalPart}} phụ kiện</span>
+                            <span>giảm giá {{item.DiscountPercent | number:'1.2-2'}}%</span>
+                        </div>
+                        <hr>
+                        <div class="left-bottom">
+                            <div class="bottom-group">
+                                <div class="group-infor">
+                                    <kendo-label [text]="'Tổng tiền'"></kendo-label>
+                                    <span class="price-1">{{item.TotalAmount ?? 0 | number}}</span>
+                                </div>
+                                <div class="group-infor" *ngIf="item.PaymentType == enumpayment.DEPOSIT">
+                                    <kendo-label [text]="'Đã thu'"></kendo-label>
+                                    <span class=" price-2">{{item.PaidAmount ?? 0 | number}}</span>
+                                </div>
+                                <div class="group-infor" *ngIf="item.PaymentType == enumpayment.LUMPSUM">
+                                    <kendo-label [text]="'Tiền thu'"></kendo-label>
+                                    <span class="price-3">{{item.CollectedAmount ?? 0 | number}}</span>
+                                </div>
+                            </div>
+                            <div class="bottom-group" *ngIf="item.PaymentType == enumpayment.DEPOSIT">
+                                <div class=" group-infor">
+                                    <kendo-label [text]="'Còn lại'"></kendo-label>
+                                    <span class="price-3">{{item.RemainingAmount ?? 0 | number}}</span>
+                                </div>
+                                <ps-kendo-numeric-textbox label="Tiền thu" (click)="$event.stopPropagation()"
+                                    [(ngModel)]="item.CollectedAmount" [format]="'n0'"
+                                    [disabled]="!item.IsChecked || receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver"
+                                    (blur)="onupdatedetail(item)">
+                                </ps-kendo-numeric-textbox>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- END:CHI TIẾT PHIẾU THU -->
+
+        <!-- START: TỔNG PHIẾU THU -->
+        <section class="section-form">
+            <div class="form-title">Tổng phiếu thu</div>
+            <div class="form">
+                <div class="form-group">
+                    <!-- tổng tiền -->
+                    <ps-kendo-numeric-textbox [disabled]="true" [label]="'Tổng tiền đã thu'"
+                        [(ngModel)]="receipt.TotalReceiptAmount" class="numeric-textbox" [format]="'n0'">
+                    </ps-kendo-numeric-textbox>
+
+                    <!-- tổng tiền -->
+                    <ps-kendo-numeric-textbox [disabled]="true" [label]="'Tổng giá trị đơn hàng'"
+                        [(ngModel)]="receipt.TotalAmount" class="numeric-textbox" [format]="'n0'">
+                    </ps-kendo-numeric-textbox>
+                </div>
+
+                <div class="form-group">
+                    <!-- phương thức thanh toán -->
+                    <ps-kendo-dropdown-list
+                        [disabled]="receipt.Code != 0 && checklistdetail() &&  receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone"
+                        [label]="'Phương thức thanh toán (*)'" [(ngModel)]="receipt.PaymentMethod" name="PaymentMethod"
+                        [data]="listpaymentmethod" [textField]="'ListName'" [valueField]="'TypeOfList'"
+                        [valuePrimitive]="true" (valueChange)="onValueChange('PaymentMethod')">
+                    </ps-kendo-dropdown-list>
+
+                    <!-- số tiền thu -->
+                    <ps-kendo-numeric-textbox
+                        [disabled]="!receipt.OrderDetail || (receipt.OrderDetail && receipt.PaymentType == enumpayment.LUMPSUM) || receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone"
+                        [label]="'Tổng thu hiện tại'" [(ngModel)]="receipt.CollectedAmount" name="CollectedAmount"
+                        class="numeric-textbox numeric-textbox1" [format]="'n0'"
+                        (blur)="onValueChange('CollectedAmount')">
+                    </ps-kendo-numeric-textbox>
+                </div>
+
+                <!-- còn lại -->
+                <ps-kendo-numeric-textbox [disabled]="true" [label]="'Số tiền còn phải thanh toán'"
+                    [(ngModel)]="receipt.RemainingAmount" class="numeric-textbox numeric-textbox2"
+                    [class.numeric-textbox3]="receipt.RemainingAmount == 0" [format]="'n0'">
+                </ps-kendo-numeric-textbox>
+
+                <div class="signature">
+                    <div>
+                        <kendo-label class="label-group" [text]="'Khách hàng ký xác nhận (*)'"></kendo-label>
+                        <img src="{{receipt.Signature}}" alt="">
+                        <span>{{receipt.CustomerName}}</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- END: TỔNG PHIẾU THU -->
+
+        <!-- START: GROUP BUTTON -->
+        <section class="section-group"
+            *ngIf="receipt.Status == enumreceiptstt.New && ((receipt.PaymentType && receipt.OrderDetail) || !receipt.OrderDetail)">
+            <ps-kendo-button [disabled]="FunctionPermissionDTO.creator" [theme]="'primary'"
+                (onClick)="onupdatestatus(enumreceiptstt.Success)"
+                *ngIf="receipt.PaymentType == enumpayment.LUMPSUM || !receipt.OrderDetail">
+                Hoàn tất
+            </ps-kendo-button>
+
+            <ps-kendo-button [disabled]="FunctionPermissionDTO.creator" [theme]="'warning'"
+                (onClick)="onupdatestatus(enumreceiptstt.Success)" *ngIf="receipt.PaymentType == enumpayment.DEPOSIT">
+                Hoàn tất
+            </ps-kendo-button>
+
+            <ps-kendo-button [disabled]="FunctionPermissionDTO.creator" [theme]="'error-outline'"
+                (onClick)="showpopup = true">
+                Huỷ giao dịch
+            </ps-kendo-button>
+        </section>
+        <!-- END: GROUP BUTTON -->
+    </main>
+
+
+    <!-- START: FOOTER -->
+    <ps-footer-action>
+        <ps-kendo-button (onClick)="onnavigate('/mtbike/payment/document')">
+            <span class="material-icons">arrow_back</span>
+        </ps-kendo-button>
+
+        <ps-kendo-button (onClick)="onnavigate('/mtbike/payment')">
+            <span class="material-icons">list_alt</span>
+        </ps-kendo-button>
+
+        <ps-kendo-button [theme]="'info'" (onClick)="openSignaturePopup()"
+            [disabled]="receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone">
+            <span class="text">Ký tên</span>
+        </ps-kendo-button>
+
+        <ps-kendo-button [theme]="''" (onClick)="print()">
+            <span class="material-icons">print</span>
+        </ps-kendo-button>
+    </ps-footer-action>
+    <!-- END: FOOTER -->
+
+    <!-- START: SIGNATURE POPUP -->
+    <ps-dialog-confirm-signature [open]="showSignaturePopup" (close)="closeSignaturePopup()" (save)="save($event)">
+    </ps-dialog-confirm-signature>
+    <!-- END: SIGNATURE POPUP -->
+
+    <!-- START: CONFIRM DIALOG -->
+    <ps-dialog-confirm [theme]="'primary'" [open]="showpopup">
+        <div psDialogConfirmBody class="body">
+            <div class="title-out">
+                Hủy giao dịch
+            </div>
+            <div class="confirm">
+                Bạn có chắc chắn muốn hủy giao dịch không?
+            </div>
+            <div class="group-buttom">
+                <ps-kendo-button (onClick)="showpopup = false">Huỷ</ps-kendo-button>
+                <ps-kendo-button [theme]="'primary'" (onClick)="onupdatestatus(enumreceiptstt.Cancled)">Xác
+                    nhận</ps-kendo-button>
+            </div>
+        </div>
+    </ps-dialog-confirm>
+    <!-- END: CONFIRM DIALOG -->
+</div>

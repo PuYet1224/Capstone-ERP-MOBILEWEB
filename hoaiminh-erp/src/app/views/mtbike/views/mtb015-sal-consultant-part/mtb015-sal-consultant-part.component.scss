@@ -1,0 +1,712 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep {
+  mtb015-sal-consultant-part {
+    height: 100%;
+    font-size: 13px;
+
+    .mtb015-retail-part {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+
+      ps-header-back {
+        flex-shrink: 0;
+        z-index: 1;
+
+        .ps-header {
+          background-color: $white;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+          .header-right {
+            height: fit-content;
+            display: flex;
+            width: calc(100% - 44px);
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+
+            .left-side {
+              min-width: 128px;
+              width: 128px;
+
+              .func-title1 {
+                font-weight: bold;
+                text-transform: uppercase;
+                color: $primary;
+              }
+
+              .func-title2 {
+                color: $secondary;
+              }
+            }
+
+            .right-side {
+              text-align: end;
+              width: calc(100% - 136px);
+
+              div span,
+              .marquee-content {
+                font-weight: bold;
+              }
+
+              span {
+                color: $error;
+              }
+
+              .marquee-content {
+                color: $info;
+              }
+
+              .marquee-wrapper {
+                width: 100%;
+                overflow: hidden;
+                white-space: nowrap;
+                position: relative;
+                cursor: pointer;
+
+                .marquee-content {
+                  display: inline-block;
+                  white-space: nowrap;
+                  transform: translateX(0);
+                }
+
+                .marquee-content.running {
+                  transform: translateX(70%);
+                  animation: slide-left 8s linear infinite;
+                }
+
+                @keyframes slide-left {
+                  from {
+                    transform: translateX(70%);
+                  }
+
+                  to {
+                    transform: translateX(-100%);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .parts-body {
+        height: calc(100% - 96px);
+        padding: 8px;
+        display: flex;
+        flex-direction: column;
+        overflow-x: hidden;
+        overflow-y: auto;
+        min-height: 0;
+        scrollbar-gutter: stable;
+        touch-action: pan-y;
+
+        .vehicle-section {
+          background: $white;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          overflow: hidden;
+          flex-shrink: 0;
+          margin-bottom: 6px;
+          width: calc(100% + 2px);
+          box-sizing: border-box;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 30px;
+            padding: 8px;
+            font-weight: bold;
+            line-height: 1;
+            border-bottom: 1px solid $border;
+            box-sizing: border-box;
+
+            .section-title {
+              color: $info;
+              font-weight: bold;
+            }
+
+            .section-header-right {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+
+              b {
+                font-weight: bolder;
+              }
+            }
+
+            .section-collapse {
+              color: $info;
+              cursor: pointer;
+            }
+          }
+
+          .section-body {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            min-width: 0;
+
+            .vehicle-card.block-vehicle {
+              padding: 8px;
+              overflow: hidden;
+              position: relative;
+              display: flex;
+              gap: 8px;
+              cursor: pointer;
+              box-sizing: border-box;
+
+              .tag {
+                display: block;
+                height: 24px;
+                font-size: 10px;
+                font-weight: bold;
+                font-style: italic;
+                line-height: 1;
+                color: $white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: absolute;
+                padding: 0 24px;
+                rotate: -45deg;
+                top: 4px;
+                left: -24px;
+                z-index: 2;
+              }
+
+              .available {
+                background-color: $primary;
+              }
+
+              .allocated {
+                background-color: $warning;
+              }
+
+              .booked {
+                background-color: $secondary;
+              }
+
+              .vehicle-image {
+                min-width: 112px;
+                width: 112px;
+                border: 1px dotted $border;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                flex-shrink: 0;
+                overflow: hidden;
+
+                img {
+                  width: 100%;
+                  display: block;
+                }
+              }
+
+              .vehicle-info {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                width: 100%;
+
+                .info-row {
+                  display: flex;
+
+                  .label {
+                    min-width: 56px;
+                    line-height: 1;
+                  }
+
+                  .value {
+                    font-weight: bold;
+                    line-height: 1;
+                  }
+                }
+
+                .infor-last-row {
+                  border-top: 1px solid $border;
+                  display: flex;
+                  justify-content: space-between;
+                  padding: 4px 0px;
+                  flex-shrink: 0;
+
+                  span {
+                    font-size: 9px;
+                    line-height: 1;
+                  }
+                }
+              }
+            }
+
+            .services-table {
+              padding: 8px;
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+              border-top: 1px solid $border;
+              width: 100%;
+              box-sizing: border-box;
+              height: 100%;
+
+              .services-header {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                min-width: 0;
+
+                .header-col {
+                  font-weight: bold;
+                  font-size: 13px;
+                  color: rgba($secondary, 0.7);
+
+                  &.col-name {
+                    flex: 1 1 0;
+                    min-width: 0;
+                  }
+
+                  &.col-qty {
+                    flex: 0 0 40px;
+                    width: 40px;
+                    text-align: center;
+                  }
+
+                  &.col-price {
+                    flex: 0 0 90px;
+                    width: 90px;
+                    min-width: 90px;
+                    text-align: right;
+                  }
+                }
+              }
+
+              .services-list {
+                display: flex;
+                flex-direction: column;
+                min-width: 0;
+
+                .service-item {
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                  padding: 5px;
+                  min-width: 0;
+
+                  &:nth-child(odd) {
+                    background-color: $background-primary;
+                  }
+
+                  &:nth-child(even) {
+                    background-color: $white;
+                  }
+
+                  .service-number {
+                    flex: 0 0 auto;
+                    font-weight: bold;
+                    font-size: 13px;
+                    color: $info;
+                  }
+
+                  .service-name {
+                    flex: 1 1 0;
+                    min-width: 0;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    font-weight: bold;
+                    font-size: 13px;
+                    color: $info;
+                  }
+
+                  .part-qty {
+                    flex: 0 0 32px;
+                    width: 40px;
+                    text-align: center;
+                    font-weight: bold;
+                    font-size: 13px;
+                    color: $info;
+                  }
+
+                  .service-cost {
+                    flex: 0 0 90px;
+                    text-align: right;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    font-weight: bold;
+                    font-size: 13px;
+                    color: $info;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      ps-footer-action {
+        .footer-action {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          padding: 8px;
+          height: fit-content;
+
+          ps-kendo-button {
+            button {
+              .k-button-text {
+                text-transform: none;
+
+                .material-icons {
+                  width: 20px;
+                  height: 20px;
+                  font-size: 20px;
+                }
+
+                .text {
+                  font-size: 13px;
+                }
+              }
+            }
+
+            &:nth-child(3) {
+              flex: 1;
+
+              button {
+                width: 100%;
+                height: 36px;
+                border-radius: 8px;
+                background-color: $info;
+                border-color: $info;
+                color: $white;
+
+                .k-button-text .text {
+                  color: $white;
+                  font-weight: bold;
+                }
+              }
+            }
+
+            &:first-child,
+            &:nth-child(2) {
+              button {
+                width: 36px;
+                height: 36px;
+                border: 1px solid $border;
+                border-radius: 8px;
+              }
+            }
+          }
+        }
+      }
+
+      ps-dialog-confirm-bottom {
+        .dialog-header {
+          display: none !important;
+        }
+
+        .dialog-header .header-frame {
+          display: none !important;
+        }
+
+        .popup-add-part-body {
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          width: 100%;
+          max-width: 100%;
+          align-items: stretch;
+          min-height: 0;
+        }
+
+        .popup-block-1 {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .popup-block-vehicle {
+          width: 100%;
+          max-width: 100%;
+          height: 174px;
+          flex-shrink: 0;
+          position: relative;
+        }
+
+        .vehicle-slider-wrap {
+          display: block;
+          width: 100%;
+          max-width: 100%;
+          height: 100%;
+          overflow: hidden;
+        }
+
+        .vehicle-slider {
+          display: block;
+          width: 100%;
+          height: 100%;
+          max-width: 100%;
+          overflow-x: scroll;
+          overflow-y: hidden;
+          -webkit-overflow-scrolling: touch;
+          scroll-snap-type: x mandatory;
+          scroll-behavior: smooth;
+          scrollbar-width: thin;
+          scrollbar-color: $primary $background-primary;
+          touch-action: pan-x;
+          cursor: grab;
+          user-select: none;
+          position: relative;
+          z-index: 1;
+
+          &:active {
+            cursor: grabbing;
+          }
+
+          &::-webkit-scrollbar {
+            height: 1px;
+          }
+
+          &::-webkit-scrollbar-track {
+            background: $background-primary;
+            border-radius: 1px;
+          }
+
+          &::-webkit-scrollbar-thumb {
+            background: $primary;
+            border-radius: 1px;
+          }
+
+          &::-webkit-scrollbar-thumb:hover {
+            background: darken($primary, 8%);
+          }
+        }
+
+        .vehicle-slider-track {
+          display: flex;
+          flex-direction: row;
+          gap: 8px;
+          height: 100%;
+          padding: 0 8px;
+          width: max-content;
+          min-width: 100%;
+          box-sizing: border-box;
+        }
+
+        .vehicle-card-item {
+          flex-shrink: 0;
+          width: 104px;
+          height: 166px;
+          min-height: 0;
+          border-radius: 8px;
+          overflow: hidden;
+          position: relative;
+          cursor: pointer;
+          background: $white;
+          scroll-snap-align: start;
+          scroll-snap-stop: always;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+
+          &.selected {}
+
+          .card-img {
+            box-sizing: border-box;
+            width: 104px;
+            height: 78px;
+            flex-shrink: 0;
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            border: 1px dashed $border;
+          }
+
+          .card-info {
+            width: 104px;
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            font-size: 13px;
+            line-height: 16px;
+            font-weight: 700;
+            box-sizing: border-box;
+            overflow: hidden;
+
+            .card-code {
+              font-size: 11px;
+              line-height: 1.2;
+              color: $secondary;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              font-weight: bolder;
+            }
+
+            .card-name {
+              font-weight: bold;
+              line-height: 1.2;
+              word-break: break-word;
+              max-height: 3.6em;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              display: -webkit-box;
+              -webkit-line-clamp: 3;
+              -webkit-box-orient: vertical;
+              flex: 0 1 auto;
+              min-height: 0;
+            }
+
+            .card-ver {
+              color: $primary;
+              flex-shrink: 0;
+              font-weight: bold;
+            }
+
+            .card-status {
+              display: block;
+              font-size: 10px;
+              color: $secondary;
+              margin-top: auto;
+              flex-shrink: 0;
+              line-height: 1.2;
+            }
+          }
+
+          .card-check {
+            box-sizing: border-box;
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 8px;
+            top: 8.5px;
+            background: $white;
+            border: 1px solid $primary;
+            border-radius: 9px;
+            color: $primary;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            box-shadow: none !important;
+            outline: none !important;
+          }
+        }
+
+        .popup-block-form {
+          width: 100%;
+          max-width: 100%;
+          display: flex;
+          flex-direction: column;
+          touch-action: pan-y;
+        }
+
+        .popup-block-1 .block-1-header,
+        .popup-block-form .form-header {
+          width: 100%;
+          box-sizing: border-box;
+          padding: 0 0 4px;
+          margin: 0 auto 4px;
+          font-weight: 700;
+          font-size: 15px;
+          line-height: 19px;
+          text-align: center;
+          border-bottom: 1px solid rgba(60, 72, 88, 0.5);
+          color: rgba(60, 72, 88, 1);
+        }
+
+        .form-fields {
+          width: 100%;
+          padding: 8px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          box-sizing: border-box;
+
+          input,
+          .k-input,
+          .k-input-inner,
+          .k-numerictextbox input {}
+
+          .k-label {
+            margin-bottom: 4px;
+          }
+
+          kendo-label+.k-input,
+          .k-label+input {
+            margin-top: 4px;
+          }
+
+          .form-row-2 {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+
+            >* {
+              flex: 1;
+              min-width: 0;
+            }
+          }
+
+          ps-kendo-dropdown-list,
+          ps-kendo-numeric-textbox {
+            width: 100%;
+            max-width: 100%;
+          }
+
+          ps-kendo-numeric-textbox .custom-numeric-textbox {
+            gap: 0;
+          }
+        }
+
+        .popup-footer-btns {
+          height: 32px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 0 8px 8px;
+          width: calc(100% - 16px);
+          margin: 0 auto;
+          box-sizing: border-box;
+
+          ps-kendo-button {
+
+            &:first-child,
+            &:nth-child(2) {
+              button {
+                height: 32px;
+                min-width: 80px;
+              }
+            }
+
+            &:last-child {
+              flex: 1;
+
+              button {
+                width: 100%;
+                height: 32px;
+                background-color: $primary;
+                border-color: $primary;
+                color: $white;
+
+                .text {
+                  color: $white;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

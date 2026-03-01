@@ -3,6 +3,21 @@
     <ng-content></ng-content>
   </div>
 
+  <ps-dialog-confirm [open]="onconfirmlogout">
+    <div psDialogConfirmBody class="body">
+      <div class="title-out">
+        Đăng xuất
+      </div>
+      <div class="confirm">
+        Bạn có chắc chắn muốn đăng xuất khỏi hệ thống không?
+      </div>
+      <div class="group-buttom">
+        <ps-kendo-button (onClick)="onconfirmlogout = false">Huỷ</ps-kendo-button>
+        <ps-kendo-button [theme]="'primary'" (onClick)="onlogout()">đăng xuất</ps-kendo-button>
+      </div>
+    </div>
+  </ps-dialog-confirm>
+
   <div class="right">
     <ps-kendo-button>
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -10,7 +25,7 @@
               fill="white" />
       </svg>
     </ps-kendo-button>
-    <ps-kendo-button>
+    <ps-kendo-button (onClick)="onconfirmlogout = true">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M7.01613 6.16956C5.68507 7.28122 4.73151 8.77055 4.28453 10.4359C3.83756 12.1013 3.91876 13.8623 4.51713 15.4806C5.11551 17.0988 6.20217 18.4961 7.63 19.4833C9.05784 20.4706 10.7579 21 12.5 21C14.2421 21 15.9422 20.4706 17.37 19.4833C18.7978 18.4961 19.8845 17.0988 20.4829 15.4806C21.0812 13.8623 21.1624 12.1013 20.7155 10.4359C20.2685 8.77055 19.3149 7.28122 17.9839 6.16956M12.5 4V12.6783"
               stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />

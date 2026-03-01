@@ -1,0 +1,12 @@
+<div class="ps-dialog-confirm-bottom" *ngIf="open">
+  <div class="k-overlay" (click)="onclose()"></div>
+  <div class="dialog">
+    <div class="dialog-header">
+      <div class="header-frame">
+        <span>{{title}}</span>
+      </div>
+    </div>
+    <ng-content select="[psDialogConfirmBottomBody]"></ng-content>
+    <ng-content select="[psDialogConfirmBottomFooter]"></ng-content>
+  </div>
+</div>

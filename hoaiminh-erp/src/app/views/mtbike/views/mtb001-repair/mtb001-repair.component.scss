@@ -1,0 +1,366 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep {
+  mtb001-repair {
+    .mtb001-repair {
+      height: 100%;
+
+      ps-header-back {
+        .header-right {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 4px;
+
+          .func-title {
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: $primary;
+          }
+
+          .sub-title {
+            font-size: 13px;
+          }
+        }
+      }
+
+      .k-overlay {
+        z-index: 1000;
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+
+      }
+
+      .filter-popup {
+        z-index: 100002;
+        position: fixed;
+        bottom: -70%;
+        width: 100%;
+        height: fit-content;
+        padding: 10px;
+        border-radius: 10px;
+        background: $white;
+        transition: bottom 0.35s ease-in-out;
+
+        &.open {
+          bottom: 0;
+        }
+
+        .popup-header {
+          display: flex;
+          justify-content: center;
+
+          .header-filter {
+            width: fit-content;
+            border-bottom: 1px solid $border;
+
+            span {
+              font-size: 13px;
+              font-weight: bold;
+            }
+
+            .material-icons {
+              color: $primary;
+            }
+          }
+        }
+
+        .popup-body {
+          margin-top: 10px;
+
+          .body-top {
+            width: 95%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px;
+
+            .date-picker {
+              display: flex;
+              flex-direction: column;
+              gap: 10px;
+
+              .datepicker {
+                display: flex;
+                flex-direction: column;
+
+                label {
+                  font-size: 13px;
+                }
+
+                kendo-datepicker {
+                  height: 35px;
+                  border-color: $border;
+                  border-radius: 5px;
+                  padding-left: 15px;
+
+                  input {
+                    font-size: 13px;
+                    color: $secondary;
+                    font-weight: 400;
+                  }
+
+                  button {
+                    background: $white;
+                  }
+
+                  &.disable-block {
+                    background: $disable-input;
+                    pointer-events: none;
+
+                    button {
+                      background: $disable-input;
+                    }
+                  }
+
+                  &.readonly-mode {
+                    border: none;
+                    pointer-events: none;
+
+                    button {
+                      display: none;
+                    }
+                  }
+                }
+
+                .k-disabled {
+                  border-color: $border;
+                  background-color: $disable-input;
+                  opacity: 1;
+
+                  .k-input-button {
+                    border-left: none;
+                    background-color: transparent;
+                  }
+                }
+
+                .status {
+                  margin-top: 5px;
+                }
+              }
+            }
+
+            .monthpicker {
+              display: flex;
+              gap: 10px;
+
+              ps-kendo-dropdown-list {
+                .kendo-dropdown-list {
+                  .k-dropdownlist {
+                    .k-animation-container {
+                      .k-popup {
+                        .k-list {
+                          .k-list-content {
+                            overflow: auto;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+
+            .checkbox {
+              display: flex;
+              flex-direction: column;
+              gap: 5px;
+
+              .checkbox-main-label {
+                margin-bottom: 5px;
+                display: block;
+                font-size: 13px;
+              }
+
+              .checkbox-list {
+                display: flex;
+                justify-content: space-between;
+
+                ps-kendo-checkbox {
+                  .checkbox {
+                    flex-direction: row;
+                  }
+                }
+              }
+
+            }
+
+            .row-4 {
+              display: flex;
+              gap: 10px;
+
+              ps-kendo-dropdown-list {
+                flex: 1;
+              }
+            }
+          }
+
+        }
+
+        .body-bottom {
+          margin-top: 15px;
+          display: flex;
+          gap: 4px;
+          width: 100%;
+
+          ps-kendo-button:last-child {
+            flex: 1;
+
+            button {
+              width: 100%;
+
+
+            }
+          }
+        }
+      }
+
+      .repair-body {
+        height: calc(100% - 96px);
+        width: 100%;
+        padding: 8px 0;
+
+        .body-title {
+          padding: 0 8px 0 8px;
+          font-size: 13px;
+          font-weight: bold;
+          color: $secondary;
+          height: 32px;
+          display: flex;
+          align-items: center;
+        }
+
+        .body-list {
+          padding: 0 8px;
+          width: 100%;
+          height: calc(100% - 32px);
+          gap: 4px;
+          display: flex;
+          flex-direction: column;
+          overflow-y: auto;
+
+          .item {
+            display: flex;
+            height: 45px;
+
+            .item-left {
+              width: calc(100% - 45px);
+              padding-left: 4px;
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+              justify-content: center;
+
+              .customer {
+                font-size: 13px;
+                font-weight: bold;
+              }
+
+              .vehicle {
+                display: flex;
+                gap: 4px;
+                font-size: 10px;
+
+                .wanring span {
+                  color: $warning;
+                }
+
+                .error span {
+                  color: $error;
+                }
+              }
+            }
+
+            .item-right {
+              width: 45px;
+              height: 45px;
+              display: flex;
+              align-items: center;
+              background-color: $error;
+              font-size: 11px;
+              color: $white;
+              text-align: center;
+            }
+          }
+
+          .white {
+            background-color: $white;
+          }
+        }
+      }
+
+      ps-footer-action {
+        .footer-action {
+          ps-kendo-button {
+            button {
+              height: 40px;
+              width: calc(100% / 3);
+
+              .k-button-text {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 2px 0;
+
+                svg {
+                  width: 24px;
+                  height: 24px;
+                }
+
+                .text {
+                  font-size: 11px;
+                }
+              }
+            }
+          }
+
+          ps-kendo-button:nth-child(2) {
+            button {
+              border-radius: 0;
+
+              span {
+                color: $white;
+              }
+            }
+
+            .text {
+              color: $white;
+            }
+          }
+
+          ps-kendo-button:first-child,
+          ps-kendo-button:last-child {
+            button {
+              border: none;
+            }
+          }
+        }
+      }
+    }
+
+    ps-dialog-confirm {
+
+
+      .main-title {
+        text-align: center;
+
+        div {
+          font-weight: bold;
+          color: $primary;
+        }
+      }
+
+      .sub-title {
+        span {
+          font-weight: bold;
+          color: $error;
+        }
+      }
+    }
+  }
+}

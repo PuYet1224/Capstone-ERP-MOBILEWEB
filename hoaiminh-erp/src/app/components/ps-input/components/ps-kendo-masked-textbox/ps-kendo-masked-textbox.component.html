@@ -1,0 +1,8 @@
+<div class="kendo-maskedtextbox">
+  <kendo-label *ngIf="label != ''" class="k-display-block" [for]="textbox" text="{{label}}"></kendo-label>
+  <kendo-maskedtextbox #maskedtextbox (keydown.Enter)="onKeydownEnter()" (valueChange)="onValueChange()"
+                       (blur)="onBlur()" (focus)="onFocus()" (valueChange)="onChange($event)"
+                       [(ngModel)]="value" [disabled]="disabled" [style.width.px]="width"
+                       [ngClass]="{'hasPrefix': hasPrefix}" [mask]="mask">
+  </kendo-maskedtextbox>
+</div>

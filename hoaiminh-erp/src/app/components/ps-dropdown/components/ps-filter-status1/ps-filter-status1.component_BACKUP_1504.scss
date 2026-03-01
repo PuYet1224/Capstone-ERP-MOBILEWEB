@@ -1,0 +1,303 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep {
+  ps-filter-status1 {
+    .card-content-column {
+      display: flex;
+      gap: 50px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      height: 56px;
+
+      .col-2 {
+        display: flex;
+        flex-direction: column;
+        width: fit-content;
+        min-width: 200px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        kendo-label {
+          line-height: 1;
+
+          .k-label {
+            line-height: 1;
+          }
+        }
+
+        .hasSelect {
+          .k-input-values {
+            .k-chip {
+              .k-chip-content {
+                .k-chip-label {
+                  font-style: italic;
+                  color: $placeholder;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .col-3-4-container {
+        display: flex;
+        gap: 10px;
+
+        .col-3 {
+          width: fit-content;
+          display: flex;
+          flex-direction: column;
+
+          .btn-group {
+            display: flex;
+            gap: 10px;
+            padding-top: 21px;
+          }
+        }
+
+        .col-4 {
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+
+          kendo-label {
+            line-height: 1;
+
+            .k-label {
+              line-height: 1;
+            }
+          }
+
+          .status-btn {
+            display: flex;
+            font-size: 10px;
+            height: 35px;
+            flex-wrap: wrap;
+            gap: 3px;
+          }
+
+          .status {
+            width: fit-content;
+            gap: 10px;
+            padding: 0 5px;
+            border: 1px solid #808080;
+            color: #808080;
+            border-radius: 8px;
+            background: $white;
+            display: flex;
+            align-items: center;
+            height: 16px;
+
+            &:hover {
+              background-color: $hover;
+            }
+
+            .custom-tag {
+              color: #808080;
+              display: flex;
+              height: 13.4px;
+              align-items: center;
+            }
+
+            .k-i-x {
+              cursor: pointer;
+              font-size: 10px;
+              color: #808080;
+            }
+          }
+        }
+      }
+
+      label {
+        font-size: 13px;
+      }
+
+      .k-input-solid.k-focus {
+        box-shadow: none;
+      }
+
+      .dropdown-list {
+        height: 35px;
+        width: 200px;
+        border: 1px solid $border;
+
+        .k-clear-value {
+          display: none;
+        }
+
+        &:has(.k-animation-container) {
+          border: 1px solid $primary;
+        }
+
+        .k-chip-list-md {
+          .k-chip-solid-base {
+            font-size: 13px;
+            border: none;
+            background-color: transparent;
+
+            .k-chip-content {
+              height: 34px;
+
+              .k-chip-label {
+                height: 35px;
+                display: flex;
+                align-items: center;
+              }
+            }
+
+            .k-chip-actions {
+              display: none;
+            }
+          }
+        }
+
+        .k-icon {
+          display: none;
+          pointer-events: none;
+        }
+      }
+
+      .dropdown-list::after {
+        font-family: "WebComponentsIcons";
+        content: "\e015";
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 13px;
+        cursor: pointer;
+      }
+
+      .dropdown-list.k-open::after {
+        content: "\e013";
+      }
+
+      .button {
+        width: 35px;
+
+        .k-button {
+          box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+          border: none;
+          background: $white;
+        }
+      }
+    }
+  }
+
+  kendo-popup kendo-treeview {
+    padding-block: 0 !important;
+    padding-inline: 0 !important;
+
+    ul .k-treeview-item {
+      padding: 0;
+
+      .k-treeview-top {
+        cursor: pointer;
+
+        &:hover {
+          background: $hover;
+        }
+
+        height: 35px;
+
+        .k-treeview-leaf.k-focus {
+          box-shadow: none;
+        }
+
+        kendo-checkbox {
+          width: 35px;
+          height: 35px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          .k-checkbox:indeterminate {
+            background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2016%2016%27%3E%3Cpath%20fill%3D%27none%27%20stroke%3D%27%23126433%27%20stroke-linecap%3D%27square%27%20stroke-linejoin%3D%27square%27%20stroke-width%3D%272%27%20d%3D%27M4%2C8%20h8%27/%3E%3C/svg%3E");
+          }
+
+          .k-checkbox:checked {
+            border-color: $primary;
+            color: white;
+            background-color: $primary;
+          }
+        }
+      }
+
+      ul {
+        margin-top: 5px;
+        gap: 5px;
+        display: flex;
+        flex-direction: column;
+
+        .k-treeview-item {
+          padding: 0;
+          padding-left: 15px;
+
+          .k-treeview-mid,
+          .k-treeview-bot {
+            .k-checkbox-wrapper {
+              width: 35px;
+              height: 35px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+          }
+        }
+
+        .k-treeview-leaf:focus,
+        .k-treeview-leaf.k-focus {
+          box-shadow: none;
+        }
+
+        li {
+          cursor: pointer;
+
+          &:hover {
+            background: $hover;
+          }
+
+          .k-treeview-top:hover {
+            background: none;
+          }
+
+          display: flex;
+          align-items: center;
+          padding-left: 15px;
+          padding-right: 5px;
+          height: 35px;
+
+          kendo-checkbox {
+            .k-checkbox:checked {
+              border-color: $primary;
+              color: white;
+              background-color: $primary;
+            }
+
+            .k-checkbox:checked:focus {
+              box-shadow: none;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .k-checkbox:focus {
+    box-shadow: none;
+  }
+
+  .k-treeview-leaf:focus {
+    box-shadow: none !important;
+  }
+
+  .k-treeview-leaf:hover {
+    background: none;
+  }
+
+  k-treeview-leaf.k-focus {
+    box-shadow: none !important;
+  }
+}

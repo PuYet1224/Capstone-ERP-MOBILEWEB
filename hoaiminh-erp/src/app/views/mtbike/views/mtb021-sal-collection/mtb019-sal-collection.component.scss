@@ -1,0 +1,451 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep {
+    mtb019-sal-collection {
+        .mtb019-sal-payment {
+            height: 100%;
+
+            ps-header-back {
+                .ps-header {
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    height: 56px;
+
+                    .header-right {
+                        height: fit-content;
+                        display: flex;
+                        width: 100%;
+                        justify-content: space-between;
+                        align-items: center;
+                        font-size: 13px;
+
+                        .left-side {
+
+                            .func-title1 {
+                                font-size: 13px;
+                                font-weight: bold;
+                                text-transform: uppercase;
+                                color: $primary;
+                            }
+                        }
+
+                        .right-side {
+                            span {
+                                color: $error;
+                                font-weight: bold;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // .k-overlay
+            // {
+            //     z-index: 1000;
+            //     position: fixed;
+            //     width: 100vw;
+            //     height: 100vh;
+            // }
+
+            // .filter-popup
+            // {
+            //     z-index: 100002;
+            //     position: fixed;
+            //     bottom: -70%;
+            //     width: 100%;
+            //     height: fit-content;
+            //     padding: 8px;
+            //     border-top-left-radius: 8px;
+            //     border-top-right-radius: 8px;
+            //     background: $white;
+            //     transition: bottom 0.35s ease-in-out;
+
+            //     &.open
+            //     {
+            //         bottom: 0;
+            //     }
+
+            //     .popup-header
+            //     {
+            //         display: flex;
+            //         justify-content: center;
+
+            //         .header-filter
+            //         {
+            //             width: fit-content;
+            //             border-bottom: 1px solid $border;
+
+            //             .material-icons
+            //             {
+            //                 color: $primary;
+            //             }
+
+            //             span
+            //             {
+            //                 font-size: 13px;
+            //                 font-weight: bold;
+            //             }
+            //         }
+            //     }
+
+            //     .popup-body
+            //     {
+            //         margin-top: 10px;
+
+            //         .body-top
+            //         {
+            //             width: 95%;
+            //             margin: 0 auto;
+            //             display: flex;
+            //             flex-direction: column;
+            //             justify-content: center;
+            //             gap: 10px;
+
+            //             ps-kendo-dropdown-list
+            //             {
+            //                 .kendo-dropdown-list
+            //                 {
+            //                     kendo-dropdownlist
+            //                     {
+            //                         kendo-popup
+            //                         {
+            //                             .k-popup
+            //                             {
+            //                                 kendo-list
+            //                                 {
+            //                                     .k-list-content
+            //                                     {
+            //                                         overflow: auto;
+            //                                     }
+            //                                 }
+            //                             }
+            //                         }
+            //                     }
+            //                 }
+            //             }
+
+
+            //             .row-4
+            //             {
+            //                 display: flex;
+            //                 gap: 10px;
+
+            //                 ps-kendo-dropdown-list
+            //                 {
+            //                     flex: 1;
+            //                 }
+            //             }
+            //         }
+
+            //     }
+
+            //     .body-bottom
+            //     {
+            //         margin-top: 15px;
+            //         display: flex;
+            //         gap: 8px;
+            //         width: 100%;
+
+            //         ps-kendo-button:last-child
+            //         {
+            //             flex: 1;
+
+            //             button
+            //             {
+            //                 width: 100%;
+            //             }
+            //         }
+            //     }
+            // }
+
+            [psDialogConfirmBottomBody] {
+                // margin-top: 10px;
+
+                .body-top {
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+
+                    kendo-label {
+                        .k-label {
+                            font-weight: bold;
+                            color: rgba($secondary, 0.7);
+                        }
+                    }
+
+                    .row-4 {
+                        display: flex;
+                        gap: 8px;
+
+                        ps-kendo-dropdown-list,
+                        ps-kendo-textbox {
+                            flex: 1;
+                        }
+                    }
+
+                    ps-kendo-textbox.unit-price {
+                        kendo-label {
+                            .k-label {
+                                white-space: nowrap;
+                                padding-left: 4px;
+                            }
+                        }
+                    }
+                }
+            }
+
+            [psDialogConfirmBottomFooter] {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                padding: 8px 0px 0px 0px;
+                max-width: 100%;
+                width: 100%;
+                box-sizing: border-box;
+
+                ps-kendo-button {
+                    width: calc(25% - 4px);
+
+                    &:last-child {
+                        width: calc(75% - 4px);
+                    }
+
+                    button {
+                        width: 100%;
+                    }
+                }
+            }
+
+            .repair-body {
+                height: calc(100% - 112px);
+                width: 100%;
+                margin: 8px 0;
+                overflow: hidden;
+
+                .body-title {
+                    padding: 0 8px 0 8px;
+                    font-size: 13px;
+                    font-weight: bold;
+                    color: $secondary;
+                    height: 32px;
+                    display: flex;
+                    align-items: center;
+                    line-height: 1;
+                }
+
+                .action-tabs {
+                    padding: 8px;
+                    margin: 8px;
+                    margin-top: 0;
+                    background: $white;
+                    display: flex;
+                    gap: 8px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    border-radius: 8px;
+
+                    .tab {
+                        font-size: 11px;
+                        background: $background-primary;
+                        padding: 6px 0;
+                        border-radius: 5px;
+                        text-align: center;
+                        flex: 1;
+
+                        &.active {
+                            outline: 1px solid $primary;
+                            color: $primary;
+                            background: $white;
+                        }
+                    }
+                }
+
+                .body-list {
+                    padding: 0 8px;
+                    width: 100%;
+                    height: calc(100% - 48px);
+                    gap: 4px;
+                    display: flex;
+                    flex-direction: column;
+                    overflow-y: auto;
+
+                    .item {
+                        height: 45px;
+                        display: flex;
+                        gap: 4px;
+
+                        .item-left {
+                            width: calc(100% - 92px);
+                            line-height: 1;
+                            padding-left: 4px;
+                            height: 45px;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 8px;
+                            justify-content: center;
+
+                            .customer {
+                                font-size: 13px;
+                                font-weight: bold;
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+
+                                span {
+                                    font-weight: bold;
+                                }
+
+                                .retail-no {
+                                    font-weight: bold;
+                                    color: $error;
+
+                                    span {
+                                        font-weight: bold;
+                                    }
+                                }
+                            }
+
+                            .vehicle {
+                                display: flex;
+                                gap: 4px;
+                                font-size: 11px;
+                                align-items: center;
+                                flex-wrap: nowrap;
+
+                                .vehicle-care,
+                                .vehicle-buy {
+                                    display: flex;
+                                    max-width: calc(100% - 8px);
+                                    text-wrap: nowrap;
+
+                                    &.case2 {
+                                        display: flex;
+                                        gap: 16px;
+                                    }
+
+                                    .vehicle-care-name,
+                                    .vehicle-buy-name {
+                                        color: $primary;
+                                        overflow: hidden;
+                                        text-overflow: ellipsis;
+                                        white-space: nowrap;
+                                    }
+
+                                    .vehicle-color {
+                                        color: $primary
+                                    }
+
+                                    .vehicle-transfer {
+                                        color: $warning;
+                                    }
+
+                                    .vehicle-buy {
+                                        color: $primary;
+                                    }
+                                }
+                            }
+
+                        }
+
+                        .item-right {
+                            width: 88px;
+                            height: 45px;
+                            display: flex;
+                            align-items: center;
+                            // background-color: $error;
+                            font-size: 11px;
+                            color: $white;
+                            text-align: center;
+
+                            .pipe-class {
+                                height: 100%;
+                                width: 100%;
+                                line-height: 1;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                            }
+                        }
+                    }
+
+                    .white {
+                        background-color: $white;
+                    }
+                }
+            }
+
+            ps-footer-action {
+                .footer-action {
+                    ps-kendo-button {
+                        button {
+                            height: 40px;
+                            border-radius: 0;
+                            padding: 0;
+
+
+                            .k-button-text {
+                                height: 100%;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                gap: 4px;
+                                padding: 4px 0;
+                                text-transform: none;
+                                justify-content: center;
+
+                                svg {
+                                    width: 24px;
+                                    height: 24px;
+                                }
+
+                                .text {
+                                    font-size: 13px;
+                                }
+                            }
+                        }
+
+                        &:first-child {
+                            button {
+                                width: 50%;
+                                border: none;
+
+                                .k-button-text {
+                                    border-right: 1px solid $border !important;
+                                    width: 100%;
+                                    height: 65%;
+                                }
+                            }
+                        }
+
+                        &:last-child {
+                            button {
+                                width: 50%;
+                                border: none;
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+        ps-dialog-confirm {
+
+
+            .main-title {
+                text-align: center;
+
+                div {
+                    font-weight: bold;
+                    color: $primary;
+                }
+            }
+
+            .sub-title {
+                span {
+                    font-weight: bold;
+                    color: $error;
+                }
+            }
+        }
+    }
+}

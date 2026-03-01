@@ -1,5 +1,6 @@
 import { LSVehicleConfigStatus } from "../../enums/e-status/ls-vehicle-config-status.enum";
-import { LSVehicleColorCusDTO } from "./ls-vehicle-color-cus.dto";
+import { LSVehicleColorCusDTO } from "./ls-vehicle-color.dto";
+import { LSVehicleSpecsCusDTO } from "./LSVehicleSpecs.dto";
 
 class LSVehicleDTO {
   Code: number = 0;
@@ -29,4 +30,15 @@ export class LSVehicleCusDTO extends LSVehicleDTO {
   CategoryName: string = '';
   StatusName: string = "Tạo mới";
   TypeOfVehicleStatus: LSVehicleConfigStatus;
+  MinPrice: number;
+  MaxPrice: number;
+  ListPromotionName = []
+  Category: number
+  ListSpecs: LSVehicleSpecsCusDTO[] = []
+  VehicleColor: number;
+  ColorName: string;
+  ImageSetting1: string;
+  IsImportant: boolean;
+  IsChecked: boolean = false;
+  IsExisted: boolean = false;
 }

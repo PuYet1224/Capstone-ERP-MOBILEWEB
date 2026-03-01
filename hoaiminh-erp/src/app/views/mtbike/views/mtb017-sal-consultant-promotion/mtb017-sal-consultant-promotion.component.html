@@ -1,0 +1,114 @@
+<div class="mtb017-sal-consutant-promotion">
+    <!-- START: HEADER -->
+    <ps-header-back>
+        <div class="left-side">
+            <div class="func-title1">Tư vấn bán hàng</div>
+            <div class="func-title2">Dịch vụ kèm theo</div>
+        </div>
+        <div class="right-side">
+            <div>
+                No.: <span>{{master.ID}}</span>
+            </div>
+            <div #wrapper class="marquee-wrapper" (click)="onnavigate('/detail')">
+                <div #content class="marquee-content">
+                    {{master.CustomerName != null && master.CustomerName != undefined ?
+                        master.CustomerName + ' |' : ''}}
+                    {{master.CustomerPhone}}
+                </div>
+            </div>
+        </div>
+    </ps-header-back>
+    <!-- END: HEADER -->
+
+    <!-- START: BODY -->
+    <main>
+        <div class="main-body">
+            <section *ngFor="let promotion of promotionlist; let i = index">
+                <div class="group-services">
+                    <label [for]="promotion.Code + '_' + i">
+                        <div class="group-checkbox">
+                            <ps-kendo-checkbox [(ngModel)]="promotion.IsChecked" [id]="promotion.Code + '_' + i" class="service-checkbox"
+                                               (onchecked)="onuncheck(promotion, false)">
+                            </ps-kendo-checkbox>
+                            <div class="group-text">
+                                <span>{{ i + 1 }}. {{ promotion.InternalName }}</span>
+                            </div>
+                        </div>
+
+                        <div class="promotion-percent" *ngIf="promotion.DiscountPercentage != null && promotion.DiscountPercentage != 0">
+                            giảm {{promotion.DiscountPercentage }}%
+                            <div class="sub-title" *ngIf="promotion.TypeData == enumpmttype.PERCENTAGELIMIT">
+                                (Tối đa
+                                <span> {{formatprice(promotion.DiscountAmount)}}₫</span>
+                                )
+                            </div>
+                        </div>
+                        <span>{{countchecked(promotion)}}</span>
+                    </label>
+                </div>
+
+                <div class="section-group" *ngIf="promotion.IsChecked == true">
+                    <ps-kendo-checkbox label="Áp dụng cho tất cả" [(ngModel)]="promotion.IsAll" [id]="promotion.Code + '_' + i + '_' + promotion.IsAll"
+                                       (onchecked)="oncheckall(promotion)"></ps-kendo-checkbox>
+                    <span class="price">{{formatprice(promotion.Price)}}đ</span>
+                </div>
+
+                <ng-container *ngIf="promotion.IsChecked == true && !promotion.IsAll">
+                    <div class="section-group" *ngFor="let chill of promotion.ListOrderDetail">
+                        <ps-kendo-checkbox [(ngModel)]="chill.IsChecked" [id]="promotion.Code + '_' + i + '_' + chill.Code"
+                                           (onchecked)="onitemchecked(promotion, chill)">
+                        </ps-kendo-checkbox>
+                        <label class="group-vehicle" [for]="promotion.Code + '_' + i + '_' + chill.Code">
+                            <div class="vehicle-image">
+                                <span class="tag" [class.available]="chill.TypeData == 1" [class.allocated]="chill.TypeData == 2"
+                                      [class.booked]="chill.TypeData == 3">
+                                    {{chill.TypeData == 1 ? 'Có sẵn' : (chill.TypeData == 2 ? 'Điều xe' : 'Đặt xe')}}
+                                </span>
+                                <img src="{{chill.ImageSetting1}}">
+                            </div>
+                            <div class="vehicle-info" [class.chill_checked]="chill.IsChecked == true">
+                                <div class="vehicle-name">
+                                    <b (click)="onnavigate('/promotion-detail', $event, chill)">[{{chill.Code}}]</b>
+                                    {{chill.TypeOfVehicleName}} | {{chill.VehicleName}}
+                                </div>
+                                <div class="info-group">
+                                    <div class="vehicle-color">
+                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M3.19903 4.88167C5.64903 1.61834 10.724 0.66917 14.3357 2.915C17.9024 5.13167 19.214 9.39584 17.7524 13.3958C16.3732 17.1733 12.739 18.6692 10.1199 16.7692C9.13903 16.0575 8.75819 15.165 8.57486 13.7158L8.48653 12.8933L8.44903 12.5617C8.34653 11.7833 8.18986 11.435 7.86153 11.2517C7.41569 11.0033 7.11819 10.9975 6.53236 11.2242L6.23986 11.3458L6.09069 11.4108C5.24569 11.7775 4.68403 11.9067 3.97319 11.7575L3.80653 11.7183L3.66986 11.6792C1.34569 10.9592 1.00153 7.80667 3.19903 4.88167ZM4.01903 10.4783L4.12153 10.5092L4.23319 10.5342C4.59903 10.6067 4.91153 10.5467 5.43069 10.3325L5.93236 10.1183C6.93403 9.7075 7.58653 9.66834 8.47069 10.16C9.23486 10.5867 9.53319 11.2417 9.68486 12.3767L9.72903 12.7592L9.77486 13.2025L9.81403 13.5542C9.95736 14.6883 10.2182 15.2958 10.854 15.7575C12.7499 17.1325 15.4657 16.015 16.579 12.9667C17.8424 9.50667 16.724 5.87167 13.6757 3.97584C10.6132 2.0725 6.25986 2.8875 4.19819 5.63167C2.46903 7.93417 2.68153 10.0317 4.01903 10.4783ZM13.3732 8.81667C13.3338 8.68335 13.3215 8.5435 13.3371 8.40536C13.3526 8.26722 13.3956 8.13358 13.4636 8.01232C13.5315 7.89106 13.6231 7.78463 13.7328 7.69931C13.8426 7.61398 13.9683 7.55148 14.1025 7.51549C14.2368 7.47951 14.3769 7.47076 14.5146 7.48976C14.6523 7.50877 14.7848 7.55515 14.9043 7.62616C15.0238 7.69717 15.1279 7.79139 15.2105 7.90325C15.293 8.01512 15.3523 8.14237 15.3849 8.2775C15.4485 8.54164 15.4065 8.82021 15.2677 9.05379C15.1289 9.28736 14.9043 9.45746 14.6419 9.5278C14.3794 9.59814 14.0999 9.56316 13.8629 9.43031C13.6259 9.29745 13.4501 9.07725 13.3732 8.81667ZM13.7849 11.7233C13.7495 11.5912 13.7404 11.4534 13.7583 11.3177C13.7762 11.1821 13.8206 11.0513 13.889 10.9329C13.9574 10.8144 14.0484 10.7105 14.157 10.6273C14.2655 10.544 14.3894 10.4829 14.5215 10.4475C14.6537 10.4121 14.7915 10.4031 14.9271 10.4209C15.0628 10.4388 15.1935 10.4832 15.312 10.5516C15.4305 10.62 15.5343 10.7111 15.6176 10.8196C15.7009 10.9282 15.762 11.052 15.7974 11.1842C15.8689 11.451 15.8314 11.7354 15.6933 11.9747C15.5551 12.2139 15.3276 12.3885 15.0607 12.46C14.7938 12.5315 14.5095 12.4941 14.2702 12.3559C14.0309 12.2178 13.8564 11.9902 13.7849 11.7233ZM11.7249 6.31417C11.6534 6.0473 11.6908 5.76295 11.829 5.52368C11.9671 5.28442 12.1947 5.10983 12.4615 5.03834C12.7284 4.96684 13.0127 5.00428 13.252 5.14244C13.4913 5.28059 13.6659 5.50813 13.7374 5.775C13.7728 5.90715 13.7818 6.04497 13.7639 6.1806C13.7461 6.31623 13.7017 6.44702 13.6333 6.56549C13.5649 6.68396 13.4738 6.7878 13.3652 6.87108C13.2567 6.95435 13.1328 7.01544 13.0007 7.05084C12.7338 7.12234 12.4495 7.08489 12.2102 6.94674C12.0917 6.87833 11.9879 6.78726 11.9046 6.67872C11.8213 6.57019 11.7603 6.44631 11.7249 6.31417ZM11.7015 13.8125C11.6622 13.6792 11.6499 13.5393 11.6654 13.4012C11.6809 13.2631 11.7239 13.1294 11.7919 13.0082C11.8599 12.8869 11.9514 12.7805 12.0612 12.6951C12.1709 12.6098 12.2966 12.5473 12.4309 12.5113C12.5651 12.4753 12.7053 12.4666 12.843 12.4856C12.9807 12.5046 13.1132 12.551 13.2327 12.622C13.3522 12.693 13.4563 12.7872 13.5388 12.8991C13.6213 13.0109 13.6806 13.1382 13.7132 13.2733C13.7769 13.5375 13.7348 13.816 13.596 14.0496C13.4572 14.2832 13.2327 14.4533 12.9702 14.5236C12.7078 14.594 12.4282 14.559 12.1912 14.4261C11.9542 14.2933 11.7785 14.0731 11.7015 13.8125ZM8.78736 5.50417C8.75068 5.37161 8.74062 5.23309 8.75775 5.09662C8.77489 4.96014 8.81888 4.82842 8.88719 4.70903C8.9555 4.58965 9.04678 4.48498 9.15576 4.40106C9.26474 4.31714 9.38925 4.25564 9.52213 4.22009C9.655 4.18455 9.7936 4.17567 9.92992 4.19398C10.0662 4.21228 10.1976 4.2574 10.3164 4.32673C10.4352 4.39607 10.5391 4.48824 10.622 4.59793C10.705 4.70762 10.7655 4.83266 10.7999 4.96584C10.8686 5.23183 10.8294 5.51419 10.691 5.75146C10.5525 5.98872 10.3259 6.16168 10.0605 6.23267C9.79509 6.30366 9.5124 6.26693 9.27396 6.13049C9.03551 5.99405 8.86062 5.76894 8.78736 5.50417Z"
+                                                  fill="#3C4858" />
+                                        </svg>
+
+                                        {{chill.VehicleColorName}}
+                                    </div>
+                                    <div class="vehicle-price">
+                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M9.99984 18.3333C14.6022 18.3333 18.3332 14.6024 18.3332 9.99999C18.3332 5.39762 14.6022 1.66666 9.99984 1.66666C5.39746 1.66666 1.6665 5.39762 1.6665 9.99999C1.6665 14.6024 5.39746 18.3333 9.99984 18.3333Z"
+                                                  stroke="#E5322B" stroke-width="1.5" />
+                                            <path d="M10 5V15M12.5 7.91667C12.5 6.76667 11.3808 5.83333 10 5.83333C8.61917 5.83333 7.5 6.76667 7.5 7.91667C7.5 9.06667 8.61917 10 10 10C11.3808 10 12.5 10.9333 12.5 12.0833C12.5 13.2333 11.3808 14.1667 10 14.1667C8.61917 14.1667 7.5 13.2333 7.5 12.0833"
+                                                  stroke="#E5322B" stroke-width="1.5" stroke-linecap="round" />
+                                        </svg>
+
+                                        {{formatprice(chill.Amount)}}đ
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </ng-container>
+            </section>
+        </div>
+    </main>
+    <!-- END: BODY -->
+
+    <!-- START: FOOTER -->
+    <ps-footer-action>
+        <ps-kendo-button (onClick)="onnavigate('/cart')">
+            <span class="material-icons w-300">arrow_back</span>
+        </ps-kendo-button>
+
+        <ps-kendo-button (onClick)="onnavigate('')">
+            <span class="material-icons w-300">list_alt</span>
+        </ps-kendo-button>
+    </ps-footer-action>
+    <!-- END: FOOTER -->
+</div>

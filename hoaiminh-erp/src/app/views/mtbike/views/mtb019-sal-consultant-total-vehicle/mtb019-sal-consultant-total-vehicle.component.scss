@@ -1,0 +1,566 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep {
+  mtb019-sal-consultant-total-vehicle {
+    font-size: 13px;
+    height: 100%;
+    background-color: $gray-light;
+
+    .mtb019-retail-total {
+      height: 100%;
+      touch-action: manipulation;
+
+      ps-header-back {
+        .ps-header {
+          .header-right {
+            height: fit-content;
+            display: flex;
+            width: calc(100% - 44px);
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+
+            .left-side {
+              min-width: 128px;
+              width: 128px;
+
+              .func-title1 {
+                font-weight: bold;
+                text-transform: uppercase;
+                color: $primary;
+              }
+            }
+
+            .right-side {
+              text-align: end;
+              width: calc(100% - 136px);
+
+              div {
+
+                span,
+                .marquee-content {
+                  font-weight: bold;
+                }
+
+                span {
+                  color: $error;
+                }
+
+                .marquee-content {
+                  color: $info;
+                }
+              }
+
+              .marquee-wrapper {
+                width: 100%;
+                overflow: hidden;
+                white-space: nowrap;
+                position: relative;
+
+                .marquee-content {
+                  display: inline-block;
+                  white-space: nowrap;
+                  transform: translateX(0);
+                }
+
+                .marquee-content.running {
+                  transform: translateX(70%);
+                  animation: slide-left 8s linear infinite;
+                }
+
+                @keyframes slide-left {
+                  from {
+                    transform: translateX(70%);
+                  }
+
+                  to {
+                    transform: translateX(-100%);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .retail-total-body {
+        height: calc(100% - 104px);
+        padding: 8px;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+
+        .body-inner {
+          flex: 1;
+          min-height: 0;
+          overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
+          touch-action: pan-y;
+        }
+
+        .main-body {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .info-card,
+        .price-card {
+          background: $white;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-card.vehicle-detail-card.block.block-1 {
+          overflow: hidden;
+          position: relative;
+          touch-action: pan-y;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          background-color: $white;
+          border-radius: 8px;
+
+          lucide-icon {
+            color: $primary !important;
+            position: absolute;
+            top: 50%;
+            width: 24px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translateY(-50%);
+            background-color: rgba($background-primary, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+            cursor: pointer;
+            z-index: 10;
+          }
+
+          lucide-icon.left {
+            left: 8px;
+          }
+
+          lucide-icon.right {
+            right: 8px;
+          }
+
+          .block-title-row {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            min-height: 32px;
+            line-height: 1;
+            font-weight: bold;
+            border-bottom: 1px solid $border;
+            cursor: pointer;
+
+            .block-title {
+              flex: 0 0 auto;
+              font-weight: bold;
+              line-height: 1;
+              color: $info;
+
+              span {
+                cursor: pointer;
+                color: $info;
+                font-weight: bold;
+              }
+            }
+
+            .card-nav-indicator {
+              flex: 1;
+              text-align: center;
+              font-size: 12px;
+              color: $secondary;
+              font-weight: normal;
+            }
+
+            .block-title-code {
+              flex: 0 0 auto;
+
+              b {
+                font-weight: bolder;
+              }
+            }
+          }
+
+          .block-vehicle {
+            padding: 8px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            gap: 8px;
+
+            .tag {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              position: absolute;
+              padding: 0 24px;
+              height: 24px;
+              font-size: 10px;
+              font-weight: bold;
+              font-style: italic;
+              line-height: 1;
+              color: $white;
+              rotate: -45deg;
+              top: 4px;
+              left: -24px;
+              z-index: 1;
+            }
+
+            .tag.available {
+              background-color: $primary;
+            }
+
+            .tag.allocated {
+              background-color: $warning;
+            }
+
+            .tag.booked {
+              background-color: $secondary;
+            }
+
+            .vehicle-image {
+              min-width: 112px;
+              width: 112px;
+              border: 1px dotted $border;
+              border-radius: 8px;
+              display: flex;
+              align-items: center;
+              flex-shrink: 0;
+              overflow: hidden;
+
+              img {
+                width: 100%;
+                display: block;
+              }
+            }
+
+            .vehicle-info {
+              display: flex;
+              flex-direction: column;
+              gap: 8px;
+              width: 100%;
+
+              .info-row {
+                display: flex;
+
+                .label {
+                  min-width: 56px;
+                  line-height: 1;
+                }
+
+                .value {
+                  font-weight: bold;
+                  line-height: 1;
+                }
+              }
+
+              .infor-last-row {
+                border-top: 1px solid $border;
+                display: flex;
+                justify-content: space-between;
+                padding: 4px 0;
+                font-size: 9px;
+                line-height: 1;
+
+
+                span {
+                  font-size: 9px;
+                }
+              }
+            }
+          }
+        }
+
+        .info-card,
+        .price-card {
+          .card-title {
+            padding: 8px;
+            font-weight: bolder;
+            border-bottom: 1px solid $border;
+          }
+
+          .card-body {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+          }
+
+          .card-body {
+            .price-section {
+              display: flex;
+              flex-direction: column;
+              gap: 8px;
+
+              .section-title {
+                font-weight: bold;
+                color: $secondary;
+                text-transform: uppercase;
+                font-size: 12px;
+                letter-spacing: 0.3px;
+              }
+            }
+          }
+        }
+
+        .price-card {
+          .card-title {
+            padding: 8px;
+          }
+
+          .card-body.price-detail-body {
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+          }
+
+          .price-group {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+          }
+
+          .price-separator-line {
+            margin: 16px 0;
+            border-top: 1px solid $border;
+            flex-shrink: 0;
+          }
+
+          .price-row,
+          .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0;
+            min-height: 16px;
+            border-bottom: none;
+            margin: 0;
+
+            &.bold {
+
+              .summary-label,
+              .summary-value {
+                font-weight: bold;
+              }
+            }
+
+            &.promotional {
+
+              .summary-label,
+              .summary-value {
+                color: $primary;
+
+                &.discount {
+                  color: $primary;
+                }
+              }
+            }
+
+            .price-label,
+            .summary-label {
+              color: $secondary;
+              flex: 1;
+            }
+
+            .price-value,
+            .summary-value {
+              color: $secondary;
+              font-weight: bold;
+              text-align: right;
+              min-width: 80px;
+
+              &.discount {
+                color: $success;
+              }
+            }
+
+            &.part-item {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              gap: 8px;
+
+              .part-info {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 8px;
+
+                .price-label {
+                  font-weight: 500;
+                  color: $secondary;
+                }
+
+                .unit-price-info {
+                  font-size: 11px;
+                  color: $secondary;
+                  opacity: 0.8;
+                  white-space: nowrap;
+                  font-style: italic;
+                }
+
+                .part-quantity {
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 4px;
+                  font-size: 11px;
+                  color: $secondary;
+                  padding: 2px 6px;
+                  background-color: rgba($primary, 0.08);
+                  border-radius: 4px;
+                  white-space: nowrap;
+
+                  .quantity-value {
+                    font-weight: bold;
+                    color: $primary;
+                    font-size: 11px;
+                  }
+
+                  .unit-name {
+                    color: $secondary;
+                    font-style: italic;
+                    font-size: 10px;
+                  }
+                }
+              }
+
+              .price-value {
+                min-width: 80px;
+                flex-shrink: 0;
+                text-align: right;
+              }
+
+              .price-label.part-label-wrap {
+                display: inline-flex;
+                align-items: baseline;
+                gap: 6px;
+                flex: 1;
+                min-width: 0;
+
+                .part-name {
+                  flex: 0 1 auto;
+                  min-width: 0;
+                }
+
+                .part-unit-price {
+                  font-size: 9px;
+                  color: $primary;
+                  font-style: italic;
+                  font-weight: normal;
+                  white-space: nowrap;
+                  flex-shrink: 0;
+                  opacity: 0.9;
+                }
+              }
+            }
+          }
+
+          .total-payment {
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 20px;
+            background: $hoaiminh-primary;
+            padding: 8px 16px;
+            border-radius: 8px;
+            margin: 0;
+
+            .payment-row {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+
+              .payment-label,
+              .payment-value {
+                font-weight: 700;
+                color: $white;
+              }
+
+              .payment-value {
+                text-align: right;
+              }
+            }
+          }
+        }
+      }
+
+      .info-card.payment-block {
+        .card-body {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          padding: 8px;
+
+          .payment-form-row {
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+
+            .payment-label {
+              font-weight: 500;
+              color: $secondary;
+
+              .required-star {
+                color: $error;
+              }
+            }
+          }
+        }
+      }
+
+      ps-footer-action {
+        .footer-action {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          padding: 8px;
+          gap: 8px;
+          background: $white;
+          height: 48px;
+          flex: none;
+          align-self: stretch;
+
+          ps-kendo-button {
+            flex: 1;
+            max-width: 192px;
+            margin: 0 auto;
+
+            button {
+              box-sizing: border-box;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              padding: 2px 8px;
+              width: 100%;
+              height: 32px;
+              min-height: 32px;
+              background: $white;
+              border: 1px solid $border;
+              border-radius: 8px;
+
+              .k-button-text {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                .material-icons {
+                  width: 20px;
+                  height: 20px;
+                  font-size: 20px;
+                  color: $secondary;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

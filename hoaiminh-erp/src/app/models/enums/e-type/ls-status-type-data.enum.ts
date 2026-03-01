@@ -13,6 +13,8 @@ export enum LSStatusTypeDataEnum {
   PURDOMaster = 10,
   PURDODetail = 11,
   VEHICLECONFIG = 12,
+  HONDA = 20,
+  ZALOOA = 21,
 }
 
 export const LSStatusType: Record<LSStatusTypeDataEnum, any> = {
@@ -28,4 +30,6 @@ export const LSStatusType: Record<LSStatusTypeDataEnum, any> = {
   [LSStatusTypeDataEnum.PURDOMaster]: ProcessStatusConfig,
   [LSStatusTypeDataEnum.PURDODetail]: ProcessStatusConfig,
   [LSStatusTypeDataEnum.VEHICLECONFIG]: ProcessStatusConfig,
+  [LSStatusTypeDataEnum.HONDA]: ProcessStatusConfig,
+  [LSStatusTypeDataEnum.ZALOOA]: ProcessStatusConfig,
 }

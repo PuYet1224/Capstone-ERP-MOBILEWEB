@@ -1,29 +1,58 @@
 @import '../../../../../assets/scss/colors';
 
-::ng-deep
-{
-    ps-header-main
-    {
-        .header-main
-        {
+::ng-deep {
+    ps-header-main {
+        .header-main {
             display: flex;
             justify-content: space-between;
             align-items: center;
             height: 72px;
             padding: 0 16px;
-            background: linear-gradient(to right, $logo-primary, $error);
+            background: linear-gradient(to right, $dark, $error);
 
-            .right
-            {
+            .left {
+                height: 100%;
+            }
+
+            .right {
                 display: flex;
                 gap: 8px;
 
-                ps-kendo-button
-                {
-                    button
-                    {
+                ps-kendo-button {
+                    button {
                         border-color: transparent;
                         width: 36px;
+                    }
+                }
+            }
+
+            ps-dialog-confirm {
+                .ps-dialog-confirm {
+                    .confirm-dialog {
+                        width: 75%;
+                        height: auto;
+
+                        .k-popup {
+                            .body {
+                                height: 100%;
+                                padding: 24px;
+                                align-items: flex-start;
+                                justify-content: flex-start;
+                                gap: 16px;
+
+                                .title-out {
+                                    font-size: 24px;
+                                    font-weight: bold;
+                                }
+
+                                .group-buttom {
+                                    width: 100%;
+                                    display: flex;
+                                    justify-content: flex-end;
+                                    gap: 8px;
+                                }
+                            }
+                        }
                     }
                 }
             }

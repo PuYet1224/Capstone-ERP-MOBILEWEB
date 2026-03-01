@@ -1,0 +1,127 @@
+<div class="mtb007-cs-wo-cast">
+  <!-- START: HEADER -->
+  <ps-header-back>
+    <div class="func-title">Bảo trì - sửa chữa xe</div>
+    <div class="sub-title">
+      <div class="title-left">Phiếu tiếp nhận - Chi phí</div>
+      <div class="title-right">No.: {{ womMaster.WorkOrderNo }}</div>
+    </div>
+  </ps-header-back>
+  <!-- END: HEADER -->
+
+  <!-- START: BODY -->
+  <div class="background">
+    <div class="main-content">
+      <div class="company-info">
+        <div class="company-logo">
+          <div class="logo">
+            <img src="../../../../../assets/images/logos/hoaiminh-logo.png" alt="" />
+          </div>
+          <div class="company-details">
+            <div class="company-name">HOÀI MINH 2</div>
+            <div class="branch">Chi nhánh Vòng Xoay</div>
+          </div>
+        </div>
+        <div class="form-number">Số: {{ womMaster.WorkOrderNo }}</div>
+      </div>
+
+      <div class="main-title">
+        PHIẾU {{ womMaster.ServiceMasterName }}
+      </div>
+
+      <div class="info-section">
+        <div class="section-header">Thông tin chung</div>
+        <div class="section-content">
+          <div class="info-row cus-row">
+            <span class="label">Khách hàng:</span>
+            <span class="value value-cus">{{ womMasterCus.FullName
+              }}<span *ngIf="womMasterCus.Cellphone1">
+                | {{ womMasterCus.Cellphone1 }}</span></span>
+          </div>
+          <div class="info-row">
+            <span class="label">Địa chỉ:</span>
+            <span class="value">{{ womMasterCus.FullAddress }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Xe:</span>
+            <span class="value"><span class="value-plate">{{ womMasterVeh.PlateNo }}</span> |
+              <span class="value-type">{{ womMasterVeh.VehicleName }}</span> |
+              <span class="value-color">{{
+                womMasterVeh.VehicleColorName
+                }}</span></span>
+          </div>
+          <div class="info-row" *ngIf="typeOfService == WOMServiceEnum.FIX">
+            <span class="label">Mã PIN:</span>
+            <span class="value">{{ womMaster.BatteryNo
+              }}<span class="value-soh" *ngIf="womMaster.SOH">
+                | Sức khỏe PIN (SOH): {{ womMaster.SOH }}%</span>
+            </span>
+          </div>
+          <div class="info-row" *ngIf="typeOfService == WOMServiceEnum.FIX">
+            <span class="label">Mức nhiên liệu:</span>
+            <span class="value">{{womMaster.FuelName}}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Ngày mua:</span>
+            <span class="value"> {{ womMaster.LastTrading | date:'dd/MM/yyyy' }} |
+              <span class="value-km">Số Km hiện tại:
+                <span class="number-of-km">{{ womMaster.CurrentKm | number}}</span></span></span>
+          </div>
+          <div class="info-row">
+            <span class="label">Tiếp nhận:</span>
+            <span class="value">{{
+              womMaster.ReceivingTime | date : "dd/MM/yyyy HH:mm"
+              }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-section" *ngIf="typeOfService === WOMServiceEnum.FIX && listOrderTask.length">
+        <div class="section-header">
+          Công việc yêu cầu
+        </div>
+        <div class="section-content">
+          <div class="task-item" *ngFor="let item of listOrderTask;">
+            <div class="task-description">{{ item.OrderBy}}. {{ item.TaskName }}</div>
+            <div class="task-action">{{ getTaskMethods(item) }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="info-section" *ngIf="typeOfService !== WOMServiceEnum.FIX && listTask.length">
+        <div class="section-header">
+          Công kiểm tra bảo dưỡng
+        </div>
+        <div class="section-content">
+          <div class="task-item" *ngFor="let item of listTask;">
+            <div class="task-description">{{ item.OrderBy}}. {{ item.TaskName }}</div>
+            <div class="task-action">{{ getTaskMethods(item) }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="info-section" *ngIf="typeOfService !== WOMServiceEnum.FIX && listOrderTask.length">
+        <div class="section-header">Công việc yêu cầu thêm</div>
+        <div class="section-content">
+          <div class="task-item" *ngFor="let item of listOrderTask;">
+            <div class="task-description">{{ item.OrderBy}}. {{ item.TaskName }}</div>
+            <div class="task-action">{{ getTaskMethods(item) }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END: BODY -->
+
+  <!-- START: FOOTER -->
+  <ps-footer-action>
+    <ps-kendo-button (onClick)="onNavigate('back')">
+      <span class="material-icons">arrow_back</span>
+    </ps-kendo-button>
+    <ps-kendo-button (onClick)="onNavigate('to-list')">
+      <span class="material-icons">list_alt</span>
+    </ps-kendo-button>
+    <ps-kendo-button [theme]="'primary'" (onClick)="onNavigate('continue')">
+      <span class="text">Tiếp tục</span>
+    </ps-kendo-button>
+  </ps-footer-action>
+  <!-- END: FOOTER -->
+</div>

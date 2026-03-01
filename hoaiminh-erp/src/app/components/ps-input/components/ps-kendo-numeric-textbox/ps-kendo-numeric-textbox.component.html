@@ -1,0 +1,10 @@
+<div class="custom-numeric-textbox">
+  <kendo-label *ngIf="label != ''" class="k-display-block" [for]="numericTextbox" text="{{label}}"></kendo-label>
+  <kendo-numerictextbox #numericTextbox [style.width.px]="width" [title]="title" [readonly]="readonly" [step]="step"
+                        [format]="format" [min]="min" [max]="max" [spinners]="spinners" [placeholder]="placeholder" [decimals]="decimals"
+                        [autoCorrect]="autoCorrect" [disabled]="disabled" [size]="size" [(ngModel)]="input"
+                        (ngModelChange)="onInputValueChange($event)" (blur)="onBlurEvent()" (focus)="onFocusEvent()"
+                        (keydown.enter)="$event.target.blur(); onKeyDownEnterEvent()" (doubleClick)="onDoubleClick()">
+  </kendo-numerictextbox>
+  <!-- {{format}} -->
+</div>

@@ -1,0 +1,152 @@
+<div class="mtb008-cs-wo-sign">
+  <!-- START: HEADER -->
+  <ps-header-back>
+    <div class="func-title">Bảo trì - sửa chữa xe</div>
+    <div class="sub-title">
+      <div class="title-left">Phiếu tiếp nhận - Chi phí</div>
+      <div class="title-right">No.: {{ womMaster?.WorkOrderNo }}</div>
+    </div>
+  </ps-header-back>
+  <!-- END: HEADER -->
+
+  <!-- START: BODY -->
+  <div class="background">
+    <div class="main-content">
+      <div class="company-info">
+        <div class="company-logo">
+          <div class="logo">
+            <img src="../../../../../assets/images/logos/hoaiminh-logo.png" alt="" />
+          </div>
+          <div class="company-details">
+            <div class="company-name">HOÀI MINH 2</div>
+            <div class="branch">Chi nhánh Vòng Xoay</div>
+          </div>
+        </div>
+        <div class="form-number">Số: {{ womMaster.WorkOrderNo }}</div>
+      </div>
+
+      <div class="main-title">
+        PHIẾU {{ womMaster.ServiceMasterName }}
+      </div>
+
+      <div class="info-section">
+        <div class="section-header">Thông tin chung</div>
+        <div class="section-content">
+          <div class="info-row cus-row">
+            <span class="label">Khách hàng:</span>
+            <span class="value value-cus">{{ womMasterCus.FullName
+              }}<span *ngIf="womMasterCus.Cellphone1">
+                | {{ womMasterCus.Cellphone1 }}</span></span>
+          </div>
+          <div class="info-row">
+            <span class="label">Địa chỉ:</span>
+            <span class="value">{{ womMasterCus.FullAddress }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Xe:</span>
+            <span class="value"><span class="value-plate">{{ womMasterVeh.PlateNo }}</span> |
+              <span class="value-type">{{ womMasterVeh.VehicleName }}</span> |
+              <span class="value-color">{{
+                womMasterVeh.VehicleColorName
+                }}</span></span>
+          </div>
+          <div class="info-row" *ngIf="typeOfService == WOMServiceEnum.FIX">
+            <span class="label">Mã PIN:</span>
+            <span class="value">{{ womMaster.BatteryNo
+              }}<span class="value-soh" *ngIf="womMaster.SOH">
+                | Sức khỏe PIN (SOH): {{ womMaster.SOH }}%</span>
+            </span>
+          </div>
+          <div class="info-row" *ngIf="typeOfService == WOMServiceEnum.FIX">
+            <span class="label">Mức nhiên liệu:</span>
+            <span class="value">{{womMaster.FuelName}}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Ngày mua:</span>
+            <span class="value"> {{ womMaster.LastTrading | date:'dd/MM/yyyy' }} |
+              <span class="value-km">Số Km hiện tại:
+                <span class="number-of-km">{{ womMaster.CurrentKm | number}}</span></span></span>
+          </div>
+          <div class="info-row">
+            <span class="label">Tiếp nhận:</span>
+            <span class="value">{{
+              womMaster.ReceivingTime | date : "dd/MM/yyyy HH:mm"
+              }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-section" *ngIf="listOrderPart.length">
+        <div class="section-header">
+          <span>Phụ tùng thay thế</span>
+          <span class="section-total">{{ totalParts | number : "1.0-0" }}</span>
+        </div>
+        <div class="section-content">
+          <div class="parts-item" *ngFor="let p of listOrderPart">
+            <div class="parts-description">{{ p.OrderBy }}. {{ p.TypeOfPartName }}</div>
+            <div class="parts-unit">{{ p.UnitName }}</div>
+            <div class="parts-price">{{ p.UnitPrice | number : "1.0-0" }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="info-section">
+        <div class="section-header">
+          <span>Chi phí nhân công và vật tư tiêu hao</span>
+          <span class="section-total">{{ totalLabor | number : "1.0-0" }}</span>
+        </div>
+        <div class="section-content">
+          <div class="labor-item" *ngFor="let l of laborTasks">
+            <div class="labor-number">{{ l.order }}.</div>
+            <div class="labor-description">{{ l.description }}</div>
+            <div class="labor-price">{{ l.price | number : "1.0-0" }}</div>
+          </div>
+        </div>
+      </div> -->
+
+      <div class="info-section total-section">
+        <div class="section-header total-header">
+          <span>TỔNG CỘNG</span>
+          <span class="total-amount">{{ grandTotal | number : "1.0-0" }}</span>
+        </div>
+      </div>
+
+      <div class="signature-section">
+        <div class="signature-label">Khách hàng (ký tên)</div>
+        <div class="signature-area" *ngIf="!womMaster.Signature">
+          <span class="signature-placeholder">Nhấn nút "KÝ TÊN" để ký tên</span>
+        </div>
+        <div class="signature-display" *ngIf="womMaster.Signature">
+          <img [src]="womMaster.Signature" alt="Chữ ký khách hàng" class="signature-image" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- END: BODY -->
+
+  <!-- START: FOOTER -->
+  <ps-footer-action>
+    <ps-kendo-button (onClick)="onNavigate('back')">
+      <span class="material-icons">arrow_back</span>
+    </ps-kendo-button>
+    <ps-kendo-button (onClick)="onNavigate('to-list')">
+      <span class="material-icons">list_alt</span>
+    </ps-kendo-button>
+    <ps-kendo-button class="sign" [theme]="'info'" [disabled]="workMaster.Progress == WOMStatusEnum.DONE"
+      (onClick)="openSignaturePopup()">
+      <span class="text" style="color:#fff ;">Ký tên</span>
+    </ps-kendo-button>
+    <ps-kendo-button [theme]="'primary'" (onClick)="onComplete()">
+      <span class="text">Hoàn tất</span>
+    </ps-kendo-button>
+  </ps-footer-action>
+
+  <!-- END: FOOTER -->
+
+  <!-- START: SIGNATURE POPUP -->
+  <ps-dialog-confirm-signature [open]="showSignaturePopup" (backdropClick)="closeSignaturePopup()"
+    (close)="closeSignaturePopup()" (save)="onSignatureSave($event)">
+  </ps-dialog-confirm-signature>
+  <!-- END: SIGNATURE POPUP -->
+</div>

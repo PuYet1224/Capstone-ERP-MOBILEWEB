@@ -1,0 +1,101 @@
+<div class="mtb001-repair">
+    <!-- START: HEADER -->
+    <ps-header-back>
+        <div class="func-title">Bảo trì - sửa chữa xe</div>
+        <div class="sub-title">Tư vấn khách hàng</div>
+    </ps-header-back>
+    <!-- END: HEADER -->
+
+    <!-- START: SEARCH -->
+    <div class="k-overlay" *ngIf="isOpenedFilter" (click)="openFilterPopup(false)"></div>
+    <div class="filter-popup" [class.open]="isOpenedFilter">
+        <div class="popup-header">
+            <div class="header-filter">
+                <span>TÌM KIẾM PHIẾU TIẾP NHẬN</span>
+            </div>
+        </div>
+        <div class="popup-body">
+            <div class="body-top">
+                <ps-kendo-textbox [label]="'Tra cứu phiếu tiếp nhận'" [placeholder]="'Tìm theo tên, SĐT, Biển số xe'"
+                    [(ngModel)]="searchKeyword">
+                </ps-kendo-textbox>
+                <ps-kendo-dropdown-list [data]="progressList" [textField]="'text'" [valueField]="'value'"
+                    [valuePrimitive]="true" [(ngModel)]="selectedProgress"
+                    [label]="'Trạng thái phiếu'"></ps-kendo-dropdown-list>
+            </div>
+            <div class="body-bottom">
+                <ps-kendo-button [theme]="'primary-outline'" (click)="openFilterPopup(false)">quay về</ps-kendo-button>
+                <ps-kendo-button [theme]="'primary'" (onClick)="onSearchTask()">tìm</ps-kendo-button>
+            </div>
+        </div>
+    </div>
+    <!-- END: SEARCH -->
+
+    <!-- START: BODY -->
+    <div class="repair-body">
+        <div class="body-title">
+            Khách hàng của tôi
+        </div>
+        <div class="body-list" #bodyList>
+            <div class="item white" *ngFor="let i of listworkordermaster" (click)="onSetItem(i)"
+                (touchstart)="startPress(i)" (touchend)="endPress()">
+                <div class="item-left">
+                    <div class="customer">
+                        {{i.CustomerName}} | {{i.CustomerPhone}}
+                    </div>
+                    <div class="vehicle">
+                        <div>X: {{i.VehiclePlateNo}}</div>
+                        <span>|</span>
+                        <div class="wanring">S: <span>{{i.TypeOfServiceName}}</span></div>
+                        <span>|</span>
+                        <div>V: {{i.ReceivingTime | date:'dd/MM/yyyy'}}</div>
+                        <span>|</span>
+                        <div class="error">G: <span>{{i.RealReturnTime | date:'dd/MM/yyyy'}}</span></div>
+                    </div>
+                </div>
+                <div class="item-right"
+                    [innerHTML]="{Progress: i.Progress, ProgressName: i.ProgressName} | WOMProgressStatus">
+                </div>
+            </div>
+            <div #anchor></div> <!-- sentinel -->
+        </div>
+    </div>
+    <!-- END: BODY -->
+
+    <!-- START: FOOTER -->
+    <ps-footer-action>
+        <ps-kendo-button (onClick)="onAddNew('home')">
+            <span class="material-icons f">home</span>
+        </ps-kendo-button>
+
+        <ps-kendo-button [theme]="'primary'" (onClick)="onAddNew('next')">
+            <span class="material-icons">barcode_scanner</span>
+        </ps-kendo-button>
+
+        <ps-kendo-button (onClick)="openFilterPopup(true)">
+            <span class="material-icons">search</span>
+        </ps-kendo-button>
+    </ps-footer-action>
+    <!-- END: FOOTER -->
+
+    <!-- START: DELETE DIALOG -->
+    <ps-dialog-confirm [theme]="'error'" [open]="showpopup">
+        <div psDialogConfirmHeader>xoá phiếu tiếp nhận</div>
+        <div psDialogConfirmBody>
+            <div class="main-title">
+                <span>Bạn có chắc chắn muốn xoá phiếu tiếp nhận</span>
+                <br>
+                <div class="hightline" *ngIf="showpopup">{{customerInfo.CustomerName}}</div>
+            </div>
+            <div class="sub-title">
+                Phiếu tiếp nhận bị xoá sẽ <span>KHÔNG</span> thể phục hồi
+            </div>
+        </div>
+        <div psDialogConfirmFooter>
+            <ps-kendo-button (onClick)="showpopup = false">huỷ</ps-kendo-button>
+            <ps-kendo-button [theme]="'error'"
+                (onClick)="DeleteWOMConsultant(itemworkordermaster)">xoá</ps-kendo-button>
+        </div>
+    </ps-dialog-confirm>
+    <!-- END: DELETE DIALOG -->
+</div>

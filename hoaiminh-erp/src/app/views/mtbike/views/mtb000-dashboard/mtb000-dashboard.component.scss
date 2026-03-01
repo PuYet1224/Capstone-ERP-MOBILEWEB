@@ -1,0 +1,419 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep {
+    mtb000-dashboard {
+        .mtb000-dashboard {
+            background: $background-primary;
+            font-size: 15px;
+            height: 100%;
+
+            .k-overlay {
+                z-index: 100001;
+                position: fixed;
+                width: 100vw;
+                height: 100%;
+
+            }
+
+            .filter-popup {
+                z-index: 100002;
+                position: fixed;
+                bottom: -60%;
+                width: 100%;
+                height: fit-content;
+                min-height: 337px;
+                padding: 10px;
+                border-radius: 10px;
+                background: $white;
+                transition: bottom 0.35s ease-in-out;
+
+                &.open {
+                    bottom: 0;
+                }
+
+                .popup-header {
+                    display: flex;
+                    justify-content: center;
+
+                    .header-filter {
+                        width: fit-content;
+                        border-bottom: 1px solid $border;
+
+                        .material-icons {
+                            color: $primary;
+                        }
+                    }
+                }
+
+                .popup-body {
+                    margin-top: 10px;
+
+                    .body-top {
+                        width: 70%;
+                        min-height: 230px;
+                        margin: 0 auto;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 10px;
+
+                        .date-picker {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 10px;
+
+                            .datepicker {
+                                display: flex;
+                                flex-direction: column;
+
+                                label {
+                                    font-size: 13px;
+                                }
+
+                                kendo-datepicker {
+                                    height: 35px;
+                                    border-color: $border;
+                                    border-radius: 5px;
+                                    padding-left: 15px;
+
+                                    input {
+                                        font-size: 13px;
+                                        color: $secondary;
+                                        font-weight: 400;
+                                    }
+
+                                    button {
+                                        background: $white;
+                                    }
+
+                                    &.disable-block {
+                                        background: $disable-input;
+                                        pointer-events: none;
+
+                                        button {
+                                            background: $disable-input;
+                                        }
+                                    }
+
+                                    &.readonly-mode {
+                                        border: none;
+                                        pointer-events: none;
+
+                                        button {
+                                            display: none;
+                                        }
+                                    }
+                                }
+
+                                .k-disabled {
+                                    border-color: $border;
+                                    background-color: $disable-input;
+                                    opacity: 1;
+
+                                    .k-input-button {
+                                        border-left: none;
+                                        background-color: transparent;
+                                    }
+                                }
+
+                                .status {
+                                    margin-top: 5px;
+                                }
+                            }
+                        }
+
+                        .monthpicker {
+                            display: flex;
+                            gap: 10px;
+
+                            ps-kendo-dropdown-list {
+                                .kendo-dropdown-list {
+                                    .k-dropdownlist {
+                                        .k-animation-container {
+                                            .k-popup {
+                                                .k-list {
+                                                    .k-list-content {
+                                                        overflow: auto;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    .body-bottom {
+                        margin-top: 15px;
+                        display: flex;
+                        gap: 10px;
+                        width: 100%;
+
+                        ps-kendo-button:last-child {
+                            flex: 1;
+
+                            button {
+                                width: 100%;
+                            }
+                        }
+                    }
+                }
+            }
+
+            ps-header-back {
+                .ps-header {
+
+                    .left-content {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-start;
+                        font-weight: bold;
+
+                        .top-content {
+                            font-weight: bold;
+
+                            span {
+                                font-weight: bold;
+                                color: $info;
+                            }
+                        }
+                    }
+
+                    .header-right {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+
+                        span {
+                            color: $primary;
+                        }
+                    }
+                }
+            }
+
+            .dashboard-container {
+                height: calc(100% - 72px);
+                overflow-y: auto;
+                margin: 8px 0;
+                padding: 0 8px;
+
+                //START - HEADER
+                .header {
+
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    .header-left {
+                        display: flex;
+                        align-items: center;
+
+
+
+                        .col-1-content {
+                            margin-left: 15px;
+
+                            .content-title {
+                                font-weight: bold;
+
+                                span {
+                                    color: $info;
+                                    font-weight: bold;
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+
+                //END -HEADER
+
+                //START OVERVIEW
+                .overview {
+                    background: $background-primary;
+                    padding: 0 10px 10px 10px;
+                    border-radius: 10px;
+
+                    .overview-title {
+                        color: $logo-primary;
+                        font-weight: bold;
+                    }
+
+                    .overview-content {
+                        display: flex;
+                        gap: 5px;
+
+                        .content-left {
+                            div {
+                                display: flex;
+                                gap: 10px;
+                                align-items: center;
+                            }
+                        }
+
+                        .content-right {
+                            div:last-child {
+                                span {
+                                    color: $primary
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //END OVERVIEW
+
+                //START - CHART
+                .chart {
+                    margin-bottom: 8px;
+
+                    .chart-1 {
+                        background: $white;
+                        padding: 10px;
+                        border-radius: 10px;
+
+                        .chart-title {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+
+                            div:first-child {
+                                background: transparent;
+                            }
+
+                            h1 {
+                                color: $primary;
+                                font-size: 15px;
+                                font-weight: bold;
+                                text-transform: uppercase;
+                                margin: 0;
+                                text-align: center;
+                                pad: 0 5px;
+                            }
+
+                            div {
+                                padding: 5px;
+                                background: $primary;
+                                color: $white;
+                                border-radius: 5px;
+                                font-weight: bold;
+                                min-width: 50px;
+                                width: 50px;
+                                text-align: center;
+                            }
+
+                            div:first-child {
+                                background: #952FC9;
+                            }
+                        }
+                    }
+
+                    .chart-2 {
+                        margin-top: 10px;
+                        padding: 10px;
+                        background: $white;
+                        border-radius: 10px;
+
+                        h1 {
+                            color: $primary;
+                            font-size: 15px;
+                            font-weight: bold;
+                            text-transform: uppercase;
+                            margin: 0;
+                            text-align: center;
+                        }
+
+                        kendo-chart {
+                            height: 320px;
+                        }
+                    }
+
+                    .chart-3 {
+                        margin-top: 10px;
+                        padding: 10px;
+                        background: $white;
+                        border-radius: 10px;
+
+                        .col-1-title {
+                            display: flex;
+
+                            div {
+                                padding: 5px;
+                                background: $primary;
+                                color: $white;
+                                border-radius: 5px;
+                                font-weight: bold;
+                                // min-width: 50px;
+                                text-align: center;
+                                white-space: nowrap;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                            }
+
+                            div:first-child {
+                                background: #0070c0;
+                            }
+
+                            div:last-child {
+                                background: #ed7d31;
+                            }
+
+                            h1 {
+                                color: $primary;
+                                font-size: 15px;
+                                font-weight: bold;
+                                text-transform: uppercase;
+                                margin: 0;
+                                text-align: center;
+                                width: 100%;
+                                padding: 0 5px;
+                            }
+                        }
+
+                        kendo-chart {
+                            height: 320px;
+                        }
+
+                        .donut-chart {
+                            .chart:nth-of-type(2) {
+                                div {
+                                    svg {
+                                        g {
+                                            g:nth-of-type(3) {
+                                                g[transform] {
+                                                    display: none;
+                                                }
+                                            }
+
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    .chart-4 {
+                        margin-top: 10px;
+                        padding: 10px;
+                        background: $white;
+                        border-radius: 10px;
+
+                        h1 {
+                            color: $primary;
+                            font-size: 15px;
+                            font-weight: bold;
+                            text-transform: uppercase;
+                            margin: 0;
+                            text-align: center;
+                        }
+
+                    }
+                }
+
+                //END - CHART
+            }
+        }
+    }
+}

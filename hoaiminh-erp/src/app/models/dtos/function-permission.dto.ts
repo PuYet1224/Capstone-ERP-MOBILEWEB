@@ -1,4 +1,4 @@
-import { PSArray } from "src/app/services/utilities/ps-array";
+import { PsArray } from "src/app/services/utilities/ps-array";
 import { PermissionEnum } from "../enums/permission.enum";
 import { PermissionDLLDTO } from "./permission-dll.dto";
 
@@ -17,7 +17,7 @@ export class FunctionPermissionDTO {
     this.approver = e.ActionPermission.some(s => s.ActionType == PermissionEnum.approver);
     this.viewer = e.ActionPermission.some(s => s.ActionType == PermissionEnum.viewer);
 
-    if (PSArray.any(e.ActionPermission)) {
+    if (PsArray.any(e.ActionPermission)) {
       this.datapermission = e.ActionPermission[0].DataPermission
     }
   }

@@ -1,0 +1,259 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep
+{
+    mtb028-sal-payment
+    {
+        font-size: 13px;
+        height: 100%;
+
+        .mtb028-sal-payment
+        {
+            height: 100%;
+
+            ps-header-back
+            {
+                .ps-header
+                {
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    height: 56px;
+                    font-size: 13px;
+
+                    .header-right
+                    {
+                        height: fit-content;
+                        display: flex;
+                        width: 100%;
+                        justify-content: space-between;
+                        align-items: center;
+
+                        section .main-title
+                        {
+                            font-weight: bold;
+                            text-transform: uppercase;
+                            color: $primary;
+                        }
+                    }
+                }
+            }
+
+            .section-list
+            {
+                height: calc(100% - 112px);
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                margin: 8px 0;
+                padding: 0 8px;
+                overflow-y: auto;
+
+                .item
+                {
+                    min-height: 45px;
+                    display: flex;
+                    flex-direction: row;
+
+                    background-color: $white;
+                    line-height: 1;
+                    padding: 0 0 0 8px;
+
+                    .left
+                    {
+                        height: 100%;
+                        width: calc(100% - 45px);
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-evenly;
+
+                        .main-info,
+                        span
+                        {
+                            font-weight: bold;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+
+                            .retail-no
+                            {
+                                color: $error;
+                            }
+                        }
+
+                        .sub-info
+                        {
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+
+                            span
+                            {
+                                color: $primary;
+                            }
+                        }
+                    }
+
+                    .right
+                    {
+                        min-width: 45px;
+                        height: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-evenly;
+                        align-items: center;
+                        border: 1px solid $border;
+
+                        div
+                        {
+                            font-weight: bold;
+                            display: flex;
+                            width: fit-content;
+
+                            span
+                            {
+                                display: block;
+                                width: 24px;
+                            }
+                        }
+
+                        .error
+                        {
+                            color: $error;
+                        }
+
+                        .success
+                        {
+                            color: $primary;
+                        }
+                    }
+                }
+            }
+
+            ps-dialog-confirm-bottom
+            {
+                [psDialogConfirmBottomFooter]
+                {
+                    ps-kendo-button
+                    {
+                        &:first-child
+                        {
+                            width: calc(25% - 4px);
+                        }
+
+                        &:last-child
+                        {
+                            width: calc(75% - 4px);
+                        }
+
+                        button
+                        {
+                            width: 100%;
+                        }
+                    }
+                }
+
+                [psDialogConfirmBottomBody]
+                {
+                    width: 100%;
+                    margin: 0 auto;
+                    gap: 8px;
+
+                    ps-kendo-textbox,
+                    ps-kendo-dropdown-list
+                    {
+                        width: 100%;
+                    }
+
+                    ps-kendo-dropdown-list
+                    {
+                        .kendo-dropdown-list
+                        {
+                            kendo-dropdownlist
+                            {
+                                kendo-popup
+                                {
+                                    .k-popup
+                                    {
+                                        kendo-list
+                                        {
+                                            .k-list-content
+                                            {
+                                                overflow: auto;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            ps-footer-action
+            {
+                .footer-action
+                {
+                    ps-kendo-button
+                    {
+                        button
+                        {
+                            height: 40px;
+                            border-radius: 0;
+                            padding: 0;
+
+
+                            .k-button-text
+                            {
+                                height: 100%;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                gap: 4px;
+                                padding: 4px 0;
+                                text-transform: none;
+                                justify-content: center;
+
+                                svg
+                                {
+                                    width: 24px;
+                                    height: 24px;
+                                }
+
+                                .text
+                                {
+                                    font-size: 13px;
+                                }
+                            }
+                        }
+
+                        &:first-child
+                        {
+                            button
+                            {
+                                width: 50%;
+                                border: none;
+
+                                .k-button-text
+                                {
+                                    border-right: 1px solid $border !important;
+                                    width: 100%;
+                                    height: 65%;
+                                }
+                            }
+                        }
+
+                        &:last-child
+                        {
+                            button
+                            {
+                                width: 50%;
+                                border: none;
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+}

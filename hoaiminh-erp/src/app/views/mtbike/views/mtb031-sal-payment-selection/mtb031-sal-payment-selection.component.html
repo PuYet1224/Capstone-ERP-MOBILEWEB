@@ -1,0 +1,228 @@
+<!-- <div class="mtb031-sal-payment-selection"> -->
+<!-- START: HEADER -->
+<!-- <ps-header-back>
+        <section>
+            <div class="main-title">Thanh toán bán lẻ</div>
+            <div class="sub-title">Tạo mới hoá đơn</div>
+        </section>
+        <section class="right">
+            No.: <span>{{master.ID}}</span>
+        </section>
+    </ps-header-back> -->
+<!-- END: HEADER -->
+
+<!-- <main> -->
+<!-- START: GROUP -->
+<!-- <section class="section-bar">
+            <div class="isall" (click)="toggleAll()">
+                <ps-kendo-checkbox [class.disabled-check]="receiptitem.Status != SALOrderInvoiceStatusEnum.New "
+                    [label]="'Tất cả'" [(ngModel)]="checkAll">
+                </ps-kendo-checkbox>
+            </div>
+
+            <div class="group">
+                <span *ngFor="let group of listgroup" [class.highlight]="group.value == groupactive"
+                    (click)="onswitchgroup(group.value)">
+                    {{group.name}}
+                </span>
+            </div>
+        </section> -->
+
+<!-- END: GROUP -->
+
+<!-- START: LIST VEHICLE -->
+<!-- <section class="section-list" *ngIf="groupactive == 'vehicle'">
+            <div class="item" *ngFor="let item of invoiceOrderItem"> -->
+
+<!-- ==== VEHICLE LINE ==== -->
+<!-- <div class="item-detail">
+                    <div class="detail-frame">
+                        <div class="frame-infor" (click)="toggleVehicleFromLabel(item)">
+
+                            <ps-kendo-checkbox
+                                [class.disabled-check]="receiptitem.Status != SALOrderInvoiceStatusEnum.New "
+                                [(ngModel)]="item.IsChecked"
+                                [disabled]="item.IsExisted || FunctionPermissionDTO.approver">
+                            </ps-kendo-checkbox>
+
+                            <div class="main-info">
+                                {{item.TypeOfVehicleName}} | {{item.VehicleName}} | {{item.VehicleColorName}}
+                            </div>
+                        </div>
+                        <div class="sub-info">{{ item.Price | number }}₫</div>
+                    </div>
+                </div> -->
+
+<!-- ==== SERVICES ==== -->
+<!-- <hr *ngIf="item.ListService.length">
+                <div class="item-detail" *ngIf="item.ListService.length">
+                    <div class="detail-frame" *ngFor="let service of item.ListService; let i = index">
+                        <div class="frame-infor" (click)="toggleChildFromLabel(service, 'service', item)">
+
+
+                            <ps-kendo-checkbox
+                                [class.disabled-check]="receiptitem.Status != SALOrderInvoiceStatusEnum.New "
+                                [(ngModel)]="service.IsChecked" [disabled]="service.IsExisted">
+                            </ps-kendo-checkbox>
+
+                            <div class="main-info">{{ i + 1 }}. {{ service.ServiceName }}</div>
+                        </div>
+                        <div class="sub-info">{{ service.Price | number }}₫</div>
+                    </div>
+                </div> -->
+
+<!-- ==== PARTS ==== -->
+<!-- <hr *ngIf="item.ListPart.length">
+                <div class="item-detail" *ngIf="item.ListPart.length">
+                    <div class="detail-frame" *ngFor="let part of item.ListPart; let i = index">
+                        <div class="frame-infor" (click)="toggleChildFromLabel(part, 'part', item)">
+
+                            <ps-kendo-checkbox
+                                [class.disabled-check]="receiptitem.Status != SALOrderInvoiceStatusEnum.New "
+                                [(ngModel)]="part.IsChecked" [disabled]="part.IsExisted">
+                            </ps-kendo-checkbox>
+
+                            <div class="main-info group-main">
+                                <div>
+                                    <span>{{ i + 1 }}. {{ part.TypeOfPartName }}</span>
+                                    <span class="unit-price-info">({{ part.UnitPrice | number }}₫/{{ part.BaseUnitName
+                                        }})</span>
+                                </div>
+                                <span class="part-quantity">SL: {{ part.Quantity }} {{ part.BaseUnitName }}</span>
+                            </div>
+                        </div>
+                        <span class="sub-info">{{ part.Quantity * part.UnitPrice | number }}₫</span>
+                    </div>
+                </div>
+
+            </div>
+        </section> -->
+
+
+<!-- END: LIST VEHICLE -->
+
+<!-- START: LIST TYPE -->
+<section class="section-list list-type" *ngIf="groupactive == 'type' && invoiceTypeItem">
+
+    <!-- VEHICLE -->
+    <!-- <div class="item" *ngIf="invoiceTypeItem.ListVehicle?.length">
+                <div class="item-title" (click)="toggleGroup('vehicle')">
+                    <ps-kendo-checkbox [class.disabled-check]="receiptitem.Status != SALOrderInvoiceStatusEnum.New "
+                        [(ngModel)]="checkGroupVehicle">
+                    </ps-kendo-checkbox>
+
+                    <div class="title">Xe bán</div>
+                </div>
+
+                <div class="item-detail">
+                    <div class="detail-frame" *ngFor="let item of invoiceTypeItem.ListVehicle">
+                        <div class="frame-infor" (click)="toggleItem(item, 'vehicle')">
+                            <ps-kendo-checkbox
+                                [class.disabled-check]="receiptitem.Status != SALOrderInvoiceStatusEnum.New "
+                                [disabled]="item.IsExisted || FunctionPermissionDTO.approver"
+                                [(ngModel)]="item.IsChecked">
+                            </ps-kendo-checkbox>
+
+                            <div class="main-info">
+                                {{item.TypeOfVehicleName}} | {{item.VehicleName}} | {{item.VehicleColorName}}
+                            </div>
+                        </div>
+                        <div class="sub-info">{{ item.Price | number }}₫</div>
+                    </div>
+                </div>
+            </div> -->
+
+
+    <!-- SERVICE -->
+    <!-- <div class="item" *ngIf="invoiceTypeItem.ListService?.length">
+                <div class="item-title" (click)="toggleGroup('service')">
+                    <ps-kendo-checkbox [class.disabled-check]="receiptitem.Status != SALOrderInvoiceStatusEnum.New "
+                        [(ngModel)]="checkGroupService">
+                    </ps-kendo-checkbox>
+
+                    <div class="title">Dịch vụ</div>
+                </div>
+
+                <div class="item-detail">
+                    <div class="detail-frame" *ngFor="let item of invoiceTypeItem.ListService; let i = index">
+                        <div class="frame-infor" (click)="toggleItem(item, 'service')">
+                            <ps-kendo-checkbox
+                                [class.disabled-check]="receiptitem.Status != SALOrderInvoiceStatusEnum.New "
+                                [disabled]="item.IsExisted || FunctionPermissionDTO.approver"
+                                [(ngModel)]="item.IsChecked">
+                            </ps-kendo-checkbox>
+
+                            <div class="main-info">{{ i + 1 }}. {{ item.ServiceName }}</div>
+                        </div>
+                        <div class="sub-info">{{ item.Price | number }}₫</div>
+                    </div>
+                </div>
+            </div> -->
+
+
+    <!-- PART -->
+    <!-- <div class="item" *ngIf="invoiceTypeItem.ListPart?.length">
+                <div class="item-title" (click)="toggleGroup('part')">
+                    <ps-kendo-checkbox [class.disabled-check]="receiptitem.Status != SALOrderInvoiceStatusEnum.New "
+                        [(ngModel)]="checkGroupPart">
+                    </ps-kendo-checkbox>
+
+                    <div class="title">Phụ tùng ráp kèm</div>
+                </div>
+
+                <div class="item-detail">
+                    <div class="detail-frame" *ngFor="let item of invoiceTypeItem.ListPart; let i = index">
+                        <div class="frame-infor" (click)="toggleItem(item, 'part')">
+                            <ps-kendo-checkbox
+                                [class.disabled-check]="receiptitem.Status != SALOrderInvoiceStatusEnum.New "
+                                [disabled]="item.IsExisted || FunctionPermissionDTO.approver"
+                                [(ngModel)]="item.IsChecked">
+                            </ps-kendo-checkbox>
+
+                            <div class="main-info group-main">
+                                <div>
+                                    <span>{{ i + 1 }}. {{ item.TypeOfPartName }}</span>
+                                    <span class="unit-price-info">
+                                        ({{ item.UnitPrice | number }}₫ / {{ item.BaseUnitName }})
+                                    </span>
+                                </div>
+                                <span class="part-quantity">
+                                    SL: {{ item.Quantity }} {{ item.BaseUnitName }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <span class="sub-info">
+                            {{ item.Quantity * item.UnitPrice | number }}₫
+                        </span>
+                    </div>
+                </div>
+            </div> -->
+
+    <!-- </section> -->
+
+    <!-- END: LIST TYPE -->
+    <!-- </main> -->
+
+    <!-- START: FOOTER -->
+    <!-- <ps-footer-action>
+        <ps-kendo-button (onClick)="onnavigate('/mtbike/payment/document')">
+            <span class="material-icons">arrow_back</span>
+        </ps-kendo-button>
+
+        <ps-kendo-button (onClick)="onnavigate('/mtbike/payment')">
+            <span class="material-icons">list_alt</span>
+        </ps-kendo-button>
+
+        <ps-kendo-button [disabled]="!hasAnyChecked() && receiptitem.Status == SALOrderInvoiceStatusEnum.New"
+            [theme]="'primary'" (onClick)="onnavigate('/mtbike/payment/total')">
+            <span class="text">{{ receiptitem.OrderInvoice == 0
+                ? 'Tạo mới'
+                : isInvoiceChanged()
+                ? 'Cập nhật'
+                : 'Tiếp tục'
+                }}</span>
+        </ps-kendo-button>
+    </ps-footer-action> -->
+    <!-- END: FOOTER -->
+    <!-- </div> -->

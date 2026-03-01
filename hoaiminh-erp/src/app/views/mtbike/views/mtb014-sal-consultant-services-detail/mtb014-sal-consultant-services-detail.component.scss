@@ -1,0 +1,394 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep
+{
+    mtb014-sal-consultant-services-detail
+    {
+        font-size: 13px;
+        height: 100%;
+
+        .mtb014-sal-consutant-services-detail
+        {
+            height: 100%;
+
+            ps-header-back
+            {
+                .ps-header
+                {
+                    .header-right
+                    {
+                        height: fit-content;
+                        display: flex;
+                        width: calc(100% - 44px);
+                        justify-content: space-between;
+                        align-items: center;
+                        gap: 8px;
+
+                        .left-side
+                        {
+                            min-width: 128px;
+                            width: 128px;
+
+                            .func-title1
+                            {
+                                font-weight: bold;
+                                text-transform: uppercase;
+                                color: $primary;
+                            }
+                        }
+
+
+                        .right-side
+                        {
+                            text-align: end;
+                            width: calc(100% - 136px);
+
+                            div
+                            {
+
+                                span,
+                                .marquee-content
+                                {
+                                    font-weight: bold;
+                                }
+
+                                span
+                                {
+                                    color: $error;
+                                }
+
+                                .marquee-content
+                                {
+                                    color: $info;
+                                }
+                            }
+
+                            .marquee-wrapper
+                            {
+                                width: 100%;
+                                overflow: hidden;
+                                white-space: nowrap;
+                                position: relative;
+
+                                .marquee-content
+                                {
+                                    display: inline-block;
+                                    white-space: nowrap;
+                                    transform: translateX(0);
+                                }
+
+                                .marquee-content.running
+                                {
+                                    transform: translateX(70%);
+                                    animation: slide-left 8s linear infinite;
+                                }
+
+                                @keyframes slide-left
+                                {
+                                    from
+                                    {
+                                        transform: translateX(70%);
+                                    }
+
+                                    to
+                                    {
+                                        transform: translateX(-100%);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            main
+            {
+                padding: 8px;
+                height: calc(100% - 108px);
+
+                .main-body
+                {
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+
+                    .block
+                    {
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                        background-color: $white;
+                        border-radius: 8px;
+
+                        .block-title
+                        {
+                            padding: 8px;
+                            border-bottom: 1px solid $border;
+                            line-height: 1;
+                            font-weight: bold;
+                            color: $info;
+                        }
+                    }
+
+                    .block-1
+                    {
+                        position: relative;
+
+                        .block-title
+                        {
+                            display: flex;
+                            justify-content: space-between;
+
+                            span
+                            {
+                                color: $info;
+                                line-height: 1;
+                                font-weight: bold;
+                            }
+                        }
+
+                        .block-vehicle
+                        {
+                            padding: 8px;
+                            overflow: hidden;
+                            position: relative;
+                            display: flex;
+                            gap: 8px;
+
+                            .tag
+                            {
+                                display: block;
+                                height: 24px;
+                                font-size: 10px;
+                                font-weight: bold;
+                                font-style: italic;
+                                line-height: 1;
+                                color: $white;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                position: absolute;
+                                padding: 0 24px;
+                                rotate: -45deg;
+                                top: 4px;
+                                left: -24px;
+                            }
+
+                            .available
+                            {
+                                background-color: $primary;
+                            }
+
+                            .allocated
+                            {
+                                background-color: $warning;
+                            }
+
+                            .booked
+                            {
+                                background-color: $secondary;
+                            }
+
+                            .vehicle-image
+                            {
+                                min-width: 112px;
+                                width: 112px;
+                                border: 1px dotted $border;
+                                border-radius: 8px;
+                                display: flex;
+                                align-items: center;
+
+                                img
+                                {
+                                    width: 100%;
+                                }
+                            }
+
+                            .vehicle-info
+                            {
+                                display: flex;
+                                flex-direction: column;
+                                gap: 8px;
+                                width: 100%;
+
+                                .info-row
+                                {
+                                    display: flex;
+
+                                    .label
+                                    {
+                                        min-width: 56px;
+                                        line-height: 1;
+                                    }
+
+                                    .value
+                                    {
+                                        font-weight: bold;
+                                        line-height: 1;
+                                    }
+                                }
+
+                                .infor-last-row
+                                {
+                                    border-top: 1px solid $border;
+                                    display: flex;
+                                    justify-content: space-between;
+                                    padding: 4px 0px;
+
+                                    span
+                                    {
+                                        font-size: 9px;
+                                        line-height: 1;
+                                    }
+                                }
+                            }
+                        }
+
+                        lucide-icon
+                        {
+                            position: absolute;
+                            top: 50%;
+                            width: 24px;
+                            height: 36px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            transform: translateY(-50%);
+                            background-color: rgba($background-primary, 0.8);
+                            border-radius: 8px;
+                            z-index: 10;
+                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                            transition: transform 0.2s ease;
+                        }
+
+                        .left
+                        {
+                            left: 8px;
+                        }
+
+                        .right
+                        {
+                            right: 8px;
+                        }
+                    }
+
+                    .block-2
+                    {
+                        .card-body
+                        {
+                            padding: 8px;
+
+                            .services-header
+                            {
+                                display: flex;
+                                justify-content: space-between;
+
+                                .header-col
+                                {
+                                    font-weight: bold;
+                                    color: rgba($secondary, 0.6);
+                                }
+                            }
+
+                            .services-list
+                            {
+                                display: flex;
+                                flex-direction: column;
+
+                                .service-item
+                                {
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 8px;
+                                    padding: 8px;
+                                    cursor: pointer;
+                                    background-color: transparent;
+
+                                    &:nth-child(odd)
+                                    {
+                                        background-color: $background-primary;
+                                    }
+
+                                    &:nth-child(even)
+                                    {
+                                        background-color: $white;
+                                    }
+
+                                    &.checked
+                                    {
+                                        .service-name
+                                        {
+                                            color: $primary;
+                                            font-weight: bold;
+                                        }
+                                    }
+
+                                    ps-kendo-checkbox
+                                    {
+                                        flex: 1;
+
+                                        label
+                                        {
+                                            font-weight: bold;
+                                            font-size: 14px;
+                                        }
+                                    }
+
+                                    .service-cost
+                                    {
+                                        color: $error;
+                                        font-weight: bold;
+                                        flex: 0 0 auto;
+                                        min-width: 130px;
+                                        text-align: right;
+                                        font-size: 14px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            ps-footer-action
+            {
+                .footer-action
+                {
+                    display: flex;
+                    gap: 8px;
+                    height: 52px;
+                    padding: 8px;
+
+                    ps-kendo-button
+                    {
+                        width: calc(50% - 4px);
+                        height: 36px;
+                        border-radius: 8px;
+
+                        button
+                        {
+                            height: 100%;
+                            width: 100%;
+                            padding: 0;
+
+                            .k-button-text
+                            {
+                                height: 100%;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                gap: 4px;
+                                padding: 4px 0;
+                                justify-content: center;
+
+                                .material-icons
+                                {
+                                    font-size: 22px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

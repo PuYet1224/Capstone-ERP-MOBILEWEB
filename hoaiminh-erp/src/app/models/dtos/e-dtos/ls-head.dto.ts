@@ -1,5 +1,6 @@
 import { LSHeadTypeDataEnum } from "src/app/models/enums/e-type/ls-head-type-data.enum";
 import { ProcessStatusEnum } from "../../enums/process-status.enum";
+import { SALOrderDetailCusDTO } from "./sal-order-detail.dto";
 
 export class LSHeadDTO {
   Code: number = 0;
@@ -33,4 +34,5 @@ export class LSHeadCusDTO extends LSHeadDTO {
   StatusName: string = 'Tạo mới';
   FullAddress: string = '';
   ReportToHeadName: string = '';
+  ListGroupOrderDetail: SALOrderDetailCusDTO[] = [];
 }

@@ -9,4 +9,5 @@ export class DashboardVehicleOverview {
     TotalStockVehicleSold: number = 0;
     TotalStockVehicleNotSold: number = 0;
     TotalStockVehicle: number = 0;
+    TotalTransactions: number = 0;
 }

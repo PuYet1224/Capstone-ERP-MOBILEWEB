@@ -1,0 +1,88 @@
+<div class="mtb010-retail-customer">
+    <!-- START: HEADER -->
+    <ps-header-back>
+        <div class="left-side">
+            <div class="func-title1">Tư vấn bán hàng</div>
+            <div class="func-title2">Phiếu bán hàng</div>
+        </div>
+    </ps-header-back>
+    <!-- END: HEADER -->
+
+    <!-- START: BODY -->
+    <div class="customer-body">
+        <div class="body-container">
+            <div class="container-body">
+                <div class="title">Phiếu bán hàng</div>
+                <div class="content">
+                    <ps-kendo-textbox class="id" [label]="'Số phiếu'" [disabled]="true"
+                        [(ngModel)]="retailDetailDTO.ID"></ps-kendo-textbox>
+                    <div class="row-2">
+                        <div class="process">
+                            <div>Loại phiếu</div>
+                            <div class="status"
+                                [innerHTML]="{Progress: retailDetailDTO.RetailTypeData, ProgressName: retailDetailDTO.RetailTypeDataName} | SALOrderMasterProcessRetail">
+                            </div>
+                        </div>
+                        <div class="status">
+                            <div>Trạng thái</div>
+                            <div
+                                [innerHTML]="{Active: retailDetailDTO.Status === SALOrderMasterStatusRetailEnum.NEW || retailDetailDTO.Status === SALOrderMasterStatusRetailEnum.RETURN ? 'consultant' : undefined, Progress: retailDetailDTO.Status, ProgressName: retailDetailDTO.StatusName} | SALOrderMasterStatusRetail">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-body">
+                <div class="title">Khách hàng</div>
+                <div class="content">
+                    <div class="row-1">
+                        <ps-kendo-textbox [label]="'Khách hàng (*)'" [disabled]="FunctionPermissionDTO.approver "
+                            [(ngModel)]="retailDetailDTO.CustomerName" (blur)="onValueChange('CustomerName')" />
+                        <ps-kendo-dropdown-list [data]="listgender" [(ngModel)]="retailDetailDTO.CustomerGender"
+                            [textField]="'ListName'" [valueField]="'OrderBy'"
+                            (valueChange)="onValueChange('CustomerGender')" [valuePrimitive]="true"
+                            [disabled]="FunctionPermissionDTO.approver || retailDetailDTOcopy.Status != SALOrderMasterStatusRetailEnum.NEW"></ps-kendo-dropdown-list>
+                    </div>
+                    <ps-kendo-masked-textbox [label]="'Số điện thoại'" [mask]="'000 000 0000'" [type]="'tel'"
+                        [disabled]="FunctionPermissionDTO.approver || retailDetailDTOcopy.Status != SALOrderMasterStatusRetailEnum.NEW"
+                        [(ngModel)]="retailDetailDTO.CustomerPhone" (blur)="onValueChange('CustomerPhone')" />
+                    <ps-kendo-textbox [label]="'Nhu cầu khách hàng'"
+                        [disabled]="FunctionPermissionDTO.approver ||  !retailDetailDTOcopy.CustomerName && !retailDetailDTOcopy.Code"
+                        [(ngModel)]="retailDetailDTO.CustomerNeeds" (blur)="onValueChange('CustomerNeeds')" />
+                    <ps-kendo-textbox [label]="'Đặc điểm khách hàng'"
+                        [disabled]="FunctionPermissionDTO.approver ||  !retailDetailDTOcopy.CustomerName && !retailDetailDTOcopy.Code"
+                        [(ngModel)]="retailDetailDTO.CustomerCharacteristics"
+                        (blur)="onValueChange('CustomerCharacteristics')" />
+                    <ps-kendo-textbox [label]="'Mong muốn khách hàng'"
+                        [disabled]="FunctionPermissionDTO.approver ||  !retailDetailDTOcopy.CustomerName && !retailDetailDTOcopy.Code"
+                        [(ngModel)]="retailDetailDTO.CustomerExpectation"
+                        (blur)="onValueChange('CustomerExpectation')" />
+                    <ps-kendo-textbox [label]="'Sở thích khách hàng'"
+                        [disabled]="FunctionPermissionDTO.approver ||  !retailDetailDTOcopy.CustomerName && !retailDetailDTOcopy.Code"
+                        [(ngModel)]="retailDetailDTO.CustomerPreferences"
+                        (blur)="onValueChange('CustomerPreferences')" />
+                    <ps-kendo-textarea [label]="'Nội dung lưu ý khác'"
+                        [disabled]="FunctionPermissionDTO.approver ||  !retailDetailDTOcopy.CustomerName && !retailDetailDTOcopy.Code"
+                        [(ngModel)]="retailDetailDTO.CustomerNotes" (blur)="onValueChange('CustomerNotes')" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END: BODY -->
+
+    <!-- START: FOOTER -->
+    <ps-footer-action>
+        <ps-kendo-button (onClick)="onNavigate('back')">
+            <span class="material-icons">arrow_back</span>
+        </ps-kendo-button>
+        <ps-kendo-button [theme]="'error'" [disabled]="FunctionPermissionDTO.approver">
+            <span class="text">Hủy giao dịch</span>
+        </ps-kendo-button>
+        <ps-kendo-button [theme]="'primary'" [disabled]="FunctionPermissionDTO.approver"
+            (onClick)="onNavigate('continue')">
+            <span class="text">Tiếp tục</span>
+        </ps-kendo-button>
+
+    </ps-footer-action>
+    <!-- END: FOOTER -->
+</div>

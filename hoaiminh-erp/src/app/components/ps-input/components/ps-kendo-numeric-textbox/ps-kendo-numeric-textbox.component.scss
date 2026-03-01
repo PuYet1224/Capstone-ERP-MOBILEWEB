@@ -1,0 +1,68 @@
+@import '../../../../../assets/scss/colors';
+
+::ng-deep {
+  ps-kendo-numeric-textbox {
+    .custom-numeric-textbox {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      kendo-label {
+        line-height: 1;
+
+        .k-label {
+          line-height: 1;
+          color: $secondary;
+          font-size: 13px;
+        }
+      }
+
+      .k-numerictextbox {
+        height: 35px;
+        border-color: $border;
+        border-radius: 8px;
+
+        padding: 0 8px;
+        opacity: 1;
+
+        &.hasPrefix {
+          padding-left: 0;
+        }
+
+        &:focus-within,
+        &.k-focus,
+        &:hover {
+          box-shadow: none;
+          border-color: $primary;
+        }
+
+        &.k-disabled {
+          opacity: 1;
+          background-color: $disable-input;
+          cursor: not-allowed;
+        }
+      }
+
+      // .k-spinner-increase,
+      // .k-spinner-decrease {
+      //   display: none !important;
+      // }
+
+      .k-input-inner {
+        font-size: 13px;
+        color: $secondary;
+        padding: 0;
+
+        &::placeholder {
+          font-style: italic;
+          color: $placeholder;
+        }
+      }
+    }
+
+    .prefix-icon,
+    .suffix-icon {
+      padding: 0 15px;
+    }
+  }
+}

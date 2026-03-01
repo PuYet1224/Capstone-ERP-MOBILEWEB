@@ -1,0 +1,117 @@
+<!-- <div class="mtb024-sal-collection-owner"> -->
+<!-- START: HEADER -->
+<!-- <ps-header-back>
+        <div class="left-side">
+            <div class="func-title1">Tiếp nhận thông tin</div>
+            <div class="func-title2">Thông tin chủ xe</div>
+        </div>
+        <div class="right-side">
+            <div>
+                No.: <span>{{retaildetail.ID}}</span>
+            </div>
+        </div>
+    </ps-header-back> -->
+<!-- END: HEADER -->
+<!-- <div class="retail-body">
+        <div class="main-body">
+            <div class="row-1">
+                <ps-kendo-masked-textbox [label]="'Số căn cước công dân (*)'" [mask]="'000000000000'"
+                    [(ngModel)]="cscustomer.CitizenCardNo" (blur)="onCitizenChange(['CitizenCardNo'])"
+                    [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed"></ps-kendo-masked-textbox>
+                <ps-kendo-button
+                    [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed"
+                    (onClick)="onscannbarcode()">
+                    <span class="material-icons">barcode_scanner</span>
+                </ps-kendo-button>
+                <ps-kendo-checkbox [label]="'Là KH mua xe'" [id]="'iscustomerbuy'"
+                    [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver  || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed"
+                    (onchecked)="onChecked($event)" [(ngModel)]="retaildetail.IsCustomerOwner">
+                </ps-kendo-checkbox>
+            </div>
+            <div class="datepicker">
+                <label>Ngày cấp (*)</label>
+                <kendo-datepicker placeholder="dd/MM/yyyy" format="dd/MM/yyyy" [readOnlyInput]="true"
+                    calendarType="classic" [(ngModel)]="cscustomer.DateOfIssue"
+                    (valueChange)="onValueChange(['DateOfIssue'])"
+                    [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
+                </kendo-datepicker>
+            </div>
+            <ps-kendo-masked-textbox [label]="'Số chứng minh nhân dân'" [mask]="'000000000'"
+                [(ngModel)]="cscustomer.CardNo" (blur)="onValueChange(['CardNo'])"
+                [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed"></ps-kendo-masked-textbox>
+
+            <ps-kendo-textbox [label]="'Họ và tên (*)'" [(ngModel)]="cscustomer.FullName"
+                (blur)="onValueChange(['FullName'])"
+                [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
+            </ps-kendo-textbox>
+            <ps-kendo-dropdown-list [label]="'Giới tính (*)'" [data]="listgender" [textField]="'ListName'"
+                [valueField]="'OrderBy'" [(ngModel)]="cscustomer.Gender" [valuePrimitive]="true"
+                (valueChange)="onValueChange(['Gender'])"
+                [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
+            </ps-kendo-dropdown-list>
+            <div class="row-6">
+                <ps-kendo-dropdown-list [label]="'Ngày tháng năm sinh (*)'" [data]="listyear"
+                    [(ngModel)]="cscustomer.BirthYear" [valuePrimitive]="true"
+                    (valueChange)="onValueChange(['BirthYear'])"
+                    [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
+                </ps-kendo-dropdown-list>
+                <ps-kendo-dropdown-list [data]="listmonth" [(ngModel)]="cscustomer.BirthMonth" [valuePrimitive]="true"
+                    (valueChange)="onValueChange(['BirthMonth'])"
+                    [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver || !cscustomerCOPY.CitizenCardNo || !cscustomer.BirthYear || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
+                </ps-kendo-dropdown-list>
+                <ps-kendo-dropdown-list [data]="listday" [(ngModel)]="cscustomer.BirthDay" [valuePrimitive]="true"
+                    (valueChange)="onValueChange(['BirthDay'])"
+                    [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver || !cscustomerCOPY.CitizenCardNo || !cscustomer.BirthMonth || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
+                </ps-kendo-dropdown-list>
+            </div>
+            <ps-kendo-dropdown-list [label]="'Tỉnh thành (*)'" [data]="provincelist" [(ngModel)]="cscustomer.Province"
+                [textField]="'VNProvince'" [valueField]="'Code'" [valuePrimitive]="true"
+                (valueChange)="onValueChange(['Province'])"
+                [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
+            </ps-kendo-dropdown-list>
+            <ps-kendo-dropdown-list
+                [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || !cscustomer.Province || FunctionPermissionDTO.approver || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed"
+                [label]="'Phường/Xã (*)'" [data]="districtlist" [(ngModel)]="cscustomer.District"
+                [textField]="'VNDistrict'" [valueField]="'Code'" [valuePrimitive]="true"
+                (valueChange)="onValueChange(['District'])">
+            </ps-kendo-dropdown-list>
+            <ps-kendo-textbox [label]="'Địa chỉ cụ thể (*)'" [(ngModel)]="cscustomer.Address"
+                (blur)="onValueChange(['Address'])"
+                [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
+            </ps-kendo-textbox>
+        </div>
+
+    </div> -->
+<!-- START: FOOTER -->
+<!-- <ps-footer-action>
+        <ps-kendo-button (onClick)="onNavigate('/mtbike/collection/vehicle')">
+            <span class="material-icons">arrow_back</span>
+        </ps-kendo-button>
+        <ps-kendo-button [theme]="'primary'" (onClick)="onNavigate('/mtbike/collection/contact')">
+            Tiếp tục
+        </ps-kendo-button>
+    </ps-footer-action> -->
+<!-- END: FOOTER -->
+
+<!-- START:SCAN BARCODE -->
+<!-- <ps-barcode-scan (onScan)="onScanResult($event)" (onClose)="onclosescanbarcode()" *ngIf="isopenscan">
+    </ps-barcode-scan> -->
+<!-- END: SCAN BARCODE -->
+
+<!-- START: CONFIRM DIALOG -->
+<!-- <ps-dialog-confirm [theme]="'primary'" [open]="showpopup">
+        <div psDialogConfirmBody class="body">
+            <div class="title-out">
+                Hủy giao dịch
+            </div>
+            <div class="confirm">
+                Bạn có chắc chắn muốn hủy giao dịch không?
+            </div>
+            <div class="group-buttom">
+                <ps-kendo-button (onClick)="showpopup = false">Huỷ</ps-kendo-button>
+                <ps-kendo-button [theme]="'primary'" (onClick)="onReject()">Xác nhận</ps-kendo-button>
+            </div>
+        </div>
+    </ps-dialog-confirm> -->
+<!-- END: CONFIRM DIALOG -->
+<!-- </div> -->

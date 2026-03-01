@@ -1,0 +1,92 @@
+<div class="mtb020-retail-total">
+    <ps-header-back>
+        <div class="left-side">
+            <div class="func-title1">Tư vấn bán hàng</div>
+            <div class="func-title2">Chi tiết bán hàng</div>
+        </div>
+        <div class="right-side" *ngIf="retailMaster">
+            <div>
+                Số phiếu: <span>{{ retailMaster.ID }}</span>
+            </div>
+            <div #wrapper class="marquee-wrapper" (click)="onNavigate('customer')">
+                <div #content class="marquee-content">
+                    {{ retailMaster.CustomerName ? retailMaster.CustomerName + ' | ' : '' }}{{ retailMaster.CustomerPhone }}
+                </div>
+            </div>
+        </div>
+    </ps-header-back>
+
+    <div class="retail-total-body">
+        <div class="price-card">
+            <div class="card-title">Chi tiết giá bán</div>
+            <div class="card-body price-detail-body">
+                <div class="price-group">
+                    <div class="price-row">
+                        <span class="price-label">Tổng tiền xe (chưa VAT):</span>
+                        <span class="price-value">{{ totals.totalVehicleBeforeVat | number:'1.0-0' }}₫</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="price-label">Tổng VAT:</span>
+                        <span class="price-value">{{ totals.totalVat | number:'1.0-0' }}₫</span>
+                    </div>
+                </div>
+                <div class="price-separator-line"></div>
+                <div class="price-group">   
+                    <div class="price-row">
+                        <span class="price-label">Tổng dịch vụ:</span>
+                        <span class="price-value">{{ totals.totalService | number:'1.0-0' }}₫</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="price-label">Tổng phụ kiện:</span>
+                        <span class="price-value">{{ totals.totalPart | number:'1.0-0' }}₫</span>
+                    </div>
+                </div>
+                <div class="price-separator-line"></div>
+                <div class="price-group">
+                    <div class="summary-row bold">
+                        <span class="summary-label">TỔNG TRƯỚC GIẢM GIÁ</span>
+                        <span class="summary-value">{{ totals.totalBeforeDiscount | number:'1.0-0' }}₫</span>
+                    </div>
+                    <div class="summary-row promotional">
+                        <span class="summary-label">Tổng giảm giá (Khuyến mãi):</span>
+                        <span class="summary-value discount">{{ totals.totalDiscount === 0 ? '' : '- ' }}{{ totals.totalDiscount | number:'1.0-0' }}₫</span>
+                    </div>
+                </div>
+                <div class="price-separator-line"></div>
+                <div class="price-group">
+                    <div class="price-row">
+                        <span class="price-label">Trả thẳng:</span>
+                        <span class="price-value">{{ totals.totalLumpsum | number:'1.0-0' }}₫</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="price-label">Đặt cọc:</span>
+                        <span class="price-value">{{ totals.totalDeposit | number:'1.0-0' }}₫</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="price-label">Dư nợ:</span>
+                        <span class="price-value">{{ totals.totalDebt | number:'1.0-0' }}₫</span>
+                    </div>
+                </div>
+                <div class="price-separator-line"></div>
+                <div class="total-payment">
+                    <div class="payment-row">
+                        <span class="payment-label">TỔNG THANH TOÁN</span>
+                        <span class="payment-value">{{ totals.totalPayment | number:'1.0-0' }}₫</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ps-footer-action>
+        <ps-kendo-button (onClick)="onNavigate('back')">
+            <span class="material-icons">arrow_back</span>
+        </ps-kendo-button>
+        <ps-kendo-button (onClick)="onNavigate('to-list')">
+            <span class="material-icons">list_alt</span>
+        </ps-kendo-button>
+        <ps-kendo-button [theme]="'primary'" (onClick)="onSendPayment()">
+            <span class="text">Gửi thanh toán</span>
+        </ps-kendo-button>
+    </ps-footer-action>
+</div>

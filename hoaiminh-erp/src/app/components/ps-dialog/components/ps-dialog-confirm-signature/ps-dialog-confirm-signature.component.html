@@ -1,0 +1,18 @@
+<div class="signature-popup" *ngIf="open" (click)="onBackdropClick()">
+  <div class="popup-content" (click)="$event.stopPropagation()">
+    <div class="popup-header">
+      <div class="header-title">
+        <span>{{ title }}</span>
+      </div>
+    </div>
+    <div class="popup-body">
+      <div class="signature-canvas-container" [style.min-height.px]="canvasHeight">
+        <canvas #sigCanvas width="500" [height]="canvasHeight" class="signature-canvas"></canvas>
+      </div>
+      <div class="signature-actions">
+        <ps-kendo-button [theme]="''" (onClick)="onCloseClick()">quay về</ps-kendo-button>
+        <ps-kendo-button [theme]="'primary'" (onClick)="onSaveClick()">xác nhận</ps-kendo-button>
+      </div>
+    </div>
+  </div>
+</div>

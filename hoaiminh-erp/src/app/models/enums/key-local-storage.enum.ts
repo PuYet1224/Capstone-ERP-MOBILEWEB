@@ -15,5 +15,12 @@ export enum KeyLocalStorageEnum {
   RETAIL = 'retail',
   WHOLESALE = 'wholesale',
   DO = 'delivery_order',
-  INBOUND = 'inbound'
+  INBOUND = 'inbound',
+  WOM_MASTER = 'wom_master',
+  WOM_SERVICE = 'wom_service',
+  SAL_ORDER_RECEIPT = 'sal_order_receipt',
+  SAL_ORDER_INVOICE = 'sal_order_invoice',
+  SAL_ORDER_DETAIL = 'sal_order_detail',
+  SAL_ORDER_MASTER = 'sal_order_master',
+  LS_VEHICLE_COLOR = 'ls_vehicle_color',
 }

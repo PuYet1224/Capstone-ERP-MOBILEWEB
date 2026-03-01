@@ -6,9 +6,6 @@ export enum LSListTypeOfListEnum {
   //đơn vị
   PIECR = 1,
   SET = 2,
-  //hình thức thanh toán
-  LUMPSUM = 1,
-  INSTALLMENT = 2,
   //kỳ
   DAY = 1,
   MONTH = 2,

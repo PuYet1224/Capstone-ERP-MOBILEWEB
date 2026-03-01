@@ -1,0 +1,181 @@
+<div class="mtb015-retail-part">
+    <!-- START: HEADER -->
+    <ps-header-back>
+        <div class="left-side">
+            <div class="func-title1">Tư vấn bán hàng</div>
+            <div class="func-title2">Phụ kiện ráp kèm</div>
+        </div>
+        <div class="right-side" *ngIf="retailMaster">
+            <div>
+                Số phiếu: <span>{{ retailMaster.ID }}</span>
+            </div>
+            <div #wrapper class="marquee-wrapper" (click)="onNavigateToDetail()">
+                <div #content class="marquee-content">
+                    {{ retailMaster.CustomerName ? retailMaster.CustomerName + ' | ' : '' }}{{
+                    retailMaster.CustomerPhone }}
+                </div>
+            </div>
+        </div>
+    </ps-header-back>
+    <!-- END: HEADER -->
+
+    <!-- START: BODY -->
+    <div class="parts-body">
+        <ng-container *ngFor="let detail of listSalVehicleParts; let i = index; trackBy: trackByCode">
+            <div class="vehicle-section" *ngIf="detail">
+                <div class="section-header">
+                    <span class="section-title section-title--info"
+                        (click)="onNavigateToCart(); $event.stopPropagation()">Thông tin xe</span>
+                    <span class="section-header-right">
+                        <b>[{{ detail.Code }}]</b>
+                        <span class="section-collapse" (click)="toggleSection(i); $event.stopPropagation()">{{
+                            isCollapsed(i) ? 'Mở rộng' : 'Thu gọn' }}</span>
+                    </span>
+                </div>
+                <div class="section-body" *ngIf="!isCollapsed(i)">
+                    <div class="vehicle-card block-vehicle" (click)="onVehicleClick(detail)">
+                        <span class="tag" [class.available]="detail.TypeData === enumTypeData.BUY"
+                            [class.allocated]="detail.TypeData === enumTypeData.TRANSFER"
+                            [class.booked]="detail.TypeData === enumTypeData.BOOK">
+                            {{ detail.TypeData === enumTypeData.BUY ? 'Có sẵn' : (detail.TypeData ===
+                            enumTypeData.TRANSFER ? 'Điều xe' : 'Đặt xe') }}
+                        </span>
+                        <div class="vehicle-image">
+                            <img [src]="detail.VehicleImage || detail.ImageSetting1 || ''" alt="" />
+                        </div>
+                        <div class="vehicle-info">
+                            <div class="info-row">
+                                <span class="label">Dòng xe:</span>
+                                <span class="value">{{ detail.TypeOfVehicleName }}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">Loại xe:</span>
+                                <span class="value">{{ detail.VehicleName }}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">Màu xe:</span>
+                                <span class="value">{{ detail.VehicleColorName }}</span>
+                            </div>
+                            <div class="infor-last-row">
+                                <span>{{ detail.TotalService ?? 0 }} dịch vụ</span>
+                                <span>{{ (detail.ListPart || []).length }} phụ kiện</span>
+                                <span>{{ getDiscountLabel(detail) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="services-table" *ngIf="(detail.ListPart || []).length">
+                        <div class="services-header">
+                            <div class="header-col col-name">Tên phụ tùng</div>
+                            <div class="header-col col-qty">SL</div>
+                            <div class="header-col col-price">Đơn giá</div>
+                        </div>
+                        <div class="services-list">
+                            <div class="service-item"
+                                *ngFor="let item of (detail.ListPart || []); let i = index; trackBy: trackByPartIndex"
+                                (click)="onEditPart(detail, item); $event.stopPropagation()">
+                                <div class="service-number">{{ i + 1 }}.</div>
+                                <div class="service-name">{{ item.TypeOfPartName ?? '' }}</div>
+                                <div class="part-qty">{{ item.Quantity ?? 0 }}</div>
+                                <div class="service-cost">{{ (item.UnitPrice ?? 0) | number:'1.0-0' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <!-- END: BODY -->
+
+    <!-- START: FOOTER -->
+    <ps-footer-action>
+        <ps-kendo-button (onClick)="onNavigateBack()">
+            <span class="material-icons">arrow_back</span>
+        </ps-kendo-button>
+        <ps-kendo-button (onClick)="onNavigateList()">
+            <span class="material-icons">list_alt</span>
+        </ps-kendo-button>
+        <ps-kendo-button [theme]="'primary'" (onClick)="onAddNew()"
+            *ngIf="!FunctionPermissionDTO.viewer && (FunctionPermissionDTO.master || FunctionPermissionDTO.creator)">
+            <span class="text">Thêm mới</span>
+        </ps-kendo-button>
+    </ps-footer-action>
+    <!-- END: FOOTER -->
+
+    <!-- POPUP THÊM MỚI PHỤ KIỆN-->
+    <ps-dialog-confirm-bottom [open]="showPopup" [title]="''" (close)="onClosePopup()">
+        <div psDialogConfirmBottomBody class="popup-add-part-body">
+            <!-- Block 1: Phụ kiện ráp kèm -->
+            <div class="popup-block-form">
+                <div class="form-header">Phụ kiện ráp kèm</div>
+                <div class="form-fields">
+                    <ps-kendo-dropdown-list [label]="'Phân nhóm phụ tùng'" [data]="listPartCategory"
+                        [textField]="'Category'" [valueField]="'Code'" [(ngModel)]="partcategory"
+                        [valuePrimitive]="false"
+                        [disabled]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator)"
+                        (valueChange)="onPartCategoryChange()">
+                    </ps-kendo-dropdown-list>
+                    <div class="form-row form-row-2">
+                        <ps-kendo-dropdown-list [label]="'Loại phụ tùng'" [data]="listTypeOfPart"
+                            [textField]="'TypeOfPart'" [valueField]="'Code'" [(ngModel)]="typeofpart.Code"
+                            [valuePrimitive]="true"
+                            [disabled]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator) || !partcategory || !partcategory.Code"
+                            (valueChange)="onTypeOfPartChange($event)">
+                        </ps-kendo-dropdown-list>
+                        <ps-kendo-dropdown-list [label]="'Phân nhóm chi tiết'" [data]="listTypeOfPartSpecs"
+                            [textField]="'TypeOfPartSpecs'" [valueField]="'Code'" [(ngModel)]="typeofpartspecs.Code"
+                            [valuePrimitive]="true"
+                            [disabled]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator) || !typeofpart || !typeofpart.Code"
+                            (valueChange)="onTypeOfPartSpecsChange()">
+                        </ps-kendo-dropdown-list>
+                    </div>
+                    <div class="form-row form-row-2">
+                        <ps-kendo-dropdown-list [label]="'Đơn vị tính'" [data]="listUnit" [textField]="'ListName'"
+                            [valueField]="'Code'" [(ngModel)]="unit.Code" [valuePrimitive]="true"
+                            [disabled]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator)"
+                            (valueChange)="onUnitChange($event)">
+                        </ps-kendo-dropdown-list>
+                        <ps-kendo-numeric-textbox [label]="'Số lượng'" [(ngModel)]="quantity" [format]="'n0'"
+                            [disabled]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator)">
+                        </ps-kendo-numeric-textbox>
+                    </div>
+                    <ps-kendo-numeric-textbox [label]="'Đơn giá'" [(ngModel)]="unitPrice" [format]="'n0'"
+                        [disabled]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator)">
+                    </ps-kendo-numeric-textbox>
+                </div>
+            </div>
+            <!-- Block 2: áp dụng cho xe khác-->
+            <div class="popup-block-1">
+                <div class="block-1-header">Áp dụng cho xe khác</div>
+                <div class="popup-block-vehicle">
+                    <div class="vehicle-slider-wrap">
+                        <div class="vehicle-slider" #popupSlider>
+                            <div class="vehicle-slider-track">
+                                <div class="vehicle-card-item"
+                                    *ngFor="let v of listVehiclesForApply; trackBy: trackByCode"
+                                    [class.selected]="isVehicleSelected(v)" (click)="toggleVehicleSelect(v)">
+                                    <div class="card-img"
+                                        [style.backgroundImage]="'url(' + (v.VehicleImage || '') + ')'"></div>
+                                    <div class="card-info">
+                                        <span class="card-code" *ngIf="v.Code">[{{ v.Code }}]</span>
+                                        <span class="card-name">{{ v.TypeOfVehicleName }} | {{ v.VehicleName }}</span>
+                                        <span class="card-ver" *ngIf="v.VehicleColorName">{{ v.VehicleColorName }}</span>
+                                    </div>
+                                    <span class="card-check" *ngIf="isVehicleSelected(v)">✓</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div psDialogConfirmBottomFooter class="popup-footer-btns">
+            <ps-kendo-button [theme]="''" (onClick)="onClosePopup()">Đóng</ps-kendo-button>
+            <ps-kendo-button [theme]="'error'" (onClick)="onDeletePart()"
+                *ngIf="!FunctionPermissionDTO.viewer && (FunctionPermissionDTO.master || FunctionPermissionDTO.creator) && isEditMode">Xoá</ps-kendo-button>
+            <ps-kendo-button [theme]="'primary'" (onClick)="onSavePart()"
+                *ngIf="!FunctionPermissionDTO.viewer && (FunctionPermissionDTO.master || FunctionPermissionDTO.creator)">
+                <span class="text">{{ isEditMode ? 'Cập nhật' : 'Thêm mới' }}</span>
+            </ps-kendo-button>
+        </div>
+    </ps-dialog-confirm-bottom>
+</div>

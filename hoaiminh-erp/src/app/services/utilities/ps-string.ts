@@ -1,6 +1,13 @@
-export class PSString {
+export class PsString {
   public static isNullOrWhitespace(str: string): boolean {
     return str == null || str == undefined || str.trim().length == 0;
+  }
+
+  public static formatPrice(price: number): string {
+    if (price == null || price === undefined) {
+      return '0';
+    }
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   }
 
   public static highlightRequiredLabels() {

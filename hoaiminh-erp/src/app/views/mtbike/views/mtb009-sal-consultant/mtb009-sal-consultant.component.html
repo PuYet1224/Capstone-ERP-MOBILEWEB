@@ -1,0 +1,160 @@
+<div class="mtb009-retail">
+    <!-- START: HEADER -->
+    <ps-header-back>
+        <div class="left-side">
+            <div class="func-title1">Tư vấn bán hàng</div>
+            <div class="func-title2">Phiếu bán hàng</div>
+        </div>
+    </ps-header-back>
+    <!-- END: HEADER -->
+
+    <!-- START: SEARCH -->
+    <!-- <div class="k-overlay" *ngIf="isOpenedFilter" (click)="openFilterPopup(false)"></div>
+    <div class="filter-popup" [class.open]="isOpenedFilter">
+        <div class="popup-header">
+            <div class="header-filter">
+                <span>TÌM KIẾM PHIẾU BÁN LẺ</span>
+            </div>
+        </div>
+        <div class="popup-body">
+            <div class="body-top">
+                <ps-kendo-textbox [label]="'Tra cứu phiếu tiếp nhận'"
+                                  [placeholder]="'Tìm theo mã phiếu, tên, số điện thoại khách hàng'" [(ngModel)]="searchKeyword">
+                </ps-kendo-textbox>
+                <ps-kendo-dropdown-list *ngIf="type == SALOrderMasterStatusRetailEnum.NEW" [data]="progressListcopy"
+                                        [textField]="'text'" [valueField]="'value'" [valuePrimitive]="true" [(ngModel)]="selectedStatus"
+                                        [label]="'Trạng thái phiếu'">
+                </ps-kendo-dropdown-list>
+            </div>
+            <div class="body-bottom">
+                <ps-kendo-button [theme]="'primary-outline'" (click)="openFilterPopup(false)">quay về</ps-kendo-button>
+                <ps-kendo-button [theme]="'primary'" (onClick)="onSearchTask()">tìm</ps-kendo-button>
+            </div>
+        </div>
+    </div> -->
+
+
+    <ps-dialog-confirm-bottom [open]="isOpenedFilter" [title]="'Tìm kiếm phiếu tư vấn bán lẻ'"
+        (close)="openFilterPopup($event)">
+        <div psDialogConfirmBottomBody>
+            <ps-kendo-textbox [label]="'Tra cứu phiếu tư vấn bán lẻ'"
+                [placeholder]="'Tra cứu theo thông tin sđt, tên khách hàng hoặc mã phiếu'" [(ngModel)]="searchKeyword">
+            </ps-kendo-textbox>
+            <ps-filter-status [label]="'Trạng thái phiếu'" [data]="progressStatusTree" [field]="'Status'"
+                [valueField]="'Status'" (changedValue)="onStatusFilterChange($event)">
+            </ps-filter-status>
+
+        </div>
+        <div psDialogConfirmBottomFooter>
+            <ps-kendo-button [theme]="''" (onClick)="openFilterPopup(false)">Đóng</ps-kendo-button>
+            <ps-kendo-button [theme]="'primary'" (onClick)="onSearchTask()">Tìm</ps-kendo-button>
+        </div>
+    </ps-dialog-confirm-bottom>
+    <!-- END: SEARCH -->
+
+    <!-- START: BODY -->
+    <div class="repair-body">
+        <div class="action-tabs" *ngIf="!searchKeywordcopy">
+            <div class="tab" [class.active]="tabactive === 1" (click)="onChangeType(1)">
+                Của tôi
+            </div>
+
+            <div class="tab" [class.active]="tabactive === 2" (click)="onChangeType(2)">
+                Nhân sự khác
+            </div>
+        </div>
+
+        <div class="body-list" #bodyList>
+            <div class="item white" *ngFor="let i of listRetailMaster; let idx = index">
+                <div class="title" (click)="toggleItem(idx)">
+                    <div class="title-name">{{i.RetailTypeDataName}} <span class="total">({{i.Quantity}})</span></div>
+                    <span class="material-icons" [class.rotate]="isOpen(idx)">
+                        keyboard_arrow_down
+                    </span>
+                </div>
+                <div *ngIf="isOpen(idx)">
+                    <div class="list-card" *ngFor="let card of i.ListData" (click)="onSetItem(card)">
+                        <div class="row-1">
+                            <div class="card-no">Số phiếu:&nbsp;<div class="no">{{card.ID}}</div>
+                            </div>
+                            <div class="status"
+                                [innerHTML]="{ Active: card.Status === SALOrderMasterStatusRetailEnum.NEW || card.Status === SALOrderMasterStatusRetailEnum.RETURN ? 'consultant' : undefined, Progress: card.Status, ProgressName: card.StatusName } | SALOrderMasterStatusRetail">
+                            </div>
+                        </div>
+                        <div class="row-2" *ngIf="card.CustomerName || card.CustomerPhone">
+                            <div class="cus-name" *ngIf="card.CustomerName">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
+                                    fill="none">
+                                    <path
+                                        d="M9.25336 4.16667C9.25336 4.5645 9.4114 4.94603 9.6927 5.22733C9.97401 5.50864 10.3555 5.66667 10.7534 5.66667C11.1512 5.66667 11.5327 5.50864 11.814 5.22733C12.0953 4.94603 12.2534 4.5645 12.2534 4.16667C12.2534 3.76885 12.0953 3.38732 11.814 3.10601C11.5327 2.82471 11.1512 2.66667 10.7534 2.66667C10.3555 2.66667 9.97401 2.82471 9.6927 3.10601C9.4114 3.38732 9.25336 3.76885 9.25336 4.16667ZM7.8267 8.44001C7.81324 8.46331 7.80615 8.48976 7.80615 8.51667C7.80615 8.54359 7.81324 8.57003 7.8267 8.59334C7.84333 8.62309 7.8694 8.64645 7.90079 8.65973C7.93218 8.67301 7.9671 8.67545 8.00003 8.66667H13.5934C13.6142 8.66722 13.6348 8.66265 13.6534 8.65334C13.672 8.64404 13.688 8.6303 13.7 8.61334C13.7084 8.59561 13.7127 8.57626 13.7127 8.55667C13.7127 8.53708 13.7084 8.51774 13.7 8.50001C13.5055 7.87714 13.1187 7.33194 12.595 6.94269C12.0713 6.55344 11.4377 6.34017 10.7852 6.3335C10.1327 6.32684 9.49489 6.52712 8.96334 6.90559C8.4318 7.28406 8.03387 7.82125 7.8267 8.44001Z"
+                                        fill="#126433" />
+                                    <path
+                                        d="M14.92 11C15.0968 11 15.2664 10.9298 15.3914 10.8047C15.5164 10.6797 15.5867 10.5101 15.5867 10.3333C15.5867 10.1565 15.5164 9.98695 15.3914 9.86192C15.2664 9.7369 15.0968 9.66666 14.92 9.66666H6.74666C6.65826 9.66666 6.57347 9.63154 6.51096 9.56903C6.44845 9.50652 6.41333 9.42173 6.41333 9.33333V8.33333C6.41333 7.53768 6.09726 6.77462 5.53465 6.21201C4.97204 5.6494 4.20898 5.33333 3.41333 5.33333C2.61768 5.33333 1.85462 5.6494 1.29201 6.21201C0.729401 6.77462 0.41333 7.53768 0.41333 8.33333V10.6667C0.41333 10.7551 0.448449 10.8399 0.510961 10.9024C0.573473 10.9649 0.658258 11 0.746663 11H1.41333C1.49776 10.9981 1.57963 11.029 1.64178 11.0862C1.70392 11.1434 1.74151 11.2224 1.74666 11.3067L2.06 15.3333C2.06515 15.4176 2.10274 15.4966 2.16488 15.5538C2.22703 15.611 2.3089 15.6419 2.39333 15.64H4.44C4.52397 15.6403 4.60495 15.6088 4.66675 15.552C4.72855 15.4951 4.76661 15.417 4.77333 15.3333L5.06 11.3333C5.06515 11.249 5.10274 11.17 5.16488 11.1128C5.22703 11.0557 5.3089 11.0248 5.39333 11.0267L14.92 11ZM1.42 2.33333C1.42 2.59597 1.47173 2.85604 1.57224 3.0987C1.67275 3.34135 1.82007 3.56182 2.00578 3.74754C2.1915 3.93326 2.41198 4.08058 2.65463 4.18109C2.89728 4.2816 3.15735 4.33333 3.42 4.33333C3.68264 4.33333 3.94271 4.2816 4.18536 4.18109C4.42802 4.08058 4.64849 3.93326 4.83421 3.74754C5.01993 3.56182 5.16725 3.34135 5.26776 3.0987C5.36827 2.85604 5.42 2.59597 5.42 2.33333C5.42 1.8029 5.20928 1.29419 4.83421 0.919115C4.45914 0.544042 3.95043 0.333328 3.42 0.333328C2.88956 0.333328 2.38086 0.544042 2.00578 0.919115C1.63071 1.29419 1.42 1.8029 1.42 2.33333Z"
+                                        fill="#126433" />
+                                </svg>
+                                <div class="name">{{card.CustomerName}}</div>
+                            </div>
+
+                            <div class="cus-phone" *ngIf="card.CustomerPhone">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
+                                    fill="none">
+                                    <path
+                                        d="M12.82 10.1733L11.1267 9.97999C10.9276 9.9566 10.7258 9.97865 10.5364 10.0445C10.347 10.1103 10.175 10.2182 10.0334 10.36L8.80669 11.5867C6.91429 10.6239 5.37607 9.08573 4.41336 7.19332L5.64669 5.95999C5.93336 5.67332 6.07336 5.27332 6.02669 4.86665L5.83336 3.18665C5.7957 2.86138 5.63967 2.56134 5.395 2.34372C5.15033 2.1261 4.83414 2.00612 4.50669 2.00665H3.35336C2.60003 2.00665 1.97336 2.63332 2.02003 3.38665C2.37336 9.07999 6.92669 13.6267 12.6134 13.98C13.3667 14.0267 13.9934 13.4 13.9934 12.6467V11.4933C14 10.82 13.4934 10.2533 12.82 10.1733Z"
+                                        fill="#126433" />
+                                </svg>
+                                <div class="phone">{{card.CustomerPhone}}</div>
+                            </div>
+                        </div>
+
+                        <div class="row-3">
+                            <div class="cus-time" *ngIf="tabactive == 2">
+                                <span>NVBH:</span><span>{{card.SaleStaffName}}</span>
+                            </div>
+                            <div class="cus-time">
+                                <span>Thời gian tư vấn:</span><span>{{card.SaleDate | date:'dd/MM/yyyy HH:mm'}}</span>
+                            </div>
+                        </div>
+
+                        <div class="row-4" *ngIf="card.BookCount || TransferCount || BuyCount">
+                            <div class="book" *ngIf="card.BookCount">
+                                Đặt xe: <span class="quantity">{{card.BookCount}}</span>
+                            </div>
+                            <div class="transfer" *ngIf="card.TransferCount">
+                                Điều chuyển: <span class="quantity">{{card.TransferCount}}</span>
+                            </div>
+                            <div class="buy" *ngIf="card.BuyCount">
+                                Mua: <span class="quantity">{{card.BuyCount}}</span>
+                            </div>
+                        </div>
+
+                        <div class="row-5" *ngIf="card.ListCareVehicle.length">
+                            Khách hàng quan tâm xe
+                            <span class="vehicle-name" *ngFor="let vehicle of card.ListCareVehicle; let i = index">
+                                {{ vehicle }}<span *ngIf="i < card.ListCareVehicle.length - 1">, </span>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+                <div #anchor></div> <!-- sentinel -->
+            </div>
+        </div>
+    </div>
+    <!-- END: BODY -->
+
+    <!-- START: FOOTER -->
+    <ps-footer-action>
+        <ps-kendo-button (onClick)="onNavigate('home')">
+            <span class="material-icons">arrow_back</span>
+        </ps-kendo-button>
+        <ps-kendo-button [theme]="'primary'" [disabled]="FunctionPermissionDTO.approver" (onClick)="onNavigate('add')">
+            <span class="text">Tạo mới phiếu</span>
+        </ps-kendo-button>
+
+        <ps-kendo-button (onClick)="openFilterPopup(true)">
+            <span class="material-icons">search</span>
+        </ps-kendo-button>
+    </ps-footer-action>
+    <!-- END: FOOTER -->
+
+</div>

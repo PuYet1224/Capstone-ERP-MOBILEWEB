@@ -21,4 +21,5 @@ export class SYSFunctionDTO {
 export class SYSFunctionCusDTO extends SYSFunctionDTO {
   FunctionName: string = '';
   Icon: string;
+  FunctionURL: string;
 }

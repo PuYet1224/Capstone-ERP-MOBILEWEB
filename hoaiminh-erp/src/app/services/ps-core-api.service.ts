@@ -1,29 +1,29 @@
 import { Injectable } from '@angular/core';
+import { FileInfo } from '@progress/kendo-angular-upload';
+import { State, toDataSourceRequest } from '@progress/kendo-data-query';
 import { Observable } from 'rxjs';
 import { ResponseDTO } from 'src/app/models/dtos/reponse.dto';
-import { PSAPIService } from './core/api.service';
-import { PSCoreApiStaticService } from './ps-core-api-static.service';
+import { LSListTypeDataEnum } from 'src/app/models/enums/e-type/ls-list-type-data.enum';
+import { LSStatusTypeDataEnum } from 'src/app/models/enums/e-type/ls-status-type-data.enum';
 import { LSDistrictDTO } from '../models/dtos/e-dtos/ls-district.dto';
 import { LSProvinceDTO } from '../models/dtos/e-dtos/ls-province.dto';
-import { FileInfo } from '@progress/kendo-angular-upload';
-import { LSStatusTypeDataEnum } from 'src/app/models/enums/e-type/ls-status-type-data.enum';
-import { LSListTypeDataEnum } from 'src/app/models/enums/e-type/ls-list-type-data.enum';
-import { HRListTypeDataEnum } from '../models/enums/e-type/hr-list-type-data.enum';
-import { State, toDataSourceRequest } from '@progress/kendo-data-query';
-import { DashboardInputDTO } from '../models/dtos/dashboard-input.dto';
 import { ReportInputDTO } from '../models/dtos/report-input.dto';
+import { CSListTypeDataEnum } from '../models/enums/e-type/cs-list-type-data.enum';
+import { HRListTypeDataEnum } from '../models/enums/e-type/hr-list-type-data.enum';
+import { APIService } from './core/api.service';
+import { CoreApiStaticService } from './core/ps-core-api-static.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PSCoreApiService {
-  constructor(private api: PSAPIService) { }
+  constructor(private api: APIService) { }
 
   GetListWarehouse(headnumber: number = null) {
     let that = this;
     return new Observable<ResponseDTO>((obs) => {
       that.api
-        .post(PSCoreApiStaticService.GetListWarehouse, headnumber)
+        .post(CoreApiStaticService.GetListWarehouse, headnumber)
         .subscribe(
           (res: ResponseDTO) => {
             obs.next(res);
@@ -40,7 +40,7 @@ export class PSCoreApiService {
   GetListEmployee() {
     let that = this;
     return new Observable<ResponseDTO>((obs) => {
-      that.api.post(PSCoreApiStaticService.GetListEmployee).subscribe(
+      that.api.post(CoreApiStaticService.GetListEmployee).subscribe(
         (res: ResponseDTO) => {
           obs.next(res);
           obs.complete();
@@ -57,7 +57,7 @@ export class PSCoreApiService {
     var format = { Template: filename }
 
     return new Observable<any>((obs) => {
-      this.api.post(PSCoreApiStaticService.GetTemplate, JSON.stringify(format), false, null, 'response', 'blob')
+      this.api.post(CoreApiStaticService.GetTemplate, JSON.stringify(format), false, null, 'response', 'blob')
         .subscribe((res: any) => {
           obs.next(res);
           obs.complete();
@@ -70,7 +70,7 @@ export class PSCoreApiService {
 
   public ExportExcel(param: ReportInputDTO) {
     return new Observable<any>((obs) => {
-      this.api.post(PSCoreApiStaticService.ExportExcel, JSON.stringify(param), false, null, 'response', 'blob')
+      this.api.post(CoreApiStaticService.ExportExcel, JSON.stringify(param), false, null, 'response', 'blob')
         .subscribe((res: any) => {
           obs.next(res);
           obs.complete();
@@ -83,7 +83,7 @@ export class PSCoreApiService {
 
   public ExportExcelPDF(param: ReportInputDTO) {
     return new Observable<any>((obs) => {
-      this.api.post(PSCoreApiStaticService.ExportExcelPDF, JSON.stringify(param), false, null, 'response', 'blob')
+      this.api.post(CoreApiStaticService.ExportExcelPDF, JSON.stringify(param), false, null, 'response', 'blob')
         .subscribe((res: any) => {
           obs.next(res);
           obs.complete();
@@ -97,7 +97,7 @@ export class PSCoreApiService {
   GetListProvince() {
     let that = this;
     return new Observable<ResponseDTO>((obs) => {
-      that.api.post(PSCoreApiStaticService.GetListProvince).subscribe(
+      that.api.post(CoreApiStaticService.GetListProvince).subscribe(
         (res: ResponseDTO) => {
           obs.next(res);
           obs.complete();
@@ -113,7 +113,7 @@ export class PSCoreApiService {
   GetListDistrict(param: LSProvinceDTO) {
     let that = this;
     return new Observable<ResponseDTO>((obs) => {
-      that.api.post(PSCoreApiStaticService.GetListDistrict, param).subscribe(
+      that.api.post(CoreApiStaticService.GetListDistrict, param).subscribe(
         (res: ResponseDTO) => {
           obs.next(res);
           obs.complete();
@@ -129,7 +129,7 @@ export class PSCoreApiService {
   GetListWard(param: LSDistrictDTO) {
     let that = this;
     return new Observable<ResponseDTO>((obs) => {
-      that.api.post(PSCoreApiStaticService.GetListWard, param).subscribe(
+      that.api.post(CoreApiStaticService.GetListWard, param).subscribe(
         (res: ResponseDTO) => {
           obs.next(res);
           obs.complete();
@@ -152,7 +152,7 @@ export class PSCoreApiService {
 
     return new Observable<any>((obs) => {
       this.api
-        .post(PSCoreApiStaticService.UploadImage, form, true)
+        .post(CoreApiStaticService.UploadImage, form, true)
         .subscribe(
           (res: any) => {
             obs.next(res);
@@ -169,7 +169,7 @@ export class PSCoreApiService {
   public DeleteImage(param: string[]) {
     let that = this;
     return new Observable<ResponseDTO>((obs) => {
-      that.api.post(PSCoreApiStaticService.DeleteImage, param).subscribe(
+      that.api.post(CoreApiStaticService.DeleteImage, param).subscribe(
         (res: ResponseDTO) => {
           obs.next(res);
           obs.complete();
@@ -184,7 +184,23 @@ export class PSCoreApiService {
 
   public GetListLSList(param: LSListTypeDataEnum): Observable<ResponseDTO> {
     return new Observable<ResponseDTO>((obs) => {
-      this.api.post(PSCoreApiStaticService.GetListLSList, param).subscribe(
+      this.api.post(CoreApiStaticService.GetListLSList, param).subscribe(
+        (res: ResponseDTO) => {
+          obs.next(res);
+          obs.complete();
+        },
+        (errors) => {
+          obs.error(errors);
+          obs.complete();
+        }
+      );
+    });
+  }
+
+  public GetListCSList(param: CSListTypeDataEnum) {
+    let that = this;
+    return new Observable<ResponseDTO>((obs) => {
+      that.api.post(CoreApiStaticService.GetListCSList, param).subscribe(
         (res: ResponseDTO) => {
           obs.next(res);
           obs.complete();
@@ -199,7 +215,7 @@ export class PSCoreApiService {
 
   public GetListStatus(param: LSStatusTypeDataEnum): Observable<ResponseDTO> {
     return new Observable<ResponseDTO>((obs) => {
-      this.api.post(PSCoreApiStaticService.GetListStatus, param).subscribe(
+      this.api.post(CoreApiStaticService.GetListStatus, param).subscribe(
         (res: ResponseDTO) => {
           obs.next(res);
           obs.complete();
@@ -214,7 +230,7 @@ export class PSCoreApiService {
 
   public GetListHRList(param: HRListTypeDataEnum): Observable<ResponseDTO> {
     return new Observable<ResponseDTO>((obs) => {
-      this.api.post(PSCoreApiStaticService.GetListHRList, param).subscribe(
+      this.api.post(CoreApiStaticService.GetListHRList, param).subscribe(
         (res: ResponseDTO) => {
           obs.next(res);
           obs.complete();
@@ -227,9 +243,9 @@ export class PSCoreApiService {
     });
   }
 
-  public GetListHead(IsAll: boolean = false): Observable<ResponseDTO> {
+  public GetListHead(IsAll: boolean = true): Observable<ResponseDTO> {
     return new Observable<ResponseDTO>((obs) => {
-      this.api.post(PSCoreApiStaticService.GetListHead, IsAll).subscribe(
+      this.api.post(CoreApiStaticService.GetListHead, IsAll).subscribe(
         (res: ResponseDTO) => {
           obs.next(res);
           obs.complete();
@@ -244,7 +260,7 @@ export class PSCoreApiService {
 
   public GetListSupplier(): Observable<ResponseDTO> {
     return new Observable<ResponseDTO>((obs) => {
-      this.api.post(PSCoreApiStaticService.GetListSupplier, {}).subscribe(
+      this.api.post(CoreApiStaticService.GetListSupplier, {}).subscribe(
         (res: ResponseDTO) => {
           obs.next(res);
           obs.complete();
@@ -259,7 +275,22 @@ export class PSCoreApiService {
 
   public GetListPartnerCustomer(): Observable<ResponseDTO> {
     return new Observable<ResponseDTO>((obs) => {
-      this.api.post(PSCoreApiStaticService.GetListPartnerCustomer, {}).subscribe(
+      this.api.post(CoreApiStaticService.GetListPartnerCustomer, {}).subscribe(
+        (res: ResponseDTO) => {
+          obs.next(res);
+          obs.complete();
+        },
+        (errors) => {
+          obs.error(errors);
+          obs.complete();
+        }
+      );
+    });
+  }
+
+  public GetListPartnerFinance(): Observable<ResponseDTO> {
+    return new Observable<ResponseDTO>((obs) => {
+      this.api.post(CoreApiStaticService.GetListPartnerFinance, {}).subscribe(
         (res: ResponseDTO) => {
           obs.next(res);
           obs.complete();
@@ -276,7 +307,7 @@ export class PSCoreApiService {
     var filterData = toDataSourceRequest(filter);
     filterData['DLLPackage'] = dll;
     return new Observable<ResponseDTO>((obs) => {
-      this.api.post(PSCoreApiStaticService.GetListReport, filterData)
+      this.api.post(CoreApiStaticService.GetListReport, filterData)
         .subscribe((res: ResponseDTO) => {
           obs.next(res);
           obs.complete();

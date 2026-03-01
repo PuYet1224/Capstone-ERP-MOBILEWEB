@@ -40,3 +40,11 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Sub-projects (mỗi folder có Git repo riêng, không push lên repo này)
+/Capstone-ERP-API/
+/hoaiminh-api/
+/hoaiminh3Ps_mobileApp/
+
+# Test files
+test_api.js

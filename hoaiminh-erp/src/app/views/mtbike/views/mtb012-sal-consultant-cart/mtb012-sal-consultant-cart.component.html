@@ -1,0 +1,232 @@
+<div class="mtb011-retail-vehicle">
+    <!-- START: HEADER -->
+    <ps-header-back>
+        <div class="left-side">
+            <div class="func-title1">Tư vấn bán hàng</div>
+            <div class="func-title2">Danh sách xe đã chọn</div>
+        </div>
+        <div class="right-side">
+            <div>
+                No.: <span>{{retailMaster.ID}}</span>
+            </div>
+            <div #wrapper class="marquee-wrapper" (click)="onNavigate('/mtbike/consultant/detail')">
+                <div #content class="marquee-content">
+                    {{retailMaster.CustomerName != null && retailMaster.CustomerName != undefined ?
+                    retailMaster.CustomerName + ' |' : ''}}
+                    {{retailMaster.CustomerPhone}}
+                </div>
+            </div>
+        </div>
+    </ps-header-back>
+    <!-- END: HEADER -->
+
+    <!-- START: BODY -->
+    <div class="action-tabs">
+        <div class="tab" *ngFor="let tab of listtab" [class.active]="typeactive == tab.value"
+            (click)="onChangeType(tab.value)">
+            {{tab.label}}
+        </div>
+    </div>
+
+    <div class="retail-body">
+        <div class="product-list"
+            *ngFor="let item of (typeactive == 'buy' ? listVehicle : listVehicle2) || []; let i = index">
+            <div class="swipe-wrapper" *ngIf="typeactive == 'buy'" (swipeleft)="onSwipeLeft(item, i)"
+                (swiperight)="onSwipeRight(item)" [class.swiped]="item.swiped"
+                [class.no-swipe]="FunctionPermissionDTO.viewer || FunctionPermissionDTO.approver">
+                <div class="product">
+                    <div class="top-product" (click)="onNavigateToTotalVehicle(item)">
+
+                        <div class="product-img">
+                            <img [src]="item.ImageSetting1" alt="">
+                        </div>
+                        <div class="right-side">
+                            <div class="item-name">{{item.TypeOfVehicleName}} |
+                                {{item.VehicleName}}
+                            </div>
+                            <div class="item-color">
+                                <lucide-icon name="palette" [size]="20"></lucide-icon>
+                                {{item.ColorName}}
+                            </div>
+                            <div class="item-pice">
+                                <div class="price">
+                                    <lucide-icon name="circle-dollar-sign" [size]="20" color="#126633"></lucide-icon>
+                                    {{item.Price| number:'1.0-0' }}
+                                </div>
+                                <div class="counter" (click)="$event.stopPropagation()">
+                                    <span class="material-icons" (click)="onConfirmDelete(item, 'delete-one')">
+                                        remove
+                                    </span>
+                                    <ps-kendo-textbox [(ngModel)]="item.OrderQuantity" (focus)="onFocusVehicle(item)"
+                                        (blur)="onAddMultiVehicle(item)"></ps-kendo-textbox>
+                                    <span class="material-icons" (click)="onAddVehicle(item)">
+                                        add
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="item-category" (click)="$event.stopPropagation()">
+                                <div class="item-service"
+                                    (click)="onNavigate('/mtbike/consultant/services', item, event)">
+                                    {{item.TotalOrderServices ?? 0}} dịch vụ
+                                </div>
+                                <div (click)="onNavigate('/mtbike/consultant/parts', item, event)" class="item-part">
+                                    {{item.TotalOrderPart ?? 0}}
+                                    phụ kiện
+                                </div>
+                                <div (click)="onNavigate('/mtbike/consultant/promotion', item, event)"
+                                    class="item-part">
+                                    {{ item.TotalOrderDiscount }} CTKM
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ps-kendo-button *ngIf="!item.IsOrderLock" (onClick)="onClickLock(item)"><span
+                            class="material-icons">
+                            lock
+                        </span> Chốt mua</ps-kendo-button>
+                    <ps-kendo-button class="unlock" *ngIf="item.IsOrderLock" (onClick)="onClickUnlock(item)"><span
+                            class="material-icons">
+                            lock_open_right
+                        </span> Bỏ chốt</ps-kendo-button>
+                    <div class="status"
+                        [innerHTML]="{ Status: item.OrderTypeData, StatusName: item.OrderTypeData == 1 ? 'Có sẵn' : item.OrderTypeData == 2 ? 'Điều xe' : 'Đặt xe'} | SALOrderDetailTypeData">
+                    </div>
+                </div>
+                <button class="btn-delete" (click)="onDelete(item)">Xóa</button>
+                <button class="btn-delete btn-services" (click)="onSetItem(item, 'services-detail')">Dịch vụ</button>
+                <button class="btn-delete btn-part" (click)="onSetItem(item, 'parts-detail')">Phụ kiện</button>
+                <button class="btn-delete btn-discount" (click)="onSetItem(item, 'promotion-detail')">CTKM</button>
+            </div>
+            <!-- LIST XE DIEU CHUYEN -->
+            <div class="swipe-wrapper swipe-wrapper2" *ngIf="typeactive == 'transfer'">
+                <div class="product">
+                    <div class="top-content">
+                        <div class="head-name">{{item.BriefName}}</div>
+                        <div>
+                            <span class="material-icons">
+                                call
+                            </span>
+                            <span>{{item.Phone}}</span>
+                        </div>
+                        <span class="arrow" (click)="toggleCard(i); $event.stopPropagation()">
+                            <span class="material-icons">
+                                {{ isCollapsed(i) ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="bot-content" *ngIf="!isCollapsed(i)">
+                        <div class="product" *ngFor="let v of item.ListGroupOrderDetail">
+                            <ps-kendo-checkbox [(ngModel)]="v.IsChecked"
+                                (onchecked)="onchecked(item, v)"></ps-kendo-checkbox>
+                            <div class="vehicle">
+                                <img [src]="v.ImageSetting1" alt="">
+                            </div>
+                            <div class="right-side">
+                                <div class="item-name">{{v.TypeOfVehicleName}} |
+                                    {{v.VehicleName}}
+                                </div>
+                                <div class="item-color">
+                                    <lucide-icon name="palette" [size]="20"></lucide-icon>
+                                    {{v.ColorName}}
+                                </div>
+                                <div class="item-pice">
+                                    <div class="price">
+                                        <lucide-icon name="circle-dollar-sign" [size]="20"
+                                            color="#126633"></lucide-icon>
+                                        {{v.Price| number:'1.0-0' }}
+                                    </div>
+                                    <div class="counter">
+                                        <span class="material-icons" (click)="onRemoveTransfer(v)">
+                                            remove
+                                        </span>
+
+                                        <ps-kendo-textbox [(ngModel)]="v.Quantity" (focus)="onFocusVehicle(v)"
+                                            (blur)="onBlurTransfer(v)">
+                                        </ps-kendo-textbox>
+
+                                        <span class="material-icons" (click)="onAddTransfer(v)">
+                                            add
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-tabs tabs2">
+        <div class="tab" *ngFor="let tab of listtab2" (click)="onNavigate(tab.link)">
+            {{tab.label}}
+        </div>
+    </div>
+
+    <!-- END: BODY -->
+
+    <!-- START: FOOTER -->
+    <ps-footer-action>
+        <ps-kendo-button (onClick)="onNavigate('/mtbike/consultant/vehicle')">
+            <span class="material-icons">arrow_back</span>
+        </ps-kendo-button>
+        <ps-kendo-button (onClick)="onNavigate('/mtbike/consultant')">
+            <span class="material-icons">list_alt</span>
+        </ps-kendo-button>
+        <ps-kendo-button [theme]="'error'" [disabled]="FunctionPermissionDTO.approver">
+            <span class="text">Hủy giao dịch</span>
+        </ps-kendo-button>
+        <ps-kendo-button (onClick)="onNavigate('/mtbike/consultant/total')" [theme]="'primary'"
+            [disabled]="FunctionPermissionDTO.approver">
+            <span class="text">Gửi thanh toán</span>
+        </ps-kendo-button>
+
+    </ps-footer-action>
+    <!-- END: FOOTER -->
+
+    <ps-dialog-confirm [open]="cofirmDelete">
+        <div psDialogConfirmBody class="body">
+            <div class="title-out">
+                Xóa xe đã chọn
+            </div>
+            <div class="confirm">
+                Bạn có chắc chắn muốn xóa xe đã chọn? Xe bị xóa không thể hoàn tác
+            </div>
+            <div class="group-buttom">
+                <ps-kendo-button (onClick)="cofirmDelete = false; onCancel(deleteItem)">Đóng</ps-kendo-button>
+                <ps-kendo-button [theme]="'error'"
+                    (onClick)="cofirmDelete = false; onConfirmDelete(deleteItem, 'delete-all')">Xóa</ps-kendo-button>
+            </div>
+        </div>
+    </ps-dialog-confirm>
+
+    <ps-dialog-confirm [open]="cofirmUnlock">
+        <div psDialogConfirmBody class="body">
+            <div class="title-out">
+                Bỏ chốt xe
+            </div>
+            <div class="confirm">
+                Bạn có chắc chắn muốn bỏ chốt xe đã chọn
+            </div>
+            <div class="group-buttom">
+                <ps-kendo-button (onClick)="cofirmUnlock = false">Đóng</ps-kendo-button>
+                <ps-kendo-button [theme]="'error'" (onClick)="onConfirmUnlock(unlockItem)">Bỏ chốt</ps-kendo-button>
+            </div>
+        </div>
+    </ps-dialog-confirm>
+
+    <ps-dialog-confirm [open]="showStockConfirm">
+        <div psDialogConfirmBody class="body">
+            <div class="title-out">
+                Thông báo tồn kho
+            </div>
+            <div class="confirm">
+                {{stockConfirmMessage}}
+            </div>
+            <div class="group-buttom">
+                <ps-kendo-button (onClick)="onCancelStock()">Đóng</ps-kendo-button>
+                <ps-kendo-button [theme]="'primary'" (onClick)="onConfirmStock()">Xác nhận</ps-kendo-button>
+            </div>
+        </div>
+    </ps-dialog-confirm>
+</div>

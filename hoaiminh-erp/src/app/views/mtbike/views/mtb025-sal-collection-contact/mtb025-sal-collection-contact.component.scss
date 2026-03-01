@@ -1,0 +1,395 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep {
+    mtb025-sal-collection-contact {
+        font-size: 13px;
+        height: 100%;
+
+        .mtb025-sal-collection-contact {
+            height: 100%;
+
+            ps-header-back {
+                .ps-header {
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+                    .header-right {
+                        height: fit-content;
+                        display: flex;
+                        width: calc(100% - 44px);
+                        justify-content: space-between;
+                        align-items: center;
+
+                        .left-side {
+                            min-width: 168px;
+                            width: 168px;
+
+                            .func-title1 {
+                                font-weight: bold;
+                                text-transform: uppercase;
+                                color: $primary;
+                            }
+                        }
+
+                        .right-side {
+                            text-align: end;
+                            width: calc(100% - 176px);
+
+                            div {
+
+                                span,
+                                .marquee-content {
+                                    font-weight: bold;
+                                }
+
+                                span {
+                                    color: $error;
+                                }
+
+                                .marquee-content {
+                                    color: $info;
+                                }
+                            }
+
+                            div {
+
+                                span,
+                                .marquee-content {
+                                    font-weight: bold;
+                                }
+
+                                span {
+                                    color: $error;
+                                }
+
+                                .marquee-content {
+                                    color: $info;
+                                }
+                            }
+
+                            .marquee-wrapper {
+                                width: 100%;
+                                overflow: hidden;
+                                white-space: nowrap;
+                                position: relative;
+
+                                .marquee-content {
+                                    display: inline-block;
+                                    white-space: nowrap;
+                                    transform: translateX(0);
+                                }
+
+                                .marquee-content.running {
+                                    transform: translateX(70%);
+                                    animation: slide-left 8s linear infinite;
+                                }
+
+                                @keyframes slide-left {
+                                    from {
+                                        transform: translateX(70%);
+                                    }
+
+                                    to {
+                                        transform: translateX(-100%);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .retail-body {
+                height: calc(100% - 112px);
+                display: flex;
+                flex-direction: column;
+                padding: 0 8px;
+                margin: 8px 0;
+                overflow: hidden;
+
+                .body-title {
+                    font-size: 13px;
+                    font-weight: bold;
+                    color: $secondary;
+                    height: 32px;
+                    display: flex;
+                    align-items: center;
+                    line-height: 1;
+                }
+
+                .main-body {
+                    height: fit-content;
+                    background: $white;
+                    border-radius: 8px;
+                    padding: 8px;
+                    margin-bottom: 8px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+                    .row-2 {
+                        position: relative;
+
+                        ps-kendo-checkbox {
+                            position: absolute;
+                            top: 0;
+                            right: 0;
+
+                            .checkbox {
+                                input:disabled {
+                                    background: $disable-input;
+                                }
+                            }
+                        }
+                    }
+
+                    .row-3 {
+                        display: flex;
+                        align-items: flex-end;
+                        gap: 8px;
+
+                        .timepicker {
+                            width: calc(100% /3);
+
+
+                            label {
+                                font-size: 13px;
+                                line-height: 1;
+                                white-space: nowrap;
+                            }
+
+                            kendo-timepicker {
+                                height: 35px;
+                                border-color: $border;
+                                border-radius: 5px;
+                                width: 100%;
+
+                                &:hover {
+                                    box-shadow: none;
+                                    border-color: $primary;
+                                }
+
+                                kendo-dateinput {
+                                    background: $disable-input;
+                                }
+
+                                input {
+                                    font-size: 13px;
+                                    color: $secondary;
+                                    font-weight: 400;
+                                }
+
+                                button {
+                                    background: $white;
+                                    width: 33px;
+                                }
+
+                                &.k-disabled {
+                                    background: $disable-input;
+                                    pointer-events: none;
+                                    opacity: 1;
+
+                                    button {
+                                        background: $disable-input;
+                                    }
+                                }
+
+                                &.readonly-mode {
+                                    border: none;
+                                    pointer-events: none;
+
+                                    button {
+                                        display: none;
+                                    }
+                                }
+                            }
+                        }
+
+
+                        .k-disabled {
+                            background: $disable-input;
+                            pointer-events: none;
+                            opacity: 1;
+
+                            button {
+                                background: $disable-input;
+                            }
+                        }
+
+                        .status {
+                            margin-top: 5px;
+                        }
+
+                        kendo-timepicker {
+                            height: 35px;
+                            border-color: $border;
+                            border-radius: 5px;
+                            width: calc(100% /3);
+
+                            &:hover {
+                                box-shadow: none;
+                                border-color: #126433;
+                            }
+
+                            kendo-dateinput {
+                                background: $disable-input;
+                            }
+
+                            input {
+                                font-size: 13px;
+                                color: $secondary;
+                                font-weight: 400;
+                            }
+
+                            button {
+                                background: $white;
+                                width: 33px;
+                            }
+
+                            &.disable-block {
+                                background: $disable-input;
+                                pointer-events: none;
+
+                                button {
+                                    background: $disable-input;
+                                }
+                            }
+
+                            &.readonly-mode {
+                                border: none;
+                                pointer-events: none;
+
+                                button {
+                                    display: none;
+                                }
+                            }
+                        }
+
+                        ps-kendo-dropdown-list {
+                            width: calc(100% /3);
+                            min-width: 110px;
+                        }
+                    }
+
+                    ps-kendo-dropdown-list {
+                        .k-list-content {
+                            overflow: auto !important;
+                        }
+                    }
+                }
+
+                ps-kendo-button {
+                    width: 100%;
+
+                    button {
+                        width: 100%;
+                    }
+                }
+            }
+
+            ps-footer-action {
+                .footer-action {
+                    display: flex;
+
+                    ps-kendo-button {
+                        button {
+                            height: 100%;
+                            border-radius: 0;
+                            width: 100%;
+                            border: none;
+                            padding: 0;
+
+                            .k-button-text {
+                                height: 100%;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                gap: 4px;
+                                padding: 4px 0;
+                                justify-content: center;
+                                font-size: 13px;
+                                text-transform: none;
+                                font-weight: normal;
+
+                                svg {
+                                    width: 24px;
+                                    height: 24px;
+                                }
+
+                                .text {
+                                    font-size: 13px;
+                                    text-transform: none;
+                                }
+                            }
+                        }
+
+                        &:last-child {
+                            width: 50%;
+
+                            .text {
+                                color: $white;
+                            }
+                        }
+
+                        &:first-child {
+                            width: 25%;
+                            border: none;
+                            align-items: center;
+
+                            .k-button-text {
+                                border-right: 1px solid $border !important;
+                                width: 100%;
+                                height: 65%;
+                            }
+                        }
+
+                        &:nth-of-type(2) {
+                            width: 25%;
+                            border: none;
+                        }
+                    }
+
+                }
+
+                &.active {
+                    .footer-action {
+                        ps-kendo-button {
+                            width: 50%;
+                        }
+                    }
+                }
+            }
+
+            ps-dialog-confirm {
+                .ps-dialog-confirm {
+                    .confirm-dialog {
+                        width: 75%;
+                        height: auto;
+
+                        .k-popup {
+                            .body {
+                                height: 100%;
+                                padding: 24px;
+                                align-items: flex-start;
+                                justify-content: flex-start;
+                                gap: 16px;
+
+                                .title-out {
+                                    font-size: 24px;
+                                    font-weight: bold;
+                                }
+
+                                .group-buttom {
+                                    width: 100%;
+                                    display: flex;
+                                    justify-content: flex-end;
+                                    gap: 8px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

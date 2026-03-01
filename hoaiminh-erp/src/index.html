@@ -11,9 +11,17 @@
 
   <body>
     <root></root>
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
     <script>
       eruda.init();
+    </script> -->
+    <script>
+      (function () {
+        const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        if (!isMobile) {
+          window.location.href = window.location.origin + "/";
+        }
+      })();
     </script>
   </body>
 

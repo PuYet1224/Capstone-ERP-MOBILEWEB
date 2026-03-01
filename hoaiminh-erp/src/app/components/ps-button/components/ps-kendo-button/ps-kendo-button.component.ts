@@ -10,14 +10,12 @@ export class PsKendoButtonComponent {
   @Input() title: string = '';
   @Input() icon: string;
   @Input() disabled: boolean = false;
-  @Input() theme: 'primary' | 'primary-outline' | 'error' | 'error-outline' | 'warning' | 'warning-outline' | 'info' | 'info-outline' | '' = '';
+  @Input() theme: 'primary' | 'primary-outline' | 'error' | 'error-outline' | 'warning' | 'warning-outline' | 'info' | 'info-outline' | 'secondary' | '' = '';
   @Output() onClick = new EventEmitter<any>()
 
   public ontouch: boolean = false;
 
   public click() {
-    console.log('click');
-
     if (!this.disabled) {
       this.onClick.emit();
     }

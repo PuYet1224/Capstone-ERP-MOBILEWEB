@@ -1,0 +1,90 @@
+<div class="mtb028-sal-payment">
+    <!-- START: HEADER -->
+    <ps-header-back>
+        <section>
+            <div class="main-title">Thanh toán bán lẻ</div>
+            <div class="sub-title">Phiếu thanh toán bán hàng</div>
+        </section>
+    </ps-header-back>
+    <!-- END: HEADER-->
+
+    <!-- START: MAIN -->
+    <div class="section-list" #bodyList>
+        <div class="item" *ngFor="let master of data" (click)="onnavigate('/mtbike/payment/document', master)">
+            <div class="left">
+                <div class="main-info">
+                    No.:<span class="retail-no"> {{master.ID}} </span>
+                    <span *ngIf="master.CustomerName">| {{master.CustomerName}}</span>
+                    <span *ngIf="master.CustomerPhone"> | {{master.CustomerPhone}} </span>
+                </div>
+                <div class="sub-info" *ngIf="master.ListPaymentVehicle.length == 1">
+                    Xe cần thanh toán:&nbsp;
+                    <span class="vehicle-name">
+                        {{ master.ListPaymentVehicle[0].VehicleName }} |
+                        {{ master.ListPaymentVehicle[0].VehicleColorName }}
+                    </span>
+                </div>
+                <div class="sub-info" *ngIf="master.ListPaymentVehicle.length > 1">
+                    Xe cần thanh toán:&nbsp;
+                    <span class="vehicle-name">
+                        {{master.ListPaymentVehicle.length}} xe
+                    </span>
+                </div>
+            </div>
+            <div class="right">
+                <div class="error">
+                    <span>PT:</span> {{master.NumOfReceipt}}
+                </div>
+                <div class="success">
+                    <span>HĐ:</span> {{master.NumOfInvoice}}
+                </div>
+            </div>
+        </div>
+        <div #anchor></div> <!-- sentinel -->
+    </div>
+    <!-- END: MAIN -->
+
+    <!-- START: OVERLAY -->
+    <!-- <div class="k-overlay" *ngIf="isshowfilter" (click)="isshowfilter = false"></div>
+    <div class="filter-popup" [class.open]="isshowfilter">
+        <div class="popup-header">
+            <div class="header-filter">
+                <span>TÌM KIẾM PHIẾU BÁN HÀNG</span>
+            </div>
+        </div>
+        <div class="popup-body">
+            <ps-kendo-textbox [label]="'Tra cứu phiếu thanh toán bán hàng'"
+                [placeholder]="'Tìm theo mã phiếu, tên, số điện thoại khách hàng'" [(ngModel)]="searchKeyword">
+            </ps-kendo-textbox>
+            <div class="body-bottom">
+                <ps-kendo-button [theme]="''" (onClick)="openFilterPopup(false)">quay về</ps-kendo-button>
+                <ps-kendo-button [theme]="'primary'" (onClick)="onSearchTask()">tìm</ps-kendo-button>
+            </div>
+        </div>
+    </div> -->
+    <ps-dialog-confirm-bottom [open]="isshowfilter" [title]="'TÌM KIẾM PHIẾU THANH TOÁN BÁN HÀNG'"
+                              (close)="openFilterPopup($event)">
+        <div psDialogConfirmBottomBody>
+            <ps-kendo-textbox [label]="'Tra cứu phiếu thanh toán bán hàng'"
+                              [placeholder]="'Tìm theo mã phiếu, tên, số điện thoại khách hàng'" [(ngModel)]="searchKeyword">
+            </ps-kendo-textbox>
+        </div>
+        <div psDialogConfirmBottomFooter>
+            <ps-kendo-button [theme]="''" (onClick)="openFilterPopup(false)">quay về</ps-kendo-button>
+            <ps-kendo-button [theme]="'primary'" (onClick)="onSearchTask()">tìm</ps-kendo-button>
+        </div>
+    </ps-dialog-confirm-bottom>
+    <!-- END: OVERLAY -->
+
+    <!-- START: FOOTER -->
+    <ps-footer-action>
+        <ps-kendo-button (onClick)="onnavigate('/menu')">
+            <span class="material-icons">arrow_back</span>
+        </ps-kendo-button>
+
+        <ps-kendo-button (onClick)="isshowfilter = !isshowfilter">
+            <span class="material-icons">search</span>
+        </ps-kendo-button>
+    </ps-footer-action>
+    <!-- END: FOOTER -->
+</div>

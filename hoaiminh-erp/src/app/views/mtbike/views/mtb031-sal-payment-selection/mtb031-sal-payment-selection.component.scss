@@ -1,0 +1,296 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep {
+    mtb031-sal-payment-selection {
+        font-size: 13px;
+        height: 100%;
+
+        .mtb031-sal-payment-selection {
+            height: 100%;
+
+            ps-header-back {
+                .ps-header {
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    height: 56px;
+                    font-size: 13px;
+
+                    .header-right {
+                        height: fit-content;
+                        display: flex;
+                        width: 100%;
+                        justify-content: space-between;
+                        align-items: center;
+
+                        section .main-title {
+                            font-weight: bold;
+                            text-transform: uppercase;
+                            color: $primary;
+                        }
+
+                        .right span {
+                            color: $error;
+                            font-weight: bold;
+                        }
+                    }
+                }
+            }
+
+            main {
+                height: calc(100% - 112px);
+                width: 100%;
+                padding: 0 8px;
+                margin: 8px 0;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                overflow-y: auto;
+
+                ps-kendo-checkbox {
+                    pointer-events: none;
+
+                    .checkbox {
+                        input:disabled {
+                            background: $disable-input;
+                        }
+                    }
+
+                    &.disabled-check .checkbox input:checked {
+                        border-color: $border;
+
+                        &::after {
+                            opacity: 0.5;
+                        }
+                    }
+
+                }
+
+
+                .section-bar {
+                    display: flex;
+                    font-weight: bold;
+                    gap: 4px;
+                    align-items: center;
+                    justify-content: space-between;
+                    height: 20px;
+
+                    .group {
+                        display: flex;
+                        gap: 4px;
+                        font-size: 13px;
+
+                        span {
+                            line-height: 1;
+
+                            &.highlight {
+                                color: $primary;
+
+                                span {
+                                    color: $primary;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .section-list {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+
+                    .item {
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                        border-radius: 8px;
+
+                        .item-detail {
+                            background: $white;
+                            display: flex;
+                            flex-direction: column;
+                            padding: 8px 8px 8px 32px;
+                            height: -moz-fit-content;
+                            height: fit-content;
+                            align-items: center;
+                            gap: 8px;
+
+                            .detail-frame,
+                            .detail-frame .frame-infor {
+                                display: flex;
+                                align-items: center;
+                                gap: 8px;
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                            }
+
+                            .detail-frame {
+                                width: 100%;
+                                justify-content: space-between;
+
+                                .frame-infor {
+                                    .group-main {
+                                        align-items: center;
+                                        display: flex;
+                                        gap: 24px;
+                                        width: 100%;
+
+                                        div {
+                                            display: flex;
+                                            flex-direction: column;
+
+                                            span {
+                                                line-height: 1;
+                                            }
+                                        }
+                                    }
+
+                                    .main-info {
+                                        font-weight: bold;
+                                        white-space: nowrap;
+                                        overflow: hidden;
+                                        text-overflow: ellipsis;
+
+                                        .unit-price-info {
+                                            font-size: 11px;
+                                            color: $secondary;
+                                            opacity: 0.8;
+                                            white-space: nowrap;
+                                            font-style: italic;
+                                        }
+
+                                        .part-quantity {
+                                            display: inline-flex;
+                                            align-items: center;
+                                            gap: 4px;
+                                            font-size: 11px;
+                                            color: $secondary;
+                                            padding: 2px 6px;
+                                            background-color: rgba($primary, 0.08);
+                                            border-radius: 4px;
+                                            white-space: nowrap;
+
+                                            .quantity-value {
+                                                font-weight: bold;
+                                                color: $primary;
+                                                font-size: 11px;
+                                            }
+
+                                            .unit-name {
+                                                color: $secondary;
+                                                font-style: italic;
+                                                font-size: 10px;
+                                            }
+                                        }
+                                    }
+
+                                }
+
+                                .sub-info {
+                                    font-weight: bold;
+                                    color: $primary;
+                                    text-align: end;
+                                }
+                            }
+                        }
+
+                        .item-detail:first-child {
+                            border-top-left-radius: 8px;
+                            border-top-right-radius: 8px;
+                            padding: 8px 8px 8px 16px;
+                        }
+
+                        .item-detail:last-child {
+                            border-bottom-left-radius: 8px;
+                            border-bottom-right-radius: 8px;
+                        }
+                    }
+                }
+
+                .list-type {
+                    .item {
+                        background-color: $white;
+
+                        .item-title {
+                            padding: 8px 8px 8px 16px;
+                            font-weight: bold;
+                            border-bottom: 1px solid $border;
+                            display: flex;
+                            gap: 8px;
+                            align-items: center;
+                        }
+
+                        .item-detail {
+                            display: flex;
+                            flex-direction: column;
+                            padding: 8px 8px 8px 32px;
+                        }
+                    }
+                }
+
+            }
+
+            ps-footer-action {
+                .footer-action {
+                    ps-kendo-button {
+                        button {
+                            height: 40px;
+                            border-radius: 0;
+                            padding: 0;
+
+                            .k-button-text {
+                                height: 100%;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                gap: 4px;
+                                padding: 4px 0;
+                                text-transform: none;
+                                justify-content: center;
+
+                                svg {
+                                    width: 24px;
+                                    height: 24px;
+                                }
+
+                                .text {
+                                    font-size: 13px;
+                                }
+                            }
+                        }
+
+                        &:first-child,
+                        &:nth-child(2) {
+                            button {
+                                width: 25%;
+                                border: none;
+
+                                .k-button-text {
+                                    width: 100%;
+                                    height: 65%;
+                                }
+                            }
+                        }
+
+                        &:first-child {
+                            button {
+                                .k-button-text {
+                                    border-right: 1px solid $border !important;
+                                }
+                            }
+                        }
+
+                        &:last-child {
+                            button {
+                                width: 50%;
+                                border: none;
+
+                                .text {
+                                    color: $white;
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+}

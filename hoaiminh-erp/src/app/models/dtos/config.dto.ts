@@ -1,12 +1,11 @@
 import { BehaviorSubject } from 'rxjs';
-import { StaffDTO } from './user.dto';
+import { HREmployeeCusDTO } from './e-dtos/hr-employee.dto';
 import { LSHeadCusDTO } from './e-dtos/ls-head.dto';
 import { TokenDTO } from './token.dto';
-import { FunctionPermissionDTO } from './function-permission.dto';
 
 export class ConfigDTO {
     static token: TokenDTO;
-    static userinfo: StaffDTO
+    static userinfo: HREmployeeCusDTO
     static head: LSHeadCusDTO
     static dllpackage: string;
     static refreshingTokens: boolean = false;

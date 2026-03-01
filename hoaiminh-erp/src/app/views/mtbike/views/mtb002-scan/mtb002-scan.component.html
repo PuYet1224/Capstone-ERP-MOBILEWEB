@@ -1,0 +1,40 @@
+<div class="mtb002">
+    <!-- HEADER  -->
+    <ps-header-back>
+        <div class="func-title">Tạo mới phiếu tiếp nhận</div>
+        <div class="sub-title">
+            <div class="title-left">Tạo mới biển số xe</div>
+        </div>
+    </ps-header-back>
+    <!-- MAIN -->
+    <div class="main">
+        <div class="camera-wrapper">
+            <div class="text">Đưa biển số xe vào khung hình, sau đó giữ nguyên để tạo Phiếu tiếp nhận</div>
+            <video #video autoplay playsinline muted></video>
+            <canvas #canvas style="display:none;"></canvas>
+            <img *ngIf="capturedImage" class="snapshot" [src]="capturedImage" />
+            <!-- Overlay che phủ + lỗ hở ở giữa -->
+            <div class="overlay"></div>
+        </div>
+        <!-- <ps-kendo-button *ngIf="!capturedImage" (click)="capture()"><span class="material-icons">
+                photo_camera
+            </span></ps-kendo-button> -->
+        <!-- <ps-kendo-button *ngIf="capturedImage" (click)="uncapture()"><span class="material-icons">
+                flip_camera_ios
+            </span></ps-kendo-button> -->
+    </div>
+
+    <!-- FOOTER  -->
+    <ps-footer-action [class.showbtn]="capturedImage">
+        <ps-kendo-button (onClick)="onNavigate('back')">
+            <span class="material-icons">arrow_back</span>
+        </ps-kendo-button>
+        <ps-kendo-button (onClick)="onNavigate('to-list')">
+            <span class="material-icons">list_alt</span>
+        </ps-kendo-button>
+        <ps-kendo-button [theme]="'primary'" (onClick)="onNavigate('continue')">
+            <span class="text">Tiếp tục</span>
+        </ps-kendo-button>
+    </ps-footer-action>
+
+</div>

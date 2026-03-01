@@ -1,0 +1,288 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep {
+    mtb033-sal-payment-invoice {
+        font-size: 13px;
+        height: 100%;
+
+        .mtb033-sal-payment-invoice {
+            height: 100%;
+
+            ps-header-back {
+                .ps-header {
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    height: 56px;
+                    font-size: 13px;
+
+                    .header-right {
+                        height: fit-content;
+                        display: flex;
+                        width: 100%;
+                        justify-content: space-between;
+                        align-items: center;
+
+                        section .main-title {
+                            font-weight: bold;
+                            text-transform: uppercase;
+                            color: $primary;
+                        }
+
+                        .right-side {
+                            width: calc(100% - 176px);
+
+                            .invoice-line {
+                                display: flex;
+                                align-items: center;
+                                gap: 6px;
+                            }
+
+                            .label {
+                                white-space: nowrap;
+                                flex-shrink: 0;
+                            }
+
+                            .marquee-wrapper {
+                                position: relative;
+                                overflow: hidden;
+                                white-space: nowrap;
+                                flex: 1; // 👈 chỉ chạy trong phần còn lại
+                            }
+
+                            .marquee-content {
+                                display: inline-block;
+                                white-space: nowrap;
+                                color: $error;
+                                font-weight: bold;
+
+                            }
+
+                            .marquee-content.running {
+                                animation: slide-left 6s linear infinite;
+                            }
+
+                            @keyframes slide-left {
+                                from {
+                                    transform: translateX(100%);
+                                }
+
+                                to {
+                                    transform: translateX(-100%);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            main {
+                height: calc(100% - 112px);
+                width: 100%;
+                padding: 0 8px;
+                margin: 8px 0;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                overflow-y: scroll;
+
+                .section-form {
+                    background-color: $white;
+                    padding: 8px;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+
+                    .datetime-picker label {
+                        line-height: 1;
+                    }
+
+                    .form-group {
+                        display: flex;
+                        gap: 8px;
+
+                        ps-kendo-dropdown-list {
+                            width: 50%;
+                        }
+
+                        &:first-child {
+                            ps-kendo-textbox {
+                                flex: 1;
+                            }
+                        }
+                    }
+
+                    .status {
+                        height: 56px;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+
+                        kendo-label {
+                            line-height: 1;
+                            display: block;
+
+                            label {
+                                line-height: 1;
+                                font-size: 13px;
+                            }
+                        }
+
+                        div {
+                            height: 35px;
+                            display: flex;
+                            align-items: center;
+
+                            span {
+                                height: 25px;
+                            }
+                        }
+                    }
+
+                    .form-tab {
+                        margin-top: 8px;
+
+                        .tab-header {
+                            height: 32px;
+                            display: flex;
+                            width: 100%;
+
+                            .header-item {
+                                height: 100%;
+                                width: calc(100% / 3);
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                border-bottom: 1px solid $primary;
+                            }
+
+                            .header-item.active {
+                                border: 1px solid $primary;
+                                border-top-left-radius: 8px;
+                                border-top-right-radius: 8px;
+                                border-bottom: none;
+                            }
+                        }
+
+                        .tab-body {
+                            border: 1px solid $primary;
+                            border-top: none;
+                            padding: 8px;
+                            border-bottom-left-radius: 8px;
+                            border-bottom-right-radius: 8px;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 8px;
+                        }
+                    }
+                }
+
+                .section-group {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+
+                    ps-kendo-button button {
+                        width: 100%;
+                    }
+                }
+            }
+
+            ps-footer-action {
+                .footer-action {
+                    ps-kendo-button {
+                        button {
+                            height: 40px;
+                            border-radius: 0;
+                            padding: 0;
+
+                            .k-button-text {
+                                height: 100%;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                gap: 4px;
+                                padding: 4px 0;
+                                text-transform: none;
+                                justify-content: center;
+
+                                svg {
+                                    width: 24px;
+                                    height: 24px;
+                                }
+
+                                .text {
+                                    font-size: 13px;
+                                }
+                            }
+                        }
+
+                        &:first-child,
+                        &:nth-child(2) {
+                            button {
+                                width: 50%;
+                                border: none;
+
+                                .k-button-text {
+                                    width: 100%;
+                                    height: 65%;
+                                }
+                            }
+                        }
+
+                        &:first-child {
+                            button {
+                                .k-button-text {
+                                    border-right: 1px solid $border !important;
+                                }
+                            }
+                        }
+
+                        &:last-child {
+                            button {
+                                width: 50%;
+                                border: none;
+
+                                .text {
+                                    color: $white;
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            ps-dialog-confirm {
+                .ps-dialog-confirm {
+                    .confirm-dialog {
+                        width: 75%;
+                        height: auto;
+
+                        .k-popup {
+                            .body {
+                                height: 100%;
+                                padding: 24px;
+                                align-items: flex-start;
+                                justify-content: flex-start;
+                                gap: 16px;
+
+                                .title-out {
+                                    font-size: 24px;
+                                    font-weight: bold;
+                                }
+
+                                .group-buttom {
+                                    width: 100%;
+                                    display: flex;
+                                    justify-content: flex-end;
+                                    gap: 8px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

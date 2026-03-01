@@ -1,0 +1,71 @@
+<!-- <div class="mtb026-sal-collection-other"> -->
+<!-- START: HEADER -->
+<!-- <ps-header-back>
+        <div class="left-side">
+            <div class="func-title1">Tiếp nhận thông tin</div>
+            <div class="func-title2">Thông tin khác</div>
+        </div>
+        <div class="right-side">
+            <div>
+                No.: <span>{{orderDetail.ID}}</span>
+            </div>
+            <div #wrapper class="marquee-wrapper">
+                <div #content class="marquee-content">
+                    <span class="infomation" (click)="onNavigate('/mtbike/collection/owner')">
+                        {{orderDetail.CustomerName}}
+                    </span>
+                    <span *ngIf="orderDetail.Phone">|</span>
+                    <span class="infomation" (click)="onNavigate('/mtbike/collection/contact')">
+                        {{orderDetail.CustomerPhone}}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </ps-header-back> -->
+<!-- END: HEADER -->
+<!-- <div class="retail-body">
+        <div class="body-container">
+            <div class="body-title">Tình trạng sử dụng app MYHONDA</div>
+            <div class="main-body main-body1">
+                <ps-kendo-dropdown-list [label]="'Tình trạng dùng App MYHONDA (*)'" [(ngModel)]="cscustomer.MyHonda"
+                    (valueChange)="onValueChange('MyHonda')" [data]="listHondaStatus" [textField]="'StatusName'"
+                    [valueField]="'TypeOfStatus'" [valuePrimitive]="true"
+                    [disabled]="orderDetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver  || orderDetail.Status == SALOrderDetailStatusEnum.Canceled || orderDetail.Status == SALOrderDetailStatusEnum.Completed"></ps-kendo-dropdown-list>
+                <ps-kendo-dropdown-list [label]="'Lý do chưa cài App MYHONDA'" [(ngModel)]="cscustomer.MyHondaReason"
+                    [data]="listHondaReason" [valuePrimitive]="true" [valuePrimitive]="true" [textField]="'ListName'"
+                    [valueField]="'Code'" (valueChange)="onValueChange('MyHondaReason')"
+                    [disabled]="orderDetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver  || orderDetail.Status == SALOrderDetailStatusEnum.Canceled || orderDetail.Status == SALOrderDetailStatusEnum.Completed"></ps-kendo-dropdown-list>
+                <ps-kendo-textarea [label]="'Chi tiết lý do'" [(ngModel)]="cscustomer.MyHondaReasonDetail"
+                    (blur)="onValueChange('MyHondaReasonDetail')"
+                    [disabled]="orderDetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver  || orderDetail.Status == SALOrderDetailStatusEnum.Canceled || orderDetail.Status == SALOrderDetailStatusEnum.Completed"></ps-kendo-textarea>
+            </div>
+            <div class="body-title">Tình trạng quan tâm Zalo OA</div>
+            <div class="main-body">
+                <ps-kendo-dropdown-list [label]="'Tình trạng quan tâm Zalo OA (*)'" [(ngModel)]="cscustomer.OA"
+                    (valueChange)="onValueChange('OA')" [data]="listOAStatus" [textField]="'StatusName'"
+                    [valueField]="'TypeOfStatus'" [valuePrimitive]="true"
+                    [disabled]="orderDetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver  || orderDetail.Status == SALOrderDetailStatusEnum.Canceled || orderDetail.Status == SALOrderDetailStatusEnum.Completed"></ps-kendo-dropdown-list>
+                <ps-kendo-dropdown-list [label]="'Lý do chưa quan tâm Zalo OA'" [(ngModel)]="cscustomer.OAReason"
+                    [data]="listOAReason" [valuePrimitive]="true" [textField]="'ListName'" [valueField]="'Code'"
+                    (valueChange)="onValueChange('OAReason')"
+                    [disabled]="orderDetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver  || orderDetail.Status == SALOrderDetailStatusEnum.Canceled || orderDetail.Status == SALOrderDetailStatusEnum.Completed"></ps-kendo-dropdown-list>
+                <ps-kendo-textarea [label]="'Chi tiết lý do'" [(ngModel)]="cscustomer.OAaReasonDetail"
+                    (blur)="onValueChange('OAaReasonDetail')"
+                    [disabled]="orderDetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver  || orderDetail.Status == SALOrderDetailStatusEnum.Canceled || orderDetail.Status == SALOrderDetailStatusEnum.Completed"></ps-kendo-textarea>
+            </div>
+        </div>
+    </div> -->
+<!-- START: FOOTER -->
+<!-- <ps-footer-action>
+        <ps-kendo-button (onClick)="onNavigate('/mtbike/collection/contact')">
+            <span class="material-icons">arrow_back</span>
+        </ps-kendo-button>
+        <ps-kendo-button (onClick)="onNavigate('/mtbike/collection')">
+            <span class="material-icons">list_alt</span>
+        </ps-kendo-button>
+        <ps-kendo-button [theme]="'primary'" (onClick)="onNavigate('/mtbike/collection/payment')">
+            Tiếp tục
+        </ps-kendo-button>
+    </ps-footer-action> -->
+<!-- END: FOOTER -->
+<!-- </div> -->

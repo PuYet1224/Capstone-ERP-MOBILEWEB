@@ -1,0 +1,109 @@
+<div class="mtb029-sal-payment-document">
+    <!-- START: HEADER -->
+    <ps-header-back>
+        <section>
+            <div class="main-title">Thanh toán bán lẻ</div>
+            <div class="sub-title">Chứng từ thanh toán</div>
+        </section>
+        <section class="right">
+            No.: <span>{{ordermaster.ID}}</span>
+        </section>
+    </ps-header-back>
+    <!-- END: HEADER -->
+
+    <main>
+        <!-- START: TAB -->
+        <section class="section-tab">
+            <div class="tab" *ngFor="let tab of listtab" [class.active]="tab.value == tabactive"
+                (click)="onchangetab(tab.value)">
+                {{tab.name}}
+            </div>
+        </section>
+        <!-- END: TAB -->
+
+        <!-- START: LIST RECEIPT -->
+        <section class="section-list" #bodyList *ngIf="tabactive == 'receipt'">
+            <div class="item" *ngFor="let receipt of datareceipt"
+                (click)="onSetItem(receipt, '/mtbike/payment/receipt')">
+                <div class="left">
+                    <div class="main-info">
+                        <span *ngIf="receipt.CustomerName">
+                            {{ receipt.CustomerName }}
+                            |
+                        </span>
+                        <span *ngIf="receipt.CellPhone">
+                            {{ receipt.CellPhone }}
+                        </span>
+                    </div>
+                    <div class="sub-info">
+                        <span *ngIf="receipt.ReceiptNo">
+                            <span>Số phiếu thu:</span>
+                            <span class="no"> {{ receipt.ReceiptNo }} </span>
+                            |
+                        </span>
+                        <span>
+                            <span>Thu: </span>
+                            <span class="amount">
+                                {{ receipt.CollectedAmount | number }}/{{ receipt.TotalAmount | number }}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+                <div class="right"
+                    [innerHTML]="{ Status: receipt.Status, StatusName: receipt.StatusName } | SALOrderReceiptStatus">
+                </div>
+            </div>
+            <div #anchor></div>
+        </section>
+        <!-- END: LIST RECEIPT -->
+
+        <!-- START: LIST INVOICE -->
+        <section class="section-list invoice" #bodyList *ngIf="tabactive == 'invoice'">
+            <div class="item" *ngFor="let invoice of datainvoice" (click)="onSetItem(invoice, '/mtbike/payment/total')">
+                <div class="left">
+                    <div class="main-info">
+                        <span *ngIf="invoice.InvoiceNo">
+                            <span>Số hoá đơn:</span>
+                            <span class="no"> {{ invoice.InvoiceNo }} </span>
+                        </span>
+                        <span *ngIf="invoice.InvoiceNo && invoice.InvoiceSerial"> | </span>
+                        <span *ngIf="invoice.InvoiceSerial">
+                            <span>Ký hiệu:</span>
+                            <span class="no"> {{ invoice.InvoiceSerial }} </span>
+                        </span>
+                    </div>
+                    <div class="sub-info">
+                        <span class="numof" *ngIf="invoice.NumOfVehicle">{{ invoice.NumOfVehicle }} xe | </span>
+                        <span class="numof" *ngIf="invoice.NumOfService">{{ invoice.NumOfService }} dv | </span>
+                        <span class="numof" *ngIf="invoice.NumOfPartItem">{{ invoice.NumOfPartItem }} pt | </span>
+                        <span>
+                            <span>Tổng HĐ: </span>
+                            <span class="amount">
+                                {{ invoice.TotalAmount | number }}
+                            </span>VNĐ
+                        </span>
+                    </div>
+                </div>
+
+                <div class="right"
+                    [innerHTML]="{Status: invoice.Status, StatusName: invoice.StatusName} | SALOrderInvoiceStatus">
+                </div>
+            </div>
+            <div #anchor></div>
+        </section>
+        <!-- END: LIST INVOICE -->
+    </main>
+
+    <!-- START: FOOTER -->
+    <ps-footer-action>
+        <ps-kendo-button (onClick)="onnavigate('/mtbike/payment')">
+            <span class="material-icons">arrow_back</span>
+        </ps-kendo-button>
+
+        <ps-kendo-button [disabled]="FunctionPermissionDTO.approver"
+            [theme]="tabactive == 'receipt' ? 'warning' : 'primary'" (onClick)="onnavigate()">
+            <span class="text">{{tabactive == 'receipt' ? 'Tạo mới phiếu thu' : 'Tạo mới hoá đơn'}}</span>
+        </ps-kendo-button>
+    </ps-footer-action>
+    <!-- END: FOOTER -->
+</div>

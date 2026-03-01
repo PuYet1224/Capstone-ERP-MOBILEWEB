@@ -1,0 +1,267 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep
+{
+    mtb029-sal-payment-document
+    {
+        font-size: 13px;
+        height: 100%;
+
+        .mtb029-sal-payment-document
+        {
+            height: 100%;
+
+            ps-header-back
+            {
+                .ps-header
+                {
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    height: 56px;
+                    font-size: 13px;
+
+                    .header-right
+                    {
+                        height: fit-content;
+                        display: flex;
+                        width: 100%;
+                        justify-content: space-between;
+                        align-items: center;
+
+                        section .main-title
+                        {
+                            font-weight: bold;
+                            text-transform: uppercase;
+                            color: $primary;
+                        }
+
+                        .right span
+                        {
+                            color: $error;
+                            font-weight: bold;
+                        }
+                    }
+                }
+            }
+
+            main
+            {
+                height: calc(100% - 96px);
+                width: 100%;
+                // padding: 8px;
+                display: flex;
+                flex-direction: column;
+                // gap: 8px;
+
+                .section-tab
+                {
+                    width: calc(100% - 16px);
+                    /* padding: 8px; */
+                    background: #ffffff;
+                    display: flex;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    border-radius: 8px;
+                    white-space: nowrap;
+                    padding: 8px;
+                    gap: 8px;
+                    height: 48px;
+                    margin: 8px;
+
+                    .tab
+                    {
+                        font-size: 13px;
+                        background: $background-primary;
+                        border-radius: 5px;
+                        height: 32px;
+                        width: calc(50% - 4px);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        &.active
+                        {
+                            outline: 1px solid $primary;
+                            color: $primary;
+                            background: $white;
+                        }
+                    }
+                }
+
+                .section-list
+                {
+                    width: 100%;
+                    height: calc(100% - 48px);
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+                    overflow: auto;
+                    padding: 0 8px;
+                    margin-bottom: 8px;
+
+                    .item
+                    {
+                        height: 45px;
+                        min-height: 45px;
+                        display: flex;
+                        flex-direction: row;
+                        gap: 4px;
+                        background-color: $white;
+                        line-height: 1;
+                        padding: 0 0 0 8px;
+
+                        .left
+                        {
+                            height: 100%;
+                            width: calc(100% - 45px);
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: space-evenly;
+                            font-size: 13px;
+                            font-weight: bold;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+
+                            .main-info
+                            {
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+
+                                span
+                                {
+                                    font-weight: bold;
+                                }
+                            }
+
+                            .main-info,
+                            span
+                            {
+                                .no
+                                {
+                                    color: $warning;
+                                    font-weight: bold;
+                                }
+                            }
+
+                            .sub-info
+                            {
+                                .no
+                                {
+                                    color: $warning;
+                                    font-weight: bold;
+                                }
+
+                                .amount span,
+                                .amount
+                                {
+                                    color: $primary;
+                                    font-weight: bold;
+                                }
+                            }
+                        }
+
+                        .right span
+                        {
+                            height: 100%;
+                            width: 45px;
+                            padding: 0;
+                            border-radius: 0;
+                        }
+                    }
+                }
+
+                .section-list.invoice
+                {
+                    .no
+                    {
+                        color: $primary !important;
+                    }
+
+                    .sub-info
+                    {
+
+                        .amount,
+                        .numof
+                        {
+                            font-weight: bold;
+                        }
+
+                        .amount
+                        {
+                            color: $primary;
+                        }
+                    }
+                }
+            }
+
+            ps-footer-action
+            {
+                .footer-action
+                {
+                    ps-kendo-button
+                    {
+                        button
+                        {
+                            height: 40px;
+                            border-radius: 0;
+                            padding: 0;
+
+                            .k-button-text
+                            {
+                                height: 100%;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                gap: 4px;
+                                padding: 4px 0;
+                                text-transform: none;
+                                justify-content: center;
+
+                                svg
+                                {
+                                    width: 24px;
+                                    height: 24px;
+                                }
+
+                                .text
+                                {
+                                    font-size: 13px;
+                                }
+                            }
+                        }
+
+                        &:first-child
+                        {
+                            button
+                            {
+                                width: 50%;
+                                border: none;
+
+                                .k-button-text
+                                {
+                                    width: 100%;
+                                    height: 65%;
+                                }
+                            }
+                        }
+
+                        &:last-child
+                        {
+                            button
+                            {
+                                width: 50%;
+                                border: none;
+
+                                .text
+                                {
+                                    color: $white;
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+}

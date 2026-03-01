@@ -143,4 +143,9 @@
 
 <div class="app">
       <router-outlet #outlet="outlet"></router-outlet>
+
+      <div class="content-loader" *ngIf="showLoader">
+            <div class="k-overlay"></div>
+            <kendo-loader [type]="'converging-spinner'" [themeColor]="'secondary'"></kendo-loader>
+      </div>
 </div>

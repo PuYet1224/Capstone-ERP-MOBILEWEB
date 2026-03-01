@@ -1,7 +1,9 @@
+import { animate, query, style, transition, trigger } from '@angular/animations';
 import { Component } from '@angular/core';
-import { trigger, transition, style, animate, query } from '@angular/animations';
 import { RouterOutlet } from '@angular/router';
-import { PSString } from './services/utilities/ps-string';
+import { PsString } from './services/utilities/ps-string';
+import { SystemApiService } from './views/system/services/system-api.service';
+import { SystemLoaderService } from './views/system/services/system-loader.service';
 
 @Component({
   selector: 'root',
@@ -27,11 +29,22 @@ import { PSString } from './services/utilities/ps-string';
   ]
 })
 export class AppComponent {
+  constructor(
+    public subLoader: SystemLoaderService,
+    public api: SystemApiService
+  ) {
+    this.subLoader.loader$.subscribe(val => {
+      setTimeout(() => this.showLoader = val);
+    });
+  }
+
+  showLoader = false;
+
   prepareRoute(outlet: RouterOutlet) {
     return outlet?.activatedRouteData?.['animation'];
   }
 
   ngAfterViewInit() {
-    PSString.highlightRequiredLabels();
+    PsString.highlightRequiredLabels();
   }
 }

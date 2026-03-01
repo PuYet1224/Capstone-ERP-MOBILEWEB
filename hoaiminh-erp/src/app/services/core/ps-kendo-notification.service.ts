@@ -5,7 +5,7 @@ import { NotificationService, NotificationSettings } from "@progress/kendo-angul
     providedIn: 'root'
 })
 
-export class PSKendoNotificationService {
+export class PsKendoNotificationService {
     constructor(private notificationService: NotificationService) { }
 
     public onSuccess(content: string, hideAfter: number = 5000) {
@@ -13,7 +13,7 @@ export class PSKendoNotificationService {
             content: content,
             type: { style: 'success', icon: false },
             animation: { type: "slide", duration: 300 },
-            position: { horizontal: "left", vertical: "bottom" },
+            position: { horizontal: "center", vertical: "top" },
             hideAfter: hideAfter
         }
         this.notificationService.show(state);
@@ -24,7 +24,7 @@ export class PSKendoNotificationService {
             content: content,
             type: { style: 'error', icon: false },
             animation: { type: "slide", duration: 300 },
-            position: { horizontal: "left", vertical: "bottom" },
+            position: { horizontal: "center", vertical: "top" },
             hideAfter: hideAfter
         }
         this.notificationService.show(state);
@@ -35,7 +35,7 @@ export class PSKendoNotificationService {
             content: content,
             type: { style: 'warning', icon: false },
             animation: { type: "slide", duration: 300 },
-            position: { horizontal: "left", vertical: "bottom" },
+            position: { horizontal: "center", vertical: "top" },
             hideAfter: hideAfter
         }
         this.notificationService.show(state);
@@ -46,7 +46,7 @@ export class PSKendoNotificationService {
             content: content,
             type: { style: 'info', icon: false },
             animation: { type: "slide", duration: 300 },
-            position: { horizontal: "left", vertical: "bottom" },
+            position: { horizontal: "center", vertical: "top" },
             hideAfter: hideAfter
         }
         this.notificationService.show(state);
@@ -57,7 +57,7 @@ export class PSKendoNotificationService {
             content: content,
             type: { style: 'none', icon: false },
             animation: { type: "slide", duration: 300 },
-            position: { horizontal: "left", vertical: "bottom" },
+            position: { horizontal: "center", vertical: "top" },
             hideAfter: hideAfter
         }
         this.notificationService.show(state);

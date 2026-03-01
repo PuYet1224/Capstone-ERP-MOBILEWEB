@@ -1,0 +1,392 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep {
+    mtb006-cs-other-task {
+        .mtb006 {
+            height: 100%;
+
+            .k-overlay {
+                z-index: 1000;
+                position: fixed;
+                width: 100vw;
+                height: 100vh;
+
+            }
+
+            .filter-popup {
+                z-index: 100002;
+                position: fixed;
+                bottom: -70%;
+                width: 100%;
+                height: fit-content;
+                min-height: 337px;
+                padding: 10px;
+                border-radius: 10px;
+                background: $white;
+                transition: bottom 0.35s ease-in-out;
+
+                &.open {
+                    bottom: 0;
+                }
+
+                .popup-header {
+                    display: flex;
+                    justify-content: center;
+
+                    .header-filter {
+                        width: fit-content;
+                        border-bottom: 1px solid $border;
+
+                        .material-icons {
+                            color: $primary;
+                        }
+                    }
+                }
+
+                .popup-body {
+                    margin-top: 10px;
+
+                    .body-top {
+                        width: 95%;
+                        min-height: 230px;
+                        margin: 0 auto;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 8px;
+
+                        .date-picker {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 8px;
+
+                            .datepicker {
+                                display: flex;
+                                flex-direction: column;
+
+                                label {
+                                    font-size: 13px;
+                                }
+
+                                kendo-datepicker {
+                                    height: 35px;
+                                    border-color: $border;
+                                    border-radius: 5px;
+                                    padding-left: 15px;
+
+                                    input {
+                                        font-size: 13px;
+                                        color: $secondary;
+                                        font-weight: 400;
+                                    }
+
+                                    button {
+                                        background: $white;
+                                    }
+
+                                    &.disable-block {
+                                        background: $disable-input;
+                                        pointer-events: none;
+
+                                        button {
+                                            background: $disable-input;
+                                        }
+                                    }
+
+                                    &.readonly-mode {
+                                        border: none;
+                                        pointer-events: none;
+
+                                        button {
+                                            display: none;
+                                        }
+                                    }
+                                }
+
+                                .k-disabled {
+                                    border-color: $border;
+                                    background-color: $disable-input;
+                                    opacity: 1;
+
+                                    .k-input-button {
+                                        border-left: none;
+                                        background-color: transparent;
+                                    }
+                                }
+
+                                .status {
+                                    margin-top: 5px;
+                                }
+                            }
+                        }
+
+                        .monthpicker {
+                            display: flex;
+                            gap: 8px;
+
+                            ps-kendo-dropdown-list {
+                                .kendo-dropdown-list {
+                                    .k-dropdownlist {
+                                        .k-animation-container {
+                                            .k-popup {
+                                                .k-list {
+                                                    .k-list-content {
+                                                        overflow: auto;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        .checkbox {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 5px;
+
+                            .checkbox-main-label {
+                                margin-bottom: 5px;
+                                display: block;
+                                font-size: 13px;
+                            }
+
+                            .checkbox-list {
+                                display: flex;
+                                justify-content: space-between;
+
+                                ps-kendo-checkbox {
+                                    .checkbox {
+                                        flex-direction: row;
+                                    }
+                                }
+                            }
+
+                        }
+
+                        .row-4 {
+                            display: flex;
+                            gap: 8px;
+
+                            ps-kendo-dropdown-list {
+                                flex: 1;
+                            }
+                        }
+                    }
+
+                }
+
+                .body-bottom {
+                    margin-top: 15px;
+                    display: flex;
+                    gap: 8px;
+                    width: 100%;
+
+                    ps-kendo-button:last-child {
+                        flex: 1;
+
+                        button {
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+        }
+
+        ps-header-back {
+            .header-right {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                gap: 4px;
+
+                .func-title {
+                    font-size: 13px;
+                    font-weight: bold;
+                    color: $primary;
+                    text-transform: uppercase;
+                }
+
+                .sub-title {
+                    font-size: 13px;
+                    display: flex;
+                    justify-content: space-between;
+
+                    .title-right {
+                        color: $error;
+                        font-weight: bold;
+                    }
+                }
+            }
+        }
+
+        .main-content {
+            padding: 10px;
+            height: calc(100% - 95px);
+            overflow: auto;
+
+            .main-content-block-1,
+            .main-content-block-2 {
+
+
+                h1 {
+                    font-weight: bold;
+                    color: $secondary;
+                    height: 32px;
+                    display: flex;
+                    align-items: center;
+                    font-size: 13px;
+                    margin: 0;
+                }
+
+                .content {
+                    background: $white;
+                    border-radius: 8px;
+                    padding: 8px 8px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+
+                        tr {
+                            &.alt-row {
+                                background-color: $background-primary;
+                            }
+                        }
+
+                        th {
+                            &:last-child {
+
+                                text-align: end;
+                            }
+
+                            font-size: 13px;
+                            font-weight: bold;
+                        }
+
+                        td {
+                            font-size: 13px;
+                            padding: 8px;
+
+                            .toggle-switch {
+                                position: relative;
+                                top: 3px;
+                                left: 42px;
+                                width: 40px;
+                                height: 22px;
+                                display: inline-block;
+
+                                input {
+                                    display: none;
+                                }
+
+                                .slider {
+                                    position: absolute;
+                                    background-color: #ccc;
+                                    border-radius: 20px;
+                                    top: 0;
+                                    left: 0;
+                                    right: 0;
+                                    bottom: 0;
+                                    transition: 0.1s;
+
+                                    &:before {
+                                        content: "";
+                                        position: absolute;
+                                        height: 16px;
+                                        width: 16px;
+                                        left: 3px;
+                                        bottom: 3px;
+                                        background-color: white;
+                                        border-radius: 50%;
+                                        transition: 0.1s;
+                                    }
+                                }
+
+                                input:checked+.slider {
+                                    background-color: $primary;
+
+                                    &:before {
+                                        transform: translateX(18px);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+
+                }
+            }
+
+        }
+
+
+
+        ps-footer-action {
+            .footer-action {
+                display: flex;
+
+                ps-kendo-button {
+                    button {
+                        height: 100%;
+                        border-radius: 0;
+                        width: 100%;
+                        border: none;
+                        padding: 0;
+
+                        .k-button-text {
+                            height: 100%;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            gap: 4px;
+                            padding: 4px 0;
+                            justify-content: center;
+
+                            svg {
+                                width: 24px;
+                                height: 24px;
+                            }
+
+                            .text {
+                                font-size: 13px;
+                                text-transform: none;
+                            }
+                        }
+                    }
+
+                    &:last-child {
+                        width: 50%;
+
+                        .text {
+                            color: $white;
+                        }
+                    }
+
+                    &:first-child {
+                        width: 25%;
+                        border: none;
+                        align-items: center;
+
+                        .k-button-text {
+                            border-right: 1px solid $border !important;
+                            width: 100%;
+                            height: 65%;
+                        }
+                    }
+
+                    &:nth-of-type(2) {
+                        width: 25%;
+                        border: none;
+                    }
+                }
+
+            }
+        }
+    }
+
+}

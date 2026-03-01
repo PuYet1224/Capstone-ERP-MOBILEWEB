@@ -1,0 +1,169 @@
+<div class="mtb016-sal-consultant-part-detail">
+    <!-- START: HEADER -->
+    <ps-header-back>
+        <div class="left-side">
+            <div class="func-title1">Tư vấn bán hàng</div>
+            <div class="func-title2">Phụ kiện ráp kèm</div>
+        </div>
+        <div class="right-side">
+            <div>
+                Số phiếu: <span>{{ (retailMaster && retailMaster.ID) ?? (detail && detail.ID) }}</span>
+            </div>
+            <div #wrapper class="marquee-wrapper" (click)="onnavigate('/mtbike/consultant/detail')">
+                <div #content class="marquee-content">
+                    {{ ((retailMaster && retailMaster.CustomerName) ?? (detail && detail.CustomerName)) != null &&
+                    ((retailMaster && retailMaster.CustomerName) ?? (detail && detail.CustomerName)) !== '' ?
+                    ((retailMaster && retailMaster.CustomerName) ?? (detail && detail.CustomerName)) + ' |' : '' }}
+                    {{ (retailMaster && retailMaster.CustomerPhone) ?? (retailMaster && retailMaster.Phone) ?? (detail
+                    && detail.Phone) }}
+                </div>
+            </div>
+        </div>
+    </ps-header-back>
+    <!-- END: HEADER -->
+
+    <!-- START: BODY -->
+    <main [@slideSwitch]="slideDirection" (@slideSwitch.done)="onSlideSwitchDone()">
+        <div class="main-body" (swipeleft)="ontorightclick()" (swiperight)="ontoleftclick()">
+            <div class="block block-1">
+                <lucide-icon *ngIf="tottalindex > 1 && currentVehicleIndex !== 0 && typedata == 'vehiclecolor'"
+                    class="left" name="chevron-left" [size]="20" (click)="ontoleftclick()">
+                </lucide-icon>
+                <lucide-icon
+                    *ngIf="tottalindex > 1 && currentVehicleIndex !== tottalindex - 1 && typedata == 'vehiclecolor'"
+                    class="right" name="chevron-right" [size]="20" (click)="ontorightclick()">
+                </lucide-icon>
+
+                <div class="block-title">
+                    <span (click)="onnavigate('cart')">
+                        Thông tin xe
+                    </span>
+                    <b>[{{ detail && detail.Code }}]</b>
+                </div>
+                <div class="block-vehicle">
+                    <span class="tag" [class.available]="detail && detail.TypeData == 1"
+                        [class.allocated]="detail && detail.TypeData == 2"
+                        [class.booked]="detail && detail.TypeData == 3">
+                        {{ detail && detail.TypeData == 1 ? 'Có sẵn' : (detail && detail.TypeData == 2 ? 'Điều xe' :
+                        'Đặt xe') }}
+                    </span>
+                    <div class="vehicle-image">
+                        <img [src]="(detail && detail.ImageSetting1) || (detail && detail.VehicleImage) || ''" alt="">
+                    </div>
+                    <div class="vehicle-info">
+                        <div class="info-row">
+                            <span class="label">Dòng xe:</span>
+                            <span class="value">{{ detail && detail.TypeOfVehicleName }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Loại xe:</span>
+                            <span class="value">{{ detail && detail.VehicleName }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Màu xe:</span>
+                            <span class="value">{{ detail && detail.VehicleColorName }}</span>
+                        </div>
+                        <div class="infor-last-row">
+                            <span>{{ (detail && detail.TotalService) != null ? detail.TotalService : 0 }} dịch vụ</span>
+                            <span>{{ (partsList || []).length }} phụ kiện</span>
+                            <span>{{ getDiscountLabel(detail) }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="block block-2">
+                <div class="block-title" (click)="onnavigate('/parts')">
+                    Phụ kiện
+                </div>
+                <div class="parts-table">
+                    <div class="parts-header">
+                        <div class="header-col col-name">Tên phụ tùng</div>
+                        <div class="header-col col-qty">SL</div>
+                        <div class="header-col col-price">Đơn giá</div>
+                    </div>
+                    <div class="parts-list">
+                        <div class="part-item"
+                            *ngFor="let part of (partsList || []); let i = index; trackBy: trackByPartCode"
+                            (click)="onEditPart(part)">
+                            <div class="part-number">{{ i + 1 }}.</div>
+                            <div class="part-name">{{ part.TypeOfPartName || '' }}</div>
+                            <div class="part-qty">{{ part.Quantity ?? 0 }}</div>
+                            <div class="part-cost">{{ formatprice(part.UnitPrice ?? 0) }}₫</div>
+                        </div>
+                        <div class="parts-empty" *ngIf="!(partsList || []).length">Chưa có phụ kiện</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- END: BODY -->
+
+    <!-- START: FOOTER -->
+    <ps-footer-action>
+        <ps-kendo-button (onClick)="onnavigate('back')">
+            <span class="material-icons w-300">arrow_back</span>
+        </ps-kendo-button>
+
+        <ps-kendo-button (onClick)="onnavigate('')">
+            <span class="material-icons w-300">list_alt</span>
+        </ps-kendo-button>
+
+        <ps-kendo-button [theme]="'primary'" (onClick)="onAddNewPart()"
+            *ngIf="!FunctionPermissionDTO.viewer && (FunctionPermissionDTO.master || FunctionPermissionDTO.creator)">
+            <span class="text">Thêm mới</span>
+        </ps-kendo-button>
+    </ps-footer-action>
+    <!-- END: FOOTER -->
+
+    <!-- START: POPUP Phụ kiện ráp kèm -->
+    <ps-dialog-confirm-bottom [open]="showPopup" [title]="''" (close)="onClosePopup()">
+        <div psDialogConfirmBottomBody class="popup-add-part-body">
+            <div class="popup-block-form">
+                <div class="form-header">Phụ kiện ráp kèm</div>
+                <div class="form-fields">
+                    <ps-kendo-dropdown-list [label]="'Phân nhóm phụ tùng'" [data]="listPartCategory"
+                        [textField]="'Category'" [valueField]="'Code'" [(ngModel)]="partcategory"
+                        [valuePrimitive]="false" (valueChange)="onPartCategoryChange()"
+                        [disabled]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator)">
+                    </ps-kendo-dropdown-list>
+                    <div class="form-row form-row-2">
+                        <ps-kendo-dropdown-list [label]="'Loại phụ tùng'" [data]="listTypeOfPart"
+                            [textField]="'TypeOfPart'" [valueField]="'Code'" [(ngModel)]="typeofpart.Code"
+                            [valuePrimitive]="true" (valueChange)="onTypeOfPartChange($event)"
+                            [disabled]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator) || !partcategory || !partcategory.Code">
+                        </ps-kendo-dropdown-list>
+                        <ps-kendo-dropdown-list [label]="'Phân nhóm chi tiết'" [data]="listTypeOfPartSpecs"
+                            [textField]="'TypeOfPartSpecs'" [valueField]="'Code'" [(ngModel)]="typeofpartspecs.Code"
+                            [valuePrimitive]="true" (valueChange)="onTypeOfPartSpecsChange($event)"
+                            [disabled]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator) || !(typeofpart && typeofpart.Code)">
+                        </ps-kendo-dropdown-list>
+                    </div>
+                    <div class="form-row form-row-2">
+                        <ps-kendo-dropdown-list [label]="'Đơn vị tính'" [data]="listUnit" [textField]="'ListName'"
+                            [valueField]="'Code'" [(ngModel)]="unit.Code" [valuePrimitive]="true"
+                            (valueChange)="onUnitChange($event)"
+                            [disabled]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator)">
+                        </ps-kendo-dropdown-list>
+                        <ps-kendo-numeric-textbox [label]="'Số lượng'" [(ngModel)]="quantity" [format]="'n0'"
+                            [disabled]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator)">
+                        </ps-kendo-numeric-textbox>
+                    </div>
+                    <ps-kendo-numeric-textbox [label]="'Đơn giá'" [(ngModel)]="unitPrice" [format]="'n0'"
+                        [disabled]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator)">
+                    </ps-kendo-numeric-textbox>
+                </div>
+            </div>
+        </div>
+        <div psDialogConfirmBottomFooter class="popup-footer-btns">
+            <ps-kendo-button [theme]="''" (onClick)="onClosePopup()">Đóng</ps-kendo-button>
+            <ps-kendo-button [theme]="'error'" (onClick)="onDeletePart()"
+                *ngIf="!FunctionPermissionDTO.viewer && (FunctionPermissionDTO.master || FunctionPermissionDTO.creator) && isEditMode">Xoá</ps-kendo-button>
+            <ps-kendo-button [theme]="'primary'" (onClick)="onSavePart()"
+                *ngIf="!FunctionPermissionDTO.viewer && (FunctionPermissionDTO.master || FunctionPermissionDTO.creator)">
+                <span class="text">{{ isEditMode ? 'Cập nhật' : 'Thêm mới' }}</span>
+            </ps-kendo-button>
+        </div>
+    </ps-dialog-confirm-bottom>
+    <!-- END: POPUP -->
+</div>

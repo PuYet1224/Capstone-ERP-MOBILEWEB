@@ -1,142 +1,132 @@
 @import '../../../../../assets/scss/colors';
 
-::ng-deep
-{
-  ps-kendo-button
-  {
-    .k-button
-    {
-      height: 36px;
+::ng-deep {
+  ps-kendo-button {
+    .k-button-solid-base {
+      background-image: none;
+    }
+
+    .k-button {
+      height: 32px;
       border-color: $secondary;
       box-shadow: none;
       background-color: transparent;
       padding: 0 8px;
-      border-radius: 4px;
+      border-radius: 8px;
 
-      .k-button-text
-      {
-        font-size: 14px;
-        font-weight: 700;
+      .k-button-text {
+        font-size: 13px;
+        font-weight: normal;
         color: $secondary;
-        text-transform: uppercase;
+        text-transform: none;
         line-height: 1;
         display: flex;
       }
 
-      .k-focus
-      {
+      .k-focus {
         box-shadow: none;
       }
     }
 
-    .k-button-solid-base.k-focus
-    {
+    .k-button-solid-base.k-focus {
       box-shadow: none !important;
     }
 
     .k-button:hover,
-    .k-focus
-    {
+    .k-focus {
       background-color: transparent;
       box-shadow: none;
     }
 
-    .ontouch
-    {
+    .ontouch {
       background-color: rgb(0, 0, 0, 0.1) !important;
     }
 
     .primary,
-    .primary:hover
-    {
+    .primary:hover {
       border-color: $primary;
       background-color: $primary;
 
-      .k-button-text
-      {
+      .k-button-text {
         color: $white;
       }
     }
 
     .primary-outline,
-    .primary-outline:hover
-    {
+    .primary-outline:hover {
       border-color: $primary;
 
       .k-button-text,
-      .k-icon-wrapper-host .k-button-icon
-      {
+      .k-icon-wrapper-host .k-button-icon {
         color: $primary;
       }
     }
 
     .error,
-    .error:hover
-    {
+    .error:hover {
       border-color: $error;
       background-color: $error;
 
-      .k-button-text
-      {
+      .k-button-text {
         color: $white;
       }
     }
 
     .error-outline:hover,
-    .error-outline
-    {
+    .error-outline {
       border-color: $error;
 
       .k-button-text,
-      .k-icon-wrapper-host .k-button-icon
-      {
+      .k-icon-wrapper-host .k-button-icon {
         color: $error;
       }
     }
 
     .warning,
-    .warning:hover
-    {
+    .warning:hover {
       border-color: $warning;
       background-color: $warning;
 
-      .k-button-text
-      {
+      .k-button-text {
         color: $white;
       }
     }
 
     .warning-outline,
-    .warning-outline:hover
-    {
+    .warning-outline:hover {
       border-color: $warning;
 
-      .k-button-text
-      {
+      .k-button-text {
         color: $warning;
       }
     }
 
     .info,
-    .info:hover
-    {
+    .info:hover {
       border-color: $info;
       background-color: $info;
 
-      .k-button-text
-      {
+      .k-button-text {
         color: $white;
       }
     }
 
     .info-outline,
-    .info-outline:hover
-    {
+    .info-outline:hover {
       border-color: $info;
 
-      .k-button-text
-      {
+      .k-button-text {
         color: $info;
+      }
+    }
+
+    .secondary,
+    .secondary:hover {
+      border-color: $secondary;
+      background-color: $secondary;
+
+      .k-button-text {
+        color: $white;
       }
     }
   }

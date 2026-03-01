@@ -1,0 +1,162 @@
+<div class="mtb003">
+    <!-- HEADER -->
+    <ps-header-back>
+        <div class="func-title">Bảo trì - sửa chữa xe</div>
+        <div class="sub-title">
+            <div class="title-left">Tư vấn khách hàng</div>
+            <div class="title-right">No.: {{vehicleInfo.WorkOrderNo}}</div>
+        </div>
+    </ps-header-back>
+
+    <!-- START: SEARCH -->
+    <div class="k-overlay" *ngIf="isOpenePopup" (click)="onCancle()"></div>
+    <div class="filter-popup" [class.open]="isOpenePopup">
+        <div class="popup-header">
+            <div class="header-filter">
+                <span>DANH SÁCH CHỦ XE</span>
+            </div>
+        </div>
+        <div class="popup-body">
+            <div class="body-top">
+                <div *ngFor="let owner of listloyalCustomer; let i = index" class="owner-item">
+                    <div class="owner-info">
+                        <span class="index">{{ i + 1 }}.</span>
+                        <span class="name">{{ owner.FullName }}</span>
+                        <span class="phone">{{ owner.Cellphone1 }}</span>
+                        <span class="gd">GD: {{ owner.LastTrading | date:'dd/MM/yyyy' }}</span>
+                    </div>
+                    <ps-kendo-button class="btn-select" [theme]="'primary'"
+                        (onClick)="onSelectOwner(owner)">CHỌN</ps-kendo-button>
+                </div>
+            </div>
+            <div class="body-bottom">
+                <ps-kendo-button [theme]="'primary-outline'" (onClick)="onCancle()">quay
+                    về</ps-kendo-button>
+                <ps-kendo-button [theme]="'primary'" (onClick)="onAdd()">thêm mới chủ xe</ps-kendo-button>
+            </div>
+        </div>
+    </div>
+    <!-- END: SEARCH -->
+
+    <!-- START: MAIN -->
+    <div class="main-content">
+        <h1>Thông tin xe</h1>
+        <div class="content">
+            <div class="row-1">
+                <ps-kendo-textbox
+                    [disabled]="!vehicleInfo.IsNewCSVehicle || vehicleInfo.Progress !== WOMStatusEnum.RECEIVING"
+                    [label]="'Biển số xe (*)'" [(ngModel)]="vehicleInfo.PlateNo" (focus)="onFocus(vehicleInfo)"
+                    (blur)="onValueChange(vehicleInfo, 'PlateNo')"></ps-kendo-textbox>
+                <ps-kendo-button [theme]="'primary'" (onClick)="onScan()">
+                    <span class="material-icons">
+                        barcode_scanner
+                    </span>
+                </ps-kendo-button>
+            </div>
+            <div class="row-2">
+                <ps-kendo-dropdown-list
+                    [disabled]="!vehicleInfo.IsNewCSVehicle || vehicleInfo.Progress !== WOMStatusEnum.RECEIVING"
+                    [label]="'Nhóm xe (*)'" [(ngModel)]="vehicleInfo.Category" [data]="listcategory"
+                    [textField]="'Category'" [valueField]="'Code'" (focus)="onFocus(vehicleInfo)"
+                    (valueChange)="onValueChange(vehicleInfo, 'Category')"
+                    [valuePrimitive]="true"></ps-kendo-dropdown-list>
+                <ps-kendo-dropdown-list
+                    [disabled]="!vehicleInfo.Category || !vehicleInfo.IsNewCSVehicle || vehicleInfo.Progress !== WOMStatusEnum.RECEIVING"
+                    [label]="'Dòng xe (*)'" [data]="listtypeofvehicle" [(ngModel)]="vehicleInfo.TypeOfVehicle"
+                    [textField]="'VehicleName'" [valueField]="'VehicleCode'" (focus)="onFocus(vehicleInfo)"
+                    (valueChange)="onValueChange(vehicleInfo, 'TypeOfVehicle')"
+                    [valuePrimitive]="true"></ps-kendo-dropdown-list>
+            </div>
+            <div class="row-3">
+                <ps-kendo-dropdown-list [label]="'Loại xe (*)'" [data]="listvehicle" [(ngModel)]="vehicleInfo.Vehicle"
+                    [textField]="'VehicleName'" [valueField]="'Code'"
+                    [disabled]="!vehicleInfo.TypeOfVehicle || !vehicleInfo.IsNewCSVehicle || vehicleInfo.Progress !== WOMStatusEnum.RECEIVING"
+                    (focus)="onFocus(vehicleInfo)" (valueChange)="onValueChange(vehicleInfo, 'Vehicle')"
+                    [valuePrimitive]="true"></ps-kendo-dropdown-list>
+                <ps-kendo-dropdown-list [label]="'Màu xe (*)'" [data]="listcolor" [(ngModel)]="vehicleInfo.VehicleColor"
+                    [textField]="'ColorName'" [valueField]="'Code'"
+                    [disabled]="!vehicleInfo.Vehicle || !vehicleInfo.IsNewCSVehicle || vehicleInfo.Progress !== WOMStatusEnum.RECEIVING"
+                    (focus)="onFocus(vehicleInfo)" (valueChange)="onValueChange(vehicleInfo, 'VehicleColor')"
+                    [valuePrimitive]="true"></ps-kendo-dropdown-list>
+            </div>
+            <div class="row-4">
+                <ps-kendo-textbox [label]="'Số khung'" [(ngModel)]="vehicleInfo.FrameSeri"
+                    [disabled]="!vehicleInfo.VehicleColor || !vehicleInfo.PlateNo || !vehicleInfo.IsNewCSVehicle || vehicleInfo.Progress !== WOMStatusEnum.RECEIVING"
+                    (focus)="onFocus(vehicleInfo)" (blur)="onValueChange(vehicleInfo, 'FrameSeri')"></ps-kendo-textbox>
+                <ps-kendo-textbox [label]="'Số máy'" [(ngModel)]="vehicleInfo.EngineSeri"
+                    [disabled]="!vehicleInfo.VehicleColor || !vehicleInfo.PlateNo || !vehicleInfo.IsNewCSVehicle || vehicleInfo.Progress !== WOMStatusEnum.RECEIVING"
+                    (focus)="onFocus(vehicleInfo)" (blur)="onValueChange(vehicleInfo, 'EngineSeri')"></ps-kendo-textbox>
+            </div>
+            <div class="row-5">
+                <ps-kendo-textbox
+                    [disabled]="!vehicleInfo.IsNewCSVehicle || vehicleInfo.Progress !== WOMStatusEnum.RECEIVING || !vehicleInfo.VehicleColor || !vehicleInfo.PlateNo"
+                    [label]="'Số bảo hành'" [(ngModel)]="vehicleInfo.InsuranceNumber" (focus)="onFocus(vehicleInfo)"
+                    (blur)="onValueChange(vehicleInfo, 'InsuranceNumber')"></ps-kendo-textbox>
+            </div>
+            <div class="row-4">
+                <div class="datepicker">
+                    <label>Thời hạn bảo hiểm</label>
+                    <kendo-datepicker
+                        [disabled]="!vehicleInfo.IsNewCSVehicle || vehicleInfo.Progress !== WOMStatusEnum.RECEIVING || !vehicleInfo.VehicleColor || !vehicleInfo.PlateNo"
+                        [(ngModel)]="vehicleInfo.WarrantyDate" placeholder="dd/MM/yyyy" format="dd/MM/yyyy"
+                        [readOnlyInput]="true" calendarType="classic"
+                        (valueChange)="onValueChange(vehicleInfo, 'WarrantyDate')">
+                    </kendo-datepicker>
+                </div>
+                <ps-kendo-numeric-textbox
+                    [disabled]="!vehicleInfo.IsNewCSVehicle || vehicleInfo.Progress !== WOMStatusEnum.RECEIVING || !vehicleInfo.VehicleColor || !vehicleInfo.PlateNo"
+                    [label]="'Số km được bảo hiểm'" [(ngModel)]="vehicleInfo.WarrantyKm"
+                    (blur)="onValueChange(vehicleInfo, 'WarrantyKm')" format="n0"></ps-kendo-numeric-textbox>
+            </div>
+            <div class="row-5">
+                <ps-kendo-numeric-textbox [label]="'Số km hiện tại (*)'"
+                    [disabled]="vehicleInfo.Progress !== WOMStatusEnum.RECEIVING || !vehicleInfo.VehicleColor || !vehicleInfo.PlateNo"
+                    [(ngModel)]="vehicleInfo.CurrentKm" (focus)="onFocus(vehicleInfo)"
+                    (blur)="onValueChange(vehicleInfo, 'CurrentKm')" format="n0"></ps-kendo-numeric-textbox>
+                <ps-kendo-dropdown-list [label]="'Mức nhiên liệu (*)'"
+                    [disabled]="vehicleInfo.Progress !== WOMStatusEnum.RECEIVING || !vehicleInfo.VehicleColor || !vehicleInfo.PlateNo"
+                    [(ngModel)]="vehicleInfo.FuelType" [data]="fuelTypes" [textField]="'ListName'" [valueField]="'Code'"
+                    (focus)="onFocus(vehicleInfo)" (valueChange)="onValueChange(vehicleInfo, 'FuelType')"
+                    [valuePrimitive]="true"></ps-kendo-dropdown-list>
+            </div>
+            <div class="row-6">
+                <ps-kendo-textbox [label]="'Mã Pin xe điện (*)'"
+                    [disabled]="vehicleInfo.Progress !== WOMStatusEnum.RECEIVING || !vehicleInfo.VehicleColor || !vehicleInfo.PlateNo"
+                    [(ngModel)]="vehicleInfo.BatteryNo" (focus)="onFocus(vehicleInfo)"
+                    (blur)="onValueChange(vehicleInfo, 'BatteryNo')"></ps-kendo-textbox>
+                <ps-kendo-numeric-textbox [label]="'Sức khỏe Pin (SOH) (%) (*)'"
+                    [disabled]="vehicleInfo.Progress !== WOMStatusEnum.RECEIVING || !vehicleInfo.VehicleColor || !vehicleInfo.PlateNo"
+                    [(ngModel)]="vehicleInfo.SOH" (focus)="onFocus(vehicleInfo)"
+                    (blur)="onValueChange(vehicleInfo, 'SOH')"></ps-kendo-numeric-textbox>
+            </div>
+            <div class="row-7">
+                <div class="datepicker">
+                    <label>Ngày mua xe</label>
+                    <kendo-datepicker
+                        [disabled]="!vehicleInfo.IsNewCSVehicle || vehicleInfo.Progress !== WOMStatusEnum.RECEIVING || !vehicleInfo.VehicleColor || !vehicleInfo.PlateNo"
+                        [(ngModel)]="vehicleInfo.LastTrading" placeholder="dd/MM/yyyy" format="dd/MM/yyyy"
+                        [readOnlyInput]="true" calendarType="classic"
+                        (valueChange)="onValueChange(vehicleInfo, 'LastTrading')">
+                    </kendo-datepicker>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END: MAIN -->
+
+    <!-- START: FOOTER -->
+    <ps-footer-action>
+        <ps-kendo-button (onClick)="onNavigate('back')">
+            <span class="material-icons">arrow_back</span>
+        </ps-kendo-button>
+        <ps-kendo-button (onClick)="onNavigate('to-list')">
+            <span class="material-icons">list_alt</span>
+        </ps-kendo-button>
+        <ps-kendo-button [theme]="'primary'" [disabled]="isContinue" (onClick)="onNavigate('continue')">
+            <span class="text">Tiếp tục</span>
+        </ps-kendo-button>
+    </ps-footer-action>
+    <!-- END: FOOTER -->
+
+
+</div>

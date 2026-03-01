@@ -1,4 +1,4 @@
-import { PSString } from "./ps-string";
+import { PsString } from "./ps-string";
 
 export class PSFile {
   public static getFileName(disposition: string): string {
@@ -34,7 +34,7 @@ export class PSFile {
     var a = document.createElement("a");
 
     a.href = url;
-    a.download = !PSString.isNullOrWhitespace(filename) ? filename : getfileName
+    a.download = !PsString.isNullOrWhitespace(filename) ? filename : getfileName
     a.click();
     window.URL.revokeObjectURL(url)
   }

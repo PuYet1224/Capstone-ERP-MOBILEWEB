@@ -9,6 +9,7 @@ import { TokenDTO } from 'src/app/models/dtos/token.dto';
 import { AuthApiStaticService } from './auth-api-static.service';
 import { PSDate } from '../utilities/ps-date';
 import { PsCache } from '../utilities/ps-cache';
+import { SystemLoaderService } from 'src/app/views/system/services/system-loader.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,8 @@ export class AuthApiService {
   public isRefreshing = false;
 
   constructor(private apiService: APIService,
-    private cache: PsCache
+    private cache: PsCache,
+    private subLoader: SystemLoaderService
   ) { }
 
   public token(username, password): Observable<any> {
@@ -75,9 +77,11 @@ export class AuthApiService {
             obs.complete();
           }
           else {
+            this.subLoader.loader(false);
             obs.complete();
           }
         }, f => {
+          this.subLoader.loader(false);
           obs.error(f);
           obs.complete();
         });

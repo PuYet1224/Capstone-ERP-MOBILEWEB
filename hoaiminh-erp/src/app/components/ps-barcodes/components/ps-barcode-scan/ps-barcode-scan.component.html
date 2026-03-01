@@ -1,0 +1,46 @@
+<div class="ps-barcode-scan">
+  <ps-kendo-button class="btn-icon button-close" *ngIf="isshowvideo" (onClick)="onCloseScan()">
+    <span class="material-icons">close</span>
+  </ps-kendo-button>
+
+  <video #videoEl autoplay playsinline muted class="video-preview"></video>
+
+  <div class="overlay" *ngIf="isshowvideo">
+    <div class="scan-box" [class.square]="Type == 'QR'">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none" class="corner top-left">
+        <path d="M24.9736 0.500054C24.9736 0.500054 25.7893 0.499933 29.0525 0.500054C32.3158 0.500175 32.3158 4.57899 29.0525 4.57899C25.7893 4.57899 11.921 4.57909 8.6579 4.57899C5.39475 4.57889 4.57897 5.39468 4.57897 8.65793L4.57895 12.9826C4.57893 18.4172 4.57889 26.6381 4.57897 29.0526C4.57907 32.3158 0.500143 32.3158 0.500044 29.0526V24.9737V20.8947V16.8158V12.7369V8.65793V4.57899C0.500044 2.13168 2.13165 0.500109 4.57897 0.500054L8.6579 0.500054H12.7368L16.8158 0.500054H20.8947H24.9736Z"
+              fill="#00C04D" stroke="#00C04D" />
+      </svg>
+
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none" class="corner top-right">
+        <path d="M31.4999 24.9736C31.4999 24.9736 31.5001 25.7893 31.4999 29.0525C31.4998 32.3158 27.421 32.3158 27.421 29.0525C27.421 25.7893 27.4209 11.921 27.421 8.6579C27.4211 5.39475 26.6053 4.57897 23.3421 4.57897L19.0174 4.57895C13.5828 4.57893 5.36195 4.57889 2.9474 4.57897C-0.3158 4.57907 -0.3158 0.500143 2.9474 0.500044L7.02633 0.500044H11.1053H15.1842H19.2631L23.3421 0.500044H27.421C29.8683 0.500044 31.4999 2.13165 31.4999 4.57897V8.6579V12.7368V16.8158V20.8947L31.4999 24.9736Z"
+              fill="#00C04D" stroke="#00C04D" />
+      </svg>
+
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none" class="corner bottom-right">
+        <path d="M7.02639 31.4999C7.02639 31.4999 6.21074 31.5001 2.94746 31.4999C-0.315829 31.4998 -0.315809 27.421 2.94746 27.421C6.21072 27.421 20.079 27.4209 23.3421 27.421C26.6052 27.4211 27.421 26.6053 27.421 23.3421L27.421 19.0174C27.4211 13.5828 27.4211 5.36195 27.421 2.9474C27.4209 -0.3158 31.4999 -0.3158 31.5 2.9474V7.02633V11.1053V15.1842V19.2631L31.5 23.3421V27.421C31.5 29.8683 29.8684 31.4999 27.421 31.4999H23.3421H19.2632H15.1842H11.1053L7.02639 31.4999Z"
+              fill="#00C04D" stroke="#00C04D" />
+      </svg>
+
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none" class="corner bottom-left">
+        <path d="M0.500054 7.02639C0.500054 7.02639 0.499933 6.21074 0.500054 2.94746C0.500175 -0.315829 4.57899 -0.315809 4.57899 2.94746C4.57899 6.21072 4.57909 20.079 4.57899 23.3421C4.57889 26.6052 5.39468 27.421 8.65793 27.421L12.9826 27.421C18.4172 27.4211 26.6381 27.4211 29.0526 27.421C32.3158 27.4209 32.3158 31.4999 29.0526 31.5H24.9737H20.8947H16.8158H12.7369H8.65793H4.57899C2.13168 31.5 0.500109 29.8684 0.500054 27.421V23.3421V19.2632V15.1842V11.1053V7.02639Z"
+              fill="#00C04D" stroke="#00C04D" />
+      </svg>
+    </div>
+  </div>
+
+  <div class="group-button" *ngIf="isshowvideo">
+    <ps-kendo-button class="btn-icon" (onClick)="onCloseScan()">
+      <span class="material-icons">arrow_back</span>
+    </ps-kendo-button>
+
+    <ps-kendo-button class="btn-icon" (onClick)="selectImage()">
+      <span class="material-icons">image</span>
+    </ps-kendo-button>
+    <input type="file" #fileInput accept="image/*" style="display:none" (change)="onFileSelected($event)">
+
+    <ps-kendo-button class="btn-icon" [class.flash-on]="isFlashOn" (onClick)="toggleFlash()">
+      <span class="material-icons f-1">flashlight_on</span>
+    </ps-kendo-button>
+  </div>
+</div>

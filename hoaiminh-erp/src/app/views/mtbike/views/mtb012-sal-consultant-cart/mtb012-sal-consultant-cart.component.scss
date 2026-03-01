@@ -1,0 +1,594 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep {
+    mtb012-sal-consultant-cart {
+        font-size: 13px;
+        height: 100%;
+
+        .mtb011-retail-vehicle {
+            height: 100%;
+
+            ps-header-back {
+                .ps-header {
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+                    .header-right {
+                        height: fit-content;
+                        display: flex;
+                        width: calc(100% - 44px);
+                        justify-content: space-between;
+                        align-items: center;
+                        gap: 8px;
+
+                        .left-side {
+                            min-width: 136px;
+                            width: 136px;
+
+                            .func-title1 {
+                                font-weight: bold;
+                                text-transform: uppercase;
+                                color: $primary;
+                            }
+                        }
+
+                        .right-side {
+                            text-align: end;
+                            width: calc(100% - 144px);
+
+                            div {
+
+                                span,
+                                .marquee-content {
+                                    font-weight: bold;
+                                }
+
+                                span {
+                                    color: $error;
+                                }
+
+                                .marquee-content {
+                                    color: $info;
+                                }
+                            }
+
+                            div {
+
+                                span,
+                                .marquee-content {
+                                    font-weight: bold;
+                                }
+
+                                span {
+                                    color: $error;
+                                }
+
+                                .marquee-content {
+                                    color: $info;
+                                }
+                            }
+
+                            .marquee-wrapper {
+                                width: 100%;
+                                overflow: hidden;
+                                white-space: nowrap;
+                                position: relative;
+
+                                .marquee-content {
+                                    display: inline-block;
+                                    white-space: nowrap;
+                                    transform: translateX(0);
+                                }
+
+                                .marquee-content.running {
+                                    transform: translateX(70%);
+                                    animation: slide-left 8s linear infinite;
+                                }
+
+                                @keyframes slide-left {
+                                    from {
+                                        transform: translateX(70%);
+                                    }
+
+                                    to {
+                                        transform: translateX(-100%);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .action-tabs {
+                padding: 8px;
+                background: $white;
+                display: flex;
+                gap: 8px;
+                margin: 8px 8px 0 8px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+                height: 48px;
+
+                .tab {
+                    font-size: 13px;
+                    background: $background-primary;
+                    padding: 6px 0;
+                    border-radius: 5px;
+                    text-align: center;
+                    flex: 1;
+
+                    &.active {
+                        outline: 1px solid $primary;
+                        color: $primary;
+                        background: $white;
+                    }
+                }
+            }
+
+            .tabs2 {
+                margin-top: 0;
+                margin-bottom: 8px;
+            }
+
+            .retail-body {
+                height: calc(100% - 236px);
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                padding: 0 8px;
+                margin: 8px 0;
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch;
+
+                .product-list {
+                    width: 100%;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    border-radius: 8px;
+
+                    .swipe-wrapper {
+                        position: relative;
+                        overflow: hidden;
+                        height: 100%;
+                        touch-action: pan-y !important;
+
+                        .product {
+                            transition: transform 0.3s ease;
+                            position: relative;
+                            z-index: 10;
+                            background: $white;
+                            padding: 8px;
+                            border-radius: 8px;
+                            gap: 8px;
+                            display: flex;
+                            flex-direction: column;
+                            height: 100%;
+
+                            .top-product {
+                                display: flex;
+                                align-items: center;
+                                gap: 8px;
+                                height: 100%;
+
+                                .product-img {
+                                    border-radius: 8px;
+                                    border: 1px dotted $border;
+                                    height: fit-content;
+                                    height: 100%;
+                                    display: flex;
+                                    align-items: center;
+
+                                    img {
+                                        height: 80px;
+                                    }
+                                }
+
+                                .right-side {
+                                    gap: 8px;
+                                    display: flex;
+                                    line-height: 1;
+                                    flex: 1;
+                                    flex-direction: column;
+
+                                    div {
+                                        font-weight: bold;
+                                        display: flex;
+                                        align-items: flex-end;
+                                        justify-content: space-between;
+
+                                        &.item-color {
+                                            display: flex;
+                                            font-weight: bold;
+                                            align-items: center;
+                                            justify-content: flex-start;
+                                            gap: 8px;
+                                        }
+
+                                        &.item-pice {
+                                            height: 22px;
+                                            gap: 8px;
+                                            align-items: flex-end;
+
+                                            .price {
+                                                color: $primary;
+                                                font-size: 16px;
+                                                display: flex;
+                                                font-weight: bold;
+                                                align-items: center;
+                                                gap: 4px;
+                                            }
+
+                                            .counter {
+                                                display: flex;
+                                                align-items: center;
+                                                gap: 4px;
+
+                                                ps-kendo-textbox {
+                                                    max-width: 40px;
+
+                                                    .kendo-textbox {
+                                                        kendo-textbox {
+                                                            .k-input-inner {
+                                                                text-align: center;
+                                                            }
+                                                        }
+                                                    }
+
+                                                }
+
+                                                .material-icons {
+                                                    font-size: 16px;
+                                                }
+                                            }
+
+                                        }
+
+                                        &.item-category {
+                                            display: flex;
+                                            align-items: center;
+                                            font-style: italic;
+                                            justify-content: space-between;
+                                            font-size: 9px;
+                                            border-top: 1px solid $border;
+                                            gap: 20px;
+                                            width: 100%;
+                                            padding-top: 4px;
+
+                                            div {
+                                                font-weight: normal;
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+
+                            ps-kendo-button {
+                                button {
+                                    width: 100%;
+                                    border-color: $error;
+
+                                    .k-button-text {
+                                        gap: 8px;
+                                        align-items: center;
+                                        color: $error;
+
+                                        .material-icons {
+                                            font-size: 16px;
+                                            color: $error;
+                                        }
+                                    }
+                                }
+
+                                &.unlock {
+                                    button {
+                                        border-color: $secondary;
+
+                                        .k-button-text {
+                                            color: $secondary;
+
+                                            .material-icons {
+                                                color: $secondary;
+                                            }
+                                        }
+
+                                    }
+                                }
+                            }
+
+                            .status {
+                                height: 24px;
+                                position: absolute;
+                                top: 6px;
+                                left: -56px;
+                                width: 150px;
+                                color: white;
+                                text-align: center;
+                                font-weight: bold;
+                                transform: rotate(-45deg);
+                                z-index: 10;
+
+                                .pipe-class {
+                                    display: block;
+                                    width: 100%;
+                                    border: none;
+                                    color: $white;
+                                    font-weight: bold;
+                                }
+                            }
+                        }
+
+                        .btn-delete {
+                            position: absolute;
+                            top: 0;
+                            bottom: 0;
+                            width: 80px;
+                            margin: 1px 0;
+                            height: calc(100% - 1px);
+                            background: $error;
+                            color: $white;
+                            border: 1px solid transparent;
+                            z-index: 0;
+                            text-align: center;
+                            border-top-right-radius: 8px;
+                            border-bottom-right-radius: 8px;
+                            z-index: 9;
+                            right: 225px;
+                        }
+
+                        .btn-services {
+                            z-index: 8;
+                            background: $white;
+                            color: $secondary;
+                            right: 150px;
+                            border: 1px solid $info;
+                        }
+
+                        .btn-part {
+                            z-index: 7;
+                            right: 75px;
+                            background: $white;
+                            color: $secondary;
+                            border: 1px solid $secondary;
+                        }
+
+                        .btn-discount {
+                            z-index: 6;
+                            right: 0;
+                            background: $white;
+                            color: $secondary;
+                            border: 1px solid $primary;
+                        }
+
+                        &.swiped .product {
+                            transform: translateX(-300px);
+                        }
+                    }
+
+                    .swipe-wrapper2 {
+                        .product {
+                            position: relative;
+                            gap: 0;
+
+                            .top-content {
+                                display: flex;
+                                line-height: 1;
+                                align-items: center;
+                                gap: 16px;
+
+                                .head-name {
+                                    font-weight: bold;
+                                }
+
+                                div {
+                                    display: flex;
+                                    gap: 8px;
+                                    align-items: center;
+
+                                    span {
+                                        color: $info;
+
+                                        &.material-icons {
+                                            font-size: 16px;
+                                        }
+                                    }
+                                }
+
+                                .arrow {
+                                    font-size: 16px;
+                                    position: absolute;
+                                    top: 8px;
+                                    right: 8px;
+
+                                    span {
+                                        font-size: 16px;
+                                    }
+                                }
+                            }
+
+                            .bot-content {
+                                display: flex;
+                                flex-direction: column;
+                                padding: 8px;
+                                gap: 8px;
+
+                                .product {
+                                    display: flex;
+                                    flex-direction: row;
+                                    align-items: center;
+                                    gap: 8px;
+                                    height: fit-content;
+                                    padding: 0;
+
+                                    .vehicle {
+                                        img {
+                                            border-radius: 8px;
+                                            border: 1px dotted $border;
+                                            width: 112px;
+                                            height: 84px;
+                                        }
+                                    }
+
+                                    .right-side {
+                                        gap: 8px;
+                                        display: flex;
+                                        line-height: 1;
+                                        flex: 1;
+                                        flex-direction: column;
+
+                                        div {
+                                            font-weight: bold;
+                                            display: flex;
+                                            align-items: flex-end;
+                                            justify-content: space-between;
+
+                                            &.item-color {
+                                                display: flex;
+                                                font-weight: bold;
+                                                align-items: center;
+                                                justify-content: flex-start;
+                                                gap: 8px;
+                                            }
+
+                                            &.item-pice {
+                                                height: 22px;
+                                                gap: 8px;
+                                                align-items: flex-end;
+
+                                                .price {
+                                                    color: $primary;
+                                                    font-size: 16px;
+                                                    display: flex;
+                                                    font-weight: bold;
+                                                    align-items: center;
+                                                    gap: 4px;
+                                                    display: inline;
+                                                    white-space: nowrap;
+                                                    overflow: hidden;
+                                                    text-overflow: ellipsis;
+                                                    width: calc(100% - 88px);
+                                                }
+
+                                                .counter {
+                                                    display: flex;
+                                                    align-items: center;
+                                                    gap: 4px;
+
+                                                    ps-kendo-textbox {
+                                                        max-width: 40px;
+
+                                                        .kendo-textbox {
+                                                            kendo-textbox {
+                                                                .k-input-inner {
+                                                                    text-align: center;
+                                                                }
+                                                            }
+                                                        }
+
+                                                    }
+
+                                                    .material-icons {
+                                                        font-size: 16px;
+                                                    }
+                                                }
+
+                                            }
+
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+
+            }
+
+            ps-footer-action {
+                .footer-action {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 8px;
+                    height: fit-content;
+
+                    ps-kendo-button {
+                        button {
+
+                            .k-button-text {
+                                text-transform: none;
+
+                                .material-icons {
+                                    width: 20px;
+                                    height: 20px;
+                                    font-size: 20px;
+                                }
+
+                                .text {
+                                    font-size: 13px;
+                                }
+                            }
+                        }
+
+                        &:nth-child(3),
+                        &:nth-child(4) {
+                            flex: 1;
+
+                            button {
+                                width: 100%;
+                                height: 36px;
+                            }
+
+                            .text {
+                                color: $white;
+                            }
+                        }
+
+                        &:nth-child(1),
+                        &:nth-child(2) {
+                            button {
+                                width: 36px;
+                                height: 36px;
+                                border: 1px solid $border;
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            ps-dialog-confirm {
+                .ps-dialog-confirm {
+                    .confirm-dialog {
+                        width: 75%;
+                        height: auto;
+
+                        .k-popup {
+                            .body {
+                                height: 100%;
+                                padding: 24px;
+                                align-items: flex-start;
+                                justify-content: flex-start;
+                                gap: 16px;
+
+                                .title-out {
+                                    font-size: 24px;
+                                    font-weight: bold;
+                                }
+
+                                .group-buttom {
+                                    width: 100%;
+                                    display: flex;
+                                    justify-content: flex-end;
+                                    gap: 8px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+}

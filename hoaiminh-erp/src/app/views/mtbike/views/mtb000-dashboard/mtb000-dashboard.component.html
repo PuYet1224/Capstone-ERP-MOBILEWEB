@@ -1,0 +1,342 @@
+<div class="mtb000-dashboard">
+    <!-- START: OVERLAY -->
+    <div class="k-overlay" *ngIf="isOpenedFilter" (click)="openFilterPopup(false)"></div>
+    <div class="filter-popup" [class.open]="isOpenedFilter">
+        <div class="popup-header">
+            <div class="header-filter">
+                <span class="material-icons">filter_alt</span>
+                <span>LỌC DỮ LIỆU</span>
+            </div>
+        </div>
+        <div class="popup-body">
+            <div class="body-top">
+                <!-- CỬA HÀNG -->
+                <ps-kendo-dropdown-list [label]="'Cửa hàng'" [data]="listHead" [valuePrimitive]="true"
+                    [textField]="'BriefName'" [valueField]="'Code'"
+                    (valueChange)="onStoreChange($event)"></ps-kendo-dropdown-list>
+                <!-- KỲ -->
+                <ps-kendo-dropdown-list [label]="'Kỳ'" [data]="listpaymentmethod" [textField]="'ListName'"
+                    [valueField]="'TypeOfList'" [valuePrimitive]="true" (valueChange)="onMethodChange($event)"
+                    [(ngModel)]="durationMethod"></ps-kendo-dropdown-list>
+                <!-- LỌC THEO NGÀY HÔM NAY -->
+                <div class="date-picker" *ngIf="durationMethod == TypePeriodDashboardEnum.TODAY">
+                    <div class="datepicker">
+                        <kendo-datepicker placeholder="dd/MM/yyyy" format="dd/MM/yyyy" [readOnlyInput]="true"
+                            calendarType="classic" [value]="endDate" (valueChange)="onEndDateChange($event)"
+                            [disabledDates]="disabledEndDates">
+                        </kendo-datepicker>
+                    </div>
+                </div>
+                <!-- LỌC THEO CHU KỲ NGÀY -->
+                <div class="date-picker" *ngIf="durationMethod == TypePeriodDashboardEnum.DAY">
+                    <div class="datepicker">
+                        <label>Thời gian</label>
+                        <kendo-datepicker placeholder="dd/MM/yyyy" format="dd/MM/yyyy" [readOnlyInput]="true"
+                            calendarType="classic" [value]="startDate" (valueChange)="onStartDateChange($event)"
+                            [disabledDates]="disabledStartDates">
+                        </kendo-datepicker>
+                    </div>
+                    <div class="datepicker">
+                        <kendo-datepicker placeholder="dd/MM/yyyy" format="dd/MM/yyyy" [readOnlyInput]="true"
+                            calendarType="classic" [value]="endDate" (valueChange)="onEndDateChange($event)"
+                            [disabledDates]="disabledEndDates">
+                        </kendo-datepicker>
+                    </div>
+                </div>
+                <!-- LỌC THEO CHU KỲ THÁNG -->
+                <div class="monthpicker" *ngIf="durationMethod == TypePeriodDashboardEnum.MONTH">
+                    <ps-kendo-dropdown-list [label]="'Năm'" [data]="listyear"
+                        (valueChange)="onMonthYearChange($event, 'year')" [(ngModel)]="selectedYear"
+                        [valuePrimitive]="true"></ps-kendo-dropdown-list>
+                    <ps-kendo-dropdown-list [label]="'Tháng'" [data]="listmonth"
+                        (valueChange)="onMonthYearChange($event, 'month')" [(ngModel)]="selectedMonth"
+                        [valuePrimitive]="true"></ps-kendo-dropdown-list>
+                </div>
+                <!-- LỌC THEO CHU KỲ QUÝ -->
+                <div class="monthpicker" *ngIf="durationMethod == TypePeriodDashboardEnum.QUARTER">
+                    <ps-kendo-dropdown-list [label]="'Năm'" [data]="listyear" [(ngModel)]="selectedYear"
+                        [valuePrimitive]="true"
+                        (valueChange)="onMonthYearChange($event, 'year')"></ps-kendo-dropdown-list>
+                    <ps-kendo-dropdown-list [label]="'Quý'" [data]="listquarter" [(ngModel)]="selectedQuater"
+                        [valuePrimitive]="true"
+                        (valueChange)="onMonthYearChange($event, 'quater')"></ps-kendo-dropdown-list>
+                </div>
+                <!-- LỌC THEO CHU KỲ NĂM -->
+                <div class="monthpicker" *ngIf="durationMethod == TypePeriodDashboardEnum.YEAR">
+                    <ps-kendo-dropdown-list [label]="'Năm'" [data]="listyear" [(ngModel)]="selectedYear"
+                        [valuePrimitive]="true"
+                        (valueChange)="onMonthYearChange($event, 'year')"></ps-kendo-dropdown-list>
+                </div>
+            </div>
+            <div class="body-bottom">
+                <ps-kendo-button [theme]="'primary-outline'" (click)="openFilterPopup(false)">quay về</ps-kendo-button>
+                <ps-kendo-button [theme]="'primary'" (click)="applyFilter()">lọc dữ liệu</ps-kendo-button>
+            </div>
+        </div>
+    </div>
+
+    <ps-header-back>
+        <div class="left-content">
+            <div class="top-content">Dashboard |<span> {{headName}}</span></div>
+            <div *ngIf="showToday" class="bot-content">Hôm nay ({{today}})</div>
+            <div *ngIf="showFromDateToDate" class="bot-content">
+                {{formattedFromDate}} -
+                {{formattedToDate}}</div>
+            <div *ngIf="showYearMonth" class="bot-content">{{formattedYearmonth}}</div>
+            <div *ngIf="showYearQuater" class="bot-content">{{formattedYearquater}}</div>
+            <div *ngIf="showYear" class="bot-content">{{formattedYear}}</div>
+        </div>
+        <span class="material-icons" (click)="openFilterPopup(true)">filter_alt</span>
+    </ps-header-back>
+    <!-- END: OVERLAY -->
+    <div class="dashboard-container">
+        <!-- START - HEADER -->
+
+        <!-- END - HEADER -->
+
+        <!-- START - OVERVIEW -->
+        <div class="overview">
+            <div class="overview-title">
+                Tổng quan
+            </div>
+            <div class="overview-content">
+                <div class="content-left">
+                    <div><span class="material-icons">
+                            bar_chart
+                        </span> Doanh thu</div>
+                    <div><span class="material-icons">
+                            two_wheeler
+                        </span>Tổng xe bán</div>
+                    <div><span class="material-icons">
+                            person_add_alt
+                        </span> Khách hàng mới</div>
+                </div>
+                <div class="content-right">
+                    <div>: {{overview.RevenueActual | number}}₫</div>
+                    <div>: {{overview.TotalVehicleSold}}</div>
+                    <div>: <span>{{overview.TotalNewCustomer}}</span> | {{overview.TotalTransactions}}</div>
+                </div>
+            </div>
+        </div>
+        <!-- END - OVERVIEW -->
+
+        <!-- START - CHART -->
+        <div class="chart">
+            <!-- CHART 1 -->
+            <div class="chart-1">
+
+                <div class="chart-title">
+                    <div>{{formattedTotalDoanhThuChart3}}</div>
+                    <h1>{{titleChart3}}</h1>
+                    <div>{{formattedTotalThucThuChart3}}</div>
+                </div>
+
+                <kendo-chart>
+                    <kendo-chart-legend position="bottom" [labels]="{ font: 'bold 11px Mulish, sans-serif' }"
+                        orientation="horizontal" [visible]="true">
+                    </kendo-chart-legend>
+                    <kendo-chart-area background="transparent" height="250"></kendo-chart-area>
+                    <kendo-chart-category-axis>
+                        <kendo-chart-category-axis-item [majorTicks]="{ visible: false }"
+                            [line]="{ visible: true, color: '#ededed', width: 2 }"
+                            [majorGridLines]="{ visible: false }">
+                            <kendo-chart-category-axis-item-labels font="bold 11px Mulish, sans-serif" rotation="-45"
+                                padding="5">
+                            </kendo-chart-category-axis-item-labels>
+                        </kendo-chart-category-axis-item>
+                    </kendo-chart-category-axis>
+                    <kendo-chart-value-axis>
+                        <kendo-chart-value-axis-item [type]="'numeric'" [majorGridLines]="{ visible: false }"
+                            [labels]="{ visible: true, color: '#3c4858' }">
+                            <kendo-chart-value-axis-item-labels [content]="labelFormatter"
+                                font="bold 11px Mulish, sans-serif">
+                            </kendo-chart-value-axis-item-labels>
+                        </kendo-chart-value-axis-item>
+                    </kendo-chart-value-axis>
+                    <kendo-chart-series>
+                        <kendo-chart-series-item type="line" [markers]="{ visible: false }" categoryField="Title"
+                            [data]="chart3_doanhthu" field="Value" color="#126633" name="Bán hàng">
+                            <kendo-chart-series-item-labels [content]="labelFormatter" [visible]="true"
+                                background="transparent" format="n0" [margin]="0"></kendo-chart-series-item-labels>
+                        </kendo-chart-series-item>
+                        <kendo-chart-series-item type="column" [data]="chart3_thucthu" field="Value" color="#952FC9"
+                            name='Thực thu'>
+                            <kendo-chart-series-item-labels [content]="labelFormatter" [visible]="true"
+                                background="transparent" format="n0" [margin]="0"></kendo-chart-series-item-labels>
+                        </kendo-chart-series-item>
+                    </kendo-chart-series>
+
+                </kendo-chart>
+            </div>
+
+            <!-- CHART 2 -->
+            <div class="chart-2">
+                <h1>{{titleChart4}}</h1>
+                <kendo-chart class="chart">
+                    <kendo-chart-series>
+                        <kendo-chart-series-item type="donut" [data]="chart4" categoryField="Title" field="Percentage">
+                            <kendo-chart-series-item-labels position="outsideEnd" color="#3c4858"
+                                [content]="labelContentdonut" [margin]="0"
+                                font="bold 10px Mulish, sans-serif"></kendo-chart-series-item-labels>
+
+                        </kendo-chart-series-item>
+                    </kendo-chart-series>
+                    <kendo-chart-legend position="bottom" [labels]="{ font: 'bold 11px Mulish, sans-serif' }"
+                        orientation="horizontal" [visible]="true">
+                    </kendo-chart-legend>
+                    <kendo-chart-tooltip>
+                        <ng-template kendoChartSeriesTooltipTemplate let-category="category" let-value="value">
+                            {{ category }}: {{ value }}%
+                        </ng-template>
+                    </kendo-chart-tooltip>
+                </kendo-chart>
+            </div>
+
+            <!-- CHART 3 -->
+            <div class="chart-3" *ngIf="typechart5 == chartEnum.IIAllStore">
+                <div class="col-1-title">
+
+                    <div class="title2">{{totalInStockChart5}} XE</div>
+                    <h1>{{titleChart5}}</h1>
+                    <div class="title1">{{totalInboundChart5}} XE</div>
+                </div>
+                <kendo-chart class="chart" [seriesColors]="['#ED7D31', '#E60A0A', '#0070C0']">
+                    <kendo-chart-legend position="bottom" [labels]="{ font: 'bold 11px Mulish, sans-serif' }"
+                        orientation="horizontal" [visible]="true">
+                    </kendo-chart-legend>
+                    <kendo-chart-area background="transparent"></kendo-chart-area>
+                    <kendo-chart-category-axis>
+                        <kendo-chart-category-axis-item [majorTicks]="{ visible: false }"
+                            [majorGridLines]="{ visible: false }">
+                            <kendo-chart-category-axis-item-labels font="bold 11px Mulish, sans-serif" rotation="-45"
+                                padding="5">
+                            </kendo-chart-category-axis-item-labels>
+                        </kendo-chart-category-axis-item>
+                    </kendo-chart-category-axis>
+                    <kendo-chart-value-axis>
+                        <kendo-chart-value-axis-item [type]="'numeric'" [majorGridLines]="{ visible: false }"
+                            [labels]="{ visible: true}">
+                            <kendo-chart-value-axis-item-labels font="bold 11px Mulish, sans-serif">
+                            </kendo-chart-value-axis-item-labels>
+                        </kendo-chart-value-axis-item>
+                    </kendo-chart-value-axis>
+                    <kendo-chart-series>
+                        <!-- Series 1 -->
+                        <kendo-chart-series-item type="column" [stack]="{ group: 'g1' }" [data]="chart5_tondaban"
+                            field="Value" categoryField="Title" name="Tồn đã bán">
+                            <kendo-chart-series-item-labels [visible]="true" background="transparent" color="white"
+                                format="n0">
+                            </kendo-chart-series-item-labels>
+                        </kendo-chart-series-item>
+
+                        <!-- Series 2 -->
+                        <kendo-chart-series-item type="column" [stack]="{ group: 'g1' }" [data]="chart5_tonchuaban"
+                            field="Value" categoryField="Title" name="Tồn chưa bán">
+                            <kendo-chart-series-item-labels [visible]="true" background="transparent" format="n0">
+                            </kendo-chart-series-item-labels>
+                        </kendo-chart-series-item>
+                        <!-- Line -->
+                        <kendo-chart-series-item type="line" [data]="chart5_nhaphang" field="Value"
+                            categoryField="Title" [stack]="{ group: 'g2' }" name="Nhập hàng"
+                            [markers]="{ visible: false }">
+                            <kendo-chart-series-item-labels [visible]="true" background="transparent" format="n0">
+                            </kendo-chart-series-item-labels>
+                        </kendo-chart-series-item>
+                    </kendo-chart-series>
+                </kendo-chart>
+            </div>
+
+            <!-- CHART 3.1 -->
+            <div class="chart-3" *ngIf="typechart5 == chartEnum.IIPercentageVehicle">
+                <div class="col-1-title">
+                    <h1>{{titleChart5}}</h1>
+                </div>
+                <div class="donut-chart">
+                    <kendo-chart class="chart">
+                        <ng-template kendoChartDonutCenterTemplate>
+                            <h3>Nhập</h3>
+                        </ng-template>
+                        <kendo-chart-legend position="bottom" [labels]="{ font: 'bold 11px Mulish, sans-serif' }"
+                            orientation="horizontal" [visible]="true" style="opacity: 0;">
+                        </kendo-chart-legend>
+                        <kendo-chart-area background="transparent"></kendo-chart-area>
+                        <kendo-chart-series>
+                            <kendo-chart-series-item type="donut" colorField="Color" [data]="chart5_pieChart"
+                                categoryField="Title" field="Percentage" color="#e2e2e2">
+                                <kendo-chart-series-item-labels position="outsideEnd" [content]="labelContentdonut"
+                                    [margin]="0" font="bold 11px Mulish, sans-serif"></kendo-chart-series-item-labels>
+                            </kendo-chart-series-item>
+                        </kendo-chart-series>
+                    </kendo-chart>
+                    <kendo-chart class="chart">
+                        <ng-template kendoChartDonutCenterTemplate>
+                            <h3>Tồn</h3>
+                        </ng-template>
+                        <kendo-chart-area background="transparent"></kendo-chart-area>
+                        <kendo-chart-series>
+                            <kendo-chart-series-item type="donut" colorField="Color" [data]="chart5_pieChart"
+                                categoryField="Title" field="Percentage" color="#0000">
+                                <kendo-chart-series-item-labels position="outsideEnd" [content]="labelContentdonut"
+                                    [margin]="0" font="bold 11px Mulish, sans-serif"></kendo-chart-series-item-labels>
+                            </kendo-chart-series-item>
+                        </kendo-chart-series>
+                        <kendo-chart-legend position="bottom" [labels]="{ font: 'bold 11px Mulish, sans-serif' }"
+                            orientation="horizontal" [visible]="true">
+                        </kendo-chart-legend>
+                    </kendo-chart>
+                </div>
+
+            </div>
+            <!-- CHART 4 -->
+            <div class="chart-4">
+                <h1>{{titleChart6}}</h1>
+                <kendo-chart class="chart" [seriesColors]="['#ED7D31', '#E60A0A', '#0070C0']">
+                    <kendo-chart-legend position="bottom" [labels]="{ font: 'bold 11px Mulish, sans-serif' }"
+                        orientation="horizontal" [visible]="true">
+                    </kendo-chart-legend>
+                    <kendo-chart-category-axis>
+                        <kendo-chart-category-axis-item [majorTicks]="{ visible: false }"
+                            [line]="{ visible: true, color: '#ededed', width: 2 }"
+                            [majorGridLines]="{ visible: false }">
+                            <kendo-chart-category-axis-item-labels font="bold 11px Mulish, sans-serif" rotation="-45"
+                                padding="5">
+                            </kendo-chart-category-axis-item-labels>
+                        </kendo-chart-category-axis-item>
+                    </kendo-chart-category-axis>
+                    <kendo-chart-value-axis>
+                        <kendo-chart-value-axis-item [type]="'numeric'" [line]="{visible: true, color: '#BDBDBD'}"
+                            [majorGridLines]="{ visible: false }" [labels]="{ visible: true }">
+                            <kendo-chart-value-axis-item-labels font="bold 11px Mulish, sans-serif">
+                            </kendo-chart-value-axis-item-labels>
+                        </kendo-chart-value-axis-item>
+                    </kendo-chart-value-axis>
+                    <kendo-chart-series>
+                        <!-- Series 1 -->
+                        <kendo-chart-series-item type="column" [stack]="{ group: 'g1' }" [data]="chart6_tondaban"
+                            field="Value" categoryField="Title" name="Tồn đã bán">
+                            <kendo-chart-series-item-labels [visible]="true" background="transparent" color="white"
+                                format="n0">
+                            </kendo-chart-series-item-labels>
+                        </kendo-chart-series-item>
+                        <!-- Series 2 -->
+                        <kendo-chart-series-item type="column" [stack]="{ group: 'g1' }" [data]="chart6_tonchuaban"
+                            field="Value" categoryField="Title" name="Tồn chưa bán">
+                            <kendo-chart-series-item-labels [visible]="true" background="transparent" format="n0">
+                            </kendo-chart-series-item-labels>
+                        </kendo-chart-series-item>
+                        <!-- Series 3 -->
+                        <kendo-chart-series-item type="column" [stack]="{ group: 'g2' }" [data]="chart6_nhaphang"
+                            [markers]="{ visible: false }" field="Value" [spacing]="0" [gap]="0" categoryField="Title"
+                            name="Nhập hàng">
+
+                            <kendo-chart-series-item-labels [visible]="true" background="transparent" format="n0"
+                                [margin]="0"></kendo-chart-series-item-labels>
+                        </kendo-chart-series-item>
+                    </kendo-chart-series>
+                </kendo-chart>
+            </div>
+        </div>
+
+        <!-- END - CHART -->
+    </div>
+</div>

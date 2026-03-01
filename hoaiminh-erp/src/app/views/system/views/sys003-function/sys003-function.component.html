@@ -1,0 +1,70 @@
+<div class="ath003">
+    <!-- START: HEADER -->
+    <ps-header-main>
+        <div class="store" (click)="onselectstore()">
+            <div class="image">
+                <img src="../../../assets/images/logos/hoaiminh-logo.png" alt="">
+            </div>
+            <div class="group-name">
+                <div class="short-name playfair-display">{{headActive.HeadName}}</div>
+                <div class="name">{{headActive.TradeName}}</div>
+            </div>
+        </div>
+    </ps-header-main>
+    <!-- END: HEADER -->
+
+    <!-- START: BODY -->
+    <div class="body">
+        <div class="scroll">
+            <!-- START: LIKE FUNCTION -->
+            <div class="like-function">
+                <div class="title">
+                    <div class="label">
+                        Các tính năng ưu thích
+                    </div>
+                    <ps-kendo-button>
+                        <span class="material-icons">tune</span>
+                    </ps-kendo-button>
+                </div>
+
+                <div class="function">
+                    <ps-kendo-button>
+                        <span class="material-icons">motorcycle</span>
+                        <div class="function-name">Bán xe</div>
+                    </ps-kendo-button>
+                    <ps-kendo-button>
+                        <span class="material-icons">construction</span>
+                        <div class="function-name">Bảo trì - sửa chữa</div>
+                    </ps-kendo-button>
+                    <ps-kendo-button>
+                        <span class="material-icons">dashboard</span>
+                        <div class="function-name">Dashboard</div>
+                    </ps-kendo-button>
+                </div>
+            </div>
+            <!-- END: LIKE FUNCTION -->
+
+            <!-- START: MODULE -->
+            <div class="like-function module" *ngFor="let module of datamodule">
+                <div class="title">
+                    <div class="label">
+                        {{module.ModuleName}}
+                    </div>
+                </div>
+
+                <div class="function">
+                    <ps-kendo-button *ngFor="let function of module.ListFunction" (onClick)="onclickfunction(function)">
+                        <span class="material-icons">{{function.Icon}}</span>
+                        <div class="function-name" [innerHTML]="function.FunctionName"></div>
+                    </ps-kendo-button>
+                </div>
+            </div>
+            <!-- END: MODULE -->
+        </div>
+    </div>
+    <!-- END: BODY -->
+
+    <!-- START: FOOTER COPYRIGHT -->
+    <ps-footer-copyright></ps-footer-copyright>
+    <!-- END: FOOTER COPYRIGHT -->
+</div>

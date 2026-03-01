@@ -1,0 +1,135 @@
+<div class="mtb005">
+    <div class="k-overlay" *ngIf="isOpenedFilter" (click)="openFilterPopup(false)"></div>
+    <div class="filter-popup" [class.open]="isOpenedFilter">
+        <div class="popup-header">
+            <div class="header-filter">
+                <span>CÔNG VIỆC YÊU CẦU </span>
+            </div>
+        </div>
+        <div class="popup-body">
+            <div class="body-top">
+                <ps-kendo-autocomplete [popupSettings]="{appendTo: 'component'}" [label]="'Nội dung công việc'"
+                    [data]="listTaskBank" [valueField]="'TaskName'" [filterable]="true"
+                    [(ngModel)]="taskRequest.TaskName"></ps-kendo-autocomplete>
+                <div class="checkbox">
+                    <div class="checkbox-main-label">
+                        Phương pháp thực hiện
+                    </div>
+                    <div class="checkbox-list">
+                        <ps-kendo-checkbox *ngFor="let option of taskRequest.TypeOfTask" [label]="option.name"
+                            [(ngModel)]="option.checked">
+                        </ps-kendo-checkbox>
+                    </div>
+
+                </div>
+                <ps-kendo-dropdown-list [label]="'Phân nhóm phụ tùng'" [data]="listCategory" [textField]="'Category'"
+                    [valueField]="'Code'" [(ngModel)]="taskRequest.PartCategory" [valuePrimitive]="true"
+                    (valueChange)="onCategoryChange()"></ps-kendo-dropdown-list>
+                <div class="row-4">
+                    <ps-kendo-dropdown-list [label]="'Loại phụ tùng'" [data]="listTypeOfPart" [textField]="'TypeOfPart'"
+                        [valueField]="'Code'" [(ngModel)]="taskRequest.TypeOfPart"
+                        (valueChange)="onTypeOfPartChange($event)" [valuePrimitive]="true"
+                        [disabled]="!taskRequest.PartCategory"></ps-kendo-dropdown-list>
+                    <ps-kendo-dropdown-list [label]="'Phân nhóm chi tiết'" [data]="listTypeOfPartSpecs"
+                        [textField]="'TypeOfPartSpecs'" [valueField]="'Code'" [(ngModel)]="taskRequest.TypeOfPartSpecs"
+                        (valueChange)="onTypeOfPartSpecsChange($event)" [valuePrimitive]="true"
+                        [disabled]="!taskRequest.TypeOfPart"></ps-kendo-dropdown-list>
+                </div>
+            </div>
+            <div class="body-bottom">
+                <ps-kendo-button [theme]="'primary-outline'" (click)="openFilterPopup(false)">quay về</ps-kendo-button>
+                <ps-kendo-button [disabled]="!taskRequest.TaskName" [theme]="'primary'" (onClick)="onAddTask()">thêm
+                    mới</ps-kendo-button>
+            </div>
+        </div>
+    </div>
+    <!-- HEADER -->
+    <ps-header-back>
+        <div class="func-title">Bảo trì - sửa chữa xe</div>
+        <div class="sub-title">
+            <div class="title-left">Tư vấn khách hàng</div>
+            <div class="title-right">No.: {{workMaster.WorkOrderNo}}</div>
+        </div>
+    </ps-header-back>
+    <!-- START: MAIN -->
+    <div class="main-content">
+        <div class="main-content-block-1" *ngIf="typeOfService !== WOMServiceEnum.FIX">
+            <h1>Công việc bảo dưỡng định kỳ</h1>
+            <div class="content">
+                <table>
+                    <tr>
+                        <th>Công việc</th>
+                        <th>Phương pháp</th>
+                    </tr>
+                    <tr *ngFor="let task of mainTasks; let i = index" [class.alt-row]="i % 2 !== 1">
+                        <td>{{ task.OrderBy }}. {{ task.TaskName }}</td>
+                        <td>{{ getTaskMethods(task) }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="main-content-block-2">
+            <h1>Công việc yêu cầu&nbsp; <span *ngIf="typeOfService !== WOMServiceEnum.FIX"> thêm</span></h1>
+            <div class="content">
+                <table>
+                    <tr>
+                        <th>Công việc</th>
+                        <th>Phương pháp</th>
+                    </tr>
+                    <tr *ngFor="let task of additionalTasks; let i = index" [class.alt-row]="i % 2 !== 1"
+                        (touchstart)="startPress(task)" (touchend)="endPress()">
+                        <td>
+                            <div class="task-name">
+                                {{ i + 1 }}. {{ task.TaskName }}
+                            </div>
+                            <div class="task-note" *ngIf="task.TypeOfPartDetail">
+                                PT: {{ task.TypeOfPartDetail }}
+                            </div>
+                        </td>
+                        <td>{{ getTaskMethods(task) }}</td>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- END: MAIN -->
+
+    <!-- START: FOOTER -->
+    <ps-footer-action>
+        <ps-kendo-button (onClick)="onNavigate('back')">
+            <span class="material-icons">arrow_back</span>
+        </ps-kendo-button>
+        <ps-kendo-button (onClick)="onNavigate('to-list')">
+            <span class="material-icons">list_alt</span>
+        </ps-kendo-button>
+        <ps-kendo-button [theme]="'info'" [disabled]="workMaster.Progress == WOMStatusEnum.DONE"
+            (onClick)="openFilterPopup(true)">
+            Thêm công việc
+        </ps-kendo-button>
+        <ps-kendo-button [theme]="'primary'" (onClick)="onNavigate('continue')">
+            <span class="text">Tiếp tục</span>
+        </ps-kendo-button>
+    </ps-footer-action>
+    <!-- END: FOOTER -->
+
+    <!-- START: DELETE DIALOG -->
+    <ps-dialog-confirm [theme]="'error'" [open]="showpopup">
+        <div psDialogConfirmHeader>xoá công việc</div>
+        <div psDialogConfirmBody>
+            <div class="main-title">
+                <span>Bạn có chắc chắn muốn xoá công việc</span>
+                <br>
+                <div class="hightline" *ngIf="showpopup">{{taskRequest.TaskName}}</div>
+            </div>
+            <div class="sub-title">
+                công việc bị xoá sẽ <span>KHÔNG</span> thể phục hồi
+            </div>
+        </div>
+        <div psDialogConfirmFooter>
+            <ps-kendo-button (onClick)="showpopup = false">huỷ</ps-kendo-button>
+            <ps-kendo-button [theme]="'error'" (onClick)="DeleteItem()">xoá</ps-kendo-button>
+        </div>
+    </ps-dialog-confirm>
+    <!-- END: DELETE DIALOG -->
+</div>

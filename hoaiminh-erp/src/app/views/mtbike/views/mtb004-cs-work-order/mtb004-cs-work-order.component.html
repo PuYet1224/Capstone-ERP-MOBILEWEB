@@ -1,0 +1,108 @@
+<div class="mtb004">
+    <!-- HEADER -->
+    <ps-header-back>
+        <div class="func-title">Bảo trì - sửa chữa xe</div>
+        <div class="sub-title">
+            <div class="title-left">Tư vấn khách hàng</div>
+            <div class="title-right">No.: {{workMaster.WorkOrderNo}}</div>
+        </div>
+    </ps-header-back>
+
+
+
+    <!-- START: MAIN -->
+    <div class="main-content">
+        <div class="main-content-block-1">
+            <h1>Thông tin chủ xe</h1>
+            <div class="content" *ngIf="loyalCustomer">
+                <div class="row-1">
+                    <ps-kendo-masked-textbox [label]="'Số điện thoại (*)'" [mask]="'000 000 0000'"
+                        [disabled]="workMaster.Progress !== WOMStatusEnum.REPAIRING"
+                        [(ngModel)]="loyalCustomer.Cellphone1" (focus)="onFocus(loyalCustomer)"
+                        (blur)="onValueChange(loyalCustomer, 'Cellphone1')"></ps-kendo-masked-textbox>
+                </div>
+                <div class="row-2">
+                    <ps-kendo-textbox [label]="'Họ và tên chủ xe (*)'"
+                        [disabled]="workMaster.Progress !== WOMStatusEnum.REPAIRING"
+                        [(ngModel)]="loyalCustomer.FullName" (focus)="onFocus(loyalCustomer)"
+                        (blur)="onValueChange(loyalCustomer, 'FullName')"></ps-kendo-textbox>
+                </div>
+                <div class="row-3">
+                    <ps-kendo-textbox [label]="'Địa chỉ liên hệ'"
+                        [disabled]="workMaster.Progress !== WOMStatusEnum.REPAIRING" [(ngModel)]="loyalCustomer.Address"
+                        (focus)="onFocus(loyalCustomer)"
+                        (blur)="onValueChange(loyalCustomer, 'Address')"></ps-kendo-textbox>
+                </div>
+                <div class="row-4">
+                    <ps-kendo-dropdown-list [label]="'Tỉnh thành'"
+                        [disabled]="workMaster.Progress !== WOMStatusEnum.REPAIRING"
+                        [(ngModel)]="loyalCustomer.Province" [data]="provincelist" [textField]="'VNProvince'"
+                        [valueField]="'Code'" [valuePrimitive]="true" (focus)="onFocus(loyalCustomer)"
+                        (valueChange)="onProvinceChange(loyalCustomer.Province, 'Province')"></ps-kendo-dropdown-list>
+                    <ps-kendo-dropdown-list [label]="'Phường/Xã'"
+                        [disabled]="workMaster.Progress !== WOMStatusEnum.REPAIRING"
+                        [(ngModel)]="loyalCustomer.District" [data]="districtlist" [textField]="'VNDistrict'"
+                        [valueField]="'Code'" [valuePrimitive]="true" (focus)="onFocus(loyalCustomer)"
+                        (valueChange)="onProvinceChange(loyalCustomer.District, 'District')"
+                        [disabled]="loyalCustomer.Province == null || workMaster.Progress !== WOMStatusEnum.REPAIRING"></ps-kendo-dropdown-list>
+                </div>
+            </div>
+        </div>
+        <div class="main-content-block-2" *ngIf="workOrderMaster">
+            <h1>Phiếu tiếp nhận</h1>
+            <div class="content">
+                <div class="row-1">
+                    <ps-kendo-textbox [label]="'Số phiếu tiếp nhận'" [disabled]="true"
+                        [(ngModel)]="workOrderMaster.WorkOrderNo"></ps-kendo-textbox>
+                </div>
+                <div class="row-2">
+                    <ps-kendo-textbox [label]="'Cửa hàng tiếp nhận'" [disabled]="true"
+                        [(ngModel)]="headName"></ps-kendo-textbox>
+                </div>
+
+                <div class="row-3">
+                    <div class="datepicker">
+                        <label>Thời gian tiếp nhận</label>
+                        <kendo-datetimepicker [(ngModel)]="workOrderMaster.ReceivingTime" placeholder="dd/MM/yyyy"
+                            format="dd/MM/yyyy HH:mm" [readOnlyInput]="true" calendarType="classic" [disabled]="true">
+                        </kendo-datetimepicker>
+                    </div>
+                    <div class="datepicker">
+                        <label>Thời gian dự kiến giao xe <span
+                                class="material-icons required-icons">emergency</span></label>
+                        <kendo-datetimepicker *ngIf="workOrderMaster"
+                            [disabled]="workMaster.Progress !== WOMStatusEnum.REPAIRING"
+                            [(ngModel)]="workOrderMaster.EstimateReturnTime" placeholder="dd/MM/yyyy"
+                            format="dd/MM/yyyy HH:mm" [readOnlyInput]="true" calendarType="classic"
+                            (focus)="onFocusWOM(workOrderMaster)"
+                            (valueChange)="onValueChangeWOM(workOrderMaster, 'EstimateReturnTime')" [min]="minDate">
+                        </kendo-datetimepicker>
+                    </div>
+                </div>
+                <div class="row-4">
+                    <ps-kendo-dropdown-list [label]="'Dịch vụ (*)'"
+                        [disabled]="workMaster.Progress !== WOMStatusEnum.REPAIRING" [textField]="'ServiceName'"
+                        [valueField]="'Code'" [(ngModel)]="workOrderMaster.ServiceMaster" [data]="serviceTypes"
+                        [valuePrimitive]="true"
+                        (valueChange)="onValueChangeWOM(workOrderMaster, 'ServiceMaster')"></ps-kendo-dropdown-list>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- END: MAIN -->
+
+    <!-- START: FOOTER -->
+    <ps-footer-action>
+        <ps-kendo-button (onClick)="onNavigate('back')">
+            <span class="material-icons">arrow_back</span>
+        </ps-kendo-button>
+        <ps-kendo-button (onClick)="onNavigate('to-list')">
+            <span class="material-icons">list_alt</span>
+        </ps-kendo-button>
+        <ps-kendo-button [theme]="'primary'" [disabled]="isContinue" (onClick)="onNavigate('continue')">
+            <span class="text">Tiếp tục</span>
+        </ps-kendo-button>
+    </ps-footer-action>
+    <!-- END: FOOTER -->
+</div>

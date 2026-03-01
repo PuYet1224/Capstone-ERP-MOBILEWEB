@@ -1,0 +1,195 @@
+<div class="mtb019-retail-total">
+    <!-- START: HEADER -->
+    <ps-header-back>
+        <div class="left-side">
+            <div class="func-title1">Tư vấn bán hàng</div>
+            <div class="func-title2">Chi tiết bán hàng</div>
+        </div>
+        <div class="right-side" *ngIf="retailMaster">
+            <div>
+                Số phiếu: <span>{{ retailMaster.ID }}</span>
+            </div>
+            <div #wrapper class="marquee-wrapper" (click)="onNavigate('customer')">
+                <div #content class="marquee-content">
+                    {{ retailMaster.CustomerName ? retailMaster.CustomerName + ' | ' : '' }}{{
+                    retailMaster.CustomerPhone }}
+                </div>
+            </div>
+        </div>
+    </ps-header-back>
+    <!-- END: HEADER -->
+
+    <!-- START: BODY -->
+    <div class="retail-total-body">
+        <div #bodyInner class="body-inner" (swipeleft)="ontorightclick()" (swiperight)="ontoleftclick()">
+            <div [@slideSwitch]="slideDirection" (@slideSwitch.done)="onSlideSwitchDone()">
+                <div class="main-body">
+                    <!-- Thông tin xe -->
+                    <div class="info-card vehicle-detail-card block block-1">
+                        <lucide-icon *ngIf="tottalindex > 1 && currentVehicleIndex !== 0" class="left"
+                            name="chevron-left" [size]="20" (click)="ontoleftclick()"></lucide-icon>
+                        <lucide-icon *ngIf="tottalindex > 1 && currentVehicleIndex !== tottalindex - 1" class="right"
+                            name="chevron-right" [size]="20" (click)="ontorightclick()"></lucide-icon>
+                        <div class="block-title-row" (click)="onNavigate('cart')">
+                            <div class="block-title">
+                                <span>Thông tin xe</span>
+                            </div>
+                            <span class="card-nav-indicator" *ngIf="tottalindex > 1">{{ currentVehicleIndex + 1 }} / {{
+                                tottalindex }}</span>
+                            <div class="block-title-code">
+                                <b>[{{ orderDetail && orderDetail.Code }}]</b>
+                            </div>
+                        </div>
+                        <div class="block-vehicle">
+                            <span class="tag" [class.available]="orderDetail && orderDetail.TypeData == 1"
+                                [class.allocated]="orderDetail && orderDetail.TypeData == 2"
+                                [class.booked]="orderDetail && orderDetail.TypeData == 3">
+                                {{ orderDetail && orderDetail.TypeData == 1 ? 'Có sẵn' : (orderDetail &&
+                                orderDetail.TypeData == 2 ? 'Điều xe' : 'Đặt xe') }}
+                            </span>
+                            <div class="vehicle-image">
+                                <img [src]="(orderDetail && orderDetail.ImageSetting1) || (orderDetail && orderDetail.VehicleImage) || ''"
+                                    alt="" />
+                            </div>
+                            <div class="vehicle-info">
+                                <div class="info-row">
+                                    <span class="label">Dòng xe:</span>
+                                    <span class="value">{{ orderDetail && orderDetail.TypeOfVehicleName }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Loại xe:</span>
+                                    <span class="value">{{ orderDetail && orderDetail.VehicleName }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Màu xe:</span>
+                                    <span class="value">{{ orderDetail && orderDetail.VehicleColorName }}</span>
+                                </div>
+                                <div class="infor-last-row">
+                                    <span>{{ orderDetail && orderDetail['TotalService'] != null ?
+                                        orderDetail['TotalService'] : listService.length }} dịch vụ</span>
+                                    <span>{{ listPart.length }} phụ kiện</span>
+                                    <span>{{ getDiscountLabel() }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chi tiết giá bán -->
+                    <div class="price-card">
+                        <div class="card-title">Chi tiết giá bán</div>
+                        <div class="card-body price-detail-body">
+                            <!-- Giá xe + VAT -->
+                            <div class="price-group">
+                                <div class="price-row">
+                                    <span class="price-label">Giá xe (chưa VAT):</span>
+                                    <span class="price-value">{{ (orderDetail['BasePrice'] ?? orderDetail.Price) |
+                                        number:'1.0-0' }}₫</span>
+                                </div>
+                                <div class="price-row" *ngIf="orderDetail['VATAmount'] != null">
+                                    <span class="price-label">VAT:</span>
+                                    <span class="price-value">{{ orderDetail['VATAmount'] | number:'1.0-0' }}₫</span>
+                                </div>
+                            </div>
+                            <div class="price-separator-line"></div>
+                            <!-- Dịch vụ (Đăng ký biển số + ListService) -->
+                            <div class="price-group" *ngIf="orderDetail['RegistrationFee'] || hasServices">
+                                <div class="price-row" *ngIf="orderDetail['RegistrationFee']">
+                                    <span class="price-label">Đăng ký biển số xe:</span>
+                                    <span class="price-value">{{ orderDetail['RegistrationFee'] | number:'1.0-0'
+                                        }}₫</span>
+                                </div>
+                                <div class="price-row" *ngFor="let service of listService">
+                                    <span class="price-label">{{ service.ServiceName || service.Name }}</span>
+                                    <span class="price-value">{{ (service.Price ?? service.Amount ?? 0) | number:'1.0-0'
+                                        }}₫</span>
+                                </div>
+                            </div>
+                            <div class="price-separator-line" *ngIf="orderDetail['RegistrationFee'] || hasServices">
+                            </div>
+                            <!-- Phụ tùng -->
+                            <div class="price-group" *ngIf="hasParts">
+                                <div class="price-row part-item" *ngFor="let part of listPart">
+                                    <span class="price-label part-label-wrap">
+                                        <span class="part-name">{{ part.TypeOfPartName }}</span>
+                                        <span class="part-unit-price" *ngIf="(part.Quantity ?? 0) >= 2">({{
+                                            (part.UnitPrice ?? 0) | number:'1.0-0' }}đ/1 {{ part.BaseUnitName || 'cái'
+                                            }})</span>
+                                    </span>
+                                    <span class="price-value">{{ (part.TotalPrice ?? (part.UnitPrice * (part.Quantity ??
+                                        0))) | number:'1.0-0' }}₫</span>
+                                </div>
+                            </div>
+                            <div class="price-separator-line" *ngIf="hasParts"></div>
+                            <!-- Tổng trước giảm giá + Giảm giá -->
+                            <div class="price-group">
+                                <div class="summary-row bold">
+                                    <span class="summary-label">TỔNG TRƯỚC GIẢM GIÁ</span>
+                                    <span class="summary-value">{{ (orderDetail['TotalAmount'] ?? 0) | number:'1.0-0'
+                                        }}₫</span>
+                                </div>
+                                <div class="summary-row promotional">
+                                    <span class="summary-label">Giảm giá (Khuyến mãi):</span>
+                                    <span class="summary-value discount">{{ (orderDetail['DiscountAmount'] ?? 0) === 0 ?
+                                        '' : '- ' }}{{ (orderDetail['DiscountAmount'] ?? 0) | number:'1.0-0' }}₫</span>
+                                </div>
+                            </div>
+                            <div class="price-separator-line"></div>
+                            <!-- Tổng thanh toán -->
+                            <div class="total-payment">
+                                <div class="payment-row">
+                                    <span class="payment-label">TỔNG THANH TOÁN</span>
+                                    <span class="payment-value">{{ (orderDetail['TotalPayment'] ?? orderDetail.Price ??
+                                        0) | number:'1.0-0' }}₫</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Block 2: Thông tin thanh toán -->
+                    <div class="info-card payment-block">
+                        <div class="card-title">Thông tin thanh toán</div>
+                        <div class="card-body">
+                            <div class="payment-form-row">
+                                <label class="payment-label">Hình thức thanh toán <span
+                                        class="required-star">*</span></label>
+                                <ps-kendo-dropdown-list [data]="paymentTypeOptions" [textField]="'ListName'"
+                                    [valueField]="'Code'" [(ngModel)]="orderDetail.PaymentType" [valuePrimitive]="true"
+                                    (valueChange)="onPaymentTypeChange()">
+                                </ps-kendo-dropdown-list>
+                            </div>
+                            <div class="payment-form-row"
+                                *ngIf="orderDetail.PaymentType === enumPaymentType.INSTALLMENT">
+                                <label class="payment-label">Công ty tài chính <span
+                                        class="required-star">*</span></label>
+                                <ps-kendo-dropdown-list [data]="listFinanceCompany" [textField]="'ListName'"
+                                    [valueField]="'Code'" [(ngModel)]="orderDetail.FinanceCompany"
+                                    [valuePrimitive]="true" (valueChange)="onFinanceCompanyChangeByCode($event)"
+                                    [placeholder]="'Chọn công ty tài chính'">
+                                </ps-kendo-dropdown-list>
+                            </div>
+                            <div class="payment-form-row" *ngIf="orderDetail.PaymentType === enumPaymentType.DEPOSIT">
+                                <label class="payment-label">Số tiền cọc</label>
+                                <ps-kendo-numeric-textbox
+                                    [ngModel]="(orderDetail.DepositAmount != null && orderDetail.DepositAmount !== 0) ? orderDetail.DepositAmount : null"
+                                    (ngModelChange)="orderDetail.DepositAmount = $event ?? 0" [format]="'n0'"
+                                    [placeholder]="'Nhập số tiền đặt cọc'" (blur)="onDepositAmountBlur()">
+                                </ps-kendo-numeric-textbox>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- START: FOOTER -->
+    <ps-footer-action>
+        <ps-kendo-button (onClick)="onNavigate('back')">
+            <span class="material-icons">arrow_back</span>
+        </ps-kendo-button>
+        <ps-kendo-button (onClick)="onNavigate('to-list')">
+            <span class="material-icons">list_alt</span>
+        </ps-kendo-button>
+    </ps-footer-action>
+    <!-- END: FOOTER -->
+</div>

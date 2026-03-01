@@ -1,11 +1,11 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'auth',
-    loadChildren: () => import('./views/auth/auth.module').then(t => t.AuthModule),
+    path: '',
+    loadChildren: () => import('./views/views.module').then(m => m.ViewsModule)
   }
 ];
 

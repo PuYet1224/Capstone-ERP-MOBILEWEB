@@ -1,0 +1,187 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep {
+    mtb010-sal-consultant-detail {
+        font-size: 13px;
+
+        .mtb010-retail-customer {
+            height: 100%;
+
+            ps-header-back {
+                .ps-header {
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+                    .header-right {
+                        height: fit-content;
+                        display: flex;
+                        width: 100%;
+                        justify-content: space-between;
+                        align-items: center;
+
+                        .left-side {
+
+                            .func-title1 {
+                                font-size: 13px;
+                                font-weight: bold;
+                                text-transform: uppercase;
+                                color: $primary;
+                            }
+                        }
+
+                        .right-side {
+                            span {
+                                color: $error;
+                                font-weight: bold;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .customer-body {
+                background-color: transparent;
+                height: calc(100% - 124px);
+                margin: 8px 0;
+                border-radius: 8px;
+                overflow: auto;
+
+                .body-container {
+                    height: fit-content;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                    padding: 0 8px;
+
+                    .container-body {
+                        border-radius: 8px;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                        background: $white;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 8px;
+                        height: 100%;
+                        overflow: auto;
+
+                        .title {
+                            font-weight: bold;
+                            padding: 9px 8px;
+                            border-bottom: 1px solid $border;
+                        }
+
+                        .content {
+                            padding: 0 8px 8px 8px;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 8px;
+
+                            ps-kendo-textbox {
+                                flex: 1;
+
+                                &.id {
+
+                                    .kendo-textbox {
+                                        kendo-textbox {
+                                            .k-input-inner {
+                                                color: $error;
+                                                font-weight: bold;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            .row-1 {
+                                display: flex;
+                                align-items: flex-end;
+                                gap: 8px;
+
+                                ps-kendo-textbox {
+                                    flex: 1;
+                                }
+
+                                ps-kendo-dropdown-list {
+                                    width: 80px;
+                                }
+                            }
+
+                            .row-2 {
+                                display: flex;
+
+                                .process,
+                                .status {
+                                    flex: 1;
+                                    gap: 4px;
+                                    display: flex;
+                                    flex-direction: column;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            ps-footer-action {
+                .footer-action {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 8px;
+                    height: fit-content;
+
+                    ps-kendo-button {
+                        button {
+                            height: 48px;
+                            border-radius: 0;
+
+                            .k-button-text {
+                                height: 100%;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                gap: 4px;
+                                padding: 4px 0;
+                                text-transform: none;
+                                justify-content: center;
+
+                                .material-icons {
+                                    width: 20px;
+                                    height: 20px;
+                                    font-size: 20px;
+                                }
+
+                                .text {
+                                    font-size: 13px;
+                                }
+                            }
+                        }
+
+                        &:nth-child(2),
+                        &:nth-child(3) {
+                            flex: 1;
+
+                            button {
+                                width: 100%;
+                                height: 36px;
+                                border-radius: 8px;
+                            }
+
+                            .text {
+                                color: $white;
+                            }
+                        }
+
+                        &:first-child {
+                            button {
+                                width: 36px;
+                                height: 36px;
+                                border: 1px solid $border;
+                                border-radius: 8px;
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+}

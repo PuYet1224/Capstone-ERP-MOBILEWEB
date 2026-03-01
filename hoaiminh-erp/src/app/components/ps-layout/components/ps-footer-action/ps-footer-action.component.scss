@@ -1,0 +1,15 @@
+@import '../../../../../assets/scss/colors';
+
+::ng-deep
+{
+    ps-footer-action
+    {
+        .footer-action
+        {
+            height: 40px;
+            width: 100%;
+            background-color: $white;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+        }
+    }
+}

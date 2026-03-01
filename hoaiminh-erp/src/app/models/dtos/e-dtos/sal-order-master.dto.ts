@@ -1,11 +1,13 @@
+
 import { SALOrderDetailCusDTO } from "./sal-order-detail.dto";
-import { SALOrderMasterStatusEnum } from "../../enums/e-status/sal-order-master-status.enum";
 class SALOrderMasterDTO {
   Code: number = 0;
   ID: string = '';
   Customer: number;
+  UserID: number | null;
+  CustomerGender: number | null;
   Partner: number;
-  SaleDate?: Date | null;
+  SaleDate: Date | null;
   SaleStaff: number;
   IsNewCustomer: boolean;
   TechnicalStaff: number;
@@ -15,26 +17,30 @@ class SALOrderMasterDTO {
   HeadOut: number;
   WHOut: number;
   TypeData: number;
-  Status: SALOrderMasterStatusEnum = SALOrderMasterStatusEnum.NEW;
+  Status: number = 1;
   CreateBy: string;
-  CreateTime?: Date | null;
+  CreateTime: Date | null;
   LastModifiedBy: string;
-  LastModifiedTime?: Date | null;
+  LastModifiedTime: Date | null;
 }
 
 export class SALOrderMasterCusDTO extends SALOrderMasterDTO {
   StatusName: string = 'Tạo mới';
+  RetailTypeData: number = 1;
+  RetailTypeDataName: string = 'Mới';
   Email: string = '';
   TotalPrice: number = 0;
   TotalVehicle: number = 0;
   CustomerName: string = '';
   Phone: string = '';
+  CustomerPhone: string = '';
   Address: string = '';
   SaleStaffName: string = '';
   PaymentMethodName: string = '';
   FullName: string = '';
   PartnerName: string = '';
   ListDetail: SALOrderDetailCusDTO[] = [];
+  ListBuyVehicle: SALOrderDetailCusDTO[] = [];
   PartnerOccupationName: string = '';
   PartnerPhone: string = '';
   PartnerFullAddress: string = '';
@@ -43,4 +49,32 @@ export class SALOrderMasterCusDTO extends SALOrderMasterDTO {
   PartnerWardName: string = '';
   PartnerDistrictName: string = '';
   PartnerProvinceName: string = '';
+  CustomerNeeds: string = '';
+  CustomerCharacteristics: string = '';
+  CustomerExpectation: string = '';
+  CustomerPreferences: string = '';
+  CustomerNotes: string = '';
+  BookCount: number;
+  TransferCount: number;
+  BuyCount: number;
+  OrderDetail: SALOrderDetailCusDTO;
+  VehiclePrice: number = 0;
+  VatPrice: number = 0;
+  ServiceTotal: number = 0;
+  PartTotal: number = 0;
+  DiscountAmount: number = 0;
+  TotalBeforeDiscount: number = 0;
+  TotalPayment: number = 0;
+  ListPaymentVehicle: SALOrderDetailCusDTO[] = [];
+  NumOfReceipt: number = 0;
+  NumOfInvoice: number = 0;
+  ListService: [] = [];
+  ListPart: [] = [];
+  ListVehicle: [] = [];
+  TypeOfVehicleName: string | null;
+  VehicleName: string | null;
+  VehicleColorName: string | null;
+  ListCareVehicle: string[] | null;
+  ListInvoiceSelection: SALOrderDetailCusDTO[] | null;
+  OrderInvoice: number | null;
 }

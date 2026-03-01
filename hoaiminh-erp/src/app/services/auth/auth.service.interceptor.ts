@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, catchError, filter, map, Observable, switchMap, take, tap, throwError } from 'rxjs';
-import { AuthService } from './auth.service';
 import { PSObject } from '../utilities/ps-object';
-import { PSString } from '../utilities/ps-string';
+import { PsString } from '../utilities/ps-string';
 import { AuthApiService } from './auth-api.service';
-import { PSGetConfigService } from '../core/ps-get-config.service';
+import { GetConfigService } from '../core/ps-get-config.service';
 import { PSDate } from '../utilities/ps-date';
+import { SystemService } from 'src/app/views/system/services/system.service';
+import { SystemLoaderService } from 'src/app/views/system/services/system-loader.service';
 
 @Injectable()
 export class PS_AuthInterceptorService implements HttpInterceptor {
@@ -14,9 +15,10 @@ export class PS_AuthInterceptorService implements HttpInterceptor {
     private refreshTokenSubject = new BehaviorSubject<any>(null);
 
     constructor(
-        private auth: AuthService,
+        private auth: SystemService,
         private authapi: AuthApiService,
-        private config: PSGetConfigService,
+        private config: GetConfigService,
+        private subLoader: SystemLoaderService
     ) { }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -32,7 +34,7 @@ export class PS_AuthInterceptorService implements HttpInterceptor {
                     this.authapi.refreshToken(token).subscribe((data) => {
                         this.isRefresing = false;
                         this.refreshTokenSubject.next(data);
-                        // this.subLoader.loader(false);
+                        this.subLoader.loader(false);
                         return next.handle(this.auth.setHeader(req));
                     }, error => {
                         this.auth.logout();
@@ -58,7 +60,7 @@ export class PS_AuthInterceptorService implements HttpInterceptor {
                     if (!PSObject.isNullOfUndefined(err.error) && !PSObject.isNullOfUndefined(err.error.Message)) {
                         error = err.error.Message;
                     } else {
-                        if (!PSString.isNullOrWhitespace(err.statusText))
+                        if (!PsString.isNullOrWhitespace(err.statusText))
                             error = err.statusText;
                         else {
                             error = err;

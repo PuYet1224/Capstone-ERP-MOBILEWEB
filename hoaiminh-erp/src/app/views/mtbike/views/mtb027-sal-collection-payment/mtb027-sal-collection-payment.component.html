@@ -1,0 +1,79 @@
+<!-- <div class="mtb027-sal-collection-payment"> -->
+<!-- START: HEADER -->
+<!-- <ps-header-back>
+        <div class="left-side">
+            <div class="func-title1">Tiếp nhận thông tin</div>
+            <div class="func-title2">Thông tin thanh toán</div>
+        </div>
+        <div class="right-side">
+            <div>
+                No.: <span>{{orderdetail.ID}}</span>
+            </div>
+            <div #wrapper class="marquee-wrapper">
+                <div #content class="marquee-content">
+                    <span class="infomation" (click)="onNavigate('/mtbike/collection/owner')">
+                        {{orderdetail.CustomerName}}
+                    </span>
+                    <span *ngIf="orderdetail.CustomerPhone">|</span>
+                    <span class="infomation" (click)="onNavigate('/mtbike/collection/contact')">
+                        {{orderdetail.CustomerPhone}}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </ps-header-back> -->
+<!-- END: HEADER -->
+
+<!-- <main>
+        <section class="section-form"> -->
+<!-- hình thức thanh toán -->
+<!-- <ps-kendo-dropdown-list [label]="'Hình thức thanh toán (*)'" [(ngModel)]="orderdetail.PaymentType"
+                name="PaymentMethod" [data]="listpaymenttype" [textField]="'ListName'" [valueField]="'TypeOfList'"
+                [valuePrimitive]="true" (valueChange)="onvaluechange('PaymentType')"
+                [disabled]="orderdetail.Status > odstt.RePayment || FunctionPermissionDTO.approver">
+            </ps-kendo-dropdown-list> -->
+
+<!-- công ty tài chính -->
+<!-- <ps-kendo-dropdown-list [label]="'Công ty tài chính ((*) nếu trả góp)'"
+                [(ngModel)]="orderdetail.FinanceCompany" [data]="listfinance" [textField]="'Name'" [valueField]="'Code'"
+                [valuePrimitive]="true" (valueChange)="onvaluechange('PaymentType')"
+                [disabled]="!orderdetail.PaymentType || orderdetail.PaymentType != paymenttypeenum.INSTALLMENT || orderdetail.Status > odstt.RePayment || FunctionPermissionDTO.approver">
+            </ps-kendo-dropdown-list> -->
+
+<!-- số hợp đồng -->
+<!-- <ps-kendo-textbox label="Số hợp đồng ((*) nếu trả góp)" [(ngModel)]="orderdetail.ContractID"
+                (blur)="onvaluechange('ContractID')"
+                [disabled]="!orderdetail.FinanceCompany || !orderdetail.PaymentType || orderdetail.PaymentType != paymenttypeenum.INSTALLMENT || orderdetail.Status > odstt.RePayment || FunctionPermissionDTO.approver">
+            </ps-kendo-textbox>
+
+            <div class="form-group"> -->
+<!-- số lần thanh toán -->
+<!-- <ps-kendo-numeric-textbox [label]="'Số lần thanh toán'" [format]="'n0'"
+                    [(ngModel)]="orderdetail.InstallmentTerm" (blur)="onvaluechange('InstallmentTerm')"
+                    [disabled]="!orderdetail.FinanceCompany || !orderdetail.PaymentType || orderdetail.PaymentType != paymenttypeenum.INSTALLMENT || orderdetail.Status > odstt.RePayment || FunctionPermissionDTO.approver">
+                </ps-kendo-numeric-textbox> -->
+
+<!-- số lần thanh toán -->
+<!-- <ps-kendo-numeric-textbox [label]="'Lãi xuất ((*) nếu trả góp)'" [format]="'n2'"
+                    [(ngModel)]="orderdetail.InterestRate" (blur)="onvaluechange('InterestRate')"
+                    [disabled]="!orderdetail.FinanceCompany || !orderdetail.PaymentType || orderdetail.PaymentType != paymenttypeenum.INSTALLMENT || orderdetail.Status > odstt.RePayment || FunctionPermissionDTO.approver">
+                </ps-kendo-numeric-textbox>
+            </div>
+        </section>
+    </main> -->
+
+<!-- START: FOOTER -->
+<!-- <ps-footer-action>
+        <ps-kendo-button (onClick)="onNavigate('/mtbike/collection/other')">
+            <span class="material-icons">arrow_back</span>
+        </ps-kendo-button>
+        <ps-kendo-button (onClick)="onNavigate('/mtbike/collection')">
+            <span class="material-icons">list_alt</span>
+        </ps-kendo-button>
+        <ps-kendo-button [theme]="'primary'"
+            (onClick)="onNavigate(orderdetail.Status == odstt.Payment || FunctionPermissionDTO.creator ? '/mtbike/collection' : 'check')">
+            {{orderdetail.Status == odstt.Payment || FunctionPermissionDTO.creator ? 'Tiếp tục' : 'Thanh toán'}}
+        </ps-kendo-button>
+    </ps-footer-action> -->
+<!-- END: FOOTER -->
+<!-- </div> -->

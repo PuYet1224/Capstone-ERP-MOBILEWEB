@@ -1,0 +1,105 @@
+<div class="mtb014-sal-consutant-services-detail">
+    <!-- START: HEADER -->
+    <ps-header-back>
+        <div class="left-side">
+            <div class="func-title1">Tư vấn bán hàng</div>
+            <div class="func-title2">Dịch vụ kèm theo</div>
+        </div>
+        <div class="right-side">
+            <div>
+                No.: <span>{{detail.ID}}</span>
+            </div>
+            <div #wrapper class="marquee-wrapper" (click)="onnavigate('/detail')">
+                <div #content class="marquee-content">
+                    {{detail.CustomerName != null && detail.CustomerName != undefined ?
+                        detail.CustomerName + ' |' : ''}}
+                    {{detail.Phone}}
+                </div>
+            </div>
+        </div>
+    </ps-header-back>
+    <!-- END: HEADER -->
+
+    <!-- START: BODY -->
+    <main [@slideSwitch]="slideDirection" (@slideSwitch.done)="onslideok()">
+        <div class="main-body" (swipeleft)="ontorightclick()" (swiperight)="ontoleftclick()">
+            <div class="block block-1">
+                <lucide-icon *ngIf="tottalindex > 1 && currentindex != 0 && typedata == 'vehiclecolor'" class="left" name="chevron-left" [size]="20"
+                             (click)="ontoleftclick()">
+                </lucide-icon>
+                <lucide-icon *ngIf="tottalindex > 1 && currentindex != tottalindex - 1 && typedata == 'vehiclecolor'" class="right" name="chevron-right"
+                             [size]="20"
+                             (click)="ontorightclick()">
+                </lucide-icon>
+
+                <div class="block-title">
+                    <span (click)="onnavigate('/cart')">
+                        Thông tin xe
+                    </span>
+                    <b>[{{detail.Code}}]</b>
+                </div>
+                <div class="block-vehicle">
+                    <span class="tag" [class.available]="detail.TypeData == 1" [class.allocated]="detail.TypeData == 2" [class.booked]="detail.TypeData == 3">
+                        {{detail.TypeData == 1 ? 'Có sẵn' : (detail.TypeData == 2 ? 'Điều xe' : 'Đặt xe')}}
+                    </span>
+                    <div class="vehicle-image">
+                        <img src="{{detail.ImageSetting1}}">
+                    </div>
+                    <div class="vehicle-info">
+                        <div class="info-row">
+                            <span class="label">Dòng xe:</span>
+                            <span class="value">{{detail.TypeOfVehicleName}}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Loại xe:</span>
+                            <span class="value">{{detail.VehicleName}}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Màu xe:</span>
+                            <span class="value">{{detail.VehicleColorName}}</span>
+                        </div>
+                        <div class="infor-last-row">
+                            <span>{{detail.TotalService}} dịch vụ</span>
+                            <span>{{detail.TotalPart}} phụ kiện</span>
+                            <span>{{detail.TotalPromotion}} CTKM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="block block-2">
+                <div class="block-title" (click)="onnavigate('/services')">
+                    Dịch vụ
+                </div>
+                <div class="card-body">
+                    <div class="services-header">
+                        <div class="header-col col-name">Tên dịch vụ</div>
+                        <div class="header-col col-cost">Chi phí</div>
+                    </div>
+                    <div class="services-list">
+                        <div class="service-item" *ngFor="let service of servicesList; let i = index"
+                             [class.checked]="service.IsChecked">
+                            <ps-kendo-checkbox [(ngModel)]="service.IsChecked" [id]="service.Code + '_' + i" label="{{ i + 1 }}. {{ service.ServiceName }}"
+                                               (onchecked)="onservicechecked(service)">
+                            </ps-kendo-checkbox>
+                            <label [for]="service.Code + '_' + i" class="service-cost">{{ formatprice(service.Price) }}₫</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- END: BODY -->
+
+    <!-- START: FOOTER -->
+    <ps-footer-action>
+        <ps-kendo-button (onClick)="onnavigate('back')">
+            <span class="material-icons w-300">arrow_back</span>
+        </ps-kendo-button>
+
+        <ps-kendo-button (onClick)="onnavigate('')">
+            <span class="material-icons w-300">list_alt</span>
+        </ps-kendo-button>
+    </ps-footer-action>
+    <!-- END: FOOTER -->
+</div>
