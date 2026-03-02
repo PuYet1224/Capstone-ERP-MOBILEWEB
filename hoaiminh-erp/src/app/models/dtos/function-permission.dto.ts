@@ -12,6 +12,15 @@ export class FunctionPermissionDTO {
   public static datapermission: any[] = [];
 
   public static set(e: PermissionDLLDTO) {
+    if (!e || !e.ActionPermission) {
+      this.master = false;
+      this.creator = false;
+      this.approver = false;
+      this.viewer = false;
+      this.datapermission = [];
+      return;
+    }
+
     this.master = e.ActionPermission.some(s => s.ActionType == PermissionEnum.master);
     this.creator = e.ActionPermission.some(s => s.ActionType == PermissionEnum.creator);
     this.approver = e.ActionPermission.some(s => s.ActionType == PermissionEnum.approver);
