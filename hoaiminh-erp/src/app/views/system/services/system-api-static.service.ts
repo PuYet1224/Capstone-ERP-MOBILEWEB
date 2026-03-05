@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment.dev';
   providedIn: 'root',
 })
 export class SystemApiStaticService {
+  public static GetConfig: string = environment.apiServer + '/api/admin/GetConfig';
   public static GetHead: string = environment.apiServer + '/api/admin/GetHead';
   public static GetModule: string = environment.apiServer + '/api/admin/GetModule';
   public static GetAPIByFunctionPackage: string = environment.apiServer + '/api/admin/GetAPIByFunctionPackage';

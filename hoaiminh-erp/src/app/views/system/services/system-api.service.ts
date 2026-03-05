@@ -18,6 +18,19 @@ export class SystemApiService {
     private cache: PsCache
   ) { }
 
+  public GetConfig() {
+    let that = this;
+    return new Observable<ResponseDTO>(obs => {
+      that.api.post(SystemApiStaticService.GetConfig).subscribe((res: ResponseDTO) => {
+        obs.next(res);
+        obs.complete();
+      }, errors => {
+        obs.error(errors);
+        obs.complete();
+      })
+    });
+  }
+
   public GetHead() {
     let that = this;
     return new Observable<ResponseDTO>(obs => {

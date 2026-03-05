@@ -123,22 +123,33 @@ export class Sys001LoginComponent implements OnDestroy, OnInit, AfterViewInit {
     var temp = this.authAPI.token(this.f['username'].value, this.f['password'].value)
       .subscribe(res => {
         if (res) {
-          var cacheheadlastactive = this.cache.getItem(KeyLocalStorageEnum.HEAD_OBJECT);
-          var headlastactive = cacheheadlastactive ? this.cache.parseValue(cacheheadlastactive) : null;
+          // Gọi GetConfig trước để nạp GlobalVar trên server (roles, permissions, API)
+          var configSub = this.sysapi.GetConfig().subscribe({
+            next: () => {
+              var cacheheadlastactive = this.cache.getItem(KeyLocalStorageEnum.HEAD_OBJECT);
+              var headlastactive = cacheheadlastactive ? this.cache.parseValue(cacheheadlastactive) : null;
 
-          this.loader.loader(false);
-          if (!headlastactive || !headlastactive.Head) {
-            this.router.navigate(['/store']);
-          } else {
-            this.router.navigate(["menu"]);
-          }
+              this.loader.loader(false);
+              if (!headlastactive || !headlastactive.Head) {
+                this.router.navigate(['/store']);
+              } else {
+                this.router.navigate(["menu"]);
+              }
 
-          var sub = this.sysapi.GetEmployeeAccount().subscribe({
-            complete: () => {
-              sub.unsubscribe();
+              var sub = this.sysapi.GetEmployeeAccount().subscribe({
+                complete: () => {
+                  sub.unsubscribe();
+                }
+              });
+              this.arrUnsubscribe.push(sub);
+            },
+            error: () => {
+              // Nếu GetConfig lỗi, vẫn cho navigate
+              this.loader.loader(false);
+              this.router.navigate(['/store']);
             }
           });
-          this.arrUnsubscribe.push(sub);
+          this.arrUnsubscribe.push(configSub);
         }
       }, (e) => {
         this.loader.loader(false);
