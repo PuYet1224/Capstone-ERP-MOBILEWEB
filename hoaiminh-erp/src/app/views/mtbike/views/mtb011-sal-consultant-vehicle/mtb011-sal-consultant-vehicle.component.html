@@ -300,11 +300,11 @@
         <ps-kendo-button (onClick)="onNavigate('/mtbike/consultant')">
             <span class="material-icons">list_alt</span>
         </ps-kendo-button>
-        <ps-kendo-button [theme]="'error'" [disabled]="FunctionPermissionDTO.approver">
+        <ps-kendo-button [theme]="'error'" [disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master">
             <span class="text">Hủy giao dịch</span>
         </ps-kendo-button>
         <ps-kendo-button (onClick)="onNavigate('/mtbike/consultant/cart')" [theme]="'primary'"
-            [disabled]="FunctionPermissionDTO.approver">
+            [disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master">
             <span class="text">Tiếp tục</span>
         </ps-kendo-button>
 

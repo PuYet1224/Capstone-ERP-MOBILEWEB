@@ -33,7 +33,7 @@
             *ngFor="let item of (typeactive == 'buy' ? listVehicle : listVehicle2) || []; let i = index">
             <div class="swipe-wrapper" *ngIf="typeactive == 'buy'" (swipeleft)="onSwipeLeft(item, i)"
                 (swiperight)="onSwipeRight(item)" [class.swiped]="item.swiped"
-                [class.no-swipe]="FunctionPermissionDTO.viewer || FunctionPermissionDTO.approver">
+                [class.no-swipe]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)">
                 <div class="product">
                     <div class="top-product" (click)="onNavigateToTotalVehicle(item)">
 
@@ -173,11 +173,11 @@
         <ps-kendo-button (onClick)="onNavigate('/mtbike/consultant')">
             <span class="material-icons">list_alt</span>
         </ps-kendo-button>
-        <ps-kendo-button [theme]="'error'" [disabled]="FunctionPermissionDTO.approver">
+        <ps-kendo-button [theme]="'error'" [disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master">
             <span class="text">Hủy giao dịch</span>
         </ps-kendo-button>
         <ps-kendo-button (onClick)="onNavigate('/mtbike/consultant/total')" [theme]="'primary'"
-            [disabled]="FunctionPermissionDTO.approver">
+            [disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master">
             <span class="text">Gửi thanh toán</span>
         </ps-kendo-button>
 

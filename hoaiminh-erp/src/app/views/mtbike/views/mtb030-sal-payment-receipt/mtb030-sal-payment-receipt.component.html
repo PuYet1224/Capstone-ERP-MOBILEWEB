@@ -25,12 +25,12 @@
                 <!-- Ký hiệu phiếu thu -->
                 <!-- <ps-kendo-textbox [label]="'Ký hiệu'" [(ngModel)]="receipt.ReceiptSerial"
                                   (blur)="onValueChange('ReceiptSerial')"
-                                  [disabled]=" receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled">
+                                  [disabled]=" receipt.Status == enumreceiptstt.Success || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || receipt.Status == enumreceiptstt.Cancled">
                 </ps-kendo-textbox> -->
 
                 <!-- xe thanh toán -->
                 <!-- <ps-kendo-dropdown-list [popupSettings]="{ popupClass: 'vehicledropdownlist' }"
-                                        [disabled]=" receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled"
+                                        [disabled]=" receipt.Status == enumreceiptstt.Success || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || receipt.Status == enumreceiptstt.Cancled"
                                         [label]="'Thu tiền theo xe'" [(ngModel)]="receipt.OrderDetail" [data]="listvehicle"
                                         [valuePrimitive]="true" (valueChange)="onValueChange('OrderDetail')" [textField]="'VehicleName'"
                                         [valueField]="'Code'">
@@ -42,21 +42,21 @@
 
                 <!-- số điện thoại khách hàng -->
                 <ps-kendo-masked-textbox
-                    [disabled]=" receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled"
+                    [disabled]=" receipt.Status == enumreceiptstt.Success || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || receipt.Status == enumreceiptstt.Cancled"
                     [label]="'Số điện thoại khách hàng (*)'" [mask]="'000 000 0000'" [(ngModel)]="receipt.CellPhone"
                     [type]="'tel'" (blur)="onValueChange('CellPhone')">
                 </ps-kendo-masked-textbox>
 
                 <!-- họ và tên khách hàng -->
                 <ps-kendo-textbox
-                    [disabled]=" receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone"
+                    [disabled]=" receipt.Status == enumreceiptstt.Success || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone"
                     [label]="'Họ và tên khách hàng (*)'" [(ngModel)]="receipt.CustomerName"
                     (blur)="onValueChange('CustomerName')">
                 </ps-kendo-textbox>
 
                 <!-- địa chỉ khách hàng -->
                 <ps-kendo-textarea
-                    [disabled]=" receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone"
+                    [disabled]=" receipt.Status == enumreceiptstt.Success || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone"
                     [label]="'Địa chỉ'" [(ngModel)]="receipt.Address" (blur)="onValueChange('Address')">
                 </ps-kendo-textarea>
 
@@ -64,7 +64,7 @@
                 <div class="datetime-picker">
                     <label>Ngày hiệu lực (*)</label>
                     <kendo-datepicker
-                        [disabled]=" receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code"
+                        [disabled]=" receipt.Status == enumreceiptstt.Success || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code"
                         format="dd/MM/yyyy" placeholder="dd/MM/yyyy" [readOnlyInput]="true" calendarType="classic"
                         [(ngModel)]="receipt.EffDate" (valueChange)="onValueChange('EffDate')">
                     </kendo-datepicker>
@@ -72,7 +72,7 @@
 
                 <!-- nội dung thu tiền -->
                 <ps-kendo-textarea
-                    [disabled]=" receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone"
+                    [disabled]=" receipt.Status == enumreceiptstt.Success || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone"
                     [label]="'Nội dung thu tiền (*)'" [(ngModel)]="receipt.Description"
                     (blur)="onValueChange('Description')">
                 </ps-kendo-textarea>
@@ -80,7 +80,7 @@
                 <!-- <div class="form-group"> -->
                 <!-- phương thức thanh toán -->
                 <!-- <ps-kendo-dropdown-list
-                                            [disabled]=" receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone"
+                                            [disabled]=" receipt.Status == enumreceiptstt.Success || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone"
                                             [label]="'Phương thức thanh toán (*)'" [(ngModel)]="receipt.PaymentMethod" name="PaymentMethod"
                                             [data]="listpaymentmethod" [textField]="'ListName'" [valueField]="'TypeOfList'"
                                             [valuePrimitive]="true" (valueChange)="onValueChange('PaymentMethod')">
@@ -88,7 +88,7 @@
 
                 <!-- số tiền thu -->
                 <!-- <ps-kendo-numeric-textbox
-                                              [disabled]="!receipt.OrderDetail || (receipt.OrderDetail && receipt.PaymentType == enumpayment.LUMPSUM) || receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone"
+                                              [disabled]="!receipt.OrderDetail || (receipt.OrderDetail && receipt.PaymentType == enumpayment.LUMPSUM) || receipt.Status == enumreceiptstt.Success || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone"
                                               [label]="'Số tiền thu (VNĐ) (*)'" [(ngModel)]="receipt.CollectedAmount" name="CollectedAmount"
                                               class="numeric-textbox" [format]="'n0'" (blur)="onValueChange('CollectedAmount')">
                     </ps-kendo-numeric-textbox>
@@ -129,7 +129,7 @@
                     [class.smallitem]="item.PaymentType == enumpayment.LUMPSUM">
                     <div class="item-left">
                         <ps-kendo-checkbox [(ngModel)]="item.IsChecked" (onchecked)="oncheckdetail(item, $event)"
-                            [disabled]="receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver">
+                            [disabled]="receipt.Status == enumreceiptstt.Success || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)">
                         </ps-kendo-checkbox>
                     </div>
                     <div class="item-right">
@@ -169,7 +169,7 @@
                                 </div>
                                 <ps-kendo-numeric-textbox label="Tiền thu" (click)="$event.stopPropagation()"
                                     [(ngModel)]="item.CollectedAmount" [format]="'n0'"
-                                    [disabled]="!item.IsChecked || receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver"
+                                    [disabled]="!item.IsChecked || receipt.Status == enumreceiptstt.Success || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)"
                                     (blur)="onupdatedetail(item)">
                                 </ps-kendo-numeric-textbox>
                             </div>
@@ -199,7 +199,7 @@
                 <div class="form-group">
                     <!-- phương thức thanh toán -->
                     <ps-kendo-dropdown-list
-                        [disabled]="receipt.Code != 0 && checklistdetail() &&  receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone"
+                        [disabled]="receipt.Code != 0 && checklistdetail() &&  receipt.Status == enumreceiptstt.Success || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone"
                         [label]="'Phương thức thanh toán (*)'" [(ngModel)]="receipt.PaymentMethod" name="PaymentMethod"
                         [data]="listpaymentmethod" [textField]="'ListName'" [valueField]="'TypeOfList'"
                         [valuePrimitive]="true" (valueChange)="onValueChange('PaymentMethod')">
@@ -207,7 +207,7 @@
 
                     <!-- số tiền thu -->
                     <ps-kendo-numeric-textbox
-                        [disabled]="!receipt.OrderDetail || (receipt.OrderDetail && receipt.PaymentType == enumpayment.LUMPSUM) || receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone"
+                        [disabled]="!receipt.OrderDetail || (receipt.OrderDetail && receipt.PaymentType == enumpayment.LUMPSUM) || receipt.Status == enumreceiptstt.Success || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone"
                         [label]="'Tổng thu hiện tại'" [(ngModel)]="receipt.CollectedAmount" name="CollectedAmount"
                         class="numeric-textbox numeric-textbox1" [format]="'n0'"
                         (blur)="onValueChange('CollectedAmount')">
@@ -265,7 +265,7 @@
         </ps-kendo-button>
 
         <ps-kendo-button [theme]="'info'" (onClick)="openSignaturePopup()"
-            [disabled]="receipt.Status == enumreceiptstt.Success || FunctionPermissionDTO.approver || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone">
+            [disabled]="receipt.Status == enumreceiptstt.Success || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || receipt.Status == enumreceiptstt.Cancled || !receiptcopy.Code || !receiptcopy.CellPhone">
             <span class="text">Ký tên</span>
         </ps-kendo-button>
 

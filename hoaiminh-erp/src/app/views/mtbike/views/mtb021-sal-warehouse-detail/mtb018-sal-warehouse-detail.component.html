@@ -109,7 +109,7 @@
         </ps-kendo-button>
 
         <ps-kendo-button [theme]="'primary'"
-            [disabled]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !FunctionPermissionDTO.approver) || isCompleted || !canSubmitSeri ||detailvehicle.Status == enumstatus.Completed"
+            [disabled]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !(!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)) || isCompleted || !canSubmitSeri ||detailvehicle.Status == enumstatus.Completed"
             (onClick)="onsuccess()">
             <span class="text">{{isCompleted ? 'Đã hoàn tất' : 'Hoàn tất'}}</span>
         </ps-kendo-button>

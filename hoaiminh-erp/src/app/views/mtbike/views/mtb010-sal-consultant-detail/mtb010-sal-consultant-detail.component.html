@@ -36,33 +36,33 @@
                 <div class="title">Khách hàng</div>
                 <div class="content">
                     <div class="row-1">
-                        <ps-kendo-textbox [label]="'Khách hàng (*)'" [disabled]="FunctionPermissionDTO.approver "
+                        <ps-kendo-textbox [label]="'Khách hàng (*)'" [disabled]="(!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) "
                             [(ngModel)]="retailDetailDTO.CustomerName" (blur)="onValueChange('CustomerName')" />
                         <ps-kendo-dropdown-list [data]="listgender" [(ngModel)]="retailDetailDTO.CustomerGender"
                             [textField]="'ListName'" [valueField]="'OrderBy'"
                             (valueChange)="onValueChange('CustomerGender')" [valuePrimitive]="true"
-                            [disabled]="FunctionPermissionDTO.approver || retailDetailDTOcopy.Status != SALOrderMasterStatusRetailEnum.NEW"></ps-kendo-dropdown-list>
+                            [disabled]="(!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || retailDetailDTOcopy.Status != SALOrderMasterStatusRetailEnum.NEW"></ps-kendo-dropdown-list>
                     </div>
                     <ps-kendo-masked-textbox [label]="'Số điện thoại'" [mask]="'000 000 0000'" [type]="'tel'"
-                        [disabled]="FunctionPermissionDTO.approver || retailDetailDTOcopy.Status != SALOrderMasterStatusRetailEnum.NEW"
+                        [disabled]="(!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || retailDetailDTOcopy.Status != SALOrderMasterStatusRetailEnum.NEW"
                         [(ngModel)]="retailDetailDTO.CustomerPhone" (blur)="onValueChange('CustomerPhone')" />
                     <ps-kendo-textbox [label]="'Nhu cầu khách hàng'"
-                        [disabled]="FunctionPermissionDTO.approver ||  !retailDetailDTOcopy.CustomerName && !retailDetailDTOcopy.Code"
+                        [disabled]="(!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) ||  !retailDetailDTOcopy.CustomerName && !retailDetailDTOcopy.Code"
                         [(ngModel)]="retailDetailDTO.CustomerNeeds" (blur)="onValueChange('CustomerNeeds')" />
                     <ps-kendo-textbox [label]="'Đặc điểm khách hàng'"
-                        [disabled]="FunctionPermissionDTO.approver ||  !retailDetailDTOcopy.CustomerName && !retailDetailDTOcopy.Code"
+                        [disabled]="(!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) ||  !retailDetailDTOcopy.CustomerName && !retailDetailDTOcopy.Code"
                         [(ngModel)]="retailDetailDTO.CustomerCharacteristics"
                         (blur)="onValueChange('CustomerCharacteristics')" />
                     <ps-kendo-textbox [label]="'Mong muốn khách hàng'"
-                        [disabled]="FunctionPermissionDTO.approver ||  !retailDetailDTOcopy.CustomerName && !retailDetailDTOcopy.Code"
+                        [disabled]="(!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) ||  !retailDetailDTOcopy.CustomerName && !retailDetailDTOcopy.Code"
                         [(ngModel)]="retailDetailDTO.CustomerExpectation"
                         (blur)="onValueChange('CustomerExpectation')" />
                     <ps-kendo-textbox [label]="'Sở thích khách hàng'"
-                        [disabled]="FunctionPermissionDTO.approver ||  !retailDetailDTOcopy.CustomerName && !retailDetailDTOcopy.Code"
+                        [disabled]="(!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) ||  !retailDetailDTOcopy.CustomerName && !retailDetailDTOcopy.Code"
                         [(ngModel)]="retailDetailDTO.CustomerPreferences"
                         (blur)="onValueChange('CustomerPreferences')" />
                     <ps-kendo-textarea [label]="'Nội dung lưu ý khác'"
-                        [disabled]="FunctionPermissionDTO.approver ||  !retailDetailDTOcopy.CustomerName && !retailDetailDTOcopy.Code"
+                        [disabled]="(!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) ||  !retailDetailDTOcopy.CustomerName && !retailDetailDTOcopy.Code"
                         [(ngModel)]="retailDetailDTO.CustomerNotes" (blur)="onValueChange('CustomerNotes')" />
                 </div>
             </div>
@@ -75,10 +75,10 @@
         <ps-kendo-button (onClick)="onNavigate('back')">
             <span class="material-icons">arrow_back</span>
         </ps-kendo-button>
-        <ps-kendo-button [theme]="'error'" [disabled]="FunctionPermissionDTO.approver">
+        <ps-kendo-button [theme]="'error'" [disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master">
             <span class="text">Hủy giao dịch</span>
         </ps-kendo-button>
-        <ps-kendo-button [theme]="'primary'" [disabled]="FunctionPermissionDTO.approver"
+        <ps-kendo-button [theme]="'primary'" [disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master"
             (onClick)="onNavigate('continue')">
             <span class="text">Tiếp tục</span>
         </ps-kendo-button>

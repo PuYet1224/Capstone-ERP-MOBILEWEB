@@ -17,14 +17,14 @@
             <div class="row-1">
                 <ps-kendo-masked-textbox [label]="'Số căn cước công dân (*)'" [mask]="'000000000000'"
                     [(ngModel)]="cscustomer.CitizenCardNo" (blur)="onCitizenChange(['CitizenCardNo'])"
-                    [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed"></ps-kendo-masked-textbox>
+                    [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed"></ps-kendo-masked-textbox>
                 <ps-kendo-button
-                    [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed"
+                    [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed"
                     (onClick)="onscannbarcode()">
                     <span class="material-icons">barcode_scanner</span>
                 </ps-kendo-button>
                 <ps-kendo-checkbox [label]="'Là KH mua xe'" [id]="'iscustomerbuy'"
-                    [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver  || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed"
+                    [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)  || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed"
                     (onchecked)="onChecked($event)" [(ngModel)]="retaildetail.IsCustomerOwner">
                 </ps-kendo-checkbox>
             </div>
@@ -33,51 +33,51 @@
                 <kendo-datepicker placeholder="dd/MM/yyyy" format="dd/MM/yyyy" [readOnlyInput]="true"
                     calendarType="classic" [(ngModel)]="cscustomer.DateOfIssue"
                     (valueChange)="onValueChange(['DateOfIssue'])"
-                    [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
+                    [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
                 </kendo-datepicker>
             </div>
             <ps-kendo-masked-textbox [label]="'Số chứng minh nhân dân'" [mask]="'000000000'"
                 [(ngModel)]="cscustomer.CardNo" (blur)="onValueChange(['CardNo'])"
-                [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed"></ps-kendo-masked-textbox>
+                [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed"></ps-kendo-masked-textbox>
 
             <ps-kendo-textbox [label]="'Họ và tên (*)'" [(ngModel)]="cscustomer.FullName"
                 (blur)="onValueChange(['FullName'])"
-                [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
+                [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
             </ps-kendo-textbox>
             <ps-kendo-dropdown-list [label]="'Giới tính (*)'" [data]="listgender" [textField]="'ListName'"
                 [valueField]="'OrderBy'" [(ngModel)]="cscustomer.Gender" [valuePrimitive]="true"
                 (valueChange)="onValueChange(['Gender'])"
-                [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
+                [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
             </ps-kendo-dropdown-list>
             <div class="row-6">
                 <ps-kendo-dropdown-list [label]="'Ngày tháng năm sinh (*)'" [data]="listyear"
                     [(ngModel)]="cscustomer.BirthYear" [valuePrimitive]="true"
                     (valueChange)="onValueChange(['BirthYear'])"
-                    [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
+                    [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
                 </ps-kendo-dropdown-list>
                 <ps-kendo-dropdown-list [data]="listmonth" [(ngModel)]="cscustomer.BirthMonth" [valuePrimitive]="true"
                     (valueChange)="onValueChange(['BirthMonth'])"
-                    [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver || !cscustomerCOPY.CitizenCardNo || !cscustomer.BirthYear || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
+                    [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || !cscustomerCOPY.CitizenCardNo || !cscustomer.BirthYear || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
                 </ps-kendo-dropdown-list>
                 <ps-kendo-dropdown-list [data]="listday" [(ngModel)]="cscustomer.BirthDay" [valuePrimitive]="true"
                     (valueChange)="onValueChange(['BirthDay'])"
-                    [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver || !cscustomerCOPY.CitizenCardNo || !cscustomer.BirthMonth || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
+                    [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || retaildetail.Status > SALOrderDetailStatusEnum.RePayment || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || !cscustomerCOPY.CitizenCardNo || !cscustomer.BirthMonth || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
                 </ps-kendo-dropdown-list>
             </div>
             <ps-kendo-dropdown-list [label]="'Tỉnh thành (*)'" [data]="provincelist" [(ngModel)]="cscustomer.Province"
                 [textField]="'VNProvince'" [valueField]="'Code'" [valuePrimitive]="true"
                 (valueChange)="onValueChange(['Province'])"
-                [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
+                [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
             </ps-kendo-dropdown-list>
             <ps-kendo-dropdown-list
-                [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || !cscustomer.Province || FunctionPermissionDTO.approver || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed"
+                [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || !cscustomer.Province || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed"
                 [label]="'Phường/Xã (*)'" [data]="districtlist" [(ngModel)]="cscustomer.District"
                 [textField]="'VNDistrict'" [valueField]="'Code'" [valuePrimitive]="true"
                 (valueChange)="onValueChange(['District'])">
             </ps-kendo-dropdown-list>
             <ps-kendo-textbox [label]="'Địa chỉ cụ thể (*)'" [(ngModel)]="cscustomer.Address"
                 (blur)="onValueChange(['Address'])"
-                [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
+                [disabled]="retaildetail.Status > SALOrderDetailStatusEnum.RePayment || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || !cscustomerCOPY.CitizenCardNo || retaildetail.Status == SALOrderDetailStatusEnum.Canceled || retaildetail.Status == SALOrderDetailStatusEnum.Completed">
             </ps-kendo-textbox>
         </div>
 

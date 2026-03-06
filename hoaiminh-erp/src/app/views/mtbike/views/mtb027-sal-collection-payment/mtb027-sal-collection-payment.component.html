@@ -30,33 +30,33 @@
 <!-- <ps-kendo-dropdown-list [label]="'Hình thức thanh toán (*)'" [(ngModel)]="orderdetail.PaymentType"
                 name="PaymentMethod" [data]="listpaymenttype" [textField]="'ListName'" [valueField]="'TypeOfList'"
                 [valuePrimitive]="true" (valueChange)="onvaluechange('PaymentType')"
-                [disabled]="orderdetail.Status > odstt.RePayment || FunctionPermissionDTO.approver">
+                [disabled]="orderdetail.Status > odstt.RePayment || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)">
             </ps-kendo-dropdown-list> -->
 
 <!-- công ty tài chính -->
 <!-- <ps-kendo-dropdown-list [label]="'Công ty tài chính ((*) nếu trả góp)'"
                 [(ngModel)]="orderdetail.FinanceCompany" [data]="listfinance" [textField]="'Name'" [valueField]="'Code'"
                 [valuePrimitive]="true" (valueChange)="onvaluechange('PaymentType')"
-                [disabled]="!orderdetail.PaymentType || orderdetail.PaymentType != paymenttypeenum.INSTALLMENT || orderdetail.Status > odstt.RePayment || FunctionPermissionDTO.approver">
+                [disabled]="!orderdetail.PaymentType || orderdetail.PaymentType != paymenttypeenum.INSTALLMENT || orderdetail.Status > odstt.RePayment || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)">
             </ps-kendo-dropdown-list> -->
 
 <!-- số hợp đồng -->
 <!-- <ps-kendo-textbox label="Số hợp đồng ((*) nếu trả góp)" [(ngModel)]="orderdetail.ContractID"
                 (blur)="onvaluechange('ContractID')"
-                [disabled]="!orderdetail.FinanceCompany || !orderdetail.PaymentType || orderdetail.PaymentType != paymenttypeenum.INSTALLMENT || orderdetail.Status > odstt.RePayment || FunctionPermissionDTO.approver">
+                [disabled]="!orderdetail.FinanceCompany || !orderdetail.PaymentType || orderdetail.PaymentType != paymenttypeenum.INSTALLMENT || orderdetail.Status > odstt.RePayment || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)">
             </ps-kendo-textbox>
 
             <div class="form-group"> -->
 <!-- số lần thanh toán -->
 <!-- <ps-kendo-numeric-textbox [label]="'Số lần thanh toán'" [format]="'n0'"
                     [(ngModel)]="orderdetail.InstallmentTerm" (blur)="onvaluechange('InstallmentTerm')"
-                    [disabled]="!orderdetail.FinanceCompany || !orderdetail.PaymentType || orderdetail.PaymentType != paymenttypeenum.INSTALLMENT || orderdetail.Status > odstt.RePayment || FunctionPermissionDTO.approver">
+                    [disabled]="!orderdetail.FinanceCompany || !orderdetail.PaymentType || orderdetail.PaymentType != paymenttypeenum.INSTALLMENT || orderdetail.Status > odstt.RePayment || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)">
                 </ps-kendo-numeric-textbox> -->
 
 <!-- số lần thanh toán -->
 <!-- <ps-kendo-numeric-textbox [label]="'Lãi xuất ((*) nếu trả góp)'" [format]="'n2'"
                     [(ngModel)]="orderdetail.InterestRate" (blur)="onvaluechange('InterestRate')"
-                    [disabled]="!orderdetail.FinanceCompany || !orderdetail.PaymentType || orderdetail.PaymentType != paymenttypeenum.INSTALLMENT || orderdetail.Status > odstt.RePayment || FunctionPermissionDTO.approver">
+                    [disabled]="!orderdetail.FinanceCompany || !orderdetail.PaymentType || orderdetail.PaymentType != paymenttypeenum.INSTALLMENT || orderdetail.Status > odstt.RePayment || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)">
                 </ps-kendo-numeric-textbox>
             </div>
         </section>

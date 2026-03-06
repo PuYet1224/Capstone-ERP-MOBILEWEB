@@ -86,11 +86,11 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
     ListGroupVehicleColor: any[];
     PriceRange: { MinPrice: number; MaxPrice: number };
   } = {
-    ListVehicleCategory: [],
-    ListTypeOfVehicle: [],
-    ListGroupVehicleColor: [],
-    PriceRange: { MinPrice: 0, MaxPrice: 0 }
-  };
+      ListVehicleCategory: [],
+      ListTypeOfVehicle: [],
+      ListGroupVehicleColor: [],
+      PriceRange: { MinPrice: 0, MaxPrice: 0 }
+    };
   public salVehicle: SALVehicleCusDTO = new SALVehicleCusDTO();
   public selectedCode: number | null = null;
   public salordermaster: SALOrderMasterCusDTO = new SALOrderMasterCusDTO();
@@ -476,9 +476,9 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
       if (res.StatusCode === 0) {
         const data = res.ObjectReturn || {};
         this.liseVehicleCategory = {
-          ListVehicleCategory: data.ListVehicleCategory || [],
-          ListTypeOfVehicle: data.ListTypeOfVehicle || [],
-          ListGroupVehicleColor: data.ListGroupVehicleColor || [],
+          ListVehicleCategory: data.VehicleCategory || [],
+          ListTypeOfVehicle: data.TypeOfVehicle || [],
+          ListGroupVehicleColor: data.GroupVehicleColor || [],
           PriceRange: data.PriceRange || { MinPrice: 0, MaxPrice: 0 }
         };
 
