@@ -399,6 +399,28 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
     this.arrUnsubscribe.push(sub);
   }
 
+  public onSwipeLeft(item: any): void {
+    if (this.FunctionPermissionDTO.viewer || (!this.FunctionPermissionDTO.creator && !this.FunctionPermissionDTO.master)) return;
+    // reset other swiped items
+    this.listSalVehicleParts.forEach(d => {
+      (d as any).ListPart?.forEach((p: any) => p.swiped = false);
+    });
+    item.swiped = true;
+  }
+
+  public onSwipeRight(item: any): void {
+    item.swiped = false;
+  }
+
+  public onDeletePartSwipe(detail: SALOrderDetailCusDTO, item: SALOrderDetailPartItemCusDTO, event: any): void {
+    event.stopPropagation();
+    if (this.FunctionPermissionDTO.viewer || (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator)) return;
+    this.isEditMode = true;
+    this.editingPartItem = { ...item };
+    this.originalDetailCode = detail.Code;
+    this.onDeletePart();
+  }
+
   private isPartFormChanged(): boolean {
     return this.editingPartItem != null && ((this.editingPartItem.Quantity !== (this.quantity ?? 0)) || (this.editingPartItem.UnitPrice !== (this.unitPrice ?? 0)));
   }

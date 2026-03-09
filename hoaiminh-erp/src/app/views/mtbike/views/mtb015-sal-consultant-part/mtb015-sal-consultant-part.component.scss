@@ -292,10 +292,10 @@
                 min-width: 0;
 
                 .service-item {
-                  display: flex;
-                  align-items: center;
-                  gap: 8px;
-                  padding: 5px;
+                  position: relative;
+                  overflow: hidden;
+                  touch-action: pan-y !important;
+                  padding: 0;
                   min-width: 0;
 
                   &:nth-child(odd) {
@@ -306,41 +306,75 @@
                     background-color: $white;
                   }
 
-                  .service-number {
-                    flex: 0 0 auto;
-                    font-weight: bold;
-                    font-size: 13px;
-                    color: $info;
-                  }
-
-                  .service-name {
-                    flex: 1 1 0;
+                  .product-content {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 5px;
                     min-width: 0;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    font-weight: bold;
-                    font-size: 13px;
-                    color: $info;
+                    width: 100%;
+                    box-sizing: border-box;
+                    transition: transform 0.3s ease;
+                    position: relative;
+                    z-index: 10;
+                    background: inherit;
+
+                    .service-number {
+                      flex: 0 0 auto;
+                      font-weight: bold;
+                      font-size: 13px;
+                      color: $info;
+                    }
+
+                    .service-name {
+                      flex: 1 1 0;
+                      min-width: 0;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                      font-weight: bold;
+                      font-size: 13px;
+                      color: $info;
+                    }
+
+                    .part-qty {
+                      flex: 0 0 32px;
+                      width: 40px;
+                      text-align: center;
+                      font-weight: bold;
+                      font-size: 13px;
+                      color: $info;
+                    }
+
+                    .service-cost {
+                      flex: 0 0 90px;
+                      text-align: right;
+                      white-space: nowrap;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                      font-weight: bold;
+                      font-size: 13px;
+                      color: $info;
+                    }
                   }
 
-                  .part-qty {
-                    flex: 0 0 32px;
-                    width: 40px;
-                    text-align: center;
+                  .btn-delete {
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    right: 0;
+                    width: 80px;
+                    background: $error;
+                    color: $white;
+                    z-index: 9;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
                     font-weight: bold;
-                    font-size: 13px;
-                    color: $info;
                   }
 
-                  .service-cost {
-                    flex: 0 0 90px;
-                    text-align: right;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    font-weight: bold;
-                    font-size: 13px;
-                    color: $info;
+                  &.swiped .product-content {
+                    transform: translateX(-80px);
                   }
                 }
               }

@@ -128,18 +128,34 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   onSwipeLeft(item: any, i: number) {
     if (this.FunctionPermissionDTO.viewer || this.FunctionPermissionDTO.approver) return;
     this.listVehicle.forEach(v => {
-      if (v !== item) {
+      if (v.Code === item.Code && v.OrderTypeData === item.OrderTypeData) {
+        v['swiped'] = true;
+      } else {
         v['swiped'] = false;
       }
     });
-    item.swiped = true;
   }
 
   // Vuốt phải → ẩn nút Xóa
   onSwipeRight(item: any) {
     // Approver không được phép swipe
     if (this.FunctionPermissionDTO.viewer || this.FunctionPermissionDTO.approver) { return; }
-    item.swiped = false;
+    const target = this.listVehicle.find(v => v.Code === item.Code && v.OrderTypeData === item.OrderTypeData);
+    if (target) (target as any)['swiped'] = false;
+  }
+
+  // Hiện/ẩn nút xóa
+  public onshowAction(item: any) {
+    if (this.FunctionPermissionDTO.viewer || this.FunctionPermissionDTO.approver) { return; }
+    const target = this.listVehicle.find(v => v.Code === item.Code && v.OrderTypeData === item.OrderTypeData);
+    if (!target) return;
+
+    if ((target as any).swiped) {
+      (target as any).swiped = false;
+    } else {
+      this.listVehicle.forEach((d) => (d as any).swiped = false);
+      (target as any).swiped = true;
+    }
   }
 
   // Xóa item
@@ -165,7 +181,8 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   }
 
   public onCancel(item: any) {
-    item.swiped = false;
+    const target = this.listVehicle.find(v => v.Code === item.Code && v.OrderTypeData === item.OrderTypeData);
+    if (target) (target as any).swiped = false;
   }
 
   onConfirmDelete(item: LSVehicleColorCusDTO, type: string) {

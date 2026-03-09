@@ -34,8 +34,8 @@
             <div class="swipe-wrapper" *ngIf="typeactive == 'buy'" (swipeleft)="onSwipeLeft(item, i)"
                 (swiperight)="onSwipeRight(item)" [class.swiped]="item.swiped"
                 [class.no-swipe]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)">
-                <div class="product">
-                    <div class="top-product" (click)="onNavigateToTotalVehicle(item)">
+                <div class="product" (click)="onshowAction(item)">
+                    <div class="top-product" (click)="onNavigateToTotalVehicle(item); $event.stopPropagation()">
 
                         <div class="product-img">
                             <img [src]="item.ImageSetting1" alt="">

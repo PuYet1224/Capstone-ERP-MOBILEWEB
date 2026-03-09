@@ -70,13 +70,19 @@
                             <div class="header-col col-price">Đơn giá</div>
                         </div>
                         <div class="services-list">
-                            <div class="service-item"
+                            <div class="service-item swipe-wrapper"
                                 *ngFor="let item of (detail.ListPart || []); let i = index; trackBy: trackByPartIndex"
-                                (click)="onEditPart(detail, item); $event.stopPropagation()">
-                                <div class="service-number">{{ i + 1 }}.</div>
-                                <div class="service-name">{{ item.TypeOfPartName ?? '' }}</div>
-                                <div class="part-qty">{{ item.Quantity ?? 0 }}</div>
-                                <div class="service-cost">{{ (item.UnitPrice ?? 0) | number:'1.0-0' }}</div>
+                                (swipeleft)="onSwipeLeft(item)" (swiperight)="onSwipeRight(item)"
+                                [class.swiped]="item.swiped"
+                                [class.no-swipe]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)">
+                                <div class="product-content"
+                                    (click)="onEditPart(detail, item); $event.stopPropagation()">
+                                    <div class="service-number">{{ i + 1 }}.</div>
+                                    <div class="service-name">{{ item.TypeOfPartName ?? '' }}</div>
+                                    <div class="part-qty">{{ item.Quantity ?? 0 }}</div>
+                                    <div class="service-cost">{{ (item.UnitPrice ?? 0) | number:'1.0-0' }}</div>
+                                </div>
+                                <div class="btn-delete" (click)="onDeletePartSwipe(detail, item, $event)">Xoá</div>
                             </div>
                         </div>
                     </div>
@@ -158,7 +164,8 @@
                                     <div class="card-info">
                                         <span class="card-code" *ngIf="v.Code">[{{ v.Code }}]</span>
                                         <span class="card-name">{{ v.TypeOfVehicleName }} | {{ v.VehicleName }}</span>
-                                        <span class="card-ver" *ngIf="v.VehicleColorName">{{ v.VehicleColorName }}</span>
+                                        <span class="card-ver" *ngIf="v.VehicleColorName">{{ v.VehicleColorName
+                                            }}</span>
                                     </div>
                                     <span class="card-check" *ngIf="isVehicleSelected(v)">✓</span>
                                 </div>
