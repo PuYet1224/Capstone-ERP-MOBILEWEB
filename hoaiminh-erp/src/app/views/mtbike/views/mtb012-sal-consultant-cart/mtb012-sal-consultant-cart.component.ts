@@ -33,6 +33,7 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   ) { }
 
 
+
   //#region lifecycle
   ngOnInit(): void {
     var temp = this.cache.getItem(KeyLocalStorageEnum.SAL_ORDER_MASTER);
@@ -50,6 +51,7 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.enableAutoSlide();
+    console.log();
   }
   //#endregion
 
