@@ -33,7 +33,7 @@
             *ngFor="let item of (typeactive == 'buy' ? listVehicle : listVehicle2) || []; let i = index; trackBy: trackByFn">
             <div class="swipe-wrapper" *ngIf="typeactive == 'buy'" (swipeleft)="onSwipeLeft(item, i)"
                 (swiperight)="onSwipeRight(item)" [class.swiped]="item.swiped"
-                [class.no-swipe]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)">
+                [class.no-swipe]="!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator">
                 <div class="product" (click)="onshowAction(item)">
                     <div class="top-product" (click)="onNavigateToTotalVehicle(item); $event.stopPropagation()">
 
@@ -54,12 +54,15 @@
                                     {{item.Price| number:'1.0-0' }}
                                 </div>
                                 <div class="counter" (click)="$event.stopPropagation()">
-                                    <span class="material-icons" (click)="onConfirmDelete(item, 'delete-one')">
+                                    <span class="material-icons" (click)="onConfirmDelete(item, 'delete-one')"
+                                        [class.disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master">
                                         remove
                                     </span>
                                     <ps-kendo-textbox [(ngModel)]="item.OrderQuantity" (focus)="onFocusVehicle(item)"
-                                        (blur)="onAddMultiVehicle(item)"></ps-kendo-textbox>
-                                    <span class="material-icons" (click)="onAddVehicle(item)">
+                                        (blur)="onAddMultiVehicle(item)"
+                                        [disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master"></ps-kendo-textbox>
+                                    <span class="material-icons" (click)="onAddVehicle(item)"
+                                        [class.disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master">
                                         add
                                     </span>
                                 </div>
@@ -80,11 +83,13 @@
                             </div>
                         </div>
                     </div>
-                    <ps-kendo-button *ngIf="!item.IsOrderLock" (onClick)="onClickLock(item)"><span
+                    <ps-kendo-button *ngIf="!item.IsOrderLock" (onClick)="onClickLock(item)"
+                        [disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master"><span
                             class="material-icons">
                             lock
                         </span> Chốt mua</ps-kendo-button>
-                    <ps-kendo-button class="unlock" *ngIf="item.IsOrderLock" (onClick)="onClickUnlock(item)"><span
+                    <ps-kendo-button class="unlock" *ngIf="item.IsOrderLock" (onClick)="onClickUnlock(item)"
+                        [disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master"><span
                             class="material-icons">
                             lock_open_right
                         </span> Bỏ chốt</ps-kendo-button>
@@ -136,15 +141,18 @@
                                         {{v.Price| number:'1.0-0' }}
                                     </div>
                                     <div class="counter">
-                                        <span class="material-icons" (click)="onRemoveTransfer(v)">
+                                        <span class="material-icons" (click)="onRemoveTransfer(v)"
+                                            [class.disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master">
                                             remove
                                         </span>
 
                                         <ps-kendo-textbox [(ngModel)]="v.Quantity" (focus)="onFocusVehicle(v)"
-                                            (blur)="onBlurTransfer(v)">
+                                            (blur)="onBlurTransfer(v)"
+                                            [disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master">
                                         </ps-kendo-textbox>
 
-                                        <span class="material-icons" (click)="onAddTransfer(v)">
+                                        <span class="material-icons" (click)="onAddTransfer(v)"
+                                            [class.disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master">
                                             add
                                         </span>
                                     </div>

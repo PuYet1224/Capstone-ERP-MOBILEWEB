@@ -84,7 +84,7 @@ export class SystemService {
         that.cache.setItem(KeyLocalStorageEnum.OUT_URL, outUrl);
         that.cache.removeItem(KeyLocalStorageEnum.BEARER_TOKEN);
         ConfigDTO.token = null;
-        window.location.href = '/login';
+        window.location.href = '/#/login';
     }
 
     public setHeader(req: HttpRequest<any>) {
