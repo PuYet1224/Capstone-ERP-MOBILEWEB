@@ -332,20 +332,20 @@
                             border-top-right-radius: 8px;
                             border-bottom-right-radius: 8px;
                             z-index: 9;
-                            right: 225px;
+                            right: 213px;
                         }
 
                         .btn-services {
                             z-index: 8;
                             background: $white;
                             color: $secondary;
-                            right: 150px;
+                            right: 142px;
                             border: 1px solid $info;
                         }
 
                         .btn-part {
                             z-index: 7;
-                            right: 75px;
+                            right: 71px;
                             background: $white;
                             color: $secondary;
                             border: 1px solid $secondary;
@@ -360,7 +360,7 @@
                         }
 
                         &.swiped .product {
-                            transform: translateX(-300px);
+                            transform: translateX(-288px);
                         }
                     }
 

@@ -126,7 +126,7 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
 
   // Vuốt trái → hiện nút Xóa
   onSwipeLeft(item: any, i: number) {
-    if (this.FunctionPermissionDTO.viewer || this.FunctionPermissionDTO.approver) return;
+    // if (this.FunctionPermissionDTO.viewer || this.FunctionPermissionDTO.approver) return;
     this.listVehicle.forEach(v => {
       if (v.Code === item.Code && v.OrderTypeData === item.OrderTypeData) {
         v['swiped'] = true;
@@ -139,14 +139,14 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   // Vuốt phải → ẩn nút Xóa
   onSwipeRight(item: any) {
     // Approver không được phép swipe
-    if (this.FunctionPermissionDTO.viewer || this.FunctionPermissionDTO.approver) { return; }
+    // if (this.FunctionPermissionDTO.viewer || this.FunctionPermissionDTO.approver) { return; }
     const target = this.listVehicle.find(v => v.Code === item.Code && v.OrderTypeData === item.OrderTypeData);
     if (target) (target as any)['swiped'] = false;
   }
 
   // Hiện/ẩn nút xóa
   public onshowAction(item: any) {
-    if (this.FunctionPermissionDTO.viewer || this.FunctionPermissionDTO.approver) { return; }
+    // if (this.FunctionPermissionDTO.viewer || this.FunctionPermissionDTO.approver) { return; }
     const target = this.listVehicle.find(v => v.Code === item.Code && v.OrderTypeData === item.OrderTypeData);
     if (!target) return;
 
@@ -160,7 +160,7 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
 
   // Xóa item
   onDelete(item: any) {
-    if (this.FunctionPermissionDTO.viewer || this.FunctionPermissionDTO.approver) { return; }
+    // if (this.FunctionPermissionDTO.viewer || this.FunctionPermissionDTO.approver) { return; }
     if (item.IsOrderLock) {
       this.notification.onWarning('Không thể xóa xe đã chốt');
       item.swiped = false;
