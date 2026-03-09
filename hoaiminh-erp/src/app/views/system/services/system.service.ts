@@ -54,7 +54,7 @@ export class SystemService {
                         console.log('token', token);
                         console.log('raw time_expired', token ? token.time_expired : null);
                         console.log('parsed time', time);
-                    } catch (e) {}
+                    } catch (e) { }
                     if (!PSObject.isNullOfUndefined(token) && !PsString.isNullOrWhitespace(token.access_token) && time && time > new Date()) {
                         ConfigDTO.token = token;
                         checktoken = true;
@@ -69,7 +69,7 @@ export class SystemService {
                                 ConfigDTO.token = token;
                                 checktoken = true;
                             }
-                        } catch (e) {}
+                        } catch (e) { }
                     }
 
                     var checkhead = false;
@@ -90,7 +90,7 @@ export class SystemService {
         that.cache.setItem(KeyLocalStorageEnum.OUT_URL, outUrl);
         that.cache.removeItem(KeyLocalStorageEnum.BEARER_TOKEN);
         ConfigDTO.token = null;
-        this.router.navigate(['/login']);
+        window.location.href = '/login';
     }
 
     public setHeader(req: HttpRequest<any>) {

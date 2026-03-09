@@ -30,7 +30,7 @@
 
     <div class="retail-body">
         <div class="product-list"
-            *ngFor="let item of (typeactive == 'buy' ? listVehicle : listVehicle2) || []; let i = index">
+            *ngFor="let item of (typeactive == 'buy' ? listVehicle : listVehicle2) || []; let i = index; trackBy: trackByFn">
             <div class="swipe-wrapper" *ngIf="typeactive == 'buy'" (swipeleft)="onSwipeLeft(item, i)"
                 (swiperight)="onSwipeRight(item)" [class.swiped]="item.swiped"
                 [class.no-swipe]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)">
@@ -115,7 +115,7 @@
                         </span>
                     </div>
                     <div class="bot-content" *ngIf="!isCollapsed(i)">
-                        <div class="product" *ngFor="let v of item.ListGroupOrderDetail">
+                        <div class="product" *ngFor="let v of item.ListGroupOrderDetail; trackBy: trackByCodeId">
                             <ps-kendo-checkbox [(ngModel)]="v.IsChecked"
                                 (onchecked)="onchecked(item, v)"></ps-kendo-checkbox>
                             <div class="vehicle">

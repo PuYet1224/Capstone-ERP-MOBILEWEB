@@ -249,30 +249,36 @@ export class Mtb009SalConsultantComponent implements OnDestroy, OnInit {
     }
   }
 
+  private _searchTimeout: any;
   private GetListSALMaster(filter: State, isRefresh: boolean = false) {
-    this.isLoading = true;
-    this.loader.loader(true);
+    if (this._searchTimeout) {
+      clearTimeout(this._searchTimeout);
+    }
+    this._searchTimeout = setTimeout(() => {
+      this.isLoading = true;
+      this.loader.loader(true);
 
-    const temp = this.api.GetListSALMaster(filter).subscribe((res) => {
-      if (res.StatusCode === 0) {
-        this.listRetailMaster = res.ObjectReturn as SALOrderMasterGroup[];
-        this.openSet.clear();
-        this.listRetailMaster.forEach((_, index) => {
-          this.openSet.add(index);
-        });
+      const temp = this.api.GetListSALMaster(filter).subscribe((res) => {
+        if (res.StatusCode === 0) {
+          this.listRetailMaster = res.ObjectReturn as SALOrderMasterGroup[];
+          this.openSet.clear();
+          this.listRetailMaster.forEach((_, index) => {
+            this.openSet.add(index);
+          });
+          this.loader.loader(false);
+        } else {
+          this.notification.onError(`Lỗi lấy danh sách phiếu bán lẻ : ${res.ErrorString}`);
+        }
+        this.isLoading = false;
         this.loader.loader(false);
-      } else {
-        this.notification.onError(`Lỗi lấy danh sách phiếu bán lẻ : ${res.ErrorString}`);
-      }
-      this.isLoading = false;
-      this.loader.loader(false);
-    }, (err) => {
-      this.isLoading = false;
-      this.loader.loader(false);
-      this.notification.onError(`Lỗi lấy danh sách phiếu bán lẻ : ${err.message}`);
-    });
+      }, (err) => {
+        this.isLoading = false;
+        this.loader.loader(false);
+        this.notification.onError(`Lỗi lấy danh sách phiếu bán lẻ : ${err.message}`);
+      });
 
-    this.arrUnsubscribe.push(temp);
+      this.arrUnsubscribe.push(temp);
+    }, 50);
   }
   //#endregion
 }

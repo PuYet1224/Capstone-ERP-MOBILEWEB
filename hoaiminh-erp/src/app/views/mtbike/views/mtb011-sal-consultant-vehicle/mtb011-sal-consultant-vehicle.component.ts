@@ -303,14 +303,14 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
     const index = this.selectedCategoryCodes.indexOf(categoryCode);
     index > -1 ? this.selectedCategoryCodes.splice(index, 1) : this.selectedCategoryCodes.push(categoryCode);
 
-    this.sortAll();
+    this.filterAll();
   }
 
   toggleVehicleType(vehicleCode: number) {
     const index = this.selectedVehicleCodes.indexOf(vehicleCode);
     index > -1 ? this.selectedVehicleCodes.splice(index, 1) : this.selectedVehicleCodes.push(vehicleCode);
 
-    this.sortAll();
+    this.filterAll();
   }
 
   toggleColor(colorName: string) {
@@ -326,56 +326,57 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
     return this.selectedColorNames.includes(color.ColorName);
   }
 
-  sortAll() {
-    this.sortTypeOfVehicle();
-    this.sortVehicleColors();
+  filterAll() {
+    this.filterTypeOfVehicle();
+    this.filterVehicleColors();
   }
 
-  sortTypeOfVehicle() {
+  filterTypeOfVehicle() {
+    clearTimeout(this._searchMemTimeout);
     const list = [...this.liseVehicleCategory.ListTypeOfVehicle];
-    this.filteredTypeOfVehicle = list.sort((a, b) => {
-      const indexA = this.selectedCategoryCodes.indexOf(a.Category);
-      const indexB = this.selectedCategoryCodes.indexOf(b.Category);
-      if (indexA !== -1 && indexB !== -1) return indexA - indexB;
-      if (indexA !== -1) return -1;
-      if (indexB !== -1) return 1;
-      return 0;
-    });
+
+    // Lọc lại các Dòng xe theo Phân nhóm đang chọn (categoryCode)
+    if (this.selectedCategoryCodes.length > 0) {
+      this.filteredTypeOfVehicle = list.filter(v => this.selectedCategoryCodes.includes(v.Category));
+    } else {
+      // Nếu không chọn nhóm nào => show hết
+      this.filteredTypeOfVehicle = list;
+    }
+
+    // Loại bỏ các Dòng xe đang chọn (selectedVehicleCodes) nếu nó không còn nằm trong filteredTypeOfVehicle
+    const validVehicleCodes = this.filteredTypeOfVehicle.map(v => v.Code);
+    this.selectedVehicleCodes = this.selectedVehicleCodes.filter(c => validVehicleCodes.includes(c));
   }
 
-  sortVehicleColors() {
+  private _searchMemTimeout: any;
+
+  filterVehicleColors() {
     const colorList = [...this.liseVehicleCategory.ListGroupVehicleColor];
 
-    this.filteredVehicleColors = colorList.sort((a, b) => {
-      // Kiểm tra màu 'a' có thuộc Dòng xe hoặc Phân nhóm đang chọn không
-      const aHasSelectedVehicle = a.ListTypeOfVehicle.some(v => this.selectedVehicleCodes.includes(v));
-      const aHasSelectedCategory = a.ListCategory.some(c => this.selectedCategoryCodes.includes(c));
+    if (this.selectedVehicleCodes.length > 0) {
+      // Nếu đã chọn Dòng Xe => Lọc Màu có chứa trong Dòng xe đó
+      this.filteredVehicleColors = colorList.filter(c => c.ListTypeOfVehicle.some((v: any) => this.selectedVehicleCodes.includes(v)));
+    } else if (this.selectedCategoryCodes.length > 0) {
+      // Nếu không có Dòng Xe mà chỉ chọn Nhóm xe => Loại tất cả màu ko thuộc Category đó
+      this.filteredVehicleColors = colorList.filter(c => c.ListCategory.some((cat: any) => this.selectedCategoryCodes.includes(cat)));
+    } else {
+      // Nếu không chọn filter => show hết màu
+      this.filteredVehicleColors = colorList;
+    }
 
-      // Kiểm tra màu 'b'
-      const bHasSelectedVehicle = b.ListTypeOfVehicle.some(v => this.selectedVehicleCodes.includes(v));
-      const bHasSelectedCategory = b.ListCategory.some(c => this.selectedCategoryCodes.includes(c));
-
-      // Ưu tiên 1 (Dòng xe): 2 điểm
-      // Ưu tiên 2 (Phân nhóm): 1 điểm
-      const scoreA = (aHasSelectedVehicle ? 2 : 0) + (aHasSelectedCategory ? 1 : 0);
-      const scoreB = (bHasSelectedVehicle ? 2 : 0) + (bHasSelectedCategory ? 1 : 0);
-
-      if (scoreA !== scoreB) {
-        return scoreB - scoreA;
-      }
-
-      return 0;
-    });
+    // Dọn các Màu đã chọn (nếu filter ko còn màu đó) 
+    const validColorSet = new Set(this.filteredVehicleColors.map(c => c.ColorName));
+    this.selectedColorNames = this.selectedColorNames.filter(name => validColorSet.has(name));
   }
 
   clearCategoryFilter() {
     this.selectedCategoryCodes = [];
-    this.sortAll();
+    this.filterAll();
   }
 
   clearVehicleTypeFilter() {
     this.selectedVehicleCodes = [];
-    this.sortAll();
+    this.filterAll();
   }
 
   clearColorFilter() {
@@ -399,7 +400,7 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
     this.maxValue = this.max;
     this.isFilterApplied = false;
     this.activeTags = [];
-    this.sortAll();
+    this.filterAll();
   }
 
   // START RANGE SLIDER ===================================
@@ -766,17 +767,29 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
   public onDeleteVehicle(v: any) {
     const totalInCart = (v.BuyQuantity || 0) + (v.TransferQuantity || 0) + (v.BookingQuantity || 0);
 
-    if (totalInCart > 0 && v.ActionHistory && v.ActionHistory.length > 0) {
-      const lastAction = v.ActionHistory.pop();
+    if (totalInCart > 0) {
+      let typeToDelete: number = 0;
 
-      if (lastAction === SALOrderDetailTypeDataEnum.BUY) {
-        if (v.ListStock && v.ListStock[0]) v.ListStock[0].Quantity++;
-        v.BuyQuantity--;
-      } else if (lastAction === SALOrderDetailTypeDataEnum.TRANSFER) {
+      if (v.BookingQuantity > 0) {
+        v.BookingQuantity--;
+        typeToDelete = SALOrderDetailTypeDataEnum.BOOK;
+      } else if (v.TransferQuantity > 0) {
         if (v.ListStock && v.ListStock[1]) v.ListStock[1].Quantity++;
         v.TransferQuantity--;
-      } else if (lastAction === SALOrderDetailTypeDataEnum.BOOK) {
-        v.BookingQuantity--;
+        typeToDelete = SALOrderDetailTypeDataEnum.TRANSFER;
+      } else if (v.BuyQuantity > 0) {
+        if (v.ListStock && v.ListStock[0]) v.ListStock[0].Quantity++;
+        v.BuyQuantity--;
+        typeToDelete = SALOrderDetailTypeDataEnum.BUY;
+      }
+
+      if (v.ActionHistory && v.ActionHistory.length > 0) {
+        const idx = v.ActionHistory.lastIndexOf(typeToDelete);
+        if (idx !== -1) {
+          v.ActionHistory.splice(idx, 1);
+        } else {
+          v.ActionHistory.pop();
+        }
       }
 
       if (this.OrderTotal > 0) this.OrderTotal--;
@@ -793,7 +806,7 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
       const param = new SALOrderDetailCusDTO();
       param.Master = this.salorderdetail.Master;
       param.VehicleColor = v.Code;
-      param.TypeData = lastAction;
+      param.TypeData = typeToDelete;
       this.DeleteSALDetail(param);
     }
   }

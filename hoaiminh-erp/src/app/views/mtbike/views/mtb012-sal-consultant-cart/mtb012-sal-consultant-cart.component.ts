@@ -156,6 +156,14 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
     this.cofirmDelete = true;
   }
 
+  public trackByFn(index: number, item: any): string {
+    return (item?.Code ?? index) + '_' + (item?.OrderTypeData ?? '');
+  }
+
+  public trackByCodeId(index: number, item: any): string {
+    return item?.VehicleColorCode ?? item?.Code ?? index;
+  }
+
   public onCancel(item: any) {
     item.swiped = false;
   }
@@ -385,7 +393,7 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   //#endregion
 
   private GetListSALSelectedVehicle(param: SALOrderMasterCusDTO) {
-    this.loader.loader(true);
+    // this.loader.loader(true);
 
     const temp = this.api.GetListSALSelectedVehicle(param).subscribe((res) => {
       if (res.StatusCode === 0) {
@@ -393,13 +401,13 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
           ...item,
           swiped: false
         }));
-        this.loader.loader(false);
+        // this.loader.loader(false);
       } else {
         this.notification.onError(`Lỗi lấy danh sách xe : ${res.ErrorString}`);
       }
-      this.loader.loader(false);
+      // this.loader.loader(false);
     }, (err) => {
-      this.loader.loader(false);
+      // this.loader.loader(false);
       this.notification.onError(`Lỗi lấy danh sách xe : ${err.message}`);
     });
 
@@ -407,18 +415,18 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   }
 
   private GetListSALSelectedWH(param: SALOrderMasterCusDTO) {
-    this.loader.loader(true);
+    // this.loader.loader(true);
 
     const temp = this.api.GetListSALSelectedWH(param).subscribe((res) => {
       if (res.StatusCode === 0) {
         this.listVehicle2 = res.ObjectReturn;
-        this.loader.loader(false);
+        // this.loader.loader(false);
       } else {
         this.notification.onError(`Lỗi lấy danh sách xe : ${res.ErrorString}`);
       }
-      this.loader.loader(false);
+      // this.loader.loader(false);
     }, (err) => {
-      this.loader.loader(false);
+      // this.loader.loader(false);
       this.notification.onError(`Lỗi lấy danh sách xe : ${err.message}`);
     });
 
@@ -426,19 +434,20 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   }
 
   private AddSALSelectedVehicles(param: LSVehicleColorCusDTO) {
-    this.loader.loader(true);
+    // this.loader.loader(true);
 
     const temp = this.api.AddSALSelectedVehicles(param).subscribe((res) => {
       if (res.StatusCode === 0) {
-        this.listVehicle = res.ObjectReturn;
+        this.notification.onSuccess("Thành công");
+        // this.listVehicle = res.ObjectReturn;
         this.GetListSALSelectedVehicle(this.retailMaster);
-        this.loader.loader(false);
+        // this.loader.loader(false);
       } else {
         this.notification.onError(`Lỗi thêm xe : ${res.ErrorString}`);
       }
-      this.loader.loader(false);
+      // this.loader.loader(false);
     }, (err) => {
-      this.loader.loader(false);
+      // this.loader.loader(false);
       this.notification.onError(`Lỗi thêm xe : ${err.message}`);
     });
 
@@ -446,19 +455,20 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   }
 
   private DeleteSALSelectedVehicles(param: LSVehicleColorCusDTO) {
-    this.loader.loader(true);
+    // this.loader.loader(true);
 
     const temp = this.api.DeleteSALSelectedVehicles(param).subscribe((res) => {
       if (res.StatusCode === 0) {
-        this.listVehicle = res.ObjectReturn;
+        this.notification.onSuccess("Thành công");
+        // this.listVehicle = res.ObjectReturn;
         this.GetListSALSelectedVehicle(this.retailMaster);
-        this.loader.loader(false);
+        // this.loader.loader(false);
       } else {
         this.notification.onError(`Lỗi xóa xe : ${res.ErrorString}`);
       }
-      this.loader.loader(false);
+      // this.loader.loader(false);
     }, (err) => {
-      this.loader.loader(false);
+      // this.loader.loader(false);
       this.notification.onError(`Lỗi xóa xe : ${err.message}`);
     });
 
