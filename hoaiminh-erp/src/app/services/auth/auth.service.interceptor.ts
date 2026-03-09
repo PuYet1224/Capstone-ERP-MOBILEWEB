@@ -75,8 +75,6 @@ export class PS_AuthInterceptorService implements HttpInterceptor {
                 //         this.isRefresing = true;
                 //         this.refreshTokenSubject.next(null);
                 //         this.authapi.refreshToken(token).subscribe((data) => {
-                //             console.log('Gọi refreshtoken sau');
-
                 //             this.isRefresing = false;
                 //             this.refreshTokenSubject.next(data);
                 //             return next.handle(this.auth.setHeader(req));

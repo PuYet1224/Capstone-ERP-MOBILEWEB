@@ -50,11 +50,6 @@ export class SystemService {
                             time = null;
                         }
                     }
-                    try {
-                        console.log('token', token);
-                        console.log('raw time_expired', token ? token.time_expired : null);
-                        console.log('parsed time', time);
-                    } catch (e) { }
                     if (!PSObject.isNullOfUndefined(token) && !PsString.isNullOrWhitespace(token.access_token) && time && time > new Date()) {
                         ConfigDTO.token = token;
                         checktoken = true;
@@ -64,7 +59,6 @@ export class SystemService {
                             var wrapper = JSON.parse(cacheToken as string);
                             var cachedDate = new Date(wrapper.date);
                             var fallbackExpire = new Date(cachedDate.getTime() + (token.expires_in * 1000));
-                            console.log('fallbackExpire', fallbackExpire);
                             if (fallbackExpire > new Date()) {
                                 ConfigDTO.token = token;
                                 checktoken = true;

@@ -145,9 +145,6 @@ export class Mtb013SalConsultantServicesComponent implements OnInit, OnDestroy {
   }
 
   public onserviceschecked(a) {
-    setTimeout(() => {
-      console.log(a.IsChecked);
-    }, 3000);
   }
 
   private GetListSALServiceGroup() {

@@ -615,7 +615,6 @@ export class Mtb000DashboardComponent implements OnInit {
 
           // Xác định handler từ ID đầu tiên (giả sử mảng luôn có ít nhất 1 ID)
           const firstId = param.Dashboard[0];
-          // console.log(firstId);
           const handler = this.dashboardHandlers[firstId];
 
           if (handler) {

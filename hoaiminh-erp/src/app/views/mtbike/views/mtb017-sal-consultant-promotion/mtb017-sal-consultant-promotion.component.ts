@@ -150,9 +150,6 @@ export class Mtb017SalConsultantPromotionComponent implements OnInit, OnDestroy 
   }
 
   public onserviceschecked(a) {
-    setTimeout(() => {
-      console.log(a.IsChecked);
-    }, 3000);
   }
 
   private getlistsalpromotiongroup() {
