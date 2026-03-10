@@ -59,6 +59,7 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   public retailMaster: SALOrderMasterCusDTO;
   private arrUnsubscribe: Subscription[] = [];
   public FunctionPermissionDTO = FunctionPermissionDTO;
+
   public listtab: { label: string; value: string }[] = [
     { label: 'Đã chọn', value: 'buy' },
     { label: 'Điều chuyển', value: 'transfer' },
@@ -128,7 +129,7 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
 
   // Vuốt trái → hiện nút Xóa
   onSwipeLeft(item: any, i: number) {
-    // if (this.FunctionPermissionDTO.viewer || this.FunctionPermissionDTO.approver) return;
+    if (this.FunctionPermissionDTO.viewer || this.FunctionPermissionDTO.approver) return;
     this.listVehicle.forEach(v => {
       if (v.Code === item.Code && v.OrderTypeData === item.OrderTypeData) {
         v['swiped'] = true;
