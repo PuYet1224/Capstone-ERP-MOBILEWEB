@@ -170,17 +170,20 @@
                             </div>
                             <div class="row-2">
                                 <ps-kendo-button (onClick)="onBuyVehicle(item, SALOrderDetailTypeDataEnum.BUY)"
-                                    *ngIf="item.ListStock[0].Quantity > 0" class="tool-btn" [theme]="'primary'">
+                                    *ngIf="item.ListStock[0].Quantity > 0" class="tool-btn" [theme]="'primary'"
+                                    [disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master">
                                     Mua xe
                                 </ps-kendo-button>
                                 <ps-kendo-button (onClick)="onBuyVehicle(item, SALOrderDetailTypeDataEnum.TRANSFER)"
                                     *ngIf="item.ListStock[0].Quantity <= 0 && item.ListStock[1].Quantity > 0"
-                                    class="tool-btn" [theme]="'warning'">
+                                    class="tool-btn" [theme]="'warning'"
+                                    [disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master">
                                     Điều xe
                                 </ps-kendo-button>
                                 <ps-kendo-button (onClick)="onBuyVehicle(item, SALOrderDetailTypeDataEnum.BOOK)"
                                     *ngIf="item.ListStock[0].Quantity <= 0 && item.ListStock[1].Quantity <= 0"
-                                    class="tool-btn" [theme]="'secondary'">
+                                    class="tool-btn" [theme]="'secondary'"
+                                    [disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master">
                                     Đặt xe
                                 </ps-kendo-button>
                                 <ps-kendo-button class="tool-btn ware-house"
@@ -195,7 +198,8 @@
                                 </ps-kendo-button> -->
                                 <ps-kendo-button
                                     *ngIf="(item.BuyQuantity + item.TransferQuantity + item.BookingQuantity) > 0"
-                                    class="tool-btn" [theme]="'error'" (onClick)="onDeleteVehicle(item)">
+                                    class="tool-btn" [theme]="'error'" (onClick)="onDeleteVehicle(item)"
+                                    [disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master">
                                     Xóa
                                 </ps-kendo-button>
                             </div>
@@ -249,26 +253,31 @@
                         </div>
                         <div class="row-2">
                             <ps-kendo-button (onClick)="onBuyVehicle(item, SALOrderDetailTypeDataEnum.BUY)"
-                                *ngIf="item.ListStock[0].Quantity > 0" class="tool-btn" [theme]="'primary'">
+                                *ngIf="item.ListStock[0].Quantity > 0" class="tool-btn" [theme]="'primary'"
+                                [disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master">
                                 Mua xe
                             </ps-kendo-button>
                             <ps-kendo-button (onClick)="onBuyVehicle(item, SALOrderDetailTypeDataEnum.TRANSFER)"
                                 *ngIf="item.ListStock[0].Quantity <= 0 && item.ListStock[1].Quantity > 0"
-                                class="tool-btn" [theme]="'warning'">
+                                class="tool-btn" [theme]="'warning'"
+                                [disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master">
                                 Điều xe
                             </ps-kendo-button>
                             <ps-kendo-button (onClick)="onBuyVehicle(item, SALOrderDetailTypeDataEnum.BOOK)"
                                 *ngIf="item.ListStock[0].Quantity <= 0 && item.ListStock[1].Quantity <= 0"
-                                class="tool-btn" [theme]="'secondary'">
+                                class="tool-btn" [theme]="'secondary'"
+                                [disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master">
                                 Đặt xe
                             </ps-kendo-button>
                             <ps-kendo-button *ngIf="!item.ListStock[0].Quantity && item.ListStock[1].Quantity"
-                                class="tool-btn ware-house" (onClick)="showpopup = true">
+                                class="tool-btn ware-house" (onClick)="showpopup = true"
+                                [disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master">
                                 <span class="material-icons">warehouse</span>
                             </ps-kendo-button>
                             <ps-kendo-button
                                 *ngIf="(item.BuyQuantity + item.TransferQuantity + item.BookingQuantity) > 0"
-                                class="tool-btn" [theme]="'error'" (onClick)="onDeleteVehicle(item)">
+                                class="tool-btn" [theme]="'error'" (onClick)="onDeleteVehicle(item)"
+                                [disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master">
                                 Xóa
                             </ps-kendo-button>
                         </div>

@@ -151,6 +151,10 @@
                         height: 100%;
                         touch-action: pan-y !important;
 
+                        &.no-swipe {
+                            pointer-events: none;
+                        }
+
                         .product {
                             transition: transform 0.3s ease;
                             position: relative;
@@ -237,6 +241,11 @@
 
                                                 .material-icons {
                                                     font-size: 16px;
+
+                                                    &.disabled {
+                                                        color: $border;
+                                                        pointer-events: none;
+                                                    }
                                                 }
                                             }
 

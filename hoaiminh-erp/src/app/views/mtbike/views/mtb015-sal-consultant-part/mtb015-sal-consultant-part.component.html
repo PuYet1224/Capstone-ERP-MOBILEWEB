@@ -74,7 +74,7 @@
                                 *ngFor="let item of (detail.ListPart || []); let i = index; trackBy: trackByPartIndex"
                                 (swipeleft)="onSwipeLeft(item)" (swiperight)="onSwipeRight(item)"
                                 [class.swiped]="item.swiped"
-                                [class.no-swipe]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)">
+                                [class.no-swipe]="!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator">
                                 <div class="product-content"
                                     (click)="onEditPart(detail, item); $event.stopPropagation()">
                                     <div class="service-number">{{ i + 1 }}.</div>
