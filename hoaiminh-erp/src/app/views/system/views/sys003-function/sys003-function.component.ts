@@ -98,6 +98,9 @@ export class Sys003FunctionComponent implements OnInit {
             var temp = new SYSModuleCusDTO();
             temp = { ...f };
             temp.ModuleName = f.ModuleName || f.Vietnamese;
+            // Logger for debugging casing if needed
+            if (!temp.ModuleName) temp.ModuleName = temp['moduleName']; 
+            if (!temp.ModuleName) temp.ModuleName = 'Module';
 
             if (temp.ListFunction) {
               temp.ListFunction.forEach(fe => {
