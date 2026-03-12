@@ -33,6 +33,7 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   ) { }
 
 
+
   //#region lifecycle
   ngOnInit(): void {
     var temp = this.cache.getItem(KeyLocalStorageEnum.SAL_ORDER_MASTER);
@@ -50,6 +51,7 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.enableAutoSlide();
+    console.log();
   }
   //#endregion
 
@@ -57,6 +59,7 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   public retailMaster: SALOrderMasterCusDTO;
   private arrUnsubscribe: Subscription[] = [];
   public FunctionPermissionDTO = FunctionPermissionDTO;
+
   public listtab: { label: string; value: string }[] = [
     { label: 'Đã chọn', value: 'buy' },
     { label: 'Điều chuyển', value: 'transfer' },
@@ -136,7 +139,21 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
 
   // Vuốt phải → ẩn nút Xóa
   onSwipeRight(item: any) {
-    item.swiped = false;
+    const target = this.listVehicle.find(v => v.Code === item.Code && v.OrderTypeData === item.OrderTypeData);
+    if (target) (target as any)['swiped'] = false;
+  }
+
+  // Hiện/ẩn nút xóa
+  public onshowAction(item: any) {
+    const target = this.listVehicle.find(v => v.Code === item.Code && v.OrderTypeData === item.OrderTypeData);
+    if (!target) return;
+
+    if ((target as any).swiped) {
+      (target as any).swiped = false;
+    } else {
+      this.listVehicle.forEach((d) => (d as any).swiped = false);
+      (target as any).swiped = true;
+    }
   }
 
   // Xóa item
