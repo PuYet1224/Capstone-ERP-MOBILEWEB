@@ -97,6 +97,7 @@ export class Sys003FunctionComponent implements OnInit {
           res.ObjectReturn.forEach(f => {
             var temp = new SYSModuleCusDTO();
             temp = { ...f };
+            temp.ModuleName = f.Vietnamese;
 
             if (temp.ListFunction) {
               temp.ListFunction.forEach(fe => {
@@ -110,8 +111,10 @@ export class Sys003FunctionComponent implements OnInit {
                   temp.ListFunction = [];
                 fe.ListFunction.forEach(fec => {
                   fec.FunctionURL = '/' + temp.ModuleID + '/' + fe.ModuleID + '/' + fec.DLLPackage;
+                  if (!temp.ListFunction.find(x => x.Code === fec.Code)) {
+                    temp.ListFunction.push(fec);
+                  }
                 })
-                // Removed the push(...) to prevent flattening submodules into the root menu.
               })
             }
             this.datamodule.push(temp);
