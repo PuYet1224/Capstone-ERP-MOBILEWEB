@@ -97,7 +97,7 @@ export class Sys003FunctionComponent implements OnInit {
           res.ObjectReturn.forEach(f => {
             var temp = new SYSModuleCusDTO();
             temp = { ...f };
-            temp.ModuleName = f.Vietnamese;
+            temp.ModuleName = f.ModuleName || f.Vietnamese;
 
             if (temp.ListFunction) {
               temp.ListFunction.forEach(fe => {
