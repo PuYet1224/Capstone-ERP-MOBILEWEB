@@ -24,6 +24,11 @@ const routes: Routes = [
     children: [
       {
         path: '',
+        redirectTo: 'menu',
+        pathMatch: 'full'
+      },
+      {
+        path: '',
         canActivate: [AuthGuard],
         data: { animation: 'LayoutPage' },
         children: [

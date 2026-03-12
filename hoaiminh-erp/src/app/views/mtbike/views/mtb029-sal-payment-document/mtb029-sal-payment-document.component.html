@@ -100,7 +100,7 @@
             <span class="material-icons">arrow_back</span>
         </ps-kendo-button>
 
-        <ps-kendo-button [disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master"
+        <ps-kendo-button [disabled]="FunctionPermissionDTO.approver"
             [theme]="tabactive == 'receipt' ? 'warning' : 'primary'" (onClick)="onnavigate()">
             <span class="text">{{tabactive == 'receipt' ? 'Tạo mới phiếu thu' : 'Tạo mới hoá đơn'}}</span>
         </ps-kendo-button>

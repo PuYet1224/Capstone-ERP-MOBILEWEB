@@ -42,7 +42,7 @@
                             <ps-kendo-checkbox
                                 [class.disabled-check]="receiptitem.Status != SALOrderInvoiceStatusEnum.New "
                                 [(ngModel)]="item.IsChecked"
-                                [disabled]="item.IsExisted || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)">
+                                [disabled]="item.IsExisted || FunctionPermissionDTO.approver">
                             </ps-kendo-checkbox>
 
                             <div class="main-info">
@@ -119,7 +119,7 @@
                         <div class="frame-infor" (click)="toggleItem(item, 'vehicle')">
                             <ps-kendo-checkbox
                                 [class.disabled-check]="receiptitem.Status != SALOrderInvoiceStatusEnum.New "
-                                [disabled]="item.IsExisted || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)"
+                                [disabled]="item.IsExisted || FunctionPermissionDTO.approver"
                                 [(ngModel)]="item.IsChecked">
                             </ps-kendo-checkbox>
 
@@ -148,7 +148,7 @@
                         <div class="frame-infor" (click)="toggleItem(item, 'service')">
                             <ps-kendo-checkbox
                                 [class.disabled-check]="receiptitem.Status != SALOrderInvoiceStatusEnum.New "
-                                [disabled]="item.IsExisted || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)"
+                                [disabled]="item.IsExisted || FunctionPermissionDTO.approver"
                                 [(ngModel)]="item.IsChecked">
                             </ps-kendo-checkbox>
 
@@ -175,7 +175,7 @@
                         <div class="frame-infor" (click)="toggleItem(item, 'part')">
                             <ps-kendo-checkbox
                                 [class.disabled-check]="receiptitem.Status != SALOrderInvoiceStatusEnum.New "
-                                [disabled]="item.IsExisted || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)"
+                                [disabled]="item.IsExisted || FunctionPermissionDTO.approver"
                                 [(ngModel)]="item.IsChecked">
                             </ps-kendo-checkbox>
 

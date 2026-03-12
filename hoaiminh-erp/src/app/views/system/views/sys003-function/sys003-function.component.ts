@@ -111,7 +111,7 @@ export class Sys003FunctionComponent implements OnInit {
                 fe.ListFunction.forEach(fec => {
                   fec.FunctionURL = '/' + temp.ModuleID + '/' + fe.ModuleID + '/' + fec.DLLPackage;
                 })
-                temp.ListFunction.push(...fe.ListFunction)
+                // Removed the push(...) to prevent flattening submodules into the root menu.
               })
             }
             this.datamodule.push(temp);

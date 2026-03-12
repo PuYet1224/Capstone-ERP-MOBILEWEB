@@ -70,19 +70,13 @@
                             <div class="header-col col-price">Đơn giá</div>
                         </div>
                         <div class="services-list">
-                            <div class="service-item swipe-wrapper"
+                            <div class="service-item"
                                 *ngFor="let item of (detail.ListPart || []); let i = index; trackBy: trackByPartIndex"
-                                (swipeleft)="onSwipeLeft(item)" (swiperight)="onSwipeRight(item)"
-                                [class.swiped]="item.swiped"
-                                [class.no-swipe]="!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator">
-                                <div class="product-content"
-                                    (click)="onEditPart(detail, item); $event.stopPropagation()">
-                                    <div class="service-number">{{ i + 1 }}.</div>
-                                    <div class="service-name">{{ item.TypeOfPartName ?? '' }}</div>
-                                    <div class="part-qty">{{ item.Quantity ?? 0 }}</div>
-                                    <div class="service-cost">{{ (item.UnitPrice ?? 0) | number:'1.0-0' }}</div>
-                                </div>
-                                <div class="btn-delete" (click)="onDeletePartSwipe(detail, item, $event)">Xoá</div>
+                                (click)="onEditPart(detail, item); $event.stopPropagation()">
+                                <div class="service-number">{{ i + 1 }}.</div>
+                                <div class="service-name">{{ item.TypeOfPartName ?? '' }}</div>
+                                <div class="part-qty">{{ item.Quantity ?? 0 }}</div>
+                                <div class="service-cost">{{ (item.UnitPrice ?? 0) | number:'1.0-0' }}</div>
                             </div>
                         </div>
                     </div>
@@ -101,7 +95,7 @@
             <span class="material-icons">list_alt</span>
         </ps-kendo-button>
         <ps-kendo-button [theme]="'primary'" (onClick)="onAddNew()"
-            *ngIf="!FunctionPermissionDTO.viewer && (FunctionPermissionDTO.master || FunctionPermissionDTO.creator)">
+            *ngIf="FunctionPermissionDTO.master || FunctionPermissionDTO.creator">
             <span class="text">Thêm mới</span>
         </ps-kendo-button>
     </ps-footer-action>
@@ -117,35 +111,35 @@
                     <ps-kendo-dropdown-list [label]="'Phân nhóm phụ tùng'" [data]="listPartCategory"
                         [textField]="'Category'" [valueField]="'Code'" [(ngModel)]="partcategory"
                         [valuePrimitive]="false"
-                        [disabled]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator)"
+                        [disabled]="!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator"
                         (valueChange)="onPartCategoryChange()">
                     </ps-kendo-dropdown-list>
                     <div class="form-row form-row-2">
                         <ps-kendo-dropdown-list [label]="'Loại phụ tùng'" [data]="listTypeOfPart"
                             [textField]="'TypeOfPart'" [valueField]="'Code'" [(ngModel)]="typeofpart.Code"
                             [valuePrimitive]="true"
-                            [disabled]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator) || !partcategory || !partcategory.Code"
+                            [disabled]="(!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator) || !partcategory || !partcategory.Code"
                             (valueChange)="onTypeOfPartChange($event)">
                         </ps-kendo-dropdown-list>
                         <ps-kendo-dropdown-list [label]="'Phân nhóm chi tiết'" [data]="listTypeOfPartSpecs"
                             [textField]="'TypeOfPartSpecs'" [valueField]="'Code'" [(ngModel)]="typeofpartspecs.Code"
                             [valuePrimitive]="true"
-                            [disabled]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator) || !typeofpart || !typeofpart.Code"
+                            [disabled]="(!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator) || !typeofpart || !typeofpart.Code"
                             (valueChange)="onTypeOfPartSpecsChange()">
                         </ps-kendo-dropdown-list>
                     </div>
                     <div class="form-row form-row-2">
                         <ps-kendo-dropdown-list [label]="'Đơn vị tính'" [data]="listUnit" [textField]="'ListName'"
                             [valueField]="'Code'" [(ngModel)]="unit.Code" [valuePrimitive]="true"
-                            [disabled]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator)"
+                            [disabled]="!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator"
                             (valueChange)="onUnitChange($event)">
                         </ps-kendo-dropdown-list>
                         <ps-kendo-numeric-textbox [label]="'Số lượng'" [(ngModel)]="quantity" [format]="'n0'"
-                            [disabled]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator)">
+                            [disabled]="!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator">
                         </ps-kendo-numeric-textbox>
                     </div>
                     <ps-kendo-numeric-textbox [label]="'Đơn giá'" [(ngModel)]="unitPrice" [format]="'n0'"
-                        [disabled]="FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator)">
+                        [disabled]="!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator">
                     </ps-kendo-numeric-textbox>
                 </div>
             </div>
@@ -164,8 +158,7 @@
                                     <div class="card-info">
                                         <span class="card-code" *ngIf="v.Code">[{{ v.Code }}]</span>
                                         <span class="card-name">{{ v.TypeOfVehicleName }} | {{ v.VehicleName }}</span>
-                                        <span class="card-ver" *ngIf="v.VehicleColorName">{{ v.VehicleColorName
-                                            }}</span>
+                                        <span class="card-ver" *ngIf="v.VehicleColorName">{{ v.VehicleColorName }}</span>
                                     </div>
                                     <span class="card-check" *ngIf="isVehicleSelected(v)">✓</span>
                                 </div>
@@ -178,9 +171,9 @@
         <div psDialogConfirmBottomFooter class="popup-footer-btns">
             <ps-kendo-button [theme]="''" (onClick)="onClosePopup()">Đóng</ps-kendo-button>
             <ps-kendo-button [theme]="'error'" (onClick)="onDeletePart()"
-                *ngIf="!FunctionPermissionDTO.viewer && (FunctionPermissionDTO.master || FunctionPermissionDTO.creator) && isEditMode">Xoá</ps-kendo-button>
+                *ngIf="(FunctionPermissionDTO.master || FunctionPermissionDTO.creator) && isEditMode">Xoá</ps-kendo-button>
             <ps-kendo-button [theme]="'primary'" (onClick)="onSavePart()"
-                *ngIf="!FunctionPermissionDTO.viewer && (FunctionPermissionDTO.master || FunctionPermissionDTO.creator)">
+                *ngIf="FunctionPermissionDTO.master || FunctionPermissionDTO.creator">
                 <span class="text">{{ isEditMode ? 'Cập nhật' : 'Thêm mới' }}</span>
             </ps-kendo-button>
         </div>

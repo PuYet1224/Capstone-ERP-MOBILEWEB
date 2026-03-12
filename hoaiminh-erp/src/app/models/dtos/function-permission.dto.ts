@@ -12,19 +12,11 @@ export class FunctionPermissionDTO {
   public static datapermission: any[] = [];
 
   public static set(e: PermissionDLLDTO) {
-    if (!e || !e.ActionPermission) {
-      this.master = false;
-      this.creator = false;
-      this.approver = false;
-      this.viewer = false;
-      this.datapermission = [];
-      return;
-    }
-
     this.master = e.ActionPermission.some(s => s.ActionType == PermissionEnum.master);
-    this.creator = e.ActionPermission.some(s => s.ActionType == PermissionEnum.creator);
-    this.approver = e.ActionPermission.some(s => s.ActionType == PermissionEnum.approver);
-    this.viewer = e.ActionPermission.some(s => s.ActionType == PermissionEnum.viewer);
+    // Master has all rights
+    this.creator = e.ActionPermission.some(s => s.ActionType == PermissionEnum.creator) || this.master;
+    this.approver = e.ActionPermission.some(s => s.ActionType == PermissionEnum.approver) || this.master;
+    this.viewer = e.ActionPermission.some(s => s.ActionType == PermissionEnum.viewer) || this.master;
 
     if (PsArray.any(e.ActionPermission)) {
       this.datapermission = e.ActionPermission[0].DataPermission

@@ -104,7 +104,7 @@ export class Mtb013SalConsultantServicesComponent implements OnInit, OnDestroy {
   }
 
   public oncheckall(service: CSServiceMasterCusDTO) {
-    if (this.master.Status != this.enummasterstt.NEW || this.FunctionPermissionDTO.viewer || (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator))
+    if (this.master.Status != this.enummasterstt.NEW || (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator))
       return;
 
     const list = service.ListOrderDetail.map(m => ({
@@ -125,7 +125,7 @@ export class Mtb013SalConsultantServicesComponent implements OnInit, OnDestroy {
   }
 
   public onservicechecked(service: CSServiceMasterCusDTO, detail: SALOrderDetailCusDTO) {
-    if (detail.Status != this.enumdetailstt.NEW || this.master.Status != this.enummasterstt.NEW || this.FunctionPermissionDTO.viewer || (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator))
+    if (detail.Status != this.enumdetailstt.NEW || this.master.Status != this.enummasterstt.NEW || (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator))
       return;
 
     const updateParam: SALOrderDetailServiceCusDTO = {
@@ -145,6 +145,9 @@ export class Mtb013SalConsultantServicesComponent implements OnInit, OnDestroy {
   }
 
   public onserviceschecked(a) {
+    setTimeout(() => {
+      console.log(a.IsChecked);
+    }, 3000);
   }
 
   private GetListSALServiceGroup() {

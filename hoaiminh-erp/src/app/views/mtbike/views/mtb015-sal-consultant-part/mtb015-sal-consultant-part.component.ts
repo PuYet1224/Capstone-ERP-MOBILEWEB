@@ -276,7 +276,7 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
   }
 
   onEditPart(detail: SALOrderDetailCusDTO, item: SALOrderDetailPartItemCusDTO): void {
-    if (FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator)) return;
+    if (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator) return;
     if (!detail || !detail.Code || !item || !item.TypeOfPart) return;
     this.resetPopupForm();
     this.isEditMode = true;
@@ -307,7 +307,7 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
   }
 
   onAddNew(): void {
-    if (FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator)) return;
+    if (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator) return;
     this.resetPopupForm();
     this.editingPartItem = null;
     this.selectedDetailCodes = new Set<number>();
@@ -326,7 +326,7 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
   }
 
   onSavePart(): void {
-    if (FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator)) return;
+    if (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator) return;
     if (this.isSaving) return;
     if (!this.partcategory.Code || !this.typeofpart.Code || !this.selectedDetailCodes.size) {
       this.notification.onError('Chọn đủ thông tin');
@@ -374,7 +374,7 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
   }
 
   onDeletePart(): void {
-    if (FunctionPermissionDTO.viewer || (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator)) return;
+    if (!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator) return;
     if (!this.isEditMode || !this.editingPartItem || !this.editingPartItem.Code) {
       this.onClosePopup();
       return;
@@ -397,28 +397,6 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
       error: (err) => { this.isSaving = false; this.subLoader.loader(false); this.notification.onError(err && err.message || 'Thất bại'); },
     });
     this.arrUnsubscribe.push(sub);
-  }
-
-  public onSwipeLeft(item: any): void {
-    if (this.FunctionPermissionDTO.viewer || (!this.FunctionPermissionDTO.creator && !this.FunctionPermissionDTO.master)) return;
-    // reset other swiped items
-    this.listSalVehicleParts.forEach(d => {
-      (d as any).ListPart?.forEach((p: any) => p.swiped = false);
-    });
-    item.swiped = true;
-  }
-
-  public onSwipeRight(item: any): void {
-    item.swiped = false;
-  }
-
-  public onDeletePartSwipe(detail: SALOrderDetailCusDTO, item: SALOrderDetailPartItemCusDTO, event: any): void {
-    event.stopPropagation();
-    if (this.FunctionPermissionDTO.viewer || (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator)) return;
-    this.isEditMode = true;
-    this.editingPartItem = { ...item };
-    this.originalDetailCode = detail.Code;
-    this.onDeletePart();
   }
 
   private isPartFormChanged(): boolean {

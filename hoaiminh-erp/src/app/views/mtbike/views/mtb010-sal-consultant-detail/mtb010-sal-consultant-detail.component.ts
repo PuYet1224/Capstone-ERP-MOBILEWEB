@@ -63,24 +63,52 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
       this.router.navigate(['/mtbike/consultant/']);
     } else if (field == 'to-list') {
       this.router.navigate(['/mtbike/consultant']);
-    } else if (field === 'continue') {
-      if (this.retailDetailDTOcopy.Code) {
-        this.firstLoad = false;
-        if (!this.retailDetailDTO.CustomerName && (this.retailDetailDTO.Code != 0 || this.retailDetailDTO.Code == 0)) {
-          if (this.isShowNoti) {
-            this.isShowNoti = false;
-          } else {
-            this.notification.onWarning('Tên khách hàng không được để trống');
-          }
-          return;
-        }
-        if (this.retailDetailDTOcopy.Status === SALOrderMasterStatusRetailEnum.NEW) {
-          // this.UpdateSALStatus(param);
-        } else {
-          this.router.navigate([this.retailDetailDTO.Status == SALOrderMasterStatusRetailEnum.COMPLETE ? '/mtbike/consultant/cart' : '/mtbike/consultant/vehicle']);
-        }
-        this.router.navigate(['/mtbike/consultant/vehicle']);
+    } else if (field == 'continue') {
+      if (!this.retailDetailDTO.CustomerName || this.retailDetailDTO.CustomerName.trim() === '') {
+        this.notification.onWarning('Tên khách hàng không được để trống');
+        return;
       }
+      if (!this.retailDetailDTO.CustomerPhone || this.retailDetailDTO.CustomerPhone.trim() === '') {
+        this.notification.onWarning('Số điện thoại khách hàng không được để trống');
+        return;
+      }
+
+      if (this.retailDetailDTO.Code) {
+        // Nếu đã có Code, chuyển sang bước chọn xe
+        this.router.navigate([this.retailDetailDTO.Status == SALOrderMasterStatusRetailEnum.COMPLETE ? '/mtbike/consultant/cart' : '/mtbike/consultant/vehicle']);
+      } else {
+        // Trường hợp chưa có Code (tạo mới nhưng chưa trigger blur để lưu)
+        this.fieldName = 'continue';
+        this.onValueChange('CustomerName');
+      }
+    }
+  }
+
+  onCancel() {
+    if (this.retailDetailDTO.Code > 0) {
+      if (!confirm('Bạn có chắc chắn muốn hủy giao dịch này không?')) {
+        return;
+      }
+
+      const param: UpdateStatusInterface<SALOrderMasterCusDTO> = {
+        ListDTO: [this.retailDetailDTO],
+        Status: SALOrderMasterStatusRetailEnum.CANCEL
+      };
+
+      this.subLoader.loader(true);
+      const sub = this.mtbikeapi.UpdateSALStatus(param).subscribe(res => {
+        this.subLoader.loader(false);
+        if (res.StatusCode == 0) {
+          this.notification.onSuccess('Hủy giao dịch thành công');
+          this.router.navigate(['/mtbike/consultant']);
+        } else {
+          this.notification.onError(res.ErrorString || 'Lỗi khi hủy giao dịch');
+        }
+      }, err => {
+        this.subLoader.loader(false);
+        this.notification.onError(err.message);
+      });
+      this.arrUnsubscribe.push(sub);
     }
   }
 

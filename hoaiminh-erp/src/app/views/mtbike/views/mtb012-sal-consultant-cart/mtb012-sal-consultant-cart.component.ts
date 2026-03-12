@@ -126,40 +126,22 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
 
   // Vuốt trái → hiện nút Xóa
   onSwipeLeft(item: any, i: number) {
-    if (!this.FunctionPermissionDTO.master && (this.FunctionPermissionDTO.viewer || this.FunctionPermissionDTO.approver)) return;
     this.listVehicle.forEach(v => {
-      if (v.Code === item.Code && v.OrderTypeData === item.OrderTypeData) {
-        v['swiped'] = true;
-      } else {
+      if (v !== item) {
         v['swiped'] = false;
       }
     });
+    item.swiped = true;
   }
 
   // Vuốt phải → ẩn nút Xóa
   onSwipeRight(item: any) {
-    if (!this.FunctionPermissionDTO.master && (this.FunctionPermissionDTO.viewer || this.FunctionPermissionDTO.approver)) { return; }
-    const target = this.listVehicle.find(v => v.Code === item.Code && v.OrderTypeData === item.OrderTypeData);
-    if (target) (target as any)['swiped'] = false;
-  }
-
-  // Hiện/ẩn nút xóa
-  public onshowAction(item: any) {
-    if (!this.FunctionPermissionDTO.master && (this.FunctionPermissionDTO.viewer || this.FunctionPermissionDTO.approver)) { return; }
-    const target = this.listVehicle.find(v => v.Code === item.Code && v.OrderTypeData === item.OrderTypeData);
-    if (!target) return;
-
-    if ((target as any).swiped) {
-      (target as any).swiped = false;
-    } else {
-      this.listVehicle.forEach((d) => (d as any).swiped = false);
-      (target as any).swiped = true;
-    }
+    item.swiped = false;
   }
 
   // Xóa item
   onDelete(item: any) {
-    if (!this.FunctionPermissionDTO.master && (this.FunctionPermissionDTO.viewer || this.FunctionPermissionDTO.approver)) { return; }
+    if (this.FunctionPermissionDTO.viewer && !this.FunctionPermissionDTO.creator && !this.FunctionPermissionDTO.approver && !this.FunctionPermissionDTO.master) { return; }
     if (item.IsOrderLock) {
       this.notification.onWarning('Không thể xóa xe đã chốt');
       item.swiped = false;
@@ -171,17 +153,8 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
     this.cofirmDelete = true;
   }
 
-  public trackByFn(index: number, item: any): string {
-    return (item?.Code ?? index) + '_' + (item?.OrderTypeData ?? '');
-  }
-
-  public trackByCodeId(index: number, item: any): string {
-    return item?.VehicleColorCode ?? item?.Code ?? index;
-  }
-
   public onCancel(item: any) {
-    const target = this.listVehicle.find(v => v.Code === item.Code && v.OrderTypeData === item.OrderTypeData);
-    if (target) (target as any).swiped = false;
+    item.swiped = false;
   }
 
   onConfirmDelete(item: LSVehicleColorCusDTO, type: string) {
@@ -409,7 +382,7 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   //#endregion
 
   private GetListSALSelectedVehicle(param: SALOrderMasterCusDTO) {
-    // this.loader.loader(true);
+    this.loader.loader(true);
 
     const temp = this.api.GetListSALSelectedVehicle(param).subscribe((res) => {
       if (res.StatusCode === 0) {
@@ -417,13 +390,13 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
           ...item,
           swiped: false
         }));
-        // this.loader.loader(false);
+        this.loader.loader(false);
       } else {
         this.notification.onError(`Lỗi lấy danh sách xe : ${res.ErrorString}`);
       }
-      // this.loader.loader(false);
+      this.loader.loader(false);
     }, (err) => {
-      // this.loader.loader(false);
+      this.loader.loader(false);
       this.notification.onError(`Lỗi lấy danh sách xe : ${err.message}`);
     });
 
@@ -431,18 +404,18 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   }
 
   private GetListSALSelectedWH(param: SALOrderMasterCusDTO) {
-    // this.loader.loader(true);
+    this.loader.loader(true);
 
     const temp = this.api.GetListSALSelectedWH(param).subscribe((res) => {
       if (res.StatusCode === 0) {
         this.listVehicle2 = res.ObjectReturn;
-        // this.loader.loader(false);
+        this.loader.loader(false);
       } else {
         this.notification.onError(`Lỗi lấy danh sách xe : ${res.ErrorString}`);
       }
-      // this.loader.loader(false);
+      this.loader.loader(false);
     }, (err) => {
-      // this.loader.loader(false);
+      this.loader.loader(false);
       this.notification.onError(`Lỗi lấy danh sách xe : ${err.message}`);
     });
 
@@ -450,20 +423,19 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   }
 
   private AddSALSelectedVehicles(param: LSVehicleColorCusDTO) {
-    // this.loader.loader(true);
+    this.loader.loader(true);
 
     const temp = this.api.AddSALSelectedVehicles(param).subscribe((res) => {
       if (res.StatusCode === 0) {
-        this.notification.onSuccess("Thành công");
-        // this.listVehicle = res.ObjectReturn;
+        this.listVehicle = res.ObjectReturn;
         this.GetListSALSelectedVehicle(this.retailMaster);
-        // this.loader.loader(false);
+        this.loader.loader(false);
       } else {
         this.notification.onError(`Lỗi thêm xe : ${res.ErrorString}`);
       }
-      // this.loader.loader(false);
+      this.loader.loader(false);
     }, (err) => {
-      // this.loader.loader(false);
+      this.loader.loader(false);
       this.notification.onError(`Lỗi thêm xe : ${err.message}`);
     });
 
@@ -471,20 +443,19 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   }
 
   private DeleteSALSelectedVehicles(param: LSVehicleColorCusDTO) {
-    // this.loader.loader(true);
+    this.loader.loader(true);
 
     const temp = this.api.DeleteSALSelectedVehicles(param).subscribe((res) => {
       if (res.StatusCode === 0) {
-        this.notification.onSuccess("Thành công");
-        // this.listVehicle = res.ObjectReturn;
+        this.listVehicle = res.ObjectReturn;
         this.GetListSALSelectedVehicle(this.retailMaster);
-        // this.loader.loader(false);
+        this.loader.loader(false);
       } else {
         this.notification.onError(`Lỗi xóa xe : ${res.ErrorString}`);
       }
-      // this.loader.loader(false);
+      this.loader.loader(false);
     }, (err) => {
-      // this.loader.loader(false);
+      this.loader.loader(false);
       this.notification.onError(`Lỗi xóa xe : ${err.message}`);
     });
 
@@ -534,6 +505,34 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   //#region footer
   public onNavigate(field: string) {
     this.router.navigate([field]);
+  }
+
+  public onCancelTransaction() {
+    if (this.retailMaster && this.retailMaster.Code > 0) {
+      if (!confirm('Bạn có chắc chắn muốn hủy giao dịch này không?')) {
+        return;
+      }
+
+      const param: UpdateStatusInterface<SALOrderMasterCusDTO> = {
+        ListDTO: [this.retailMaster],
+        Status: 6 // CANCEL
+      };
+
+      this.subLoader.loader(true);
+      const sub = this.api.UpdateSALStatus(param).subscribe(res => {
+        this.subLoader.loader(false);
+        if (res.StatusCode == 0) {
+          this.notification.onSuccess('Hủy giao dịch thành công');
+          this.router.navigate(['/mtbike/consultant']);
+        } else {
+          this.notification.onError(res.ErrorString || 'Lỗi khi hủy giao dịch');
+        }
+      }, err => {
+        this.subLoader.loader(false);
+        this.notification.onError(err.message);
+      });
+      this.arrUnsubscribe.push(sub);
+    }
   }
 
   public onNavigateToTotalVehicle(item: LSVehicleColorCusDTO | any): void {

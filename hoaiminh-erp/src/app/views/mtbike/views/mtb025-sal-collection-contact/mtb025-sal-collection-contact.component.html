@@ -23,14 +23,14 @@
         <div class="main-body">
             <ps-kendo-masked-textbox [label]="'Di động (*)'" [mask]="'000 000 0000'" [type]="'tel'"
                 [(ngModel)]="cscustomer.Cellphone1" (blur)="onValueChange('Cellphone1')"
-                [disabled]="orderDetail.Status > SALOrderDetailStatusEnum.RePayment || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)  || orderDetail.Status == SALOrderDetailStatusEnum.Canceled || orderDetail.Status == SALOrderDetailStatusEnum.Completed" />
+                [disabled]="orderDetail.Status > SALOrderDetailStatusEnum.RePayment || FunctionPermissionDTO.approver  || orderDetail.Status == SALOrderDetailStatusEnum.Canceled || orderDetail.Status == SALOrderDetailStatusEnum.Completed" />
             <div class="row-2">
                 <ps-kendo-masked-textbox [label]="'Zalo'" [mask]="'000 000 0000'" [type]="'tel'"
                     (blur)="onValueChange('Zalo')" [(ngModel)]="cscustomer.Zalo"
-                    [disabled]="orderDetail.Status > SALOrderDetailStatusEnum.RePayment ||(!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)  || orderDetail.Status == SALOrderDetailStatusEnum.Canceled || orderDetail.Status == SALOrderDetailStatusEnum.Completed" />
+                    [disabled]="orderDetail.Status > SALOrderDetailStatusEnum.RePayment ||FunctionPermissionDTO.approver  || orderDetail.Status == SALOrderDetailStatusEnum.Canceled || orderDetail.Status == SALOrderDetailStatusEnum.Completed" />
                 <ps-kendo-checkbox [label]="'Là số di động'" [id]="'iscellphone1'" (onchecked)="onchecked($event)"
                     [(ngModel)]="cscustomer.IsCellPhone"
-                    [disabled]="orderDetail.Status > SALOrderDetailStatusEnum.RePayment ||(!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)  || orderDetail.Status == SALOrderDetailStatusEnum.Canceled || orderDetail.Status == SALOrderDetailStatusEnum.Completed">
+                    [disabled]="orderDetail.Status > SALOrderDetailStatusEnum.RePayment ||FunctionPermissionDTO.approver  || orderDetail.Status == SALOrderDetailStatusEnum.Canceled || orderDetail.Status == SALOrderDetailStatusEnum.Completed">
                 </ps-kendo-checkbox>
             </div>
             <div class="row-3">
@@ -38,27 +38,27 @@
                     <label>Thời gian KH có thể nghe máy</label>
                     <kendo-timepicker placeholder="HH:mm" format="HH:mm" [readOnlyInput]="true"
                         [(ngModel)]="cscustomer.FreeStartTime" (valueChange)="onValueChange('FreeStartTime')"
-                        [disabled]="orderDetail.Status > SALOrderDetailStatusEnum.RePayment ||(!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)  || orderDetail.Status == SALOrderDetailStatusEnum.Canceled || orderDetail.Status == SALOrderDetailStatusEnum.Completed">
+                        [disabled]="orderDetail.Status > SALOrderDetailStatusEnum.RePayment ||FunctionPermissionDTO.approver  || orderDetail.Status == SALOrderDetailStatusEnum.Canceled || orderDetail.Status == SALOrderDetailStatusEnum.Completed">
                     </kendo-timepicker>
                 </div>
                 <kendo-timepicker class="time" placeholder="HH:mm" format="HH:mm" [readOnlyInput]="true"
                     [(ngModel)]="cscustomer.FreeEndTime" (valueChange)="onValueChange('FreeEndTime')"
                     [min]="cscustomer.FreeStartTime"
-                    [disabled]="orderDetail.Status > SALOrderDetailStatusEnum.RePayment ||(!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)  || orderDetail.Status == SALOrderDetailStatusEnum.Canceled || orderDetail.Status == SALOrderDetailStatusEnum.Completed || !cscustomer.FreeStartTime">
+                    [disabled]="orderDetail.Status > SALOrderDetailStatusEnum.RePayment ||FunctionPermissionDTO.approver  || orderDetail.Status == SALOrderDetailStatusEnum.Canceled || orderDetail.Status == SALOrderDetailStatusEnum.Completed || !cscustomer.FreeStartTime">
                 </kendo-timepicker>
                 <ps-kendo-dropdown-list [data]="listtype" [textField]="'ListName'" [valueField]="'OrderBy'"
                     [valuePrimitive]="true" [(ngModel)]="cscustomer.FreeTimeType"
                     (valueChange)="onValueChange('FreeTimeType')"
-                    [disabled]="orderDetail.Status > SALOrderDetailStatusEnum.RePayment || !cscustomer.FreeStartTime || !cscustomer.FreeEndTime || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)  || orderDetail.Status == SALOrderDetailStatusEnum.Canceled || orderDetail.Status == SALOrderDetailStatusEnum.Completed">
+                    [disabled]="orderDetail.Status > SALOrderDetailStatusEnum.RePayment || !cscustomer.FreeStartTime || !cscustomer.FreeEndTime || FunctionPermissionDTO.approver  || orderDetail.Status == SALOrderDetailStatusEnum.Canceled || orderDetail.Status == SALOrderDetailStatusEnum.Completed">
                 </ps-kendo-dropdown-list>
             </div>
             <ps-kendo-textbox [label]="'Email'" [(ngModel)]="cscustomer.Email" (blur)="onValueChange('Email')"
-                [disabled]="orderDetail.Status > SALOrderDetailStatusEnum.RePayment ||(!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)  || orderDetail.Status == SALOrderDetailStatusEnum.Canceled || orderDetail.Status == SALOrderDetailStatusEnum.Completed">
+                [disabled]="orderDetail.Status > SALOrderDetailStatusEnum.RePayment ||FunctionPermissionDTO.approver  || orderDetail.Status == SALOrderDetailStatusEnum.Canceled || orderDetail.Status == SALOrderDetailStatusEnum.Completed">
             </ps-kendo-textbox>
             <ps-kendo-dropdown-list [label]="'Nghề nghiệp'" [data]="listjob" [(ngModel)]="cscustomer.Occupation"
                 [textField]="'ListName'" [valueField]="'Code'" (valueChange)="onValueChange('Occupation')"
                 [valuePrimitive]="true"
-                [disabled]="orderDetail.Status > SALOrderDetailStatusEnum.RePayment ||(!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)  || orderDetail.Status == SALOrderDetailStatusEnum.Canceled || orderDetail.Status == SALOrderDetailStatusEnum.Completed">
+                [disabled]="orderDetail.Status > SALOrderDetailStatusEnum.RePayment ||FunctionPermissionDTO.approver  || orderDetail.Status == SALOrderDetailStatusEnum.Canceled || orderDetail.Status == SALOrderDetailStatusEnum.Completed">
             </ps-kendo-dropdown-list>
         </div>
     </div> -->

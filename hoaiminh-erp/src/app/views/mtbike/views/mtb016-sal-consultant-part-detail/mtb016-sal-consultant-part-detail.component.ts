@@ -349,7 +349,7 @@ const data = Array.isArray(raw) ? raw : ((raw as any) && (raw as any).Data) ? (r
   public FunctionPermissionDTO = FunctionPermissionDTO;
 
   public onAddNewPart() {
-    if (this.FunctionPermissionDTO.viewer || (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator)) return;
+    if (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator) return;
     this.isEditMode = false;
     this.resetForm();
 
@@ -363,7 +363,7 @@ const data = Array.isArray(raw) ? raw : ((raw as any) && (raw as any).Data) ? (r
   }
 
   public onEditPart(part: SALOrderDetailPartItemCusDTO) {
-    if (this.FunctionPermissionDTO.viewer || (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator)) return;
+    if (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator) return;
     if (!part || !part.Code || !part.TypeOfPart) return;
 
     this.isEditMode = true;
@@ -462,13 +462,13 @@ const data = Array.isArray(raw) ? raw : ((raw as any) && (raw as any).Data) ? (r
   }
 
   onDeletePart() {
-    if (this.FunctionPermissionDTO.viewer || (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator)) return;
+    if (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator) return;
     if (!this.currentPartItem || !this.currentPartItem.Code) return;
     this.DeleteSALPartItem();
   }
 
   onSavePart() {
-    if (this.FunctionPermissionDTO.viewer || (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator)) return;
+    if (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator) return;
     if (!this.orderDetail || !this.orderDetail.Code || !this.typeofpart || !this.typeofpart.Code) {
       if (!this.typeofpart || !this.typeofpart.Code) {
         this.notification.onError('Vui lòng chọn loại phụ tùng');

@@ -94,6 +94,8 @@ export class Mtb025SalCollectionContactComponent {
   //     return;
   //   }
   //   if (field === 'FreeStartTime') {
+  //     console.log(this.cscustomer.FreeStartTime);
+
   //     const d = new Date(this.cscustomer.FreeStartTime);
   //     const newDate = PSDate.setHours(d, d.getHours(), d.getMinutes(), 0, 0
   //     );

@@ -32,25 +32,25 @@
                 <label>Ngày hiệu lực (*)</label>
                 <kendo-datepicker format="dd/MM/yyyy" placeholder="dd/MM/yyyy" [readOnlyInput]="true"
                     calendarType="classic"
-                    [disabled]=" invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)"
+                    [disabled]=" invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || FunctionPermissionDTO.approver"
                     [(ngModel)]="invoice.EffDate" (valueChange)="onValueChange('EffDate')">
                 </kendo-datepicker>
             </div>
 
             <!-- <div class="form-group">
                 <ps-kendo-numeric-textbox label="Mức giảm giá (%)"
-                    [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)"
+                    [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || FunctionPermissionDTO.approver"
                     [(ngModel)]="invoice.DiscountPercent" (blur)="onValueChange('DiscountPercent')">
                 </ps-kendo-numeric-textbox>
 
                 <ps-kendo-numeric-textbox [label]="'Thành tiền'"
-                    [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)"
+                    [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || FunctionPermissionDTO.approver"
                     [(ngModel)]="invoice.DiscountAmount" (blur)="onValueChange('DiscountAmount')">
                 </ps-kendo-numeric-textbox>
             </div>
 
             <ps-kendo-textarea [label]="'Lý do giảm giá'"
-                [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)"
+                [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || FunctionPermissionDTO.approver"
                 [(ngModel)]="invoice.DiscountReason" (blur)="onValueChange('DiscountReason')">
             </ps-kendo-textarea> -->
 
@@ -67,76 +67,76 @@
                 </div>
                 <div class="tab-body" *ngIf="invoice.VATType == SALOrderInvoiceVATTypeEnum.Personal">
                     <ps-kendo-masked-textbox label="Số điện thoại (*)" [mask]="'0000 000 000'" [type]="'tel'"
-                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)"
+                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || FunctionPermissionDTO.approver"
                         [(ngModel)]="invoice.VATCellPhone" (blur)="onValueChange('VATCellPhone')">
                     </ps-kendo-masked-textbox>
 
                     <ps-kendo-textbox [label]="'Họ và tên (*)'"
-                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)"
+                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || FunctionPermissionDTO.approver"
                         [(ngModel)]="invoice.VATCustomerName" (blur)="onValueChange('VATCustomerName')">
                     </ps-kendo-textbox>
 
                     <ps-kendo-masked-textbox label="Số hộ chiếu"
-                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)"
+                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || FunctionPermissionDTO.approver"
                         [(ngModel)]="invoice.VATPassport" (blur)="onValueChange('VATPassport')">
                     </ps-kendo-masked-textbox>
 
                     <ps-kendo-textarea [label]="'Địa chỉ xuất hoá đơn'"
-                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)"
+                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || FunctionPermissionDTO.approver"
                         [(ngModel)]="invoice.VATAddress" (blur)="onValueChange('VATAddress')">
                     </ps-kendo-textarea>
 
                     <ps-kendo-textbox [label]="'Email xuất hoá đơn'"
-                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)"
+                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || FunctionPermissionDTO.approver"
                         [(ngModel)]="invoice.VATEmail" (blur)="onValueChange('VATEmail')">
                     </ps-kendo-textbox>
 
                     <ps-kendo-textarea [label]="'Ghi chú'"
-                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)"
+                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || FunctionPermissionDTO.approver"
                         [(ngModel)]="invoice.VATNote" (blur)="onValueChange('VATNote')">
                     </ps-kendo-textarea>
                 </div>
 
                 <div class="tab-body" *ngIf="invoice.VATType == SALOrderInvoiceVATTypeEnum.Company">
                     <ps-kendo-masked-textbox [label]="'Mã số thuế (*)'" [mask]="'0000000000'"
-                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)"
+                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || FunctionPermissionDTO.approver"
                         [(ngModel)]="invoice.VATCompanyTax" (blur)="onValueChange('VATCompanyTax')">
                     </ps-kendo-masked-textbox>
 
                     <ps-kendo-textbox [label]="'Tên đơn vị'"
-                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || !invoicecopy.VATCompanyTax"
+                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || FunctionPermissionDTO.approver || !invoicecopy.VATCompanyTax"
                         [(ngModel)]="invoice.VATCompanyName" (blur)="onValueChange('VATCompanyName')">
                     </ps-kendo-textbox>
 
                     <ps-kendo-textarea [label]="'Địa chỉ xuất hoá đơn'"
-                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || !invoicecopy.VATCompanyTax"
+                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || FunctionPermissionDTO.approver || !invoicecopy.VATCompanyTax"
                         [(ngModel)]="invoice.VATAddress" (blur)="onValueChange('VATAddress')">
                     </ps-kendo-textarea>
 
                     <ps-kendo-textbox [label]="'Email xuất hoá đơn'"
-                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || !invoicecopy.VATCompanyTax"
+                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || FunctionPermissionDTO.approver || !invoicecopy.VATCompanyTax"
                         [(ngModel)]="invoice.VATEmail" (blur)="onValueChange('VATEmail')">
                     </ps-kendo-textbox>
 
                     <ps-kendo-textarea [label]="'Ghi chú'"
-                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master) || !invoicecopy.VATCompanyTax"
+                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || FunctionPermissionDTO.approver || !invoicecopy.VATCompanyTax"
                         [(ngModel)]="invoice.VATNote" (blur)="onValueChange('VATNote')">
                     </ps-kendo-textarea>
                 </div>
 
                 <div class="tab-body" *ngIf="invoice.VATType == SALOrderInvoiceVATTypeEnum.Government">
                     <ps-kendo-textbox [label]="'Tên đơn vị quan hệ ngân sách'"
-                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)"
+                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || FunctionPermissionDTO.approver"
                         [(ngModel)]="invoice.VATBRUName" (blur)="onValueChange('VATBRUName')">
                     </ps-kendo-textbox>
 
                     <ps-kendo-textbox [label]="'Mã đơn vị quan hệ ngân sách (*)'"
-                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)"
+                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || FunctionPermissionDTO.approver"
                         [(ngModel)]="invoice.VATBRUCode" (blur)="onValueChange('VATBRUCode')">
                     </ps-kendo-textbox>
 
                     <ps-kendo-textarea [label]="'Ghi chú'"
-                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || (!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master)"
+                        [disabled]="womMaster.Status == enummasterstt.SUCCESS || invoice.Status == enuminvoicestt.Success || invoice.Status == enuminvoicestt.Cancled || FunctionPermissionDTO.approver"
                         [(ngModel)]="invoice.VATNote" (blur)="onValueChange('VATNote')">
                     </ps-kendo-textarea>
                 </div>

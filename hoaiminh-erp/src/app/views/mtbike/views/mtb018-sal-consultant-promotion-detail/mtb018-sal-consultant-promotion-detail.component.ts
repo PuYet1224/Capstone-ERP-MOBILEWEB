@@ -173,7 +173,7 @@ export class Mtb018SalConsultantPromotionDetailComponent implements OnInit, OnDe
   }
 
   public onpromotionchecked(promotion: POLPromotionMasterCusDTO) {
-    if (this.detail.Status != this.enumdetailstt.NEW || this.FunctionPermissionDTO.viewer || (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator))
+    if (this.detail.Status != this.enumdetailstt.NEW || (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator))
       return;
 
     var dto = new SALOrderDetailPromotionCusDTO();

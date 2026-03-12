@@ -170,7 +170,7 @@ export class Mtb014SalConsultantServicesDetailComponent implements OnInit, OnDes
   }
 
   public onservicechecked(service: CSServiceMasterCusDTO) {
-    if (this.detail.Status != this.enumdetailstt.NEW || this.FunctionPermissionDTO.viewer || (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator))
+    if (this.detail.Status != this.enumdetailstt.NEW || (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator))
       return;
 
     const updateParam: SALOrderDetailServiceCusDTO = {

@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  productionID: 1,
+  productionID: 3,
   apiServer: 'http://api.hoaiminh.vn',
   identityServer: 'http://identity.hoaiminh.vn'
 };

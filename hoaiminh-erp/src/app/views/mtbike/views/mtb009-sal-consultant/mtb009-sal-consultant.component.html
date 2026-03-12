@@ -147,7 +147,7 @@
         <ps-kendo-button (onClick)="onNavigate('home')">
             <span class="material-icons">arrow_back</span>
         </ps-kendo-button>
-        <ps-kendo-button [theme]="'primary'" [disabled]="!FunctionPermissionDTO.creator && !FunctionPermissionDTO.master" (onClick)="onNavigate('add')">
+        <ps-kendo-button [theme]="'primary'" [disabled]="!FunctionPermissionDTO.creator" (onClick)="onNavigate('add')">
             <span class="text">Tạo mới phiếu</span>
         </ps-kendo-button>
 
