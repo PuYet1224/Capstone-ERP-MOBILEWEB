@@ -1,0 +1,16 @@
+export enum SALOrderDetailStatusEnum {
+  NEW = 1,
+  Technical = 2,
+  Completed = 3,
+  OutboundRequest = 4,
+  OutboundCompleted = 5,
+  Payment = 6,
+  Canceled = 7,
+  PaymentRequest = 8,
+  OwnerInfo = 9,
+  ContactInfo = 10,
+  OtherInfo = 11,
+  RePayment = 12,
+  Selected = 13,
+  TransferRequest = 14,
+}
