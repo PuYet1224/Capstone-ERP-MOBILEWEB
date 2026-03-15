@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { State } from '@progress/kendo-data-query';
 import { POLSalesPolicyCusDTO } from 'src/app/models/dtos/e-dtos/pol-sales-policy.dto';
 import { PsKendoNotificationService } from 'src/app/services/core/ps-kendo-notification.service';
 import { SystemLoaderService } from 'src/app/views/system/services/system-loader.service';
@@ -14,6 +15,11 @@ import { MtbikeApiService } from '../../services/mtbike-api.service';
 export class Mtb034SalPolicyComponent implements OnInit, OnDestroy {
   public policylist: POLSalesPolicyCusDTO[] = [];
   private arrUnsubscribe: Subscription[] = [];
+
+  public gridState: State = {
+    skip: 0,
+    take: 100,
+  };
 
   constructor(
     private router: Router,
@@ -34,8 +40,7 @@ export class Mtb034SalPolicyComponent implements OnInit, OnDestroy {
 
   private getlistsalpolicy() {
     this.subLoader.loader(true);
-    // Giả lập gọi API hoặc gọi thật nếu backend đã có
-    const sub = this.mtbikeapi.GetListSALPolicy()
+    const sub = this.mtbikeapi.GetListSALPolicy(this.gridState)
       .subscribe((res) => {
         if (res.StatusCode === 0) {
           this.policylist = res.ObjectReturn || [];

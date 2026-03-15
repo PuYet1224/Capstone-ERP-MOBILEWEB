@@ -47,6 +47,16 @@ export class ViewsComponent implements OnInit, OnDestroy {
         }
       });
     }
+
+    // Luôn kiểm tra version config từ DB mỗi khi load trang
+    // Nếu DB thay đổi → tự động xóa cache cũ và cập nhật lại
+    if (!listurl.includes('login')) {
+      const subVersion = this.api.CheckAndRefreshConfig().subscribe({
+        complete: () => {
+          subVersion.unsubscribe();
+        }
+      });
+    }
   }
 
   ngOnDestroy(): void {

@@ -1728,9 +1728,9 @@ export class MtbikeApiService {
     });
   }
 
-  public GetListSALPolicy(): Observable<ResponseDTO> {
+  public GetListSALPolicy(param: State): Observable<ResponseDTO> {
     return new Observable<ResponseDTO>((obs) => {
-      this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).GetListSALPolicy)
+      this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).GetListSALPolicy, toDataSourceRequest(param))
         .subscribe((res: ResponseDTO) => {
           obs.next(res);
           obs.complete();

@@ -476,9 +476,9 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
       if (res.StatusCode === 0) {
         const data = res.ObjectReturn || {};
         this.liseVehicleCategory = {
-          ListVehicleCategory: data.ListVehicleCategory || [],
-          ListTypeOfVehicle: data.ListTypeOfVehicle || [],
-          ListGroupVehicleColor: data.ListGroupVehicleColor || [],
+          ListVehicleCategory: data.VehicleCategory || [],
+          ListTypeOfVehicle: data.TypeOfVehicle || [],
+          ListGroupVehicleColor: data.GroupVehicleColor || [],
           PriceRange: data.PriceRange || { MinPrice: 0, MaxPrice: 0 }
         };
 
