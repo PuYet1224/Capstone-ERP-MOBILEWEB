@@ -39,6 +39,10 @@ const routes: Routes = [
           {
             path: 'mtbike',
             loadChildren: () => import('./mtbike/mtbike.module').then(m => m.MtbikeModule),
+          },
+          {
+            path: 'config',
+            loadChildren: () => import('./mtbike/mtbike.module').then(m => m.MtbikeModule),
           }
         ]
       },

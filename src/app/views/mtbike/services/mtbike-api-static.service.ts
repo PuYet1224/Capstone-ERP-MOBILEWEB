@@ -69,6 +69,14 @@ export const fconsultant = {
   DeleteSALSelectedVehicles: '',
 };
 
+export const fpolicy = {
+  loader: false,
+  GetListSALPolicy: '',
+  GetSALPolicy: '',
+  UpdateSALPolicy: '',
+  DeleteSALPolicy: '',
+};
+
 export const fsale_wh = {
   loader: false,
   GetListSALWarehouse: '',
@@ -106,6 +114,8 @@ const namespaceMap: Record<string, any> = {
   dashboard: fdashboard,
   repair: frepair,
   consultant: fconsultant,
+  policy: fpolicy,
+  promotion: fpolicy,
   sale_wh: fsale_wh,
   collection: fcollection,
   payment: fpayment,

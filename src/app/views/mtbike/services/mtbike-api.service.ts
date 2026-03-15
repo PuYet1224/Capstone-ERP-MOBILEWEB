@@ -31,6 +31,7 @@ import { APIService } from "src/app/services/core/api.service";
 import { GetConfigService } from "src/app/services/core/ps-get-config.service";
 import { LSTypeOfVehicleCusDTO } from "../../../models/dtos/e-dtos/ls-type-of-vehicle.dto";
 import { LSVehicleCusDTO } from "../../../models/dtos/e-dtos/ls-vehicle.dto";
+import { POLSalesPolicyCusDTO } from "src/app/models/dtos/e-dtos/pol-sales-policy.dto";
 import { MtbikeApiStaticService } from "./mtbike-api-static.service";
 
 @Injectable({
@@ -1717,6 +1718,32 @@ export class MtbikeApiService {
   public GetListSALPromotionGroup(param: SALOrderMasterCusDTO): Observable<ResponseDTO> {
     return new Observable<ResponseDTO>((obs) => {
       this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).GetListSALPromotionGroup, param)
+        .subscribe((res: ResponseDTO) => {
+          obs.next(res);
+          obs.complete();
+        }, (errors) => {
+          obs.error(errors);
+          obs.complete();
+        });
+    });
+  }
+
+  public GetListSALPolicy(): Observable<ResponseDTO> {
+    return new Observable<ResponseDTO>((obs) => {
+      this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).GetListSALPolicy)
+        .subscribe((res: ResponseDTO) => {
+          obs.next(res);
+          obs.complete();
+        }, (errors) => {
+          obs.error(errors);
+          obs.complete();
+        });
+    });
+  }
+
+  public UpdateSALPolicy(p: POLSalesPolicyCusDTO): Observable<ResponseDTO> {
+    return new Observable<ResponseDTO>((obs) => {
+      this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).UpdateSALPolicy, p)
         .subscribe((res: ResponseDTO) => {
           obs.next(res);
           obs.complete();

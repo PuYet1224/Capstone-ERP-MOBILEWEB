@@ -59,9 +59,17 @@ export class Sys003FunctionComponent implements OnInit {
   public datamodule: SYSModuleCusDTO[] = [];
 
   public onclickfunction(func: SYSFunctionCusDTO) {
-    this.cache.setItem(KeyLocalStorageEnum.DLLPACKAGE, func.DLLPackage)
+    this.cache.setItem(KeyLocalStorageEnum.DLLPACKAGE, func.DLLPackage);
     ConfigDTO.dllpackage = func.DLLPackage;
-    const isloaded = MtbikeApiStaticService.getNamespace(func.DLLPackage).loader;
+    
+    const ns = MtbikeApiStaticService.getNamespace(func.DLLPackage);
+    if (!ns) {
+      console.error(`Namespace not found for DLLPackage: ${func.DLLPackage}. Please check MtbikeApiStaticService.namespaceMap`);
+      this.getapi(func.DLLPackage, func.FunctionURL);
+      return;
+    }
+
+    const isloaded = ns.loader;
     this.api.GetPermissionDLL(func.DLLPackage).subscribe(() => {
       if (isloaded)
         this.router.navigateByUrl(func.FunctionURL);

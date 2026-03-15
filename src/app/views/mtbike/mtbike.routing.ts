@@ -33,6 +33,7 @@ import { Mtb030SalPaymentReceiptComponent } from './views/mtb030-sal-payment-rec
 import { Mtb031SalPaymentSelectionComponent } from './views/mtb031-sal-payment-selection/mtb031-sal-payment-selection.component';
 import { Mtb032SalPaymentTotalComponent } from './views/mtb032-sal-payment-total/mtb032-sal-payment-total.component';
 import { Mtb033SalPaymentInvoiceComponent } from './views/mtb033-sal-payment-invoice/mtb033-sal-payment-invoice.component';
+import { Mtb034SalPolicyComponent } from './views/mtb034-sal-policy/mtb034-sal-policy.component';
 
 
 export const MtbikeRouting: Routes = [
@@ -176,5 +177,9 @@ export const MtbikeRouting: Routes = [
   {
     path: 'payment/invoice',
     component: Mtb033SalPaymentInvoiceComponent,
+  },
+  {
+    path: 'promotion',
+    component: Mtb034SalPolicyComponent,
   }
 ];
