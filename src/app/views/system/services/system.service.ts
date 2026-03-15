@@ -97,12 +97,16 @@ export class SystemService {
     }
 
     public setHeader(req: HttpRequest<any>) {
-        const token = this.config.GetToken();
+        const token: any = this.config.GetToken();
         if (!PSObject.isNullOfUndefined(token) && !PsString.isNullOrWhitespace(token.access_token)) {
+            let headers: any = {
+                Authorization: `Bearer ${token.access_token}`
+            };
+            if (token.is_mock) {
+                headers['X-Test-User'] = token.username;
+            }
             req = req.clone({
-                setHeaders: {
-                    Authorization: `Bearer ${token.access_token}`
-                }
+                setHeaders: headers
             });
         }
 

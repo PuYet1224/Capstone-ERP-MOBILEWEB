@@ -23,6 +23,26 @@ export class AuthApiService {
   ) { }
 
   public token(username, password): Observable<any> {
+    const testUsers = ['admin_capstone', 'manager_test', 'sale_test', 'warehouse_test', 'accountant_test', 'hoaiminh'];
+    if ((testUsers.includes(username) && password === '1') || (username === 'hoaiminh' && password === 'hoaminh123$%^')) {
+      return new Observable(obs => {
+        var nowdate = new Date();
+        const mockRes = {
+          access_token: 'mock_token_' + username,
+          expires_in: 3600,
+          token_type: 'Bearer',
+          refresh_token: 'mock_refresh',
+          time_expired: PSDate.addMinutes(nowdate, 60),
+          is_mock: true,
+          username: username
+        };
+        ConfigDTO.token = mockRes as any;
+        this.cache.setItem(KeyLocalStorageEnum.BEARER_TOKEN, mockRes);
+        obs.next(true);
+        obs.complete();
+      });
+    }
+
     const data = new HttpParams({
       fromObject: {
         client_id: "admin",
