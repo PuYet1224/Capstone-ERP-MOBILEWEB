@@ -23,18 +23,24 @@ export class AuthApiService {
   ) { }
 
   public token(username, password): Observable<any> {
+    const u = (username || '').trim().toLowerCase();
+    const p = (password || '').trim();
     const testUsers = ['admin_capstone', 'manager_test', 'sale_test', 'warehouse_test', 'accountant_test', 'hoaiminh'];
-    if ((testUsers.includes(username) && password === '1') || (username === 'hoaiminh' && password === 'hoaminh123$%^')) {
+    
+    console.log('Attempting login:', u);
+    
+    if ((testUsers.includes(u) && p === '1') || (u === 'hoaiminh' && p === 'hoaminh123$%^')) {
+      console.log('Mock login detected for:', u);
       return new Observable(obs => {
         var nowdate = new Date();
         const mockRes = {
-          access_token: 'mock_token_' + username,
+          access_token: 'mock_token_' + u,
           expires_in: 3600,
           token_type: 'Bearer',
           refresh_token: 'mock_refresh',
           time_expired: PSDate.addMinutes(nowdate, 60),
           is_mock: true,
-          username: username
+          username: u
         };
         ConfigDTO.token = mockRes as any;
         this.cache.setItem(KeyLocalStorageEnum.BEARER_TOKEN, mockRes);
