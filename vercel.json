@@ -1,8 +1,6 @@
 {
-  "version": 2,
   "buildCommand": "ng build --configuration=prod",
   "outputDirectory": "dist/hoaiminh-erp",
-  "framework": "angular",
   "rewrites": [
     {
       "source": "/(.*)",
