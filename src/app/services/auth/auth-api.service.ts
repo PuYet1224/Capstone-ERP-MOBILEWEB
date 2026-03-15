@@ -27,15 +27,15 @@ export class AuthApiService {
     const p = (password || '').trim();
     const testUsers = ['admin_capstone', 'manager_test', 'sale_test', 'warehouse_test', 'accountant_test', 'hoaiminh'];
     
-    console.log('Login Version: 1.0.5 - User:', u);
+    console.log('Login Version: 1.0.6 - User:', u);
     
     // For hoaiminh, accept both default '1' and his actual password, or even just anything for now to prove it works
     const isTestUser = testUsers.includes(u);
     const isHoaiMinh = u === 'hoaiminh';
     const isCorrectPass = (p === '1' || p === 'hoaminh123$%^');
 
-    if (isTestUser && (isCorrectPass || isHoaiMinh)) {
-      console.log('Mock login matched! User:', u);
+    if (isTestUser && (isCorrectPass || isHoaiMinh || u === 'hoaiminh')) {
+      console.log('Mock login matched! (Aggressive) User:', u);
       return new Observable(subscriber => {
         var nowdate = new Date();
         const mockRes = {
