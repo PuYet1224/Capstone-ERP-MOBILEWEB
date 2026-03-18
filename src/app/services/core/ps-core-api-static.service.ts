@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { environment } from "src/environments/environment.dev";
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +30,7 @@ export class CoreApiStaticService {
   static assignApi(apiList: any[]) {
     const apiObject = {};
     apiList.forEach(api => {
-      const fullUrl = `${api.ServerURL}${api.URL}${api.APIID}`;
+      const fullUrl = `${environment.apiServer}${api.URL}${api.APIID}`;
       apiObject[api.APIID] = fullUrl;
     });
     Object.assign(CoreApiStaticService, apiObject);

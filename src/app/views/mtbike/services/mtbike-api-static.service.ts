@@ -122,6 +122,7 @@ const namespaceMap: Record<string, any> = {
 };
 
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment.dev';
 
 @Injectable({
   providedIn: 'root',
@@ -131,7 +132,7 @@ export class MtbikeApiStaticService {
     apiList.forEach((api) => {
       const ns = namespaceMap[api.FunctionDLL];
       if (ns) {
-        ns[api.APIID] = `${api.ServerURL}${api.URL}${api.APIID}`;
+        ns[api.APIID] = `${environment.apiServer}${api.URL}${api.APIID}`;
         ns.loader = true;
       }
     });
