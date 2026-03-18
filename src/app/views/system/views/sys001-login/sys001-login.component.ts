@@ -13,7 +13,7 @@ import { PSObject } from 'src/app/services/utilities/ps-object';
 import { SystemApiService } from '../../services/system-api.service';
 import { SystemLoaderService } from '../../services/system-loader.service';
 import { SystemService } from '../../services/system.service';
-import { environment } from 'src/environments/environment.dev';
+import { environment } from 'src/environments/environment';
 declare var $: any;
 
 @Component({
