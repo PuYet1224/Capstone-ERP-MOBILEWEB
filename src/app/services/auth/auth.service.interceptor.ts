@@ -55,7 +55,6 @@ export class PS_AuthInterceptorService implements HttpInterceptor {
 
         return next.handle(req).pipe(
             catchError(err => {
-                // if (err.status !== 401) {
                 let error = "";
                 if (!PSObject.isNullOfUndefined(err)) {
                     if (!PSObject.isNullOfUndefined(err.error) && !PSObject.isNullOfUndefined(err.error.Message)) {
@@ -69,31 +68,6 @@ export class PS_AuthInterceptorService implements HttpInterceptor {
                     }
                 }
                 return throwError(error);
-                // }
-                // else {
-                //     var token = this.getconfig.GetToken();
-                //     if (!this.isRefresing) {
-                //         this.isRefresing = true;
-                //         this.refreshTokenSubject.next(null);
-                //         this.authapi.refreshToken(token).subscribe((data) => {
-                //             console.log('Gọi refreshtoken sau');
-
-                //             this.isRefresing = false;
-                //             this.refreshTokenSubject.next(data);
-                //             return next.handle(this.auth.setHeader(req));
-                //         },
-                //             error => {
-                //                 this.auth.logout();
-                //                 return throwError(error);
-                //             });
-                //     }
-
-                //     return this.refreshTokenSubject.pipe(
-                //         filter(token => token !== null),
-                //         take(1),
-                //         switchMap((token) => next.handle(this.auth.setHeader(req)))
-                //     );
-                // }
             })
         )
     }

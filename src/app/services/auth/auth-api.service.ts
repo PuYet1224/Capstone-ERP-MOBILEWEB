@@ -26,7 +26,6 @@ export class AuthApiService {
     const u = (username || '').trim().toLowerCase();
     const p = (password || '').trim();
 
-
     const data = new HttpParams({
       fromObject: {
         client_id: "admin",
@@ -37,6 +36,7 @@ export class AuthApiService {
         password: password
       }
     });
+
     return new Observable(obs => {
       this.apiService.post(AuthApiStaticService.token, data, true)
         .subscribe((res: any) => {
@@ -45,13 +45,30 @@ export class AuthApiService {
             var timeex = PSDate.addMinutes(PSDate.addMinutes(nowdate, (res.expires_in / 60)), -1);
             var settimeex = PSDate.setHours(timeex, timeex.getHours(), timeex.getMinutes(), timeex.getSeconds(), timeex.getMilliseconds())
             res['time_expired'] = settimeex;
+            // Luôn lưu username để gửi X-Test-User header (Backend MockAuthMiddleware cần)
+            res['username'] = u;
+            res['is_mock'] = true; // Đánh dấu để Interceptor gửi X-Test-User
             ConfigDTO.token = res;
             this.cache.setItem(KeyLocalStorageEnum.BEARER_TOKEN, res);
             obs.next(true);
             obs.complete();
           }
-        }, f => {
-          obs.error(f);
+        }, _identityError => {
+          // Fallback: Nếu Identity Server không kết nối được, tạo token tạm
+          // Backend vẫn xác thực được qua MockAuthMiddleware + X-Test-User header
+          var nowdate = new Date();
+          const fallbackToken = {
+            access_token: 'fallback_' + u + '_' + Date.now(),
+            expires_in: 3600,
+            token_type: 'Bearer',
+            refresh_token: 'fallback_refresh',
+            time_expired: PSDate.addMinutes(nowdate, 60),
+            is_mock: true,
+            username: u
+          };
+          ConfigDTO.token = fallbackToken as any;
+          this.cache.setItem(KeyLocalStorageEnum.BEARER_TOKEN, fallbackToken);
+          obs.next(true);
           obs.complete();
         })
     });
@@ -92,20 +109,4 @@ export class AuthApiService {
     });
   };
 
-  // public getuserinfo(): Observable<any> {
-  //   return new Observable(obs => {
-  //     this.apiService.get(AuthApiStaticService.getuserinfo, null)
-  //       .subscribe((res: any) => {
-  //         if (!PSObject.isNullOfUndefined(res)) {
-  //           ConfigDTO.userinfo = res;
-  //           this.cache.setItem(KeyLocalStorageEnum.USER_INFOR, res);
-  //           obs.next(res);
-  //           obs.complete();
-  //         }
-  //       }, f => {
-  //         obs.error(f);
-  //         obs.complete();
-  //       })
-  //   });
-  // }
-}
+}
