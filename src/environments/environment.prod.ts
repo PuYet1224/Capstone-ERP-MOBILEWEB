@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
   productionID: 3,
-  apiServer: '/proxy-api',
-  identityServer: '/proxy-identity'
+  apiServer: '/api/proxy-api',
+  identityServer: '/api/proxy-identity'
 };

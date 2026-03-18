@@ -3,12 +3,12 @@
   "outputDirectory": "dist/hoaiminh-erp",
   "rewrites": [
     {
-      "source": "/proxy-identity/:match*",
-      "destination": "http://identity.hoaiminh.vn/:match*"
+      "source": "/api/proxy-identity/:path*",
+      "destination": "/api/proxy-identity/:path*"
     },
     {
-      "source": "/proxy-api/:match*",
-      "destination": "http://puyet1224-001:Puyet1224%40@puyet1224-001-site1.jtempurl.com/:match*"
+      "source": "/api/proxy-api/:path*",
+      "destination": "/api/proxy-api/:path*"
     },
     {
       "source": "/(.*)",
