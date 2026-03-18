@@ -25,23 +25,7 @@ export class GetConfigService {
     return ConfigDTO.head;
   }
 
-  // public GetTokenHeader(): Observable<TokenDTO> {
-  //   if (PSObject.isNullOfUndefined(ConfigDTO.token) || PsString.isNullOrWhitespace(ConfigDTO.token.access_token)) {
-  //     var cachetoken = this.cache.getItem(KeyLocalStorageEnum.BEARER_TOKEN);
-  //     if (!PSObject.isNullOfUndefined(cachetoken))
-  //       ConfigDTO.token = this.cache.parseValue(cachetoken);
-  //   }
 
-  //   if (new Date(ConfigDTO.token.time_expired) < new Date()) {
-  //     return this.apiauth.refreshToken(ConfigDTO.token).pipe(
-  //       map(res => {
-  //         return ConfigDTO.token;
-  //       })
-  //     );
-  //   }
-  //   else
-  //     return of(ConfigDTO.token);
-  // }
 
   public GetToken(): TokenDTO {
     if (PSObject.isNullOfUndefined(ConfigDTO.token) || PsString.isNullOrWhitespace(ConfigDTO.token.access_token)) {
