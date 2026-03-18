@@ -6,6 +6,8 @@ export class TokenDTO extends BaseDTO {
     time_expired: Date;
     token_type: string;
     refresh_token: string;
+    is_mock?: boolean;
+    username?: string;
     clearData?: Function = () => {
         this.access_token = "";
         this.expires_in = 0;

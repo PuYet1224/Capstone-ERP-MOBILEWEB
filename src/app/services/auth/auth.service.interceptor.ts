@@ -26,8 +26,18 @@ export class PS_AuthInterceptorService implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         if (!req.url.includes('/token')) {
             const token = this.config.GetToken();
-            var time = token ? PSDate.addHours(new Date(token.time_expired), -7) : null;
-            if (time && time < new Date()) {
+            var isExpired = false;
+            if (token && token.time_expired) {
+                // Nếu là mock token, không cần check expiry gắt gao hoặc bỏ qua check refresh
+                if (token.is_mock) {
+                    isExpired = false;
+                } else {
+                    var time = PSDate.addHours(new Date(token.time_expired), -7);
+                    isExpired = time < new Date();
+                }
+            }
+
+            if (isExpired) {
                 if (!this.isRefresing) {
                     this.isRefresing = true;
                     this.refreshTokenSubject.next(null);
@@ -62,8 +72,22 @@ export class PS_AuthInterceptorService implements HttpInterceptor {
                     // Xóa URL khỏi set sau 10 giây để cho phép retry lại trong tương lai
                     setTimeout(() => this.retriedUrls.delete(req.url), 10000);
                     return timer(2000).pipe(
-                        switchMap(() => next.handle(this.auth.setHeader(req)))
+                        switchMap(() => next.handle(this.auth.setHeader(req)).pipe(
+                            catchError(retryErr => {
+                                // Retry vẫn bị 401 → token thực sự hết hạn → logout về login
+                                if (retryErr instanceof HttpErrorResponse && retryErr.status === 401) {
+                                    this.auth.logout();
+                                }
+                                return throwError(retryErr);
+                            })
+                        ))
                     );
+                }
+
+                // Bất kỳ lỗi 401 nào khác (đã retry rồi) → logout về login
+                if (err instanceof HttpErrorResponse && err.status === 401 && !req.url.includes('/token')) {
+                    this.auth.logout();
+                    return throwError(err);
                 }
 
                 let error = "";

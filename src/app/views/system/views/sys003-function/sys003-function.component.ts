@@ -32,6 +32,7 @@ export class Sys003FunctionComponent implements OnInit {
   private arrUnsubscribe: Subscription[] = [];
 
   ngOnInit(): void {
+    this.loader.reset();
     //Lấy head được chọn trên cache
     var temp = this.cache.getItem(KeyLocalStorageEnum.HEAD_OBJECT);
     var cacheHead = this.cache.parseValue(temp);
