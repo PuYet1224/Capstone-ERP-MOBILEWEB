@@ -1,21 +1,36 @@
-const https = require('http');
+const http = require('http');
 const url = require('url');
 
 module.exports = async (req, res) => {
+  // Handle CORS preflight
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', '*');
+    res.status(200).end();
+    return;
+  }
+
   const targetBase = 'http://puyet1224-001-site1.jtempurl.com';
   const pathMatch = req.url.replace(/^\/api\/proxy-api/, '');
   const targetUrl = targetBase + pathMatch;
 
-  // Basic Auth cho SmarterASP.NET hosting
-  const basicAuth = Buffer.from('puyet1224-001:Puyet1224@').toString('base64');
+  // Chuẩn bị body
+  let bodyBuffer = null;
+  if (req.body && req.method !== 'GET') {
+    const bodyStr = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
+    bodyBuffer = Buffer.from(bodyStr, 'utf-8');
+  }
 
-  const headers = { ...req.headers };
-  // Thêm Basic Auth header cho hosting
-  headers['authorization-hosting'] = `Basic ${basicAuth}`;
-  // Giữ nguyên Authorization header từ FE (JWT Bearer token)
-  // Xóa host header để tránh lỗi
-  delete headers['host'];
+  // Copy headers cần thiết
+  const headers = {};
+  ['content-type', 'authorization', 'accept', 'accept-language', 'x-test-user', 'company', 'datapermission'].forEach(h => {
+    if (req.headers[h]) headers[h] = req.headers[h];
+  });
   headers['host'] = 'puyet1224-001-site1.jtempurl.com';
+  if (bodyBuffer) {
+    headers['content-length'] = bodyBuffer.length;
+  }
 
   const parsed = url.parse(targetUrl);
 
@@ -25,25 +40,27 @@ module.exports = async (req, res) => {
     path: parsed.path,
     method: req.method,
     headers: headers,
-    auth: 'puyet1224-001:Puyet1224@', // HTTP Basic Auth
+    auth: 'puyet1224-001:Puyet1224@',
   };
 
-  return new Promise((resolve, reject) => {
-    const proxyReq = https.request(options, (proxyRes) => {
-      res.status(proxyRes.statusCode);
-      // Forward response headers
+  return new Promise((resolve) => {
+    const proxyReq = http.request(options, (proxyRes) => {
+      const respHeaders = {};
       Object.keys(proxyRes.headers).forEach(key => {
-        res.setHeader(key, proxyRes.headers[key]);
+        if (key !== 'transfer-encoding') {
+          respHeaders[key] = proxyRes.headers[key];
+        }
       });
-      // CORS headers
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-      res.setHeader('Access-Control-Allow-Headers', '*');
+      respHeaders['access-control-allow-origin'] = '*';
+      respHeaders['access-control-allow-methods'] = 'GET, POST, PUT, DELETE, OPTIONS';
+      respHeaders['access-control-allow-headers'] = '*';
 
       let body = [];
       proxyRes.on('data', chunk => body.push(chunk));
       proxyRes.on('end', () => {
-        res.end(Buffer.concat(body));
+        const data = Buffer.concat(body);
+        res.writeHead(proxyRes.statusCode, respHeaders);
+        res.end(data);
         resolve();
       });
     });
@@ -53,10 +70,8 @@ module.exports = async (req, res) => {
       resolve();
     });
 
-    // Forward request body
-    if (req.body) {
-      const bodyStr = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
-      proxyReq.write(bodyStr);
+    if (bodyBuffer) {
+      proxyReq.write(bodyBuffer);
     }
     proxyReq.end();
   });

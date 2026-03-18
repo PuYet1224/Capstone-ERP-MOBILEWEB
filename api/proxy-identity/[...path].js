@@ -1,15 +1,45 @@
-const https = require('http');
+const http = require('http');
 const url = require('url');
 const querystring = require('querystring');
 
 module.exports = async (req, res) => {
+  // Handle CORS preflight
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', '*');
+    res.status(200).end();
+    return;
+  }
+
   const targetBase = 'http://identity.hoaiminh.vn';
   const pathMatch = req.url.replace(/^\/api\/proxy-identity/, '');
   const targetUrl = targetBase + pathMatch;
 
-  const headers = { ...req.headers };
-  delete headers['host'];
+  // Chuẩn bị body trước để tính Content-Length
+  let bodyBuffer = null;
+  if (req.body && req.method !== 'GET') {
+    let bodyStr;
+    const ct = req.headers['content-type'] || '';
+    if (typeof req.body === 'string') {
+      bodyStr = req.body;
+    } else if (ct.includes('x-www-form-urlencoded')) {
+      bodyStr = querystring.stringify(req.body);
+    } else {
+      bodyStr = JSON.stringify(req.body);
+    }
+    bodyBuffer = Buffer.from(bodyStr, 'utf-8');
+  }
+
+  const headers = {};
+  // Copy headers cần thiết (bỏ qua headers Vercel thêm vào)
+  ['content-type', 'authorization', 'accept', 'accept-language'].forEach(h => {
+    if (req.headers[h]) headers[h] = req.headers[h];
+  });
   headers['host'] = 'identity.hoaiminh.vn';
+  if (bodyBuffer) {
+    headers['content-length'] = bodyBuffer.length;
+  }
 
   const parsed = url.parse(targetUrl);
 
@@ -21,20 +51,25 @@ module.exports = async (req, res) => {
     headers: headers,
   };
 
-  return new Promise((resolve, reject) => {
-    const proxyReq = https.request(options, (proxyRes) => {
-      res.status(proxyRes.statusCode);
+  return new Promise((resolve) => {
+    const proxyReq = http.request(options, (proxyRes) => {
+      // Copy response headers
+      const respHeaders = {};
       Object.keys(proxyRes.headers).forEach(key => {
-        res.setHeader(key, proxyRes.headers[key]);
+        if (key !== 'transfer-encoding') {
+          respHeaders[key] = proxyRes.headers[key];
+        }
       });
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-      res.setHeader('Access-Control-Allow-Headers', '*');
+      respHeaders['access-control-allow-origin'] = '*';
+      respHeaders['access-control-allow-methods'] = 'GET, POST, PUT, DELETE, OPTIONS';
+      respHeaders['access-control-allow-headers'] = '*';
 
       let body = [];
       proxyRes.on('data', chunk => body.push(chunk));
       proxyRes.on('end', () => {
-        res.end(Buffer.concat(body));
+        const data = Buffer.concat(body);
+        res.writeHead(proxyRes.statusCode, respHeaders);
+        res.end(data);
         resolve();
       });
     });
@@ -44,17 +79,8 @@ module.exports = async (req, res) => {
       resolve();
     });
 
-    // Forward request body
-    if (req.body) {
-      let bodyStr;
-      if (typeof req.body === 'string') {
-        bodyStr = req.body;
-      } else if (headers['content-type'] && headers['content-type'].includes('x-www-form-urlencoded')) {
-        bodyStr = querystring.stringify(req.body);
-      } else {
-        bodyStr = JSON.stringify(req.body);
-      }
-      proxyReq.write(bodyStr);
+    if (bodyBuffer) {
+      proxyReq.write(bodyBuffer);
     }
     proxyReq.end();
   });
