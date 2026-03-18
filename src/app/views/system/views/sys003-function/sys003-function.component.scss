@@ -1,23 +1,17 @@
 @import "../../../../../assets/scss/colors";
 
-::ng-deep
-{
-  sys003-function
-  {
-    .ath003
-    {
+::ng-deep {
+  sys003-function {
+    .ath003 {
       height: 100%;
 
-      ps-header-main
-      {
-        .store
-        {
+      ps-header-main {
+        .store {
           height: 100%;
           display: flex;
           align-items: center;
 
-          .image
-          {
+          .image {
             height: 80%;
             width: 80px;
             display: flex;
@@ -25,15 +19,13 @@
             justify-content: center;
             overflow: hidden;
 
-            img
-            {
+            img {
               height: 100%;
 
             }
           }
 
-          .group-name
-          {
+          .group-name {
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -41,16 +33,14 @@
             gap: 4px;
             width: 160px;
 
-            .short-name
-            {
+            .short-name {
               font-size: 15px;
               font-weight: bold;
               text-transform: uppercase;
               color: $white;
             }
 
-            .name
-            {
+            .name {
               font-size: 13px;
               color: $white;
             }
@@ -58,14 +48,12 @@
         }
       }
 
-      .body
-      {
+      .body {
         padding: 8px 0;
         height: calc(100% - 104px);
         overflow: hidden;
 
-        .scroll
-        {
+        .scroll {
           display: flex;
           flex-direction: column;
           gap: 8px;
@@ -73,109 +61,70 @@
           overflow-y: auto;
           height: 100%;
 
-          .like-function
-          {
-            padding: 8px;
+          .title {
+            height: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
 
-            ps-kendo-button
-            {
-              button
-              {
-                width: 36px;
-                border: none;
-                text-wrap: auto;
-                display: flex;
-                align-items: flex-start;
-
-                .k-button-text .material-icons
-                {
-                  color: $primary;
-                }
-              }
+            .label {
+              font-weight: bold;
             }
 
-            .title
-            {
-              height: 36px;
-              display: flex;
+            button {
               align-items: center;
-              gap: 8px;
-
-              .label
-              {
-                font-weight: bold;
-              }
-
-              button
-              {
-                align-items: center;
-              }
             }
+          }
 
-            .function
-            {
-              display: flex;
-              width: 100%;
-              padding-top: 4px;
-              gap: 8px;
-              flex-wrap: wrap;
+          .function {
+            display: flex;
+            width: 100%;
+            padding-top: 4px;
+            gap: 8px;
+            flex-wrap: wrap;
 
-              ps-kendo-button
-              {
-                width: calc((100% - 16px) / 3);
-                height: 64px;
+            ps-kendo-button {
+              width: calc((100% - 16px) / 3);
+              height: 64px;
 
-                button
-                {
-                  width: 100%;
-                  height: 100%;
-                  border: none;
-                  padding: 4px 0;
+              button {
+                width: 100%;
+                height: 100%;
+                border: none;
+                padding: 4px 0;
 
-                  .k-button-text
-                  {
-                    display: flex;
-                    flex-direction: column;
-                    text-transform: none;
-                    gap: 4px;
+                .k-button-text {
+                  display: flex;
+                  flex-direction: column;
+                  text-transform: none;
+                  gap: 4px;
 
-                    .material-icons,
-                    .function-name
-                    {
-                      color: $primary;
-                    }
+                  .material-icons,
+                  .function-name {
+                    color: $primary;
                   }
                 }
               }
             }
           }
 
-          .like-function:first-child
-          {
-            padding-top: 0;
-          }
-
-          .module
-          {
+          .module {
             padding: 8px;
             background-color: $white;
             border-radius: 8px;
 
-            .title
-            {
+            .title {
               height: 36px;
               display: flex;
               align-items: center;
               justify-content: center;
 
-              .label
-              {
+              .label {
                 height: 28px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 border-bottom: 1px solid $border;
-                color: $primary; /* Ensure color is visible */
                 font-weight: bold;
               }
             }
@@ -183,8 +132,5 @@
         }
       }
     }
-
-
-
   }
 }

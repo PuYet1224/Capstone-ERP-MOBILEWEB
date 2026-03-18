@@ -16,39 +16,16 @@
     <!-- START: BODY -->
     <div class="body">
         <div class="scroll">
-            <!-- START: LIKE FUNCTION -->
-            <div class="like-function">
-                <div class="title">
-                    <div class="label">
-                        Các tính năng ưu thích
-                    </div>
-                    <ps-kendo-button>
-                        <span class="material-icons">tune</span>
-                    </ps-kendo-button>
-                </div>
-
-                <div class="function">
-                    <ps-kendo-button>
-                        <span class="material-icons">motorcycle</span>
-                        <div class="function-name">Bán xe</div>
-                    </ps-kendo-button>
-                    <ps-kendo-button>
-                        <span class="material-icons">construction</span>
-                        <div class="function-name">Bảo trì - sửa chữa</div>
-                    </ps-kendo-button>
-                    <ps-kendo-button>
-                        <span class="material-icons">dashboard</span>
-                        <div class="function-name">Dashboard</div>
-                    </ps-kendo-button>
+            <div class="title">
+                <div class="label">
+                    Danh sách các tính năng
                 </div>
             </div>
-            <!-- END: LIKE FUNCTION -->
-
             <!-- START: MODULE -->
             <div class="like-function module" *ngFor="let module of datamodule">
                 <div class="title">
                     <div class="label">
-                        {{module.ModuleName}}
+                        Bán hàng
                     </div>
                 </div>
 
