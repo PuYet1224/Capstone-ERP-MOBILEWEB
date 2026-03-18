@@ -8,7 +8,7 @@
     },
     {
       "source": "/api/proxy-api/:path*",
-      "destination": "http://puyet1224-001-site1.jtempurl.com/:path*"
+      "destination": "http://puyet1224-001:Puyet1224%40@puyet1224-001-site1.jtempurl.com/:path*"
     },
     {
       "source": "/(.*)",
