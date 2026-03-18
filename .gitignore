@@ -48,3 +48,5 @@ Thumbs.db
 
 # Test files
 test_api.js
+hoaiminh-erp/.angular/cache/
+hoaiminh-erp/node_modules/
