@@ -11,5 +11,4 @@ export class SystemApiStaticService {
   public static GetEmployeeAccount: string = environment.apiServer + '/api/admin/GetEmployeeAccount';
   public static GetPermissionDLL: string = environment.apiServer + '/api/admin/GetPermissionDLL';
   public static GetConfig: string = environment.apiServer + '/api/admin/GetConfig';
-  public static GetConfigVersion: string = environment.apiServer + '/api/admin/GetConfigVersion';
 }

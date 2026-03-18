@@ -48,9 +48,10 @@ export class PS_AuthInterceptorService implements HttpInterceptor {
                     switchMap(() => next.handle(this.auth.setHeader(req)))
                 );
             }
+            
+            // Nếu không phải gửi token request, không bị hết hạn token, thì tự thêm Auth Header vào
+            req = this.auth.setHeader(req);
         }
-
-        req = this.auth.setHeader(req);
 
         return next.handle(req).pipe(
             catchError(err => {

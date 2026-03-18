@@ -25,34 +25,7 @@ export class AuthApiService {
   public token(username, password): Observable<any> {
     const u = (username || '').trim().toLowerCase();
     const p = (password || '').trim();
-    const testUsers = ['admin_capstone', 'manager_test', 'sale_test', 'warehouse_test', 'accountant_test', 'hoaiminh'];
-    
-    console.log('Login Version: 1.0.6 - User:', u);
-    
-    // For hoaiminh, accept both default '1' and his actual password, or even just anything for now to prove it works
-    const isTestUser = testUsers.includes(u);
-    const isHoaiMinh = u === 'hoaiminh';
-    const isCorrectPass = (p === '1' || p === 'hoaminh123$%^');
 
-    if (isTestUser && (isCorrectPass || isHoaiMinh || u === 'hoaiminh')) {
-      console.log('Mock login matched! (Aggressive) User:', u);
-      return new Observable(subscriber => {
-        var nowdate = new Date();
-        const mockRes = {
-          access_token: 'mock_token_' + u,
-          expires_in: 3600,
-          token_type: 'Bearer',
-          refresh_token: 'mock_refresh',
-          time_expired: PSDate.addMinutes(nowdate, 60),
-          is_mock: true,
-          username: u
-        };
-        ConfigDTO.token = mockRes as any;
-        this.cache.setItem(KeyLocalStorageEnum.BEARER_TOKEN, mockRes);
-        subscriber.next(true);
-        subscriber.complete();
-      });
-    }
 
     const data = new HttpParams({
       fromObject: {

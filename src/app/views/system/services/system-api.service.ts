@@ -108,60 +108,22 @@ export class SystemApiService {
   }
 
   /**
-   * Gọi API GetConfigVersion để lấy version hash từ DB.
-   * So sánh với version đã lưu trong localStorage:
-   * - Nếu khác → Xóa toàn bộ config cache (in-memory + localStorage) và gọi lại GetConfig
-   * - Nếu giống → Không làm gì (dùng cache cũ)
-   *
-   * Nhờ vậy, khi DB thay đổi, FE tự động biết và cập nhật lại mà không cần xóa cache thủ công.
+   * Refactored CheckAndRefreshConfig
+   * Bỏ qua gọi API GetConfigVersion, gọi thẳng GetConfig để làm mới cache lúc khởi động.
    */
   public CheckAndRefreshConfig(): Observable<boolean> {
     return new Observable<boolean>(obs => {
-      this.api.post(SystemApiStaticService.GetConfigVersion).subscribe(
-        (res: ResponseDTO) => {
-          if (res.StatusCode == 0) {
-            const newVersion = res.ObjectReturn;
-            const cachedVersionRaw = this.cache.getItem(KeyLocalStorageEnum.CONFIG_VERSION);
-            const cachedVersion = cachedVersionRaw ? this.cache.parseValue(cachedVersionRaw) : null;
-
-            if (cachedVersion !== newVersion) {
-              console.log(`[ConfigVersion] DB đã thay đổi: ${cachedVersion} → ${newVersion}. Đang cập nhật cache...`);
-
-              // Xóa toàn bộ cache config cũ
-              this.configCache.clearAll();
-
-              // Lưu version mới
-              this.cache.setItem(KeyLocalStorageEnum.CONFIG_VERSION, newVersion);
-
-              // Gọi lại GetConfig để cập nhật dữ liệu mới nhất
-              this.GetConfig().subscribe({
-                next: () => {
-                  console.log('[ConfigVersion] Đã cập nhật config mới từ DB thành công.');
-                  obs.next(true); // true = có thay đổi
-                  obs.complete();
-                },
-                error: (err) => {
-                  console.error('[ConfigVersion] Lỗi khi gọi GetConfig:', err);
-                  obs.next(true);
-                  obs.complete();
-                }
-              });
-            } else {
-              console.log('[ConfigVersion] Config chưa thay đổi, sử dụng cache.');
-              obs.next(false); // false = không có thay đổi
-              obs.complete();
-            }
-          } else {
-            obs.next(false);
-            obs.complete();
-          }
+      this.configCache.clearAll(); // Xóa in-memory cache để load lại
+      this.GetConfig().subscribe({
+        next: () => {
+          obs.next(true); // Đã refresh thành công
+          obs.complete();
         },
-        (err) => {
-          console.error('[ConfigVersion] Lỗi khi kiểm tra version:', err);
+        error: (err) => {
           obs.next(false);
           obs.complete();
         }
-      );
+      });
     });
   }
 }
