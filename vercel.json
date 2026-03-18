@@ -1,20 +1,14 @@
 {
   "buildCommand": "ng build --configuration=prod",
   "outputDirectory": "dist/hoaiminh-erp",
-  "functions": {
-    "api/**/*.js": {
-      "memory": 128,
-      "maxDuration": 30
-    }
-  },
   "rewrites": [
     {
-      "source": "/api/proxy-identity/(.*)",
-      "destination": "/api/proxy-identity/$1"
+      "source": "/api/proxy-identity/:path*",
+      "destination": "http://identity.hoaiminh.vn/:path*"
     },
     {
-      "source": "/api/proxy-api/(.*)",
-      "destination": "/api/proxy-api/$1"
+      "source": "/api/proxy-api/:path*",
+      "destination": "http://puyet1224-001-site1.jtempurl.com/:path*"
     },
     {
       "source": "/(.*)",
