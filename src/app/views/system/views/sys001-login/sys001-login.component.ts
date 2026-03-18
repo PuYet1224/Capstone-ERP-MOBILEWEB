@@ -13,6 +13,7 @@ import { PSObject } from 'src/app/services/utilities/ps-object';
 import { SystemApiService } from '../../services/system-api.service';
 import { SystemLoaderService } from '../../services/system-loader.service';
 import { SystemService } from '../../services/system.service';
+import { environment } from 'src/environments/environment.dev';
 declare var $: any;
 
 @Component({
@@ -38,12 +39,9 @@ export class Sys001LoginComponent implements OnDestroy, OnInit, AfterViewInit {
   private arrUnsubscribe: Subscription[] = [];
 
   ngOnInit() {
-    // this.cache.setItem(KeyLocalStorageEnum.BEARER_TOKEN, {
-    //   "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjZCN0FDQzUyMDMwNUJGREI0RjcyNTJEQUVCMjE3N0NDMDkxRkFBRTEiLCJ0eXAiOiJKV1QiLCJ4NXQiOiJhM3JNVWdNRnY5dFBjbExhNnlGM3pBa2ZxdUUifQ.eyJuYmYiOjE3NjMxMTI1NzksImV4cCI6MTc2MzExNjE3OSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdCIsImF1ZCI6WyJodHRwOi8vbG9jYWxob3N0L3Jlc291cmNlcyIsImFkbWluYXBpIl0sImNsaWVudF9pZCI6ImFkbWluIiwic3ViIjoiNjI4Zjk2NWEtNzJmOS00MjEzLTljNzEtMzMyMWRkZDBiMzZjIiwiYXV0aF90aW1lIjoxNzYzMTEyNTc5LCJpZHAiOiJsb2NhbCIsInByb2ZpbGUiOiIxIiwibmFtZSI6Ik5ndXnhu4VuIEh14buzbmggTWFpIiwic2NvcGUiOlsiYWRtaW5hcGkiLCJvZmZsaW5lX2FjY2VzcyJdLCJhbXIiOlsicGFzc3dvcmQiXX0.VgV_SFuYeSkgU3XhTkX7FDx8ag7JRZhjahS4WT_umONUP4qna3w3ZmshvyipGDEhulB-pHvBGgYXzqbq7pPSnm1YbuFgBvAo1ZLDie3BsHk3IGY4KgqT_jA87tkLRgcE2tftfT2-i2RxFRdsP8mqIlEJFulgsGUvITDZiccfCVg3RMFUxJsLEBGvpQJ4AGXTSZwnEMNjc1DkpimG4nFZ2noDRKoKjqFC_beIMtHxzkyyeJk_eA9CJ29rvqhzcyvZ0i2IghWeoTiVCKzZHZSwCuWIQL5v5Sn8qS3QmACiwW3ZSHw6hgsvX0DrrfiCHJ3elfTQTSnPax73sRZ6xefeQQ",
-    //   "expires_in": 3600,
-    //   "token_type": "Bearer",
-    //   "refresh_token": "b96e529181106f6fc0d1e5a33068e35d301384b469325c686cbdf25b44fd32b0"
-    // })
+    // Đánh thức server hosting khỏi chế độ ngủ (cold start)
+    fetch(environment.apiServer + '/api/ping').catch(() => {});
+
     const token = this.config.GetToken();
     var time = token ? PSDate.addHours(new Date(token.time_expired), -7) : null;
     if (time && time > new Date()) {
