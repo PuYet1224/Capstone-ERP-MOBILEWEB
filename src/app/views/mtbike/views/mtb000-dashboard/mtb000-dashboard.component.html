@@ -69,8 +69,8 @@
                 </div>
             </div>
             <div class="body-bottom">
-                <ps-kendo-button [theme]="'primary-outline'" (click)="openFilterPopup(false)">quay về</ps-kendo-button>
-                <ps-kendo-button [theme]="'primary'" (click)="applyFilter()">lọc dữ liệu</ps-kendo-button>
+                <ps-kendo-button [theme]="'primary-outline'" (click)="openFilterPopup(false)">Quay về</ps-kendo-button>
+                <ps-kendo-button [theme]="'primary'" (click)="applyFilter()">Lọc dữ liệu</ps-kendo-button>
             </div>
         </div>
     </div>
@@ -90,10 +90,6 @@
     </ps-header-back>
     <!-- END: OVERLAY -->
     <div class="dashboard-container">
-        <!-- START - HEADER -->
-
-        <!-- END - HEADER -->
-
         <!-- START - OVERVIEW -->
         <div class="overview">
             <div class="overview-title">
@@ -114,7 +110,7 @@
                 <div class="content-right">
                     <div>: {{overview.RevenueActual | number}}₫</div>
                     <div>: {{overview.TotalVehicleSold}}</div>
-                    <div>: <span>{{overview.TotalNewCustomer}}</span> | {{overview.TotalTransactions}}</div>
+                    <div>:<span>&nbsp;{{overview.TotalNewCustomer}}&nbsp;</span> | {{overview.TotalTransactions}}</div>
                 </div>
             </div>
         </div>
