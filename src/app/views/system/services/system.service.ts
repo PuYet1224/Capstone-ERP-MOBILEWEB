@@ -27,15 +27,12 @@ export class SystemService {
         var that = this;
         return new Promise<boolean>((resolve) => {
             if (!PSObject.isNullOfUndefined(ConfigDTO.token) &&
-                !PsString.isNullOrWhitespace(ConfigDTO.token.access_token) &&
-                !PSObject.isNullOfUndefined(ConfigDTO.head) &&
-                !PSObject.isNullOfUndefined(ConfigDTO.head.Head))
+                !PsString.isNullOrWhitespace(ConfigDTO.token.access_token))
                 resolve(true);
             else {
                 var cacheToken = that.cache.getItem(KeyLocalStorageEnum.BEARER_TOKEN);
-                var headToken = that.cache.getItem(KeyLocalStorageEnum.HEAD_OBJECT);
 
-                if (PSObject.isNullOfUndefined(cacheToken) || PSObject.isNullOfUndefined(headToken))
+                if (PSObject.isNullOfUndefined(cacheToken))
                     resolve(false);
                 else {
                     var checktoken = false;
@@ -68,13 +65,7 @@ export class SystemService {
                         } catch (e) {}
                     }
 
-                    var checkhead = false;
-                    var head = that.cache.parseValue(headToken);
-                    if (!PSObject.isNullOfUndefined(head) && !PSObject.isNullOfUndefined(head.Head)) {
-                        ConfigDTO.head = head;
-                        checkhead = true;
-                    }
-                    resolve(checktoken && checkhead);
+                    resolve(checktoken);
                 }
             }
         });

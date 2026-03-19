@@ -54,6 +54,7 @@ export class AuthApiService {
             obs.complete();
           } else {
             console.warn("Identity Server returned success but with error body:", res);
+            // Ép buộc dùng Mock Auth kể cả khi sai user/pass trên local
             this.handleFallback(u, obs);
           }
         }, err => {
