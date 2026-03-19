@@ -62,7 +62,6 @@
           height: 100%;
 
           .title {
-            height: 24px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -77,15 +76,12 @@
           }
 
           .function {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             width: 100%;
-            padding-top: 4px;
-            gap: 8px;
-            flex-wrap: wrap;
+            gap: 16px;
 
             ps-kendo-button {
-              width: calc((100% - 16px) / 3);
-              height: 64px;
 
               button {
                 width: 100%;
@@ -103,29 +99,46 @@
                   .function-name {
                     color: $primary;
                   }
+
+                  .material-icons {
+                    font-size: 28px;
+                  }
+
+                  .function-name {
+                    font-weight: bold;
+                  }
                 }
               }
             }
           }
 
           .module {
-            padding: 8px;
+            padding: 16px;
             background-color: $white;
             border-radius: 8px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            border-top: 2px solid $primary;
+            margin-top: 28px;
+            position: relative;
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 
             .title {
-              height: 36px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
+              position: absolute;
+              top: -37px;
+              left: -1px;
+              background: $primary;
+              padding: 8px;
+              width: 86px;
+              border-top-right-radius: 99px;
 
               .label {
-                height: 28px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                border-bottom: 1px solid $border;
                 font-weight: bold;
+                color: $white;
+                font-size: 13px;
               }
             }
           }
