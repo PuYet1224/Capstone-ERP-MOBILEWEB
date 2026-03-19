@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { HttpOptionsInterface } from "../../models/dtos/http-options.interface";
-import { environment } from "src/environments/environment.dev";
+import { environment } from "src/environments/environment";
 
 @Injectable({
     providedIn: 'root'

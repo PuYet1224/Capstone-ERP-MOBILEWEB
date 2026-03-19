@@ -34,6 +34,7 @@ export class Sys002StoreComponent implements OnInit, OnDestroy {
   private arrUnsubscribe: Subscription[] = [];
 
   ngOnInit(): void {
+    this.loader.reset();
     this.getListHead();
 
     var cacheuurl = this.cache.getItem(KeyLocalStorageEnum.OUT_URL);
@@ -69,9 +70,12 @@ export class Sys002StoreComponent implements OnInit, OnDestroy {
           ConfigDTO.head = this.listHead[0];
         this.cache.setItem(KeyLocalStorageEnum.HEAD_LIST, this.listHead);
         this.loader.loader(false);
-      } else
+      } else {
+        this.loader.loader(false);
         this.notification.onError(`Lỗi lấy danh sách head: ${res.ErrorString}`);
+      }
     }, (err) => {
+      this.loader.loader(false);
       this.notification.onError(`Lỗi lấy danh sách head: ${err.message}`);
     })
 

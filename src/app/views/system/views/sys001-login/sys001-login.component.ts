@@ -13,7 +13,7 @@ import { PSObject } from 'src/app/services/utilities/ps-object';
 import { SystemApiService } from '../../services/system-api.service';
 import { SystemLoaderService } from '../../services/system-loader.service';
 import { SystemService } from '../../services/system.service';
-import { environment } from 'src/environments/environment.dev';
+import { environment } from 'src/environments/environment';
 declare var $: any;
 
 @Component({
@@ -43,8 +43,13 @@ export class Sys001LoginComponent implements OnDestroy, OnInit, AfterViewInit {
     fetch(environment.apiServer + '/api/ping').catch(() => {});
 
     const token = this.config.GetToken();
-    var time = token ? PSDate.addHours(new Date(token.time_expired), -7) : null;
-    if (time && time > new Date()) {
+    if (token && token.time_expired) {
+      var time = PSDate.addHours(new Date(token.time_expired), -7);
+      if (time < new Date()) {
+        this.sysservices.logout();
+      }
+    } else if (token) {
+      // Nếu có token nhưng không có time_expired (lỗi data) -> xóa luôn cho sạch
       this.sysservices.logout();
     }
 
