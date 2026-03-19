@@ -1,0 +1,202 @@
+<div class="mtb021-document-transaction">
+    <!-- START: HEADER -->
+    <ps-header-back>
+        <section>
+            <div class="main-title">Thanh toán bán hàng</div>
+            <div class="sub-title">Chứng từ giao dịch</div>
+        </section>
+        <section class="right">
+            No.: <span>{{ordermaster.ID}}</span>
+        </section>
+    </ps-header-back>
+    <!-- END: HEADER -->
+
+    <main>
+        <!-- START: TAB -->
+        <section class="section-tab">
+            <div class="tab" *ngFor="let tab of listtab" [class.active]="tab.value == tabactive"
+                (click)="onchangetab(tab.value)">
+                {{tab.name}}
+            </div>
+        </section>
+        <!-- END: TAB -->
+
+        <!-- START: SEARCH -->
+        <section class="section-search">
+            <div class="search-input-wrapper">
+                <span class="material-icons search-icon">search</span>
+                <input class="search-input" type="text" [(ngModel)]="searchKeyword"
+                    [placeholder]="tabactive == 'receipt' ? 'Tra cứu theo tên, SĐT KH, mã phiếu thu...' : 'Tra cứu theo tên, SĐT KH, mã hoá đơn...'"
+                    (keyup.enter)="onSearchTask()" />
+                <span class="material-icons clear-icon" *ngIf="searchKeyword" (click)="searchKeyword=''; onSearchTask()">close</span>
+            </div>
+        </section>
+        <!-- END: SEARCH -->
+
+        <!-- START: CHIP FILTER -->
+        <section class="section-chips">
+            <div class="chip" *ngFor="let chip of listchip"
+                [class.active]="activeChips.includes(chip.value)"
+                (click)="onChipSelect(chip.value)">
+                {{chip.label}}
+            </div>
+        </section>
+        <!-- END: CHIP FILTER -->
+
+        <!-- START: LIST RECEIPT -->
+        <section class="section-list" #bodyList *ngIf="tabactive == 'receipt'">
+            <div class="card-item receipt-card" *ngFor="let receipt of sortedReceipts; trackBy: trackByCode"
+                (click)="onSetItem(receipt, '/mtbike/payment/receipt')">
+
+                <!-- Row 1: ID, OrderMasterNo and Status -->
+                <div class="card-row card-row--top">
+                    <div class="receipt-titles">
+                        <span class="id-text">Phiếu thu: {{ receipt.ReceiptNo || ('PT-00' + receipt.Code) }}</span>
+                        <span class="pbh-text" *ngIf="receipt.OrderMasterNo">(PBH: {{ receipt.OrderMasterNo }})</span>
+                    </div>
+                    <div class="status-badge"
+                        [innerHTML]="{ Status: receipt.Status, StatusName: receipt.StatusName } | SALOrderReceiptStatus">
+                    </div>
+                </div>
+
+                <!-- Row 2: Customer Name & Phone -->
+                <div class="card-row card-row--meta">
+                    <span class="customer-name-bold">{{ receipt.CustomerName }}</span>
+                    <span class="meta-item ml-2" *ngIf="receipt.CellPhone">
+                        <span class="material-icons meta-icon">phone</span>
+                        {{ receipt.CellPhone }}
+                    </span>
+                </div>
+
+                <!-- Row 3: Date & Total Amount -->
+                <div class="card-row card-row--amount-total mt-1">
+                    <span class="date-text" *ngIf="receipt.EffDate">
+                        Ngày: {{ receipt.EffDate | date:'dd/MM/yyyy HH:mm' }}
+                    </span>
+                    <span class="total-amount-box text-amount">
+                        <span class="material-icons money-icon">monetization_on</span>
+                        <span class="value">{{ receipt.CollectedAmount | number }}đ</span>
+                    </span>
+                </div>
+
+                <!-- Row 4: Tags -->
+                <div class="card-row card-row--footer">
+                    <div class="tags-wrapper">
+                        <span class="tag tag--payment" *ngIf="receipt.PaymentTypeName">
+                            <span class="material-icons tag-icon">payments</span>
+                            {{ receipt.PaymentTypeName }}
+                        </span>
+                        <span class="tag tag--vehicle" *ngIf="receipt.VehicleCount">
+                            <span class="material-icons tag-icon">two_wheeler</span>
+                            {{ receipt.VehicleCount }} xe
+                        </span>
+                        <span class="tag tag--signed" *ngIf="receipt.IsSigned !== undefined">
+                            <span class="material-icons tag-icon">check_circle</span>
+                            {{ receipt.IsSigned ? 'Đã ký' : 'Chưa ký' }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Row 5: Cashier -->
+                <div class="card-row card-row--cashier" *ngIf="receipt.CashierName">
+                    <span class="cashier-text">Thu ngân: <span class="cashier-name">{{ receipt.CashierName }}</span></span>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" *ngIf="datareceipt.length === 0">
+                <span class="material-icons empty-icon">inbox</span>
+                <span>Không có dữ liệu phiếu thu</span>
+            </div>
+
+            <div #anchor></div>
+        </section>
+        <!-- END: LIST RECEIPT -->
+
+        <!-- START: LIST INVOICE -->
+        <section class="section-list" #bodyList *ngIf="tabactive == 'invoice'">
+            <ng-container *ngFor="let invoice of datainvoice; trackBy: trackByCode; let i = index">
+                
+                <!-- Group Header -->
+                <div class="group-header" *ngIf="i === 0 || invoice.OrderMasterNo !== datainvoice[i-1].OrderMasterNo">
+                    <div class="header-left">
+                        <span class="label">Phiếu bán hàng: </span>
+                        <span class="value">{{ invoice.OrderMasterNo }}</span>
+                    </div>
+                    <div class="header-right">
+                        <span class="count">({{ getInvoiceCount(invoice.OrderMasterNo) }} hóa đơn)</span>
+                    </div>
+                </div>
+
+                <div class="card-item invoice-card" (click)="onSetItem(invoice, '/mtbike/payment/total')">
+                    <!-- Row 1: Invoice No + Vehicle -->
+                    <div class="card-row card-row--vehicle">
+                        <span class="id-text">{{ invoice.InvoiceNo }}</span>
+                        <span class="sep">|</span>
+                        <span class="vehicle-name">{{ invoice.VehicleGroup }} | {{ invoice.VehicleName }}</span>
+                        <span class="sep">|</span>
+                        <span class="vehicle-color">{{ invoice.ColorName }}</span>
+                    </div>
+
+                    <!-- Row 2: Customer & Date -->
+                    <div class="card-row card-row--meta">
+                        <span class="meta-item">
+                            <span class="material-icons meta-icon">person</span>
+                            {{ invoice.VATCustomerName }}
+                        </span>
+                        <span class="meta-item">
+                            <span class="material-icons meta-icon">phone</span>
+                            {{ invoice.VATCellPhone }}
+                        </span>
+                        <span class="meta-item date-right">
+                            <span class="material-icons meta-icon">calendar_today</span>
+                            {{ invoice.EffDate | date:'dd/MM/yyyy HH:mm' }}
+                        </span>
+                    </div>
+
+                    <!-- Row 3: Payment Ref & Amount -->
+                    <div class="card-row card-row--amount-total">
+                        <span class="pt-ref">PT: {{ invoice.ReceiptNoRef }}</span>
+                        <span class="total-amount-box">
+                            <span class="label">Tổng tiền:</span>
+                            <span class="value">{{ invoice.TotalAmount | number }}đ</span>
+                        </span>
+                    </div>
+
+                    <!-- Row 4: Tags & Status -->
+                    <div class="card-row card-row--footer">
+                        <div class="tags-wrapper">
+                            <span class="tag tag--tax">Thuế: {{ invoice.VATPercent }}%</span>
+                            <span class="tag tag--type" [class.public]="invoice.VATCustomerType === 'Đơn vị công'">{{ invoice.VATCustomerType }}</span>
+                        </div>
+                        <div class="status-badge"
+                            [innerHTML]="{Status: invoice.Status, StatusName: invoice.StatusName} | SALOrderInvoiceStatus">
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+
+            <!-- Empty State -->
+            <div class="empty-state" *ngIf="datainvoice.length === 0">
+                <span class="material-icons empty-icon">inbox</span>
+                <span>Không có dữ liệu hoá đơn</span>
+            </div>
+
+            <div #anchor></div>
+        </section>
+        <!-- END: LIST INVOICE -->
+    </main>
+
+    <!-- START: FOOTER -->
+    <ps-footer-action>
+        <ps-kendo-button (onClick)="onnavigate('/mtbike/consultant/total')">
+            <span class="material-icons">arrow_back</span>
+        </ps-kendo-button>
+
+        <ps-kendo-button [disabled]="FunctionPermissionDTO.approver"
+            [theme]="tabactive == 'receipt' ? 'warning' : 'primary'" (onClick)="onnavigate()">
+            <span class="text">{{tabactive == 'receipt' ? 'Tạo phiếu thu' : 'Tạo hoá đơn'}}</span>
+        </ps-kendo-button>
+    </ps-footer-action>
+    <!-- END: FOOTER -->
+</div>

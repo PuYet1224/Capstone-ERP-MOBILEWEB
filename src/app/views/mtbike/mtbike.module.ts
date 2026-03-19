@@ -56,6 +56,7 @@ import { Mtb031SalPaymentSelectionComponent } from './views/mtb031-sal-payment-s
 import { Mtb032SalPaymentTotalComponent } from './views/mtb032-sal-payment-total/mtb032-sal-payment-total.component';
 import { Mtb033SalPaymentInvoiceComponent } from './views/mtb033-sal-payment-invoice/mtb033-sal-payment-invoice.component';
 import { Mtb034SalPolicyComponent } from './views/mtb034-sal-policy/mtb034-sal-policy.component';
+import { Mtb021DocumentTransactionComponent } from './views/mtb021-document-transaction/mtb021-document-transaction.component';
 
 @NgModule({
   imports: [
@@ -114,6 +115,7 @@ import { Mtb034SalPolicyComponent } from './views/mtb034-sal-policy/mtb034-sal-p
     Mtb032SalPaymentTotalComponent,
     Mtb033SalPaymentInvoiceComponent,
     Mtb034SalPolicyComponent,
+    Mtb021DocumentTransactionComponent,
     WOMProgressStatusPipe,
     SALOrderMasterStatusRetailPipe,
     SALOrderDetailStatusPipe,
