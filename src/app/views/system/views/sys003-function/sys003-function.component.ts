@@ -62,7 +62,7 @@ export class Sys003FunctionComponent implements OnInit {
   public onclickfunction(func: SYSFunctionCusDTO) {
     this.cache.setItem(KeyLocalStorageEnum.DLLPACKAGE, func.DLLPackage);
     ConfigDTO.dllpackage = func.DLLPackage;
-    
+
     const ns = MtbikeApiStaticService.getNamespace(func.DLLPackage);
     if (!ns) {
       console.error(`Namespace not found for DLLPackage: ${func.DLLPackage}. Please check MtbikeApiStaticService.namespaceMap`);
@@ -108,7 +108,7 @@ export class Sys003FunctionComponent implements OnInit {
             temp = { ...f };
             temp.ModuleName = f.ModuleName || f.Vietnamese;
             // Logger for debugging casing if needed
-            if (!temp.ModuleName) temp.ModuleName = temp['moduleName']; 
+            if (!temp.ModuleName) temp.ModuleName = temp['moduleName'];
             if (!temp.ModuleName) temp.ModuleName = 'Module';
 
             if (temp.ListFunction) {
