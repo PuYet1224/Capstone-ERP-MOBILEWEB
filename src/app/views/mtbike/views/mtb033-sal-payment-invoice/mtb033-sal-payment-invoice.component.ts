@@ -34,15 +34,31 @@ export class Mtb033SalPaymentInvoiceComponent {
   //#region life cycle
   private arrUnsubscribe: Subscription[] = [];
   ngOnInit(): void {
+    // ---- MOCK DATA TEST ----
+    const mockWomMaster = { Code: 9999, CustomerName: 'Nguyễn Văn A', Phone: '0901234567', Address: '123 Đường Hoa Hồng, TP.HCM', TotalPrice: 15000000, StatusName: 'Mới' };
+    const mockPaymentData = { 
+      Code: 0, OrderMaster: 9999, TotalAmount: 15000000, TotalReceiptAmount: 0, 
+      CollectedAmount: 15000000, CustomerName: 'Nguyễn Văn A', CellPhone: '0901234567', 
+      EffDate: new Date(), Description: 'Thanh toán tiền sửa xe/mua phụ tùng',
+      VATType: 1, VATCustomerName: 'Nguyễn Văn A', VATCellPhone: '0901234567', 
+      VATAddress: '123 Đường Hoa Hồng', VATEmail: 'nvana@gmail.com'
+    };
+    this.cache.setItem(KeyLocalStorageEnum.WOM_MASTER, mockWomMaster);
+    this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, mockPaymentData);
+    // ------------------------
+
     var master = this.cache.getItem(KeyLocalStorageEnum.WOM_MASTER);
-    this.womMaster = this.cache.parseValue(master);
+    this.womMaster = this.cache.parseValue(master) || mockWomMaster;
 
     var temp = this.cache.getItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT);
-    this.invoice = this.cache.parseValue(temp);
+    this.invoice = this.cache.parseValue(temp) || mockPaymentData;
     if (this.invoice.EffDate) {
       this.invoice.EffDate = new Date(this.invoice.EffDate);
     }
-    this.GetSALInvoice(this.invoice)
+    this.invoicecopy = { ...this.invoice };
+    
+    // Bypass GetSALInvoice API
+    // this.GetSALInvoice(this.invoice)
   }
 
   ngAfterViewInit(): void {

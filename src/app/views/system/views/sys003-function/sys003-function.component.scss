@@ -1,10 +1,33 @@
 @import "../../../../../assets/scss/colors";
 
+// ═══════════════════════════════════════════════
+// Design System: Modern Super-App Menu
+// Palette: Multi-color icon badges (like Grab, MoMo, VNPay)
+// ═══════════════════════════════════════════════
+
+// Icon color palette — each function gets a unique color
+$icon-colors: (
+  1: (#0ea5e9, #e0f2fe),  // Sky blue
+  2: (#10b981, #d1fae5),  // Emerald
+  3: (#f59e0b, #fef3c7),  // Amber
+  4: (#ef4444, #fee2e2),  // Red
+  5: (#8b5cf6, #ede9fe),  // Violet (accent only)
+  6: (#06b6d4, #cffafe),  // Cyan
+  7: (#f97316, #ffedd5),  // Orange
+  8: (#ec4899, #fce7f3),  // Pink
+  9: (#14b8a6, #ccfbf1),  // Teal
+  10: (#6366f1, #e0e7ff), // Indigo
+);
+
 ::ng-deep {
   sys003-function {
     .ath003 {
       height: 100%;
+      background: linear-gradient(180deg, #f0f4f8 0%, #e8edf2 100%);
+      display: flex;
+      flex-direction: column;
 
+      // ── HEADER (giữ nguyên cấu trúc gốc) ──
       ps-header-main {
         .store {
           height: 100%;
@@ -21,7 +44,6 @@
 
             img {
               height: 100%;
-
             }
           }
 
@@ -42,103 +64,137 @@
 
             .name {
               font-size: 13px;
-              color: $white;
+              color: rgba($white, 0.85);
             }
           }
         }
       }
 
+      // ── BODY ──
       .body {
-        padding: 8px 0;
-        height: calc(100% - 104px);
+        flex: 1;
+        padding: 20px 0 0;
+        height: calc(100% - 70px);
         overflow: hidden;
 
         .scroll {
           display: flex;
           flex-direction: column;
-          gap: 8px;
-          padding: 0 8px;
+          gap: 24px;
+          padding: 0 16px;
           overflow-y: auto;
           height: 100%;
+          padding-bottom: 48px;
+          scrollbar-width: none;
+          &::-webkit-scrollbar { display: none; }
 
-          .title {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+          // ── MODULE CARD ──
+          .module {
+            background: $white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow:
+              0 1px 3px rgba(0, 0, 0, 0.04),
+              0 6px 24px rgba(0, 0, 0, 0.03);
+            animation: cardSlideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 
-            .label {
-              font-weight: bold;
-            }
-
-            button {
+            // ── Module Title ──
+            .title {
+              display: flex;
               align-items: center;
-            }
-          }
+              margin-bottom: 20px;
+              padding-bottom: 14px;
+              border-bottom: 1px solid #f1f3f5;
 
-          .function {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            width: 100%;
-            gap: 16px;
+              .label {
+                font-size: 15px;
+                font-weight: 700;
+                color: #1e293b;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                text-transform: uppercase;
+                letter-spacing: 0.8px;
 
-            ps-kendo-button {
-
-              button {
-                width: 100%;
-                height: 100%;
-                border: none;
-                padding: 4px 0;
-
-                .k-button-text {
-                  display: flex;
-                  flex-direction: column;
-                  text-transform: none;
-                  gap: 4px;
-
-                  .material-icons,
-                  .function-name {
-                    color: $primary;
-                  }
-
-                  .material-icons {
-                    font-size: 28px;
-                  }
-
-                  .function-name {
-                    font-weight: bold;
-                  }
+                &::before {
+                  content: '';
+                  display: block;
+                  width: 4px;
+                  height: 18px;
+                  background: linear-gradient(180deg, $primary, darken($primary, 8%));
+                  border-radius: 2px;
                 }
               }
             }
-          }
 
-          .module {
-            padding: 16px;
-            background-color: $white;
-            border-radius: 8px;
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-            border-top: 2px solid $primary;
-            margin-top: 28px;
-            position: relative;
-            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+            // ── Function Grid ──
+            .function {
+              display: grid;
+              grid-template-columns: repeat(3, 1fr);
+              gap: 8px;
 
-            .title {
-              position: absolute;
-              top: -37px;
-              left: -1px;
-              background: $primary;
-              padding: 8px;
-              width: 86px;
-              border-top-right-radius: 99px;
+              ps-kendo-button {
+                button {
+                  width: 100%;
+                  height: 100%;
+                  min-height: 100px;
+                  border: none !important;
+                  background: transparent !important;
+                  border-radius: 16px !important;
+                  padding: 14px 4px 10px !important;
+                  transition: all 0.2s ease !important;
+                  cursor: pointer;
 
-              .label {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-weight: bold;
-                color: $white;
-                font-size: 13px;
+                  &:active {
+                    transform: scale(0.94);
+                    background: #f8fafc !important;
+                  }
+
+                  .k-button-text {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: flex-start;
+                    gap: 10px;
+                    width: 100%;
+
+                    // ── Icon Badge ──
+                    .material-icons {
+                      font-size: 26px;
+                      height: 50px;
+                      width: 50px;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      border-radius: 16px;
+                      transition: transform 0.2s ease;
+                    }
+
+                    // ── Function Label ──
+                    .function-name {
+                      font-size: 12px;
+                      font-weight: 600;
+                      color: #475569;
+                      text-align: center;
+                      line-height: 1.35;
+                      white-space: normal;
+                      display: block;
+                      word-break: break-word;
+                      max-width: 100%;
+                    }
+                  }
+                }
+
+                // ═══ Unique color per function button ═══
+                @for $i from 1 through 10 {
+                  &:nth-child(#{$i}) {
+                    button .k-button-text .material-icons {
+                      $pair: map-get($icon-colors, $i);
+                      color: nth($pair, 1);
+                      background: nth($pair, 2);
+                    }
+                  }
+                }
               }
             }
           }
@@ -146,4 +202,22 @@
       }
     }
   }
+
+  // ── Animations ──
+  @keyframes cardSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .module:nth-child(1) { animation-delay: 0s; }
+  .module:nth-child(2) { animation-delay: 0.08s; }
+  .module:nth-child(3) { animation-delay: 0.16s; }
+  .module:nth-child(4) { animation-delay: 0.24s; }
+  .module:nth-child(5) { animation-delay: 0.32s; }
 }
