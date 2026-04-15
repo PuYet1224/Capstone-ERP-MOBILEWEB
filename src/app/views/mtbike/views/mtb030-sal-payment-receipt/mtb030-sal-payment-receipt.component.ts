@@ -43,16 +43,33 @@ export class Mtb030SalPaymentReceiptComponent {
   private arrUnsubscribe: Subscription[] = [];
 
   ngOnInit(): void {
+    // ---- MOCK DATA TEST ----
+    const mockWomMaster = { Code: 9999, CustomerName: 'Nguyễn Văn A', Phone: '0901234567', Address: '123 Đường Hoa Hồng, TP.HCM', TotalPrice: 15000000, StatusName: 'Mới' };
+    const mockPaymentData = { Code: 0, OrderMaster: 9999, TotalAmount: 15000000, TotalReceiptAmount: 0, CollectedAmount: 15000000, CustomerName: 'Nguyễn Văn A', CellPhone: '0901234567', EffDate: new Date(), Description: 'Thanh toán tiền sửa xe/mua phụ tùng', PaymentMethod: 1 };
+    this.cache.setItem(KeyLocalStorageEnum.WOM_MASTER, mockWomMaster);
+    this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, mockPaymentData);
+    // ------------------------
+
     var master = this.cache.getItem(KeyLocalStorageEnum.WOM_MASTER);
-    this.womMaster = this.cache.parseValue(master);
+    this.womMaster = this.cache.parseValue(master) || mockWomMaster;
 
     var temp = this.cache.getItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT);
-    var receipt = this.cache.parseValue(temp);
+    var receipt = this.cache.parseValue(temp) || mockPaymentData;
 
-    if (receipt.Code != 0) {
-      this.getsalreceipt(receipt, true)
-    }
+    this.receipt = receipt;
+    this.receiptcopy = { ...this.receipt };
+
+    // Bypass API get receipt for testing
+    // if (receipt.Code != 0) {
+    //   this.getsalreceipt(receipt, true)
+    // }
     this.getlistlslist();
+
+    // Mock vehicle list for testing
+    this.listvehicle = [
+      { Code: 1, VehicleName: 'Honda Wave', CollectedAmount: 5000000, RemainingAmount: 5000000, PaymentType: 1, IsChecked: false } as any
+    ];
+    this.listvehiclecopy = this.listvehicle.map(x => ({ ...x }));
   }
 
   ngOnDestroy(): void {
