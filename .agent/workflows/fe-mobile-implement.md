@@ -9,8 +9,8 @@ skills:
 # /fe-mobile-implement — Frontend Mobile Web Implementation
 
 ## STEP 0: Design Reference Check (BEFORE anything else)
-1. Scan `C:\ai.pipeline\designs\` for feature folders that have a `mobile\` subfolder
-2. If found → list all PNG files inside `C:\ai.pipeline\designs\{feature}\mobile\`
+1. Scan `C:\ai-pipeline\designs\` for feature folders that have a `mobile\` subfolder
+2. If found → list all PNG files inside `C:\ai-pipeline\designs\{feature}\mobile\`
 3. Read ALL images using `view_file` — analyze layout, colors, touch targets, mobile components
 4. Follow `design-reference` skill protocol for detailed extraction
 5. Keep analysis in memory — use it throughout implementation

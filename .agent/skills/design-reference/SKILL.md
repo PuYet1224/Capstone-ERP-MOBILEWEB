@@ -1,6 +1,6 @@
 ---
 name: design-reference
-description: Figma design image handling for mobile web UI implementation. Reads from shared C:\ai.pipeline\designs\{feature}\mobile\. Manages export specs (375-414px viewport), touch targets, Ionic/Angular mobile components, and cleanup.
+description: Figma design image handling for mobile web UI implementation. Reads from shared C:\ai-pipeline\designs\{feature}\mobile\. Manages export specs (375-414px viewport), touch targets, Ionic/Angular mobile components, and cleanup.
 ---
 
 # Design Reference Skill — Mobile Web (Ionic + Angular)
@@ -15,7 +15,7 @@ description: Figma design image handling for mobile web UI implementation. Reads
 
 **Path cố định:**
 ```
-C:\ai.pipeline\designs\{feature-name}\mobile\
+C:\ai-pipeline\designs\{feature-name}\mobile\
 ```
 
 **Cấu trúc:**
@@ -91,7 +91,7 @@ C:\ai.pipeline\
 **Trigger:** Khi chạy `/fe-mobile-implement`:
 
 ```
-Step 0: Scan C:\ai.pipeline\designs\ → tìm folder có subfolder mobile\
+Step 0: Scan C:\ai-pipeline\designs\ → tìm folder có subfolder mobile\
   → Nếu có ảnh → ĐỌC TẤT CẢ ảnh TRƯỚC khi code
   → Nếu không có → thông báo: "Không tìm thấy design. Tiếp tục từ guide text."
 ```
