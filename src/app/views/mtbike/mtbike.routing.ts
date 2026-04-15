@@ -40,11 +40,11 @@ import { Mtb021DocumentTransactionComponent } from './views/mtb021-document-tran
 export const MtbikeRouting: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'dashboard-mobile',
     pathMatch: 'full'
   },
   {
-    path: 'dashboard',
+    path: 'dashboard-mobile',
     component: Mtb000DashboardComponent,
   },
   {
