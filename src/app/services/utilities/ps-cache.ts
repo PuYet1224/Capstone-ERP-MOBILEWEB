@@ -25,10 +25,13 @@ export class PsCache {
     }
 
     public parse(str: any) {
+        if (!str) return null;
         return JSON.parse(str);
     }
 
     public parseValue(str: any) {
-        return JSON.parse(str).value;
+        if (!str) return null;
+        const parsed = JSON.parse(str);
+        return parsed ? parsed.value : null;
     }
 }

@@ -33,5 +33,22 @@ export class SALOrderReceiptCusDTO extends SALOrderReceiptDTO {
   RemainingAmount: number = 0;
   PaymentType: SALOrderDetailPaymentTypeEnum;
   PaymentTypeName: string = '';
+  PaymentMethodName: string = '';
   TotalReceiptAmount: number = 0;
+  CashierName: string = '';
+  OrderNo: string = '';
+  OrderStatus: number = 0;
+  OrderStatusName: string = '';
+  TotalOrderValue: number = 0;
+  PriorCollections: number = 0;
+  CurrentRemainingDebt: number = 0;
+  Progress: number = 0;
+
+  // New fields for updated UI form
+  Province: string = '';
+  Ward: string = '';
+  Bank: string = '';
+  BankAccount: string = '';
+  CashAmount: number = 0;
+  TransferAmount: number = 0;
 }

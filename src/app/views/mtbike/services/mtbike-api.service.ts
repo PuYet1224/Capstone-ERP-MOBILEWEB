@@ -204,19 +204,6 @@ export class MtbikeApiService {
     });
   }
 
-  public GetSALReceipt(param: SALOrderReceiptCusDTO) {
-    return new Observable<ResponseDTO>((obs) => {
-      this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).GetSALReceipt, param)
-        .subscribe((res: ResponseDTO) => {
-          obs.next(res);
-          obs.complete();
-        }, (errors) => {
-          obs.error(errors);
-          obs.complete();
-        });
-    });
-  }
-
   public GetIOMasterVehicle(param: WHIOMasterVehicleCusDTO) {
     return new Observable<ResponseDTO>((obs) => {
       this.api.post(MtbikeApiStaticService[this.config.GetDLL()].GetIOMasterVehicle, param)
@@ -1348,6 +1335,19 @@ export class MtbikeApiService {
     });
   }
 
+  public GetListSALInvoice(param: State): Observable<ResponseDTO> {
+    return new Observable<ResponseDTO>((obs) => {
+      this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).GetListSALInvoice, toDataSourceRequest(param))
+        .subscribe((res: ResponseDTO) => {
+          obs.next(res);
+          obs.complete();
+        }, (errors) => {
+          obs.error(errors);
+          obs.complete();
+        });
+    });
+  }
+
   public GetListSALReceipt(param: State): Observable<ResponseDTO> {
     return new Observable<ResponseDTO>((obs) => {
       this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).GetListSALReceipt, toDataSourceRequest(param))
@@ -1361,9 +1361,48 @@ export class MtbikeApiService {
     });
   }
 
-  public GetListSALInvoice(param: State): Observable<ResponseDTO> {
+  public GetSALReceipt(param: SALOrderReceiptCusDTO): Observable<ResponseDTO> {
     return new Observable<ResponseDTO>((obs) => {
-      this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).GetListSALInvoice, toDataSourceRequest(param))
+      this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).GetSALReceipt, param)
+        .subscribe((res: ResponseDTO) => {
+          obs.next(res);
+          obs.complete();
+        }, (errors) => {
+          obs.error(errors);
+          obs.complete();
+        });
+    });
+  }
+
+  public UpdateSALReceipt(param: SALOrderReceiptCusDTO): Observable<ResponseDTO> {
+    return new Observable<ResponseDTO>((obs) => {
+      this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).UpdateSALReceipt, param)
+        .subscribe((res: ResponseDTO) => {
+          obs.next(res);
+          obs.complete();
+        }, (errors) => {
+          obs.error(errors);
+          obs.complete();
+        });
+    });
+  }
+
+  public UpdateSALReceiptStatus(param: SALOrderReceiptCusDTO): Observable<ResponseDTO> {
+    return new Observable<ResponseDTO>((obs) => {
+      this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).UpdateSALReceiptStatus, param)
+        .subscribe((res: ResponseDTO) => {
+          obs.next(res);
+          obs.complete();
+        }, (errors) => {
+          obs.error(errors);
+          obs.complete();
+        });
+    });
+  }
+
+  public UpdateSALReceiptDetail(param: SALOrderReceiptDetailCusDTO): Observable<ResponseDTO> {
+    return new Observable<ResponseDTO>((obs) => {
+      this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).UpdateSALReceiptDetail, param)
         .subscribe((res: ResponseDTO) => {
           obs.next(res);
           obs.complete();
@@ -1494,40 +1533,6 @@ export class MtbikeApiService {
     return new Observable<ResponseDTO>((obs) => {
       const ns = MtbikeApiStaticService.getNamespace(this.config.GetDLL());
       this.api.post(ns.UpdateWOMConsultant, DTO)
-        .subscribe(
-          (res: ResponseDTO) => {
-            obs.next(res);
-            obs.complete();
-          },
-          (errors) => {
-            obs.error(errors);
-            obs.complete();
-          }
-        );
-    });
-  }
-
-  public UpdateSALReceipt(DTO: UpdatePropertiesInterface<SALOrderReceiptCusDTO>) {
-    return new Observable<ResponseDTO>((obs) => {
-      const ns = MtbikeApiStaticService.getNamespace(this.config.GetDLL());
-      this.api.post(ns.UpdateSALReceipt, DTO)
-        .subscribe(
-          (res: ResponseDTO) => {
-            obs.next(res);
-            obs.complete();
-          },
-          (errors) => {
-            obs.error(errors);
-            obs.complete();
-          }
-        );
-    });
-  }
-
-  public UpdateSALReceiptDetail(DTO: SALOrderReceiptDetailCusDTO) {
-    return new Observable<ResponseDTO>((obs) => {
-      const ns = MtbikeApiStaticService.getNamespace(this.config.GetDLL());
-      this.api.post(ns.UpdateSALReceiptDetail, DTO)
         .subscribe(
           (res: ResponseDTO) => {
             obs.next(res);

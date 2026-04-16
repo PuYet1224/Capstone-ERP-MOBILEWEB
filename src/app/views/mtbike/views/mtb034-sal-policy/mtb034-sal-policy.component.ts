@@ -12,53 +12,53 @@ import { MtbikeApiService } from '../../services/mtbike-api.service';
   templateUrl: './mtb034-sal-policy.component.html',
   styleUrls: ['./mtb034-sal-policy.component.scss'],
 })
-export class Mtb034SalPolicyComponent implements OnInit, OnDestroy {
-  public policylist: POLSalesPolicyCusDTO[] = [];
-  private arrUnsubscribe: Subscription[] = [];
+export class Mtb034SalPolicyComponent {
+  // public policylist: POLSalesPolicyCusDTO[] = [];
+  // private arrUnsubscribe: Subscription[] = [];
 
-  public gridState: State = {
-    skip: 0,
-    take: 100,
-  };
+  // public gridState: State = {
+  //   skip: 0,
+  //   take: 100,
+  // };
 
-  constructor(
-    private router: Router,
-    private subLoader: SystemLoaderService,
-    private notification: PsKendoNotificationService,
-    private mtbikeapi: MtbikeApiService,
-  ) { }
+  // constructor(
+  //   private router: Router,
+  //   private subLoader: SystemLoaderService,
+  //   private notification: PsKendoNotificationService,
+  //   private mtbikeapi: MtbikeApiService,
+  // ) { }
 
-  ngOnInit(): void {
-    this.getlistsalpolicy();
-  }
+  // ngOnInit(): void {
+  //   this.getlistsalpolicy();
+  // }
 
-  ngOnDestroy(): void {
-    this.subLoader.reset();
-    this.arrUnsubscribe.forEach(e => e.unsubscribe());
-    this.arrUnsubscribe = [];
-  }
+  // ngOnDestroy(): void {
+  //   this.subLoader.reset();
+  //   this.arrUnsubscribe.forEach(e => e.unsubscribe());
+  //   this.arrUnsubscribe = [];
+  // }
 
-  private getlistsalpolicy() {
-    this.subLoader.loader(true);
-    const sub = this.mtbikeapi.GetListSALPolicy(this.gridState)
-      .subscribe((res) => {
-        if (res.StatusCode === 0) {
-          this.policylist = res.ObjectReturn || [];
-          this.subLoader.loader(false);
-        } else {
-          this.subLoader.loader(false);
-          this.notification.onError(`Lỗi lấy danh sách chính sách: ${res.ErrorString}`);
-        }
-      },
-        (err) => {
-          this.subLoader.loader(false);
-          this.notification.onError(`Lỗi hệ thống: ${err.message}`);
-        }
-      );
-    this.arrUnsubscribe.push(sub);
-  }
+  // private getlistsalpolicy() {
+  //   this.subLoader.loader(true);
+  //   const sub = this.mtbikeapi.GetListSALPolicy(this.gridState)
+  //     .subscribe((res) => {
+  //       if (res.StatusCode === 0) {
+  //         this.policylist = res.ObjectReturn || [];
+  //         this.subLoader.loader(false);
+  //       } else {
+  //         this.subLoader.loader(false);
+  //         this.notification.onError(`Lỗi lấy danh sách chính sách: ${res.ErrorString}`);
+  //       }
+  //     },
+  //       (err) => {
+  //         this.subLoader.loader(false);
+  //         this.notification.onError(`Lỗi hệ thống: ${err.message}`);
+  //       }
+  //     );
+  //   this.arrUnsubscribe.push(sub);
+  // }
 
-  public onBack() {
-    this.router.navigate(['/menu']);
-  }
+  // public onBack() {
+  //   this.router.navigate(['/menu']);
+  // }
 }

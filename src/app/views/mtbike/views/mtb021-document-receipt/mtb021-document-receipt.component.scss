@@ -1,0 +1,511 @@
+@import "../../../../../assets/scss/colors";
+
+::ng-deep {
+    mtb021-document-receipt {
+        .mtb021-document-receipt {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+
+            ps-header-back {
+                .ps-header {
+                    box-shadow: 0 4px 4px rgba($black, 0.1);
+
+                    .header-right {
+                        display: flex;
+                        width: 100%;
+                        align-items: center;
+
+                        .header-content {
+                            .func-title1 {
+                                font-size: 13px;
+                                font-weight: 700;
+                                color: $primary;
+                                text-transform: uppercase;
+                            }
+
+                            .func-title2 {
+                                font-size: 11px;
+                                color: $secondary;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Search bottom sheet
+            ps-dialog-confirm-bottom {
+                .ps-dialog-confirm-bottom {
+                    .dialog {
+                        padding-top: 8px;
+padding-bottom: 8px;
+
+                        .dialog-header .header-frame span {
+                            text-transform: none;
+                        }
+
+                        [psDialogConfirmBottomBody] {
+                            width: 100%;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 12px;
+
+                            .filter-row {
+                                display: flex;
+                                flex-direction: column;
+                                gap: 8px;
+                                width: 100%;
+                                position: relative;
+
+                                .checkbox-label {
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 4px;
+                                    cursor: pointer;
+                                    font-size: 13px;
+                                    color: $secondary;
+                                    align-self: flex-end;
+                                    position: absolute;
+                                    top: 0;
+
+                                    input[type="checkbox"] {
+                                        width: 16px;
+                                        height: 16px;
+                                        accent-color: $primary;
+                                        cursor: pointer;
+                                    }
+                                }
+                            }
+
+                            ps-kendo-textbox {
+                                width: 100%;
+                            }
+                        }
+
+                        [psDialogConfirmBottomFooter] {
+                            padding: 12px;
+                            ps-kendo-button {
+                                &:first-child {
+                                    width: calc(25% - 4px);
+                                }
+
+                                &:last-child {
+                                    width: calc(75% - 4px);
+                                }
+
+                                button {
+                                    width: 100%;
+                                    height: 36px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Body list
+            .body-list {
+                flex: 1;
+                overflow-y: auto;
+                padding: 12px;
+                display: flex;
+                flex-direction: column;
+                gap: 0;
+                font-size: 12px;
+
+                // ========== GROUP SECTION ==========
+                .group-section {
+                    margin-bottom: 12px;
+
+                    .group-header {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        padding: 8px 12px;
+                        background: $white;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        user-select: none;
+                        margin-bottom: 8px;
+
+                        .group-name {
+                            font-size: 13px;
+                            font-weight: 600;
+                            color: $secondary;
+
+                            .group-count {
+                                color: $error;
+                                font-weight: 700;
+                            }
+                        }
+
+                        .toggle-icon {
+                            font-size: 20px;
+                            color: $border;
+                            transition: transform 0.2s ease;
+
+                            &.rotated {
+                                transform: rotate(180deg);
+                            }
+                        }
+                    }
+
+                    .group-content {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 8px;
+                    }
+                }
+
+                // ========== PBH CARD ==========
+                .pbh-card {
+                    background: $white;
+                    border-radius: 8px;
+                    overflow: hidden;
+
+                    .pbh-header {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        padding: 8px 12px 4px;
+                        cursor: pointer;
+                        user-select: none;
+
+                        .pbh-title {
+                            display: flex;
+                            align-items: baseline;
+                            gap: 0;
+                            flex-wrap: wrap;
+                            min-width: 0;
+
+                            .pbh-prefix {
+                                font-size: 12px;
+                                font-weight: 600;
+                                color: $secondary;
+                                margin-right: 4px;
+                            }
+
+                            .pbh-code {
+                                font-size: 12px;
+                                font-weight: 700;
+                                color: $error;
+                            }
+
+                            .pbh-receipt-count {
+                                font-size: 11px;
+                                color: $secondary;
+                                margin-left: 8px;
+                            }
+                        }
+
+                        .pbh-actions {
+                            display: flex;
+                            align-items: center;
+                            gap: 4px;
+                            flex-shrink: 0;
+
+                            .expand-arrow {
+                                font-size: 18px;
+                                color: $border;
+                                transition: transform 0.2s ease;
+
+                                &.expanded {
+                                    transform: rotate(180deg);
+                                }
+                            }
+                        }
+                    }
+
+                    .pbh-body {
+                        padding: 4px 12px 8px;
+
+                        .info-line {
+                            display: flex;
+                            gap: 4px;
+                            margin-bottom: 4px;
+
+                            .info-half {
+                                flex: 1;
+                                min-width: 0;
+                                font-size: 11px;
+                                color: $secondary;
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+
+                                .info-label {
+                                    color: $secondary;
+                                    opacity: 0.7;
+                                }
+                            }
+                        }
+
+                        .amount-line {
+                            display: flex;
+                            justify-content: flex-end;
+                            align-items: center;
+                            margin-top: 4px;
+                            font-size: 13px;
+                            font-weight: 700;
+
+                            .amount-paid {
+                                color: $error;
+font-weight: bold;
+                            }
+
+                            .amount-sep {
+                                color: $secondary;
+                                font-weight: bold;
+                                margin: 0 4px;
+                            }
+
+                            .amount-total {
+                                color: $primary;
+font-weight: bold;
+                            }
+                        }
+                    }
+
+                    // ========== RECEIPT SECTION ==========
+                    .receipt-section {
+                        border-top: 1px solid $border;
+
+                        .receipt-card {
+                            padding: 8px 12px;
+                            background: $hover;
+                            cursor: pointer;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 4px;
+
+
+                            &:active {
+                                background: $hover-green;
+                            }
+
+                            .r-header {
+                                display: flex;
+                                align-items: center;
+                                justify-content: space-between;
+                                flex-wrap: wrap;
+                                gap: 4px;
+
+                                .r-title {
+                                    display: flex;
+                                    align-items: baseline;
+
+                                    .r-prefix {
+                                        font-size: 11px;
+                                        font-weight: 600;
+                                        color: $secondary;
+                                        margin-right: 4px;
+                                    }
+
+                                    .r-code {
+                                        font-size: 11px;
+                                        font-weight: 700;
+                                        color: $error;
+                                    }
+                                }
+
+                                .r-badges {
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 8px;
+
+                                    .r-pm-badge {
+                                        display: inline-flex;
+                                        align-items: center;
+                                        gap: 2px;
+                                        font-size: 9px;
+                                        font-weight: 600;
+                                        padding: 4px 8px;
+                                        border-radius: 12px;
+                                        white-space: nowrap;
+
+                                        .r-badge-icon {
+                                            font-size: 11px;
+                                        }
+
+                                        &.pm-cash {
+                                            background: $purple-100;
+                                            color: $purple-700;
+                                        }
+
+                                        &.pm-transfer {
+                                            background: $blue-100;
+                                            color: $blue-700;
+                                        }
+
+                                        &.pm-card {
+                                            background: $amber-100;
+                                            color: $amber-700;
+                                        }
+
+                                        &.pm-mixed {
+                                            background: $pink-100;
+                                            color: $pink-700;
+                                        }
+                                    }
+
+                                    .r-amount-value {
+                                        display: inline-flex;
+                                        align-items: center;
+                                        gap: 2px;
+                                        font-size: 11px;
+                                        font-weight: 700;
+                                        color: $primary;
+
+                                        .r-money-icon {
+                                            font-size: 13px;
+                                            color: $primary;
+                                        }
+                                    }
+                                }
+                            }
+
+                            .r-info {
+                                display: flex;
+                                align-items: center;
+                                gap: 12px;
+                                flex-wrap: wrap;
+
+                                .r-info-item {
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 2px;
+                                    font-size: 11px;
+                                    color: $secondary;
+
+                                    .r-icon {
+                                        font-size: 13px;
+                                        color: $primary;
+                                    }
+                                }
+                            }
+
+                            .r-meta {
+                                display: flex;
+                                gap: 12px;
+                                flex-wrap: wrap;
+
+                                .r-meta-item {
+                                    font-size: 11px;
+                                    color: $secondary;
+
+                                    .r-meta-label {
+                                        color: $secondary;
+                                        opacity: 0.7;
+                                    }
+                                }
+                            }
+                        }
+
+                        .create-receipt {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 4px;
+                            padding: 12px;
+                            font-size: 12px;
+                            font-weight: 600;
+                            color: $primary;
+                            cursor: pointer;
+                            border-top: 1px dashed rgba($primary, 0.3);
+                            background: #12643325;
+
+                            .material-icons {
+                                font-size: 16px;
+                            }
+
+                            &:active {
+                                background: $hover-green;
+                            }
+                        }
+                    }
+                }
+
+                // ========== STATUS BADGES ==========
+                .status-badge {
+                    font-size: 10px;
+                    font-weight: 700;
+                    padding: 4px 8px;
+                    border-radius: 12px;
+                    border: 1px solid;
+                    white-space: nowrap;
+
+                    &.status-new {
+                        color: $secondary;
+                        border-color: $border;
+                        background: transparent;
+                    }
+
+                    &.status-pending {
+                        color: $white;
+                        border-color: $warning;
+                        background: $warning;
+                    }
+
+                    &.status-processing {
+                        color: $white;
+                        border-color: $info;
+                        background: $info;
+                    }
+
+                    &.status-complete {
+                        color: $primary;
+                        border-color: $primary;
+                        background: transparent;
+                    }
+
+                    &.status-cancel {
+                        color: $error;
+                        border-color: $error;
+                        background: transparent;
+                    }
+                }
+
+                // ========== EMPTY STATE ==========
+                .empty-state {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 40px 16px;
+                    gap: 12px;
+                    color: $secondary;
+                    opacity: 0.6;
+                    font-size: 13px;
+
+                    .empty-icon {
+                        font-size: 40px;
+                        color: $border;
+                    }
+                }
+            }
+
+            // Footer
+            ps-footer-action {
+                .footer-action {
+height: 56px;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 8px 12px;
+
+                    ps-kendo-button {
+                        display: flex;
+                        flex: 1;
+
+                        button {
+                            width: 100%;
+                            height: 36px;
+                            border: 1px solid $border;
+                            border-radius: 8px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

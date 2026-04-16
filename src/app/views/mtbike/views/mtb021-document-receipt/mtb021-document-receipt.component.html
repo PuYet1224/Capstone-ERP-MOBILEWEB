@@ -1,0 +1,167 @@
+<div class="mtb021-document-receipt">
+    <!-- START: HEADER -->
+    <ps-header-back>
+        <div class="header-content">
+            <div class="func-title1">THANH TOÁN BÁN HÀNG</div>
+            <div class="func-title2">Phiếu bán hàng</div>
+        </div>
+    </ps-header-back>
+    <!-- END: HEADER -->
+
+    <!-- START: SEARCH BOTTOM SHEET -->
+    <ps-dialog-confirm-bottom [open]="isOpenedFilter" [title]="'Tìm kiếm phiếu bán hàng'" (close)="openFilter($event)">
+        <div psDialogConfirmBottomBody>
+            <div class="filter-row">
+                <ps-kendo-textbox [label]="'Tra cứu phiếu bán hàng'"
+                    [placeholder]="'Tra cứu theo tên, sđt KH, mã phiếu thu, phiếu bán hàng...'"
+                    [(ngModel)]="searchKeyword">
+                </ps-kendo-textbox>
+                <label class="checkbox-label">
+                    <input type="checkbox" [(ngModel)]="includeFinished" />
+                    <span>Bao gồm các phiếu đã kết thúc</span>
+                </label>
+            </div>
+            <ps-kendo-textbox [label]="'Tra cứu tư vấn viên'" [placeholder]="''" [(ngModel)]="selectedConsultant">
+            </ps-kendo-textbox>
+        </div>
+        <div psDialogConfirmBottomFooter>
+            <ps-kendo-button [theme]="''" (onClick)="openFilter(false)">Đóng</ps-kendo-button>
+            <ps-kendo-button [theme]="'primary'" (onClick)="onSearch()">Tìm</ps-kendo-button>
+        </div>
+    </ps-dialog-confirm-bottom>
+    <!-- END: SEARCH BOTTOM SHEET -->
+
+    <!-- START: BODY -->
+    <div class="body-list" #bodyList>
+        <div class="group-section" *ngFor="let group of displayGroups; let gi = index">
+            <!-- GROUP HEADER -->
+            <div class="group-header" (click)="toggleGroup(gi)">
+                <span class="group-name">{{ group.name }}
+                    <span class="group-count">({{ group.items.length }})</span>
+                </span>
+                <span class="material-icons toggle-icon" [class.rotated]="!isGroupOpen(gi)">keyboard_arrow_up</span>
+            </div>
+
+            <!-- GROUP CONTENT -->
+            <div class="group-content" *ngIf="isGroupOpen(gi)">
+                <div class="pbh-card" *ngFor="let item of group.items">
+                    <!-- PBH HEADER ROW -->
+                    <div class="pbh-header" (click)="toggleItem(item)">
+                        <div class="pbh-title">
+                            <span class="pbh-prefix">PBH:</span>
+                            <span class="pbh-code">{{ item.ID }}</span>
+                            <span class="pbh-receipt-count">({{ item.receiptCount || 0 }} phiếu thu)</span>
+                        </div>
+                        <div class="pbh-actions">
+                            <span class="status-badge" [ngClass]="getStatusClass(item.Status)">
+                                {{ item.StatusName }}
+                            </span>
+                            <span class="material-icons expand-arrow" [class.expanded]="item.isExpanded">
+                                keyboard_arrow_down
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- PBH BODY: Info + Amount (always visible) -->
+                    <div class="pbh-body">
+                        <div class="info-line">
+                            <span class="info-half">
+                                <span class="info-label">Khách hàng:</span> {{ item.CustomerName }}
+                            </span>
+                            <span class="info-half">
+                                <span class="info-label">Số điện thoại:</span> {{ item.CustomerPhone }}
+                            </span>
+                        </div>
+                        <div class="info-line">
+                            <span class="info-half">
+                                <span class="info-label">Tư vấn viên:</span> {{ item.SaleStaffName }}
+                            </span>
+                            <span class="info-half">
+                                <span class="info-label">Ngày tư vấn:</span> {{ item.SaleDate | date:'dd/MM/yyyy HH:mm'
+                                }}
+                            </span>
+                        </div>
+                        <div class="amount-line">
+                            <span class="amount-paid">{{ (item.AmountPaid || 0) | number }}đ</span>
+                            <span class="amount-sep">/</span>
+                            <span class="amount-total">{{ (item.TotalPrice || 0) | number }}đ</span>
+                        </div>
+                    </div>
+
+                    <!-- EXPANDED: RECEIPT SUB-CARDS -->
+                    <ng-container *ngIf="item.isExpanded && item.receipts">
+                        <div class="receipt-section">
+                            <div class="receipt-card" *ngFor="let r of item.receipts"
+                                (click)="onNavigateReceipt(r, item)">
+                                <!-- Receipt header -->
+                                <div class="r-header">
+                                    <div class="r-title">
+                                        <span class="r-prefix">PT:</span>
+                                        <span class="r-code">{{ r.ReceiptNo }}</span>
+                                    </div>
+                                    <div class="r-badges">
+                                        <span class="r-pm-badge" [ngClass]="getPaymentMethodClass(r.PaymentMethod)">
+                                            <span class="material-icons r-badge-icon">
+                                                {{ r.PaymentMethod === 2 ? 'swap_horiz' : 'payments' }}
+                                            </span>
+                                            {{ r.PaymentMethodName }}
+                                        </span>
+                                        <span class="r-amount-value">
+                                            <span class="material-icons r-money-icon">monetization_on</span>
+                                            {{ r.CollectedAmount | number }}đ
+                                        </span>
+                                    </div>
+                                </div>
+                                <!-- Receipt person row -->
+                                <div class="r-info">
+                                    <span class="r-info-item">
+                                        <span class="material-icons r-icon">person</span>
+                                        {{ r.CustomerName }}
+                                    </span>
+                                    <span class="r-info-item">
+                                        <span class="material-icons r-icon">call</span>
+                                        {{ r.CellPhone }}
+                                    </span>
+                                </div>
+                                <!-- Receipt cashier row -->
+                                <div class="r-meta">
+                                    <span class="r-meta-item">
+                                        <span class="r-meta-label">Thu ngân:</span> {{ r.CashierName }}
+                                    </span>
+                                    <span class="r-meta-item">
+                                        <span class="r-meta-label">Ngày thu:</span> {{ r.CreatedTime | date:'dd/MM/yyyy
+                                        HH:mm' }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Create new receipt -->
+                            <div class="create-receipt" *ngIf="item.HasDeposit" (click)="onCreateReceipt(item)">
+                                <span class="material-icons">add</span>
+                                Tạo mới phiếu thu
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty state -->
+        <div class="empty-state" *ngIf="displayGroups.length === 0">
+            <span class="material-icons empty-icon">inbox</span>
+            <span>Không có dữ liệu</span>
+        </div>
+    </div>
+    <!-- END: BODY -->
+
+    <!-- START: FOOTER -->
+    <ps-footer-action>
+        <ps-kendo-button (onClick)="onNavigateBack()">
+            <span class="material-icons">arrow_back</span>
+        </ps-kendo-button>
+        <ps-kendo-button (onClick)="openFilter(true)">
+            <span class="material-icons">search</span>
+        </ps-kendo-button>
+    </ps-footer-action>
+    <!-- END: FOOTER -->
+</div>
