@@ -45,12 +45,11 @@ export class Mtb022DocumentReceiptDetailComponent {
 
   ngOnInit(): void {
     var master = this.cache.getItem(KeyLocalStorageEnum.WOM_MASTER);
-    this.womMaster = this.cache.parseValue(master);
+    this.womMaster = this.cache.parseValue(master) || new SALOrderMasterCusDTO();
 
     var temp = this.cache.getItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT);
-    var receipt = this.cache.parseValue(temp);
+    var receipt = this.cache.parseValue(temp) || new SALOrderReceiptCusDTO();
 
-    this.receipt = receipt;
     this.receiptcopy = { ...this.receipt };
 
     // Bypass API get receipt for testing
@@ -296,13 +295,31 @@ export class Mtb022DocumentReceiptDetailComponent {
     this.loader.loader(true);
     var temp = this.api.GetSALReceipt(param).subscribe((res) => {
       if (res.StatusCode == 0) {
-        this.receipt = res.ObjectReturn;
+        const result = res.ObjectReturn || {};
+        const receiptData = result.Receipt || {};
+        const orderInfo = result.OrderInfo || {};
 
-        this.receipt.RemainingAmount = (this.receipt.TotalAmount ?? 0) - (this.receipt.TotalReceiptAmount ?? 0);
-        this.receiptcopy.RemainingAmount = (this.receipt.TotalAmount ?? 0) - (this.receipt.TotalReceiptAmount ?? 0);
+        // Map Receipt basic info
+        this.receipt = Object.assign(new SALOrderReceiptCusDTO(), receiptData);
+
+        // Map OrderInfo to womMaster for breakdown details
+        this.womMaster.VehiclePrice = orderInfo.VehicleAmount || 0;
+        this.womMaster.ServiceTotal = orderInfo.ServiceAmount || 0;
+        this.womMaster.PartTotal = orderInfo.PartAmount || 0;
+        this.womMaster.DiscountAmount = orderInfo.PromotionAmount || 0;
+        this.womMaster.VatPrice = orderInfo.VATAmount || 0;
+        this.womMaster.TotalPayment = orderInfo.TotalBillAmount || 0;
+        this.womMaster.TotalBeforeDiscount = (orderInfo.VehicleAmount || 0) + (orderInfo.ServiceAmount || 0) + (orderInfo.PartAmount || 0);
+
+        // Map OrderInfo to bottom summary fields
+        this.receipt.TotalOrderValue = orderInfo.TotalPrice || 0;
+        this.receipt.PriorCollections = orderInfo.AmountPaid || 0;
+        this.receipt.CurrentRemainingDebt = orderInfo.DebtAmount || 0;
+        this.receipt.OrderNo = orderInfo.OrderID || this.receipt.OrderNo;
 
         if (this.receipt.EffDate)
           this.receipt.EffDate = new Date(this.receipt.EffDate);
+
         this.receiptcopy = { ...this.receipt };
 
         this.loader.loader(false);

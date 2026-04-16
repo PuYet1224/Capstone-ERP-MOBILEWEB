@@ -13,63 +13,60 @@
         <section class="receipt-section">
             <div class="section-header">
                 <h3 class="section-title">Thông tin phiếu thu</h3>
-                <span class="material-icons edit-icon" *ngIf="receipt.Status !== enumreceiptstt.Success"
+                <span class="material-icons edit-icon" *ngIf="receipt?.Status !== enumreceiptstt.Success"
                     (click)="onnavigate('/mtbike/document/receipt/update')">edit</span>
             </div>
             <div class="info-grid">
                 <div class="info-row">
                     <span class="label">Số phiếu thu</span>
-                    <span class="value highlight-red">{{ receipt.ReceiptNo || 'HM0000005/PT1' }}</span>
+                    <span class="value highlight-red">{{ receipt?.ReceiptNo }}</span>
                 </div>
                 <div class="info-row">
                     <span class="label">Chứng từ tham chiếu</span>
-                    <span class="value highlight-red">{{ womMaster.ID || 'HM0000005' }}</span>
+                    <span class="value highlight-red">{{ receipt?.OrderNo }}</span>
                 </div>
                 <div class="info-row">
                     <span class="label">Thu ngân</span>
-                    <span class="value">{{ receipt.CashierName || 'Nguyễn Tấn Phú' }}</span>
+                    <span class="value">{{ receipt?.CashierName }}</span>
                 </div>
                 <div class="info-row">
                     <span class="label">Ngày thu</span>
-                    <span class="value">{{ (receipt.CreatedTime || '2025-03-24T10:00:00') | date:'dd/MM/yyyy HH:mm'
-                        }}</span>
+                    <span class="value">{{ receipt?.CreatedTime | date:'dd/MM/yyyy HH:mm' }}</span>
                 </div>
                 <div class="info-row">
                     <span class="label">Tên khách hàng</span>
-                    <span class="value bold">{{ receipt.CustomerName || 'Trần Thị Bích' }}</span>
+                    <span class="value bold">{{ receipt?.CustomerName }}</span>
                 </div>
                 <div class="info-row">
                     <span class="label">Số điện thoại</span>
-                    <span class="value">{{ receipt.CellPhone || '0912345678' }}</span>
+                    <span class="value">{{ receipt?.CellPhone }}</span>
                 </div>
                 <div class="info-row full-width">
                     <span class="label">Địa chỉ</span>
-                    <span class="value">{{ receipt.Address || '123 đường số 14, phường An Nhơn, thành phố Hồ Chí Minh'
-                        }}</span>
+                    <span class="value">{{ receipt?.Address }}</span>
                 </div>
                 <div class="info-row">
                     <span class="label">Phương thức thanh toán</span>
-                    <span class="value">{{ receipt.PaymentMethodName || 'Tiền mặt và chuyển khoản' }}</span>
+                    <span class="value">{{ receipt?.PaymentMethodName }}</span>
                 </div>
-                <div class="info-sub-group">
+                <div class="info-sub-group" *ngIf="receipt?.PaymentMethod !== 1">
                     <div class="sub-row">
                         <span class="sub-label">+ Ngân hàng:</span>
-                        <span class="sub-value">Techcombank</span>
+                        <span class="sub-value">{{ receipt?.Bank }}</span>
                     </div>
                     <div class="sub-row">
                         <span class="sub-label">+ Số tài khoản:</span>
-                        <span class="sub-value">30485484951575</span>
+                        <span class="sub-value">{{ receipt?.BankAccount }}</span>
                     </div>
                 </div>
                 <div class="info-row full-width">
                     <span class="label">Mô tả</span>
-                    <span class="value">{{ receipt.Description || ('Thu tiền mua xe theo phiếu ' + (womMaster.ID ||
-                        'HM0000005')) }}</span>
+                    <span class="value">{{ receipt?.Description }}</span>
                 </div>
                 <div class="info-row">
                     <span class="label">Tình trạng</span>
-                    <span class="status-badge" [ngClass]="getStatusClass(receipt.Status)">
-                        {{ receipt.StatusName || 'Chờ thu' }}
+                    <span class="status-badge" [ngClass]="getStatusClass(receipt?.Status)">
+                        {{ receipt?.StatusName }}
                     </span>
                 </div>
             </div>
@@ -79,80 +76,70 @@
         <section class="receipt-section">
             <div class="section-header">
                 <h3 class="section-title">Chi tiết phiếu thu</h3>
-                <span class="material-icons edit-icon" *ngIf="receipt.Status !== enumreceiptstt.Success"
-                    (click)="onnavigate('/mtbike/document/receipt/update')">edit</span>
             </div>
             <div class="calculation-grid">
                 <div class="calc-row">
                     <span class="label">Giá xe (chưa VAT):</span>
-                    <span class="value">{{ (receipt.TotalAmount || 229347273) | number }}đ</span>
+                    <span class="value">{{ (womMaster?.VehiclePrice || 0) | number }}đ</span>
                 </div>
                 <div class="calc-row">
                     <span class="label">Dịch vụ:</span>
-                    <span class="value">{{ 15000000 | number }}đ</span>
+                    <span class="value">{{ (womMaster?.ServiceTotal || 0) | number }}đ</span>
                 </div>
                 <div class="calc-row">
                     <span class="label">Phụ kiện:</span>
-                    <span class="value">{{ 4060000 | number }}đ</span>
+                    <span class="value">{{ (womMaster?.PartTotal || 0) | number }}đ</span>
                 </div>
 
                 <div class="calc-row divider-top">
                     <span class="label bold">TỔNG CỘNG</span>
-                    <span class="value bold">{{ (receipt.TotalAmount || 248407273) | number }}đ</span>
+                    <span class="value bold">{{ (womMaster?.TotalBeforeDiscount || 0) | number }}đ</span>
                 </div>
                 <div class="calc-row">
                     <span class="label green">Giảm giá (Khuyến mãi):</span>
-                    <span class="value green">- {{ 4000000 | number }}đ</span>
+                    <span class="value green">- {{ (womMaster?.DiscountAmount || 0) | number }}đ</span>
                 </div>
 
                 <div class="calc-row divider-top">
                     <span class="label bold">TỔNG GIÁ TRỊ THANH TOÁN</span>
-                    <span class="value bold">{{ (receipt.TotalAmount || 244407273) | number }}đ</span>
+                    <span class="value bold">{{ (womMaster?.TotalPayment || 0) | number }}đ</span>
                 </div>
                 <div class="calc-row">
                     <span class="label">Tổng VAT:</span>
-                    <span class="value">{{ 23502360 | number }}đ</span>
+                    <span class="value">{{ (womMaster?.VatPrice || 0) | number }}đ</span>
                 </div>
 
                 <div class="calc-row divider-top">
                     <span class="label bold">TỔNG GIÁ TRỊ ĐƠN HÀNG</span>
-                    <span class="value bold">{{ 267909633 | number }}đ</span>
+                    <span class="value bold">{{ (receipt?.TotalOrderValue || 0) | number }}đ</span>
                 </div>
                 <div class="calc-row sub-item">
-                    <span class="label">+ Trả thẳng:</span>
-                    <span class="value">{{ 167909633 | number }}đ</span>
+                    <span class="label">+ Đã thu trước đó:</span>
+                    <span class="value">{{ (receipt?.PriorCollections || 0) | number }}đ</span>
                 </div>
                 <div class="calc-row sub-item">
-                    <span class="label">+ Đặt cọc:</span>
-                    <span class="value">{{ 50000000 | number }}đ</span>
-                </div>
-                <div class="calc-row sub-item">
-                    <span class="label">+ Vay công ty tài chính:</span>
-                    <span class="value">0đ</span>
-                </div>
-                <div class="calc-row sub-item">
-                    <span class="label">+ Dư nợ:</span>
-                    <span class="value">{{ 50000000 | number }}đ</span>
+                    <span class="label">+ Còn nợ hiện tại:</span>
+                    <span class="value highlight-debt">{{ (receipt?.CurrentRemainingDebt || 0) | number }}đ</span>
                 </div>
             </div>
         </section>
 
         <!-- TOTAL HIGHLIGHT CARD -->
         <div class="total-highlight-card">
-            <span class="card-label">TỔNG TIỀN THANH TOÁN</span>
-            <span class="card-amount">{{ (receipt.CollectedAmount || 217909633) | number }}đ</span>
+            <span class="card-label">TIỀN THU LẦN NÀY</span>
+            <span class="card-amount">{{ (receipt?.CollectedAmount || 0) | number }}đ</span>
         </div>
 
         <!-- SIGNATURE AREA -->
         <div class="signature-section">
-            <div class="signature-box" *ngIf="receipt.Signature">
+            <div class="signature-box" *ngIf="receipt?.Signature">
                 <p class="sig-title">Khách hàng <span class="sig-sub">(ký tên)</span></p>
                 <div class="sig-wrapper">
-                    <img [src]="receipt.Signature" alt="Chữ ký khách hàng" class="sig-image">
+                    <img [src]="receipt?.Signature" alt="Chữ ký khách hàng" class="sig-image">
                 </div>
-                <p class="sig-name">{{ receipt.CustomerName || 'Trần Thị Bích' }}</p>
+                <p class="sig-name">{{ receipt?.CustomerName || 'Trần Thị Bích' }}</p>
             </div>
-            <div class="signature-box empty" *ngIf="!receipt.Signature" (click)="openSignaturePopup()">
+            <div class="signature-box empty" *ngIf="!receipt?.Signature" (click)="openSignaturePopup()">
                 <p class="sig-title">Ký tên xác nhận đóng tiền</p>
                 <div class="sig-placeholder">
                     <span class="material-icons">draw</span>
@@ -167,7 +154,7 @@
         <ps-kendo-button class="btn-icon" (onClick)="onnavigate('/mtbike/document')">
             <span class="material-icons">arrow_back</span>
         </ps-kendo-button>
-        <ps-kendo-button class="btn-action primary-green" [disabled]="receipt.Status === enumreceiptstt.Success"
+        <ps-kendo-button class="btn-action primary-green" [disabled]="receipt?.Status === enumreceiptstt.Success"
             (onClick)="onupdatestatus(enumreceiptstt.Success)">
             <span class="text">Đã thu tiền</span>
         </ps-kendo-button>

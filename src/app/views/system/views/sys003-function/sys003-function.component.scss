@@ -132,6 +132,7 @@ $icon-colors: (
               display: grid;
               grid-template-columns: repeat(3, 1fr);
               gap: 8px;
+              align-items: start;
 
               ps-kendo-button {
                 button {
