@@ -13,6 +13,7 @@ import { SALOrderReceiptStatusEnum } from 'src/app/models/enums/e-status/sal-ord
 import { LSListTypeDataEnum } from 'src/app/models/enums/e-type/ls-list-type-data.enum';
 import { SALOrderDetailPaymentTypeEnum } from 'src/app/models/enums/e-type/sal-order-detail-payment-type.enum';
 import { KeyLocalStorageEnum } from 'src/app/models/enums/key-local-storage.enum';
+import { ConfigDTO } from 'src/app/models/dtos/config.dto';
 import { GetConfigService } from 'src/app/services/core/ps-get-config.service';
 import { ConfigCacheService } from 'src/app/services/core/config-cache.service';
 import { PsKendoNotificationService } from 'src/app/services/core/ps-kendo-notification.service';
@@ -23,12 +24,12 @@ import { SystemLoaderService } from 'src/app/views/system/services/system-loader
 import { MtbikeApiService } from '../../services/mtbike-api.service';
 
 @Component({
-  selector: 'mtb030-sal-payment-receipt',
-  templateUrl: './mtb030-sal-payment-receipt.component.html',
-  styleUrls: ['./mtb030-sal-payment-receipt.component.scss'],
+  selector: 'mtb022-document-receipt-detail',
+  templateUrl: './mtb022-document-receipt-detail.component.html',
+  styleUrls: ['./mtb022-document-receipt-detail.component.scss'],
 })
 
-export class Mtb030SalPaymentReceiptComponent {
+export class Mtb022DocumentReceiptDetailComponent {
   constructor(
     private api: MtbikeApiService,
     private cache: PsCache,
@@ -43,25 +44,18 @@ export class Mtb030SalPaymentReceiptComponent {
   private arrUnsubscribe: Subscription[] = [];
 
   ngOnInit(): void {
-    // ---- MOCK DATA TEST ----
-    const mockWomMaster = { Code: 9999, CustomerName: 'Nguyễn Văn A', Phone: '0901234567', Address: '123 Đường Hoa Hồng, TP.HCM', TotalPrice: 15000000, StatusName: 'Mới' };
-    const mockPaymentData = { Code: 0, OrderMaster: 9999, TotalAmount: 15000000, TotalReceiptAmount: 0, CollectedAmount: 15000000, CustomerName: 'Nguyễn Văn A', CellPhone: '0901234567', EffDate: new Date(), Description: 'Thanh toán tiền sửa xe/mua phụ tùng', PaymentMethod: 1 };
-    this.cache.setItem(KeyLocalStorageEnum.WOM_MASTER, mockWomMaster);
-    this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, mockPaymentData);
-    // ------------------------
-
     var master = this.cache.getItem(KeyLocalStorageEnum.WOM_MASTER);
-    this.womMaster = this.cache.parseValue(master) || mockWomMaster;
+    this.womMaster = this.cache.parseValue(master);
 
     var temp = this.cache.getItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT);
-    var receipt = this.cache.parseValue(temp) || mockPaymentData;
+    var receipt = this.cache.parseValue(temp);
 
     this.receipt = receipt;
     this.receiptcopy = { ...this.receipt };
 
     // Bypass API get receipt for testing
     // if (receipt.Code != 0) {
-    //   this.getsalreceipt(receipt, true)
+    this.getsalreceipt(receipt, true)
     // }
     this.getlistlslist();
 
@@ -90,6 +84,15 @@ export class Mtb030SalPaymentReceiptComponent {
   public onnavigate(field: string) {
     this.router.navigate([field]);
   }
+
+  public getStatusClass(status: number): string {
+    switch (status) {
+      case SALOrderReceiptStatusEnum.Success: return 'status-complete';
+      case SALOrderReceiptStatusEnum.New: return 'status-new';
+      case SALOrderReceiptStatusEnum.Cancled: return 'status-cancel';
+      default: return 'status-pending';
+    }
+  }
   //#endregion
 
   //#region phiếu thu
@@ -114,10 +117,10 @@ export class Mtb030SalPaymentReceiptComponent {
         this.receiptcopy.Address = '';
         this.receiptcopy.CellPhone = '';
         this.receiptcopy.Signature = null;
-        
+
         this.listvehicle = [];
         this.listvehiclecopy = [];
-        
+
         this.receipt.TotalAmount = 0;
         this.receipt.TotalReceiptAmount = 0;
         this.receipt.RemainingAmount = 0;
@@ -126,7 +129,7 @@ export class Mtb030SalPaymentReceiptComponent {
         this.receiptcopy.TotalReceiptAmount = 0;
         this.receiptcopy.RemainingAmount = 0;
         this.receiptcopy.CollectedAmount = 0;
-        
+
         return;
       }
     }
@@ -155,7 +158,6 @@ export class Mtb030SalPaymentReceiptComponent {
         Properties: [field]
       };
     }
-    this.updatesalreceipt(param);
   }
 
   public onupdatestatus(enumstt: SALOrderReceiptStatusEnum) {
@@ -207,7 +209,6 @@ export class Mtb030SalPaymentReceiptComponent {
 
     this.receipt.Status = enumstt;
     var param = { DTO: this.receipt, Properties: ['Status'] }
-    this.updatesalreceipt(param);
   }
   //#endregion
 
@@ -269,7 +270,6 @@ export class Mtb030SalPaymentReceiptComponent {
       Properties: properties,
     };
 
-    this.updatesalreceipt(param);
     this.closeSignaturePopup();
   }
 
@@ -279,28 +279,6 @@ export class Mtb030SalPaymentReceiptComponent {
   //#endregion
 
   //#region api get
-  private getlistvehiclereceipt() {
-    this.loader.loader(true);
-    var temp = this.api.GetListVehicleReceipt({ OrderMaster: this.womMaster.Code, OrderReceipt: this.receipt.Code }).subscribe((res) => {
-      if (res.StatusCode == 0) {
-        this.listvehicle = res.ObjectReturn || [];
-        // this.listvehicle.forEach(f => {
-        //   f.VehicleName = `${f.TypeOfVehicleName} | ${f.VehicleName} | ${f.VehicleColorName}`
-        // })
-        this.listvehiclecopy = this.listvehicle.map(x => ({ ...x }));
-        this.loader.loader(false);
-      } else {
-        this.loader.loader(false);
-        this.notification.onError(`Lỗi: ${res.ErrorString}`);
-      }
-    },
-      (err) => {
-        this.loader.loader(false);
-        this.notification.onError(`Lỗi: ${err.message}`);
-      }
-    );
-    this.arrUnsubscribe.push(temp);
-  }
 
   private getlistlslist() {
     this.loader.loader(true);
@@ -327,9 +305,6 @@ export class Mtb030SalPaymentReceiptComponent {
           this.receipt.EffDate = new Date(this.receipt.EffDate);
         this.receiptcopy = { ...this.receipt };
 
-        if (loadpage) {
-          this.getlistvehiclereceipt();
-        }
         this.loader.loader(false);
       } else {
         this.loader.loader(false);
@@ -346,45 +321,11 @@ export class Mtb030SalPaymentReceiptComponent {
   //#endregion
 
   //#region api set
-  private updatesalreceipt(param: UpdatePropertiesInterface<SALOrderReceiptCusDTO>) {
-    this.loader.loader(true);
-    var temp = this.api.UpdateSALReceipt(param).subscribe(
-      (res) => {
-        if (res.StatusCode == 0) {
-          this.receipt = { ...res.ObjectReturn };
-          this.receipt.RemainingAmount = (this.receipt.TotalAmount ?? 0) - (this.receipt.TotalReceiptAmount ?? 0);
-          if (this.receipt.EffDate) {
-            this.receipt.EffDate = new Date(this.receipt.EffDate);
-          }
-
-          this.receiptcopy = { ...this.receipt };
-
-          if (param.DTO.Code == 0)
-            this.getlistvehiclereceipt();
-          this.notification.onSuccess(`Thành công`);
-          this.showpopup = false;
-          this.loader.loader(false);
-        } else {
-          this.notification.onError(`Lỗi cập nhật phiếu: ${res.ErrorString}`);
-          this.showpopup = false;
-        }
-        this.loader.loader(false);
-      },
-      (err) => {
-        this.loader.loader(false);
-        this.showpopup = false;
-        this.notification.onError(`Lỗi cập nhật phiếu: ${err.message}`);
-      }
-    );
-    this.arrUnsubscribe.push(temp);
-  }
-
   private updatesalreceiptdetail(param: SALOrderReceiptDetailCusDTO) {
     this.loader.loader(true);
     var temp = this.api.UpdateSALReceiptDetail(param).subscribe(
       (res) => {
         if (res.StatusCode == 0) {
-          this.getlistvehiclereceipt();
           this.getsalreceipt(this.receipt);
           this.notification.onSuccess(`Thành công`);
           this.loader.loader(false);

@@ -1,0 +1,192 @@
+@import "../../../../../assets/scss/colors";
+
+.mtb035-document-receipt-update {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    background-color: $background-primary;
+
+    .content-scrollable {
+       height: calc(100% - 112px);
+    overflow: auto;
+        padding: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .form-card {
+        background-color: $white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+        .card-header {
+    height: 35px;
+    display: flex;
+    align-items: center;
+            padding:0 8px;
+            border-bottom: 1px solid $gray-200;
+            
+            .card-title {
+                margin: 0;
+                font-size: 13px;
+                color: $secondary;
+font-weight: bold;
+            }
+        }
+
+        .card-body {
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;  
+
+            .form-group {
+                display: flex;
+                flex-direction: column;
+                ps-kendo-textbox{
+                .kendo-textbox{
+                    kendo-label{
+                        label{
+                            margin: 0;
+                        }
+                    }
+                }
+                }
+                
+            }
+            
+            .amount-input-wrapper {
+                position: relative;
+                display: flex;
+                align-items: center;
+                width: 100%;
+
+                ps-kendo-numeric-textbox {
+                    flex: 1;
+                    ::ng-deep .k-input-inner {
+                        padding-right: 90px;
+                    }
+                }
+
+                .amount-postfix {
+                    position: absolute;
+                    right: 12px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: $secondary;
+                    pointer-events: none;
+                    z-index: 1;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    margin-top: 12px; 
+                }
+            }
+
+            .split-amount {
+                .k-label {
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: $secondary;
+                    margin-bottom: 8px;
+                }
+                
+                .amount-input-wrapper .amount-postfix {
+                    margin-top: 0; 
+                }
+            }
+
+            ::ng-deep .readonly-input .k-numerictextbox {
+                background-color: $disable-input !important;
+            }
+        }
+    }
+
+    .header-content {
+        display: flex;
+        width: 100%;
+        
+        .func-title1 {
+            font-size: 13px;
+            font-weight: 700;
+            color: $success;
+            text-transform: uppercase;
+white-space: nowrap;
+        }
+
+        .func-title2 {
+            font-size: 13px;
+            font-weight: 400;
+            color: $secondary;
+        }
+    }
+    
+    .header-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        
+        .receipt-code {
+            font-size: 13px;
+            font-weight: bold;
+            color: $error;
+        }
+        
+        .receipt-date {
+            font-size: 11px;
+            color: $secondary;
+        }
+    }
+
+    .footer-actions {
+        background-color: white;
+        padding: 8px;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-top: auto;
+height: 56px;
+
+        .btn-back {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border: 1px solid $border;
+            border-radius: 8px;
+            background: transparent;
+            color: $gray-600;
+            cursor: pointer;
+            flex-shrink: 0;
+
+            .material-icons {
+                font-size: 20px;
+            }
+            
+            &:active {
+                background-color: $hover;
+            }
+        }
+
+        .btn-save {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 36px;
+            background-color: $primary;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            
+            &:active {
+                opacity: 0.8;
+            }
+        }
+    }
+}

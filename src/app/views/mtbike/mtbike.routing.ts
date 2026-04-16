@@ -20,31 +20,19 @@ import { Mtb017SalConsultantPromotionComponent } from './views/mtb017-sal-consul
 import { Mtb018SalConsultantPromotionDetailComponent } from './views/mtb018-sal-consultant-promotion-detail/mtb018-sal-consultant-promotion-detail.component';
 import { Mtb019SalConsultantTotalVehicleComponent } from './views/mtb019-sal-consultant-total-vehicle/mtb019-sal-consultant-total-vehicle.component';
 import { Mtb020SalConsultantTotalComponent } from './views/mtb020-sal-consultant-total/mtb020-sal-consultant-total.component';
-import { Mtb021SalCollectionServicesComponent } from './views/mtb021-sal-collection-services/mtb021-sal-collection-services.component';
-import { Mtb022SalCollectionPartComponent } from './views/mtb022-sal-collection-part/mtb022-sal-collection-part.component';
-import { Mtb023SalCollectionCouponComponent } from './views/mtb023-sal-collection-coupon/mtb023-sal-collection-coupon.component';
-import { Mtb024SalCollectionOwnerComponent } from './views/mtb024-sal-collection-owner/mtb024-sal-collection-owner.component';
-import { Mtb025SalCollectionContactComponent } from './views/mtb025-sal-collection-contact/mtb025-sal-collection-contact.component';
-import { Mtb026SalCollectionOtherComponent } from './views/mtb026-sal-collection-other/mtb026-sal-collection-other.component';
-import { Mtb027SalCollectionPaymentComponent } from './views/mtb027-sal-collection-payment/mtb027-sal-collection-payment.component';
-import { Mtb028SalPaymentComponent } from './views/mtb028-sal-payment/mtb028-sal-payment.component';
-import { Mtb029SalPaymentDocumentComponent } from './views/mtb029-sal-payment-document/mtb029-sal-payment-document.component';
-import { Mtb030SalPaymentReceiptComponent } from './views/mtb030-sal-payment-receipt/mtb030-sal-payment-receipt.component';
-import { Mtb031SalPaymentSelectionComponent } from './views/mtb031-sal-payment-selection/mtb031-sal-payment-selection.component';
-import { Mtb032SalPaymentTotalComponent } from './views/mtb032-sal-payment-total/mtb032-sal-payment-total.component';
-import { Mtb033SalPaymentInvoiceComponent } from './views/mtb033-sal-payment-invoice/mtb033-sal-payment-invoice.component';
 import { Mtb034SalPolicyComponent } from './views/mtb034-sal-policy/mtb034-sal-policy.component';
-import { Mtb021DocumentTransactionComponent } from './views/mtb021-document-transaction/mtb021-document-transaction.component';
-
+import { Mtb021DocumentReceiptComponent } from './views/mtb021-document-receipt/mtb021-document-receipt.component';
+import { Mtb022DocumentReceiptDetailComponent } from './views/mtb022-document-receipt-detail/mtb022-document-receipt-detail.component';
+import { Mtb035DocumentReceiptUpdateComponent } from './views/mtb035-document-receipt-update/mtb035-document-receipt-update.component';
 
 export const MtbikeRouting: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'dashboard-mobile',
     pathMatch: 'full'
   },
   {
-    path: 'dashboard',
+    path: 'dashboard-mobile',
     component: Mtb000DashboardComponent,
   },
   {
@@ -128,56 +116,8 @@ export const MtbikeRouting: Routes = [
     component: Mtb020SalConsultantTotalComponent,
   },
   {
-    path: 'collection/owner',
-    component: Mtb024SalCollectionOwnerComponent,
-  },
-  {
-    path: 'collection/services',
-    component: Mtb021SalCollectionServicesComponent,
-  },
-  {
-    path: 'collection/part',
-    component: Mtb022SalCollectionPartComponent,
-  },
-  {
-    path: 'collection/coupon',
-    component: Mtb023SalCollectionCouponComponent,
-  },
-  {
-    path: 'collection/contact',
-    component: Mtb025SalCollectionContactComponent,
-  },
-  {
-    path: 'collection/other',
-    component: Mtb026SalCollectionOtherComponent,
-  },
-  {
-    path: 'collection/payment',
-    component: Mtb027SalCollectionPaymentComponent,
-  },
-  {
-    path: 'payment',
-    component: Mtb028SalPaymentComponent,
-  },
-  {
-    path: 'payment/document',
-    component: Mtb029SalPaymentDocumentComponent,
-  },
-  {
-    path: 'payment/receipt',
-    component: Mtb030SalPaymentReceiptComponent,
-  },
-  {
-    path: 'payment/selection',
-    component: Mtb031SalPaymentSelectionComponent,
-  },
-  {
-    path: 'payment/total',
-    component: Mtb032SalPaymentTotalComponent,
-  },
-  {
-    path: 'payment/invoice',
-    component: Mtb033SalPaymentInvoiceComponent,
+    path: 'document/receipt',
+    component: Mtb022DocumentReceiptDetailComponent,
   },
   {
     path: 'promotion',
@@ -185,7 +125,11 @@ export const MtbikeRouting: Routes = [
   },
   {
     path: 'document',
-    component: Mtb021DocumentTransactionComponent,
+    component: Mtb021DocumentReceiptComponent,
+  },
+  {
+    path: 'document/receipt/update',
+    component: Mtb035DocumentReceiptUpdateComponent,
   },
 
 ];

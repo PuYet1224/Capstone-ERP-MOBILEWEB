@@ -1,0 +1,25 @@
+{
+  "/api/proxy-identity": {
+    "target": "http://identity.hoaiminh.vn",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api/proxy-identity": ""
+    }
+  },
+  "/api/proxy-api": {
+    "target": "http://puyet1224-001-site1.jtempurl.com",
+    "secure": false,
+    "changeOrigin": true,
+    "auth": "puyet1224-001:Puyet1224@",
+    "pathRewrite": {
+      "^/api/proxy-api": ""
+    }
+  },
+  "/resource": {
+    "target": "http://puyet1224-001-site1.jtempurl.com",
+    "secure": false,
+    "changeOrigin": true,
+    "auth": "puyet1224-001:Puyet1224@"
+  }
+}

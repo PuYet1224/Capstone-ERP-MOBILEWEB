@@ -27,8 +27,18 @@ export class ViewsComponent implements OnInit, OnDestroy {
     var url = this.route.url;
     var listurl = url.split('/');
     if (!listurl.includes('menu') && !listurl.includes('store') && !listurl.includes('login')) {
-      this.api.GetPermissionDLL(listurl[2]).subscribe(() => {
-        this.getapi(listurl[2]);
+      var funcdll = listurl[2];
+
+      // Try to find a more specific DLL in nested segments
+      for (let i = listurl.length - 1; i >= 2; i--) {
+        if (MtbikeApiStaticService.getNamespace(listurl[i])) {
+          funcdll = listurl[i];
+          break;
+        }
+      }
+
+      this.api.GetPermissionDLL(funcdll).subscribe(() => {
+        this.getapi(funcdll);
       });
     }
     else

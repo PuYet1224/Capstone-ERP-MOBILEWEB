@@ -122,7 +122,7 @@ export class Mtb020SalConsultantTotalComponent implements OnInit, OnDestroy, Aft
       return;
     }
     const param: UpdateStatusInterface<SALOrderMasterCusDTO> = {
-      ListDTO: [this.retailMaster],
+      ListDTO: [{ Code: this.retailMaster.Code } as SALOrderMasterCusDTO],
       Status: SALOrderMasterStatusRetailEnum.PENDING,
     };
     this.subLoader.loader(true);
