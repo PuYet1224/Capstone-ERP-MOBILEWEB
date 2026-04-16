@@ -15,7 +15,6 @@
     <!-- END: HEADER -->
 
     <main class="content-scrollable">
-        <!-- Khách hàng Card -->
         <div class="form-card">
             <div class="card-header">
                 <h3 class="card-title">Khách hàng</h3>
@@ -31,27 +30,6 @@
                     <ps-kendo-textbox label="Số điện thoại" placeholder="Nhập số điện thoại"
                         [(ngModel)]="receipt.CellPhone" (blur)="onBlur()">
                     </ps-kendo-textbox>
-                </div>
-
-                <div class="form-group">
-                    <ps-kendo-dropdown-list label="Tỉnh thành" [data]="listProvince" 
-                        textField="VNProvince" valueField="Code" [valuePrimitive]="true"
-                        [(ngModel)]="currentProvinceCode" (valueChange)="onProvinceChange($event)">
-                    </ps-kendo-dropdown-list>
-                </div>
-
-                <div class="form-group">
-                    <ps-kendo-dropdown-list label="Phường xã" [data]="listWard" 
-                        textField="VNWard" valueField="Code" [valuePrimitive]="true"
-                        [(ngModel)]="currentWardCode" (valueChange)="onWardChange($event)"
-                        placeholder="Chọn phường xã">
-                    </ps-kendo-dropdown-list>
-                </div>
-
-                <div class="form-group">
-                    <ps-kendo-textarea label="Địa chỉ" placeholder="Nhập địa chỉ" [(ngModel)]="receipt.Address"
-                        (blur)="onBlur()">
-                    </ps-kendo-textarea>
                 </div>
             </div>
         </div>
@@ -89,8 +67,9 @@
                         <label class="k-label">Số tiền chuyển khoản</label>
                         <div class="amount-input-wrapper">
                             <ps-kendo-numeric-textbox [spinners]="false" format="n0"
-                                [readonly]="receipt.PaymentMethod === 3" [(ngModel)]="receipt.TransferAmount"
-                                [class.readonly-input]="receipt.PaymentMethod === 3" (blur)="onBlur()">
+                                [(ngModel)]="receipt.TransferAmount"
+                                (valueChange)="onTransferAmountChange($event)"
+                                (blur)="onBlur()">
                             </ps-kendo-numeric-textbox>
                             <span class="amount-postfix">{{ receipt.CollectedAmount | number:'1.0-0' }}đ</span>
                         </div>
@@ -108,9 +87,6 @@
 
     <!-- FOOTER ACTIONS -->
     <div class="footer-actions">
-        <button class="btn-back" (click)="goBack()">
-            <span class="material-icons">arrow_back</span>
-        </button>
-        <button class="btn-save" (click)="onSave()">Lưu thay đổi</button>
+        <button class="btn-back" (click)="goBack()">Quay lại</button>
     </div>
 </div>

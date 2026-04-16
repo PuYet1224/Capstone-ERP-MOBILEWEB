@@ -149,43 +149,21 @@ white-space: nowrap;
 height: 56px;
 
         .btn-back {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            border: 1px solid $border;
-            border-radius: 8px;
-            background: transparent;
-            color: $gray-600;
-            cursor: pointer;
-            flex-shrink: 0;
-
-            .material-icons {
-                font-size: 20px;
-            }
-            
-            &:active {
-                background-color: $hover;
-            }
-        }
-
-        .btn-save {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             height: 36px;
-            background-color: $primary;
-            color: white;
-            border: none;
+            border: 1px solid $border;
             border-radius: 8px;
+            background: white;
+            color: $secondary;
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
-            
+
             &:active {
-                opacity: 0.8;
+                background-color: $hover;
             }
         }
     }

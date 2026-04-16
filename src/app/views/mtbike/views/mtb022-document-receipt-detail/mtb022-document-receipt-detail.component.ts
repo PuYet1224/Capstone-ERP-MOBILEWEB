@@ -269,7 +269,26 @@ export class Mtb022DocumentReceiptDetailComponent {
       Properties: properties,
     };
 
-    this.closeSignaturePopup();
+    this.loader.loader(true);
+    const sub = this.api.UpdateSALReceipt(param.DTO).subscribe(
+      (res) => {
+        this.loader.loader(false);
+        if (res.StatusCode === 0) {
+          this.receipt.Signature = e;
+          this.receiptcopy.Signature = e;
+          this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
+          this.notification.onSuccess('Thành công');
+          this.closeSignaturePopup();
+        } else {
+          this.notification.onError(`Lỗi: ${res.ErrorString}`);
+        }
+      },
+      (err) => {
+        this.loader.loader(false);
+        this.notification.onError(`Lỗi: ${err.message || err}`);
+      }
+    );
+    this.arrUnsubscribe.push(sub);
   }
 
   print() {
