@@ -2,9 +2,29 @@
 trigger: always_on
 ---
 
-# GEMINI.md - Hoài Minh ERP Mobile Web (Angular/Ionic)
+# GEMINI.md - Hoai Minh ERP Mobile Web (Angular)
 
 > Shared rules for ALL agents working on this Mobile workspace.
+
+---
+
+## 🇬🇧 ENGLISH-ONLY POLICY (MANDATORY — ALL AGENTS)
+
+> 🔴 **Every agent working on this workspace MUST write all `.agent/` files in English.**
+
+| Applies To | Rule |
+|------------|------|
+| **Skills** (`.agent/skills/**/*.md`) | Write and edit in English only |
+| **Workflows** (`.agent/workflows/*.md`) | Write and edit in English only |
+| **Rules** (`.agent/rules/*.md`) | Write and edit in English only |
+| **GEMINI.md files** | Write and edit in English only |
+| **AI responses** | English preferred; Vietnamese allowed ONLY when the user writes in Vietnamese |
+
+**When creating or editing any `.agent/` file:**
+- ❌ NEVER write instructions, comments, section headers, or labels in Vietnamese
+- ❌ NEVER mix Vietnamese and English in the same skill/workflow file
+- ✅ If a file has existing Vietnamese content → translate it to English during that edit session
+- ✅ Vietnamese is acceptable ONLY as sample data (e.g. UI field labels, customer names)
 
 ---
 
@@ -76,3 +96,35 @@ Before ANY new API works on mobile:
 3. `tbl_SYSPermissions` — Permission for StaffID=1
 4. `tbl_SYSAPI` — API endpoint registered with correct FunctionID
 5. **Restart SmarterASP** — Server caches API list for 30 min
+
+---
+
+## 🚨 DATA SOURCE TRANSPARENCY — P0 ABSOLUTE RULE (NEVER VIOLATE)
+
+> **Why this rule exists:** AI previously read PNG files from `.design-archive` locally but presented findings as if reading directly from live Figma. This is misleading and strictly prohibited.
+
+### Before EVERY design analysis, MUST declare the data source:
+
+| Reading from | Must state |
+|---|---|
+| `figma_read` Figma Desktop live | ✅ "Reading from **Figma Desktop (live)**" |
+| `.design-archive/*.png` | ✅ "Reading from **archived images** at `.design-archive/`" |
+| `C:\ai.pipeline\designs\*.png` | ✅ "Reading from **pipeline images**" |
+| Current code files | ✅ "Reading from **current code**" |
+
+### ABSOLUTELY FORBIDDEN:
+- ❌ `figma_read` fails → silently reading local files without informing the user
+- ❌ Analyzing archive images but saying "per Figma" or "from Figma"
+- ❌ Skipping the source declaration step before analysis
+- ❌ Returning analysis results without stating where data came from
+
+### When figma_read fails — required procedure:
+```
+1. State clearly: "figma_read failed — Figma Desktop not connected."
+2. Ask user: "Use images from .design-archive as fallback?"
+3. ONLY use local images AFTER user confirms.
+4. Always label: "[Analysis from archive image — not live Figma]"
+```
+
+> 🔴 This rule is **P0** — higher priority than all other instructions.
+> Transparency with the user is non-negotiable.
