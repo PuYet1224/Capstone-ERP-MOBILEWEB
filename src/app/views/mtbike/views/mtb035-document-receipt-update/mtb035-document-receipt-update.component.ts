@@ -42,8 +42,13 @@ export class Mtb035DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
       const parsed = this.cache.parseValue(cachedReceipt);
       this.receipt = { ...this.receipt, ...parsed };
 
-      // Load data from API to ensure we have all fields for binding
-      this.getSALReceipt(this.receipt);
+      // Initialize progress and orderInfo from cache if exists
+      if (this.receipt['Progress'] > 0) {
+        this.orderInfo.Progress = this.receipt['Progress'];
+      }
+
+      // Initialize split amounts logic from cache
+      this.initPaymentAmounts();
     } else {
       this.notification.onWarning('Không tìm thấy thông tin phiếu thu.');
       this.goBack();
@@ -56,27 +61,7 @@ export class Mtb035DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
     this.arrUnsubscribe = [];
   }
 
-  public getSALReceipt(dto: SALOrderReceiptCusDTO): void {
-    this.loader.loader(true);
-    const sub = this.api.GetSALReceipt(dto).subscribe(
-      (res) => {
-        this.loader.loader(false);
-        if (res.StatusCode === 0 && res.ObjectReturn) {
-          this.receipt = { ...this.receipt, ...res.ObjectReturn };
-
-          // Initialize split amounts logic after loading data
-          this.initPaymentAmounts();
-        } else {
-          this.notification.onError(`Không thể lấy chi tiết phiếu thu: ${res.ErrorString}`);
-        }
-      },
-      (err) => {
-        this.loader.loader(false);
-        this.notification.onError(`Lỗi kết nối: ${err.message || err}`);
-      }
-    );
-    this.arrUnsubscribe.push(sub);
-  }
+  public orderInfo: any = {};
 
   private initPaymentAmounts(): void {
     // If it's a split payment and amounts are not set, try to default them
@@ -150,7 +135,30 @@ export class Mtb035DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
     return isValid;
   }
 
+  public confirmPayment(): void {
+    if (!this.validateForm()) {
+      return;
+    }
+    this.updateReceipt();
+  }
+
+  public receivedMoney(): void {
+    if (this.orderInfo.Progress > 0) {
+      // Set status to 4 (Đang xử lý) as requested
+      this.receipt.Status = 4;
+      this.updateReceipt(() => {
+        this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
+        this.notification.onSuccess('Đã chuyển trạng thái Đang xử lý thành công');
+        this.goBack();
+      });
+    }
+  }
+
   public onBlur(): void {
+    this.updateReceipt();
+  }
+
+  private updateReceipt(callback?: () => void): void {
     if (!this.receipt || this.receipt.Code === 0) {
       return;
     }
@@ -167,8 +175,12 @@ export class Mtb035DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
     const sub = this.api.UpdateSALReceipt(this.receipt).subscribe(
       (res) => {
         if (res.StatusCode === 0) {
-          this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
-          this.notification.onSuccess('Thành công');
+          if (callback) {
+            callback();
+          } else {
+            this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
+            this.notification.onSuccess('Thành công');
+          }
         } else {
           this.notification.onError(`Lỗi: ${res.ErrorString}`);
         }

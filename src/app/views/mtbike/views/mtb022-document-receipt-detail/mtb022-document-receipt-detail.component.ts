@@ -80,6 +80,8 @@ export class Mtb022DocumentReceiptDetailComponent {
   public enumreceiptstt = SALOrderReceiptStatusEnum;
   public FunctionPermissionDTO = FunctionPermissionDTO;
 
+  public orderInfo: any = {};
+
   public onnavigate(field: string) {
     this.router.navigate([field]);
   }
@@ -207,7 +209,59 @@ export class Mtb022DocumentReceiptDetailComponent {
     }
 
     this.receipt.Status = enumstt;
-    var param = { DTO: this.receipt, Properties: ['Status'] }
+    this.updateReceipt();
+  }
+
+  public confirmPayment(): void {
+    if (this.receipt.TotalOrderValue > 0) {
+      const totalCollected = (this.receipt.PriorCollections || 0) + (this.receipt.CollectedAmount || 0);
+      const progress = (totalCollected / this.receipt.TotalOrderValue) * 100;
+
+      this.orderInfo.Progress = progress > 100 ? 100 : progress;
+      this.receipt.Progress = this.orderInfo.Progress;
+    }
+    this.updateReceipt();
+  }
+
+  public receivedMoney(): void {
+    if (this.orderInfo.Progress > 0) {
+      this.receipt.Status = 4; // Đang xử lý
+      this.updateReceipt(() => {
+        this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
+        this.notification.onSuccess('Đã chuyển trạng thái Đang xử lý thành công');
+        this.onnavigate('/mtbike/document/receipt');
+      });
+    }
+  }
+
+  private updateReceipt(callback?: () => void): void {
+    if (!this.receipt || this.receipt.Code === 0) {
+      return;
+    }
+
+    this.loader.loader(true);
+    const sub = this.api.UpdateSALReceipt(this.receipt).subscribe(
+      (res) => {
+        this.loader.loader(false);
+        if (res.StatusCode === 0) {
+          this.getsalreceipt(this.receipt);
+          if (callback) {
+            callback();
+          } else {
+            this.getsalreceipt(this.receipt);
+            this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
+            this.notification.onSuccess('Thành công');
+          }
+        } else {
+          this.notification.onError(`Lỗi: ${res.ErrorString}`);
+        }
+      },
+      (err) => {
+        this.loader.loader(false);
+        this.notification.onError(`Lỗi: ${err.message || err}`);
+      }
+    );
+    this.arrUnsubscribe.push(sub);
   }
   //#endregion
 
@@ -335,6 +389,7 @@ export class Mtb022DocumentReceiptDetailComponent {
         this.receipt.PriorCollections = orderInfo.AmountPaid || 0;
         this.receipt.CurrentRemainingDebt = orderInfo.DebtAmount || 0;
         this.receipt.OrderNo = orderInfo.OrderID || this.receipt.OrderNo;
+        this.orderInfo = orderInfo;
 
         if (this.receipt.EffDate)
           this.receipt.EffDate = new Date(this.receipt.EffDate);

@@ -1,170 +1,247 @@
-@import "../../../../../assets/scss/colors";
+@import '../../../../../assets/scss/colors';
 
 .mtb035-document-receipt-update {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  background-color: $background-primary;
+
+  .content-scrollable {
+    height: calc(100% - 112px);
+    overflow: auto;
+    padding: 8px;
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    height: 100dvh;
-    background-color: $background-primary;
+    gap: 8px;
+  }
 
-    .content-scrollable {
-       height: calc(100% - 112px);
-    overflow: auto;
-        padding: 8px;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
+  .form-card {
+    background-color: $white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    .card-header {
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+      border-bottom: 1px solid $gray-200;
+
+      .card-title {
+        margin: 0;
+        font-size: 13px;
+        color: $secondary;
+        font-weight: bold;
+      }
+
+      .order-id {
+        font-size: 12px;
+        font-weight: 600;
+        color: $primary;
+        background-color: lighten($primary, 45%);
+        padding: 2px 8px;
+        border-radius: 4px;
+      }
     }
 
-    .form-card {
-        background-color: $white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    &.order-summary-card {
+      margin-top: 4px;
+      border: 1px solid lighten($primary, 40%);
 
-        .card-header {
-    height: 35px;
-    display: flex;
-    align-items: center;
-            padding:0 8px;
-            border-bottom: 1px solid $gray-200;
-            
-            .card-title {
-                margin: 0;
-                font-size: 13px;
-                color: $secondary;
-font-weight: bold;
-            }
-        }
-
-        .card-body {
-            padding: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;  
-
-            .form-group {
-                display: flex;
-                flex-direction: column;
-                ps-kendo-textbox{
-                .kendo-textbox{
-                    kendo-label{
-                        label{
-                            margin: 0;
-                        }
-                    }
-                }
-                }
-                
-            }
-            
-            .amount-input-wrapper {
-                position: relative;
-                display: flex;
-                align-items: center;
-                width: 100%;
-
-                ps-kendo-numeric-textbox {
-                    flex: 1;
-                    ::ng-deep .k-input-inner {
-                        padding-right: 90px;
-                    }
-                }
-
-                .amount-postfix {
-                    position: absolute;
-                    right: 12px;
-                    font-size: 14px;
-                    font-weight: 600;
-                    color: $secondary;
-                    pointer-events: none;
-                    z-index: 1;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    margin-top: 12px; 
-                }
-            }
-
-            .split-amount {
-                .k-label {
-                    font-size: 14px;
-                    font-weight: 500;
-                    color: $secondary;
-                    margin-bottom: 8px;
-                }
-                
-                .amount-input-wrapper .amount-postfix {
-                    margin-top: 0; 
-                }
-            }
-
-            ::ng-deep .readonly-input .k-numerictextbox {
-                background-color: $disable-input !important;
-            }
-        }
-    }
-
-    .header-content {
+      .summary-row {
         display: flex;
-        width: 100%;
-        
-        .func-title1 {
-            font-size: 13px;
-            font-weight: 700;
-            color: $success;
-            text-transform: uppercase;
-white-space: nowrap;
+        justify-content: space-between;
+        font-size: 13px;
+        padding: 4px 0;
+        color: $secondary;
+
+        .value {
+          font-weight: 600;
+          color: $primary;
         }
 
-        .func-title2 {
-            font-size: 13px;
-            font-weight: 400;
-            color: $secondary;
+        &.highlight {
+          border-top: 1px dashed $border;
+          padding-top: 6px;
+          margin-top: 2px;
         }
-    }
-    
-    .header-right {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        
-        .receipt-code {
-            font-size: 13px;
-            font-weight: bold;
-            color: $error;
-        }
-        
-        .receipt-date {
-            font-size: 11px;
-            color: $secondary;
-        }
-    }
 
-    .footer-actions {
-        background-color: white;
-        padding: 8px;
+        .text-success {
+          color: $success !important;
+        }
+        .text-danger {
+          color: $error !important;
+        }
+      }
+
+      .total-bar {
+        margin-top: 8px;
+        padding: 10px;
+        background: linear-gradient(135deg, $error 0%, darken($error, 10%) 100%);
+        border-radius: 6px;
         display: flex;
-        gap: 8px;
+        justify-content: space-between;
         align-items: center;
-        margin-top: auto;
-height: 56px;
+        color: $white;
 
-        .btn-back {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 36px;
-            border: 1px solid $border;
-            border-radius: 8px;
-            background: white;
-            color: $secondary;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-
-            &:active {
-                background-color: $hover;
-            }
+        span {
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.5px;
         }
+
+        .value {
+          font-size: 18px;
+          font-weight: 800;
+        }
+      }
+
+      .progress-section {
+        margin-top: 12px;
+        .progress-info {
+          display: flex;
+          justify-content: space-between;
+          font-size: 11px;
+          font-weight: 600;
+          color: $secondary;
+          margin-bottom: 4px;
+        }
+        .progress-track {
+          height: 6px;
+          background-color: $gray-200;
+          border-radius: 3px;
+          overflow: hidden;
+          .progress-fill {
+            height: 100%;
+            background-color: $success;
+            transition: width 0.3s ease;
+          }
+        }
+      }
     }
+
+    .card-body {
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        ps-kendo-textbox {
+          .kendo-textbox {
+            kendo-label {
+              label {
+                margin: 0;
+              }
+            }
+          }
+        }
+      }
+
+      .amount-input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+
+        ps-kendo-numeric-textbox {
+          flex: 1;
+          ::ng-deep .k-input-inner {
+            padding-right: 90px;
+          }
+        }
+
+        .amount-postfix {
+          position: absolute;
+          right: 12px;
+          font-size: 14px;
+          font-weight: 600;
+          color: $secondary;
+          pointer-events: none;
+          z-index: 1;
+          top: 50%;
+          transform: translateY(-50%);
+          margin-top: 12px;
+        }
+      }
+
+      .split-amount {
+        .k-label {
+          font-size: 14px;
+          font-weight: 500;
+          color: $secondary;
+          margin-bottom: 8px;
+        }
+
+        .amount-input-wrapper .amount-postfix {
+          margin-top: 0;
+        }
+      }
+
+      ::ng-deep .readonly-input .k-numerictextbox {
+        background-color: $disable-input !important;
+      }
+    }
+  }
+
+  .header-content {
+    display: flex;
+    width: 100%;
+
+    .func-title1 {
+      font-size: 13px;
+      font-weight: 700;
+      color: $success;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .func-title2 {
+      font-size: 13px;
+      font-weight: 400;
+      color: $secondary;
+    }
+  }
+
+  .header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    .receipt-code {
+      font-size: 13px;
+      font-weight: bold;
+      color: $error;
+    }
+
+    .receipt-date {
+      font-size: 11px;
+      color: $secondary;
+    }
+  }
+
+  .footer-actions {
+    background-color: white;
+    padding: 8px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: auto;
+    height: 52px;
+
+    .btn-back {
+      width: 100%;
+      flex-shrink: 0;
+      ::ng-deep .k-button {
+        height: 36px;
+        width: 100%;
+        border-color: $border;
+        color: $secondary;
+      }
+    }
+  }
 }

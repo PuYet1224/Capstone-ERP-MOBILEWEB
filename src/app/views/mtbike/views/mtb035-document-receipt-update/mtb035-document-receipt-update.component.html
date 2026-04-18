@@ -1,92 +1,174 @@
 <div class="mtb035-document-receipt-update premium-receipt">
-    <!-- START: HEADER -->
-    <ps-header-back (clickBack)="goBack()">
-        <div class="header-content">
-            <div>
-                <div class=" func-title1">THANH TOÁN BÁN HÀNG</div>
-                <div class="func-title2">Thông tin phiếu thu</div>
-            </div>
-            <div class="header-right">
-                <div class="receipt-code">{{ receipt.ReceiptNo || 'HM0000005/PT1' }}</div>
-                <div class="receipt-date">{{ receipt.CreatedTime | date:'dd/MM/yyyy HH:mm' }}</div>
-            </div>
-        </div>
-    </ps-header-back>
-    <!-- END: HEADER -->
-
-    <main class="content-scrollable">
-        <div class="form-card">
-            <div class="card-header">
-                <h3 class="card-title">Khách hàng</h3>
-            </div>
-            <div class="card-body">
-                <div class="form-group custom-label-wrapper" [ngClass]="{'has-error': errors.CustomerName}">
-                    <ps-kendo-textbox label="Khách hàng (*)" placeholder="Nhập tên khách hàng"
-                        [(ngModel)]="receipt.CustomerName" (blur)="onBlur()">
-                    </ps-kendo-textbox>
-                </div>
-
-                <div class="form-group">
-                    <ps-kendo-textbox label="Số điện thoại" placeholder="Nhập số điện thoại"
-                        [(ngModel)]="receipt.CellPhone" (blur)="onBlur()">
-                    </ps-kendo-textbox>
-                </div>
-            </div>
-        </div>
-
-        <!-- Thanh toán Card -->
-        <div class="form-card">
-            <div class="card-header">
-                <h3 class="card-title">Thanh toán</h3>
-            </div>
-            <div class="card-body">
-                <div class="form-group">
-                    <ps-kendo-dropdown-list label="Phương thức thanh toán (*)" [data]="listPaymentMethods"
-                        textField="Name" valueField="TypeOfList" [valuePrimitive]="true"
-                        [(ngModel)]="receipt.PaymentMethod" (valueChange)="onPaymentMethodChange($event)">
-                    </ps-kendo-dropdown-list>
-                </div>
-
-                <!-- Tiền mặt Amount -->
-                <ng-container *ngIf="receipt.PaymentMethod === 1 || receipt.PaymentMethod === 3">
-                    <div class="form-group split-amount">
-                        <label class="k-label">Số tiền mặt</label>
-                        <div class="amount-input-wrapper">
-                            <ps-kendo-numeric-textbox [spinners]="false" format="n0" placeholder="0"
-                                [(ngModel)]="receipt.CashAmount" (valueChange)="onCashAmountChange($event)"
-                                (blur)="onBlur()">
-                            </ps-kendo-numeric-textbox>
-                            <span class="amount-postfix">{{ receipt.CollectedAmount | number:'1.0-0' }}đ</span>
-                        </div>
-                    </div>
-                </ng-container>
-
-                <!-- Chuyển khoản details & Amount -->
-                <ng-container *ngIf="receipt.PaymentMethod === 2 || receipt.PaymentMethod === 3">
-                    <div class="form-group split-amount">
-                        <label class="k-label">Số tiền chuyển khoản</label>
-                        <div class="amount-input-wrapper">
-                            <ps-kendo-numeric-textbox [spinners]="false" format="n0"
-                                [(ngModel)]="receipt.TransferAmount"
-                                (valueChange)="onTransferAmountChange($event)"
-                                (blur)="onBlur()">
-                            </ps-kendo-numeric-textbox>
-                            <span class="amount-postfix">{{ receipt.CollectedAmount | number:'1.0-0' }}đ</span>
-                        </div>
-                    </div>
-                </ng-container>
-
-                <div class="form-group">
-                    <ps-kendo-textarea label="Mô tả" placeholder="Nhập mô tả" [(ngModel)]="receipt.Description"
-                        (blur)="onBlur()">
-                    </ps-kendo-textarea>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- FOOTER ACTIONS -->
-    <div class="footer-actions">
-        <button class="btn-back" (click)="goBack()">Quay lại</button>
+  <!-- START: HEADER -->
+  <ps-header-back (clickBack)="goBack()">
+    <div class="header-content">
+      <div>
+        <div class="func-title1">THANH TOÁN BÁN HÀNG</div>
+        <div class="func-title2">Thông tin phiếu thu</div>
+      </div>
+      <div class="header-right">
+        <div class="receipt-code">{{ receipt.ReceiptNo || 'HM0000005/PT1' }}</div>
+        <div class="receipt-date">{{ receipt.CreatedTime | date: 'dd/MM/yyyy HH:mm' }}</div>
+      </div>
     </div>
+  </ps-header-back>
+  <!-- END: HEADER -->
+
+  <main class="content-scrollable">
+    <div class="form-card">
+      <div class="card-header">
+        <h3 class="card-title">Khách hàng</h3>
+      </div>
+      <div class="card-body">
+        <div class="form-group custom-label-wrapper" [ngClass]="{ 'has-error': errors.CustomerName }">
+          <ps-kendo-textbox
+            label="Khách hàng (*)"
+            placeholder="Nhập tên khách hàng"
+            [(ngModel)]="receipt.CustomerName"
+            [disabled]="orderInfo.Progress > 0 || receipt.Status == 4"
+            (blur)="onBlur()"
+          >
+          </ps-kendo-textbox>
+        </div>
+
+        <div class="form-group">
+          <ps-kendo-textbox
+            label="Số điện thoại"
+            placeholder="Nhập số điện thoại"
+            [(ngModel)]="receipt.CellPhone"
+            [disabled]="orderInfo.Progress > 0 || receipt.Status == 4"
+            (blur)="onBlur()"
+          >
+          </ps-kendo-textbox>
+        </div>
+      </div>
+    </div>
+
+    <!-- Thanh toán Card -->
+    <div class="form-card">
+      <div class="card-header">
+        <h3 class="card-title">Thanh toán</h3>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <ps-kendo-dropdown-list
+            label="Phương thức thanh toán (*)"
+            [data]="listPaymentMethods"
+            textField="Name"
+            valueField="TypeOfList"
+            [valuePrimitive]="true"
+            [(ngModel)]="receipt.PaymentMethod"
+            [disabled]="receipt.Status == 4"
+            (valueChange)="onPaymentMethodChange($event)"
+          >
+          </ps-kendo-dropdown-list>
+        </div>
+
+        <!-- Tiền mặt Amount -->
+        <ng-container *ngIf="receipt.PaymentMethod === 1 || receipt.PaymentMethod === 3">
+          <div class="form-group split-amount">
+            <label class="k-label">Số tiền mặt</label>
+            <div class="amount-input-wrapper">
+              <ps-kendo-numeric-textbox
+                [spinners]="false"
+                format="n0"
+                placeholder="0"
+                [(ngModel)]="receipt.CashAmount"
+                [disabled]="receipt.Status == 4"
+                (valueChange)="onCashAmountChange($event)"
+                (blur)="onBlur()"
+              >
+              </ps-kendo-numeric-textbox>
+              <span class="amount-postfix">{{ receipt.CollectedAmount | number: '1.0-0' }}đ</span>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Chuyển khoản details & Amount -->
+        <ng-container *ngIf="receipt.PaymentMethod === 2 || receipt.PaymentMethod === 3">
+          <div class="form-group split-amount">
+            <label class="k-label">Số tiền chuyển khoản</label>
+            <div class="amount-input-wrapper">
+              <ps-kendo-numeric-textbox
+                [spinners]="false"
+                format="n0"
+                [(ngModel)]="receipt.TransferAmount"
+                [disabled]="receipt.Status == 4"
+                (valueChange)="onTransferAmountChange($event)"
+                (blur)="onBlur()"
+              >
+              </ps-kendo-numeric-textbox>
+              <span class="amount-postfix">{{ receipt.CollectedAmount | number: '1.0-0' }}đ</span>
+            </div>
+          </div>
+        </ng-container>
+
+        <div class="form-group">
+          <ps-kendo-textarea
+            label="Mô tả"
+            placeholder="Nhập mô tả"
+            [(ngModel)]="receipt.Description"
+            [disabled]="orderInfo.Progress > 0 || receipt.Status == 4"
+            (blur)="onBlur()"
+          >
+          </ps-kendo-textarea>
+        </div>
+      </div>
+    </div>
+    <!-- Order Information Info Card -->
+    <div class="form-card order-summary-card" *ngIf="orderInfo.OrderID">
+      <div class="card-header">
+        <h3 class="card-title">Chi tiết thanh toán đơn hàng</h3>
+        <span class="order-id">#{{ orderInfo.OrderID }}</span>
+      </div>
+      <div class="card-body">
+        <div class="summary-row">
+          <span>Tổng tiền đơn hàng:</span>
+          <span class="value">{{ orderInfo.TotalPrice | number: '1.0-0' }}đ</span>
+        </div>
+        <div class="summary-row" *ngIf="orderInfo.VehicleAmount > 0">
+          <span>Tiền xe:</span>
+          <span class="value">{{ orderInfo.VehicleAmount | number: '1.0-0' }}đ</span>
+        </div>
+        <div class="summary-row" *ngIf="orderInfo.ServiceAmount > 0">
+          <span>Tiền dịch vụ:</span>
+          <span class="value">{{ orderInfo.ServiceAmount | number: '1.0-0' }}đ</span>
+        </div>
+        <div class="summary-row" *ngIf="orderInfo.PartAmount > 0">
+          <span>Tiền phụ tùng:</span>
+          <span class="value">{{ orderInfo.PartAmount | number: '1.0-0' }}đ</span>
+        </div>
+        <div class="summary-row highlight">
+          <span>Đã thanh toán:</span>
+          <span class="value text-success">{{ orderInfo.AmountPaid | number: '1.0-0' }}đ</span>
+        </div>
+        <div class="summary-row highlight">
+          <span>Còn lại (Công nợ):</span>
+          <span class="value text-danger">{{ orderInfo.DebtAmount | number: '1.0-0' }}đ</span>
+        </div>
+        <div class="total-bar">
+          <span>SỐ TIỀN THU LẦN NÀY:</span>
+          <span class="value">{{ receipt.CollectedAmount | number: '1.0-0' }}đ</span>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-section" *ngIf="orderInfo.Progress >= 0">
+          <div class="progress-info">
+            <span>Tiến độ thu tiền:</span>
+            <span class="progress-value">{{ orderInfo.Progress | number: '1.0-0' }}%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" [style.width.%]="orderInfo.Progress"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER ACTIONS -->
+  <div class="footer-actions">
+    <ps-kendo-button class="btn-back" (onClick)="goBack()">
+      <span class="material-icons">arrow_back</span>
+    </ps-kendo-button>
+  </div>
 </div>
