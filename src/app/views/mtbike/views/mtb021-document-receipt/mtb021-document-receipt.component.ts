@@ -150,7 +150,6 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
 
     // Group statuses: 1(New), 3(Pending), 4(Processing) are "Active"
     const statusFilters: any[] = [
-      { field: 'Status', operator: 'eq', value: SALOrderMasterStatusRetailEnum.NEW },
       { field: 'Status', operator: 'eq', value: SALOrderMasterStatusRetailEnum.PENDING },
       { field: 'Status', operator: 'eq', value: SALOrderMasterStatusRetailEnum.PROCESSING },
     ];

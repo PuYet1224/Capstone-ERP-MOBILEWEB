@@ -51,19 +51,34 @@ export class Mtb020SalConsultantTotalComponent implements OnInit, OnDestroy, Aft
       const vat = r.VATAmount ?? 0;
       const svc = Array.isArray(r.ListService) ? r.ListService.reduce((s: number, x: any) => s + (x.Price ?? x.Amount ?? 0), 0) : (r.TotalService ?? 0);
       const part = Array.isArray(r.ListPart) ? r.ListPart.reduce((s: number, x: any) => s + (x.TotalPrice ?? (x.UnitPrice ?? 0) * (x.Quantity ?? 0)), 0) : (r.TotalPart ?? 0);
-      const pay = r.TotalPayment ?? r.Price ?? 0;
+      const discount = r.DiscountAmount ?? 0;
+      const itemNet = v + vat + svc + part - discount;
+
       const isLumpsum = r.PaymentType === L;
       return {
         v: acc.v + v, vat: acc.vat + vat, svc: acc.svc + svc, part: acc.part + part,
-        discount: acc.discount + (r.DiscountAmount ?? 0),
-        lumpsum: acc.lumpsum + (isLumpsum ? pay : 0),
-        deposit: acc.deposit + (r.DepositAmount ?? 0),
+        discount: acc.discount + discount,
+        lumpsum: acc.lumpsum + (isLumpsum ? itemNet : 0),
+        deposit: acc.deposit + (!isLumpsum ? (r.DepositAmount ?? 0) : 0),
       };
     }, z);
     const before = o.v + o.vat + o.svc + o.part;
-    const payment = o.lumpsum + o.deposit;
-    const debt = Math.max(0, before - o.discount - payment);
-    return { totalVehicleBeforeVat: o.v, totalVat: o.vat, totalService: o.svc, totalPart: o.part, totalBeforeDiscount: before, totalDiscount: o.discount, totalLumpsum: o.lumpsum, totalDeposit: o.deposit, totalPayment: payment, totalDebt: debt };
+    const bill = before - o.discount;
+    const paid = o.lumpsum + o.deposit;
+    const debt = Math.max(0, bill - paid);
+    return { 
+      totalVehicleBeforeVat: o.v, 
+      totalVat: o.vat, 
+      totalService: o.svc, 
+      totalPart: o.part, 
+      totalBeforeDiscount: before, 
+      totalDiscount: o.discount, 
+      totalLumpsum: o.lumpsum, 
+      totalDeposit: o.deposit, 
+      totalPaid: paid, 
+      totalPayment: bill, 
+      totalDebt: debt 
+    };
   }
 
   ngOnInit(): void {
