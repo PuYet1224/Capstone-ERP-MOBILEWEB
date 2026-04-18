@@ -10,6 +10,8 @@ import { PsString } from 'src/app/services/utilities/ps-string';
 import { PSCoreApiService } from 'src/app/services/ps-core-api.service';
 import { ListDTO } from 'src/app/models/dtos/e-dtos/list.dto';
 import { MtbikeApiService } from '../../services/mtbike-api.service';
+import { ConfigCacheService } from 'src/app/services/core/config-cache.service';
+import { LSListTypeDataEnum } from 'src/app/models/enums/e-type/ls-list-type-data.enum';
 @Component({
   selector: 'mtb035-document-receipt-update',
   templateUrl: './mtb035-document-receipt-update.component.html',
@@ -32,6 +34,7 @@ export class Mtb035DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
     private router: Router,
     private api: MtbikeApiService,
     private coreapi: PSCoreApiService,
+    private configCache: ConfigCacheService,
     private notification: PsKendoNotificationService,
     private loader: SystemLoaderService
   ) { }
@@ -42,12 +45,10 @@ export class Mtb035DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
       const parsed = this.cache.parseValue(cachedReceipt);
       this.receipt = { ...this.receipt, ...parsed };
 
-      // Initialize progress and orderInfo from cache if exists
-      if (this.receipt['Progress'] > 0) {
-        this.orderInfo.Progress = this.receipt['Progress'];
+      if (this.receipt.Code > 0 || (this.receipt.OrderMaster > 0 && this.receipt.Code === 0)) {
+        this.getsalreceipt(this.receipt);
       }
-
-      // Initialize split amounts logic from cache
+      this.getlistlslist();
       this.initPaymentAmounts();
     } else {
       this.notification.onWarning('Không tìm thấy thông tin phiếu thu.');
@@ -139,6 +140,7 @@ export class Mtb035DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
     if (!this.validateForm()) {
       return;
     }
+    this.receipt.IsConfirmedPayment = true;
     this.updateReceipt();
   }
 
@@ -158,8 +160,55 @@ export class Mtb035DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
     this.updateReceipt();
   }
 
+  //#region api get
+  private getlistlslist() {
+    this.loader.loader(true);
+    var temp = this.configCache.GetListLSList(LSListTypeDataEnum.PaymentMethod).subscribe((data) => {
+      this.listPaymentMethods = data;
+      this.loader.loader(false);
+    }, (err) => {
+      this.loader.loader(false);
+      this.notification.onError(`Lỗi lấy danh sách phương thức thanh toán: ${err.message || err}`);
+    });
+    this.arrUnsubscribe.push(temp);
+  }
+
+  private getsalreceipt(param: SALOrderReceiptCusDTO) {
+    this.loader.loader(true);
+    var temp = this.api.GetSALReceipt(param).subscribe((res) => {
+      if (res.StatusCode == 0) {
+        const result = res.ObjectReturn || {};
+        const receiptData = result.Receipt || {};
+        const orderInfo = result.OrderInfo || {};
+
+        // Merge API data into local receipt but preserve some FE fields
+        const isConfirmed = this.receipt.IsConfirmedPayment;
+        this.receipt = Object.assign(new SALOrderReceiptCusDTO(), receiptData);
+        this.receipt.IsConfirmedPayment = isConfirmed;
+
+        // Ensure date is valid for kendo-date-picker if any
+        if (this.receipt.EffDate) this.receipt.EffDate = new Date(this.receipt.EffDate);
+        if (this.receipt.CreatedTime) this.receipt.CreatedTime = new Date(this.receipt.CreatedTime);
+
+        // Map financial breakdown
+        this.orderInfo = orderInfo;
+
+        this.initPaymentAmounts();
+        this.loader.loader(false);
+      } else {
+        this.loader.loader(false);
+        this.notification.onError(`Lỗi lấy thông tin phiếu: ${res.ErrorString}`);
+      }
+    }, (err) => {
+      this.loader.loader(false);
+      this.notification.onError(`Lỗi lấy thông tin phiếu: ${err.message}`);
+    });
+    this.arrUnsubscribe.push(temp);
+  }
+  //#endregion
+
   private updateReceipt(callback?: () => void): void {
-    if (!this.receipt || this.receipt.Code === 0) {
+    if (!this.receipt || (!this.receipt.Code && !this.receipt.OrderMaster)) {
       return;
     }
 
@@ -175,6 +224,17 @@ export class Mtb035DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
     const sub = this.api.UpdateSALReceipt(this.receipt).subscribe(
       (res) => {
         if (res.StatusCode === 0) {
+          // If we just created the receipt, update the Code from response to avoid duplicate creation
+          if (!this.receipt.Code && res.ObjectReturn) {
+            if (typeof res.ObjectReturn === 'number') {
+              this.receipt.Code = res.ObjectReturn;
+            } else if (res.ObjectReturn.Code) {
+              this.receipt.Code = res.ObjectReturn.Code;
+            }
+            // Refresh full data after creation
+            this.getsalreceipt(this.receipt);
+          }
+
           if (callback) {
             callback();
           } else {

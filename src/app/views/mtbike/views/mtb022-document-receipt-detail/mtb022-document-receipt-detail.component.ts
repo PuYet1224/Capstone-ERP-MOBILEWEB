@@ -49,13 +49,14 @@ export class Mtb022DocumentReceiptDetailComponent {
 
     var temp = this.cache.getItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT);
     var receipt = this.cache.parseValue(temp) || new SALOrderReceiptCusDTO();
-
+    this.receipt = receipt;
+    if (this.receipt.Status >= 4) {
+      this.receipt.IsConfirmedPayment = true;
+    }
+    
     this.receiptcopy = { ...this.receipt };
 
-    // Bypass API get receipt for testing
-    // if (receipt.Code != 0) {
-    this.getsalreceipt(receipt, true)
-    // }
+    this.getsalreceipt(this.receipt, true);
     this.getlistlslist();
 
     // Mock vehicle list for testing
@@ -88,10 +89,11 @@ export class Mtb022DocumentReceiptDetailComponent {
 
   public getStatusClass(status: number): string {
     switch (status) {
-      case SALOrderReceiptStatusEnum.Success: return 'status-complete';
-      case SALOrderReceiptStatusEnum.New: return 'status-new';
-      case SALOrderReceiptStatusEnum.Cancled: return 'status-cancel';
-      default: return 'status-pending';
+      case 5: return 'status-complete'; // COMPLETE
+      case 1: return 'status-new';      // NEW
+      case 6: return 'status-cancel';   // CANCEL
+      case 4: return 'status-processing'; // PROCESSING
+      default: return 'status-pending'; // PENDING (3) and others
     }
   }
   //#endregion
@@ -216,27 +218,35 @@ export class Mtb022DocumentReceiptDetailComponent {
     if (this.receipt.TotalOrderValue > 0) {
       const totalCollected = (this.receipt.PriorCollections || 0) + (this.receipt.CollectedAmount || 0);
       const progress = (totalCollected / this.receipt.TotalOrderValue) * 100;
-
-      this.orderInfo.Progress = progress > 100 ? 100 : progress;
-      this.receipt.Progress = this.orderInfo.Progress;
+      this.receipt.Progress = progress > 100 ? 100 : progress;
     }
-    this.updateReceipt();
+    this.receipt.IsConfirmedPayment = true;
+    this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
+    this.notification.onSuccess('Xác nhận thanh toán thành công');
   }
 
   public receivedMoney(): void {
-    if (this.orderInfo.Progress > 0) {
-      this.receipt.Status = 4; // Đang xử lý
-      this.updateReceipt(() => {
-        this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
-        this.notification.onSuccess('Đã chuyển trạng thái Đang xử lý thành công');
-        this.onnavigate('/mtbike/document/receipt');
-      });
-    }
+    // Luôn cho phép gửi progress và cập nhật status khi đã xác nhận
+    this.receipt.Status = 4; // Đang xử lý
+    this.updateReceipt(() => {
+      this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
+      this.notification.onSuccess('Đã thu tiền và chuyển trạng thái Đang xử lý');
+      this.onnavigate('/mtbike/document/receipt');
+    });
   }
 
   private updateReceipt(callback?: () => void): void {
     if (!this.receipt || this.receipt.Code === 0) {
       return;
+    }
+
+    // Recalculate Progress and CurrentRemainingDebt for the payload
+    if (this.receipt.TotalOrderValue > 0) {
+      const totalCollected = (this.receipt.PriorCollections || 0) + (this.receipt.CollectedAmount || 0);
+      const progress = (totalCollected / this.receipt.TotalOrderValue) * 100;
+      this.receipt.Progress = progress > 100 ? 100 : progress;
+      this.receipt.CurrentRemainingDebt = this.receipt.TotalOrderValue - totalCollected;
+      if (this.receipt.CurrentRemainingDebt < 0) this.receipt.CurrentRemainingDebt = 0;
     }
 
     this.loader.loader(true);
@@ -374,6 +384,7 @@ export class Mtb022DocumentReceiptDetailComponent {
 
         // Map Receipt basic info
         this.receipt = Object.assign(new SALOrderReceiptCusDTO(), receiptData);
+        this.receipt.IsConfirmedPayment = param.IsConfirmedPayment || false;
 
         // Map OrderInfo to womMaster for breakdown details
         this.womMaster.VehiclePrice = orderInfo.VehicleAmount || 0;
@@ -384,11 +395,11 @@ export class Mtb022DocumentReceiptDetailComponent {
         this.womMaster.TotalPayment = orderInfo.TotalBillAmount || 0;
         this.womMaster.TotalBeforeDiscount = (orderInfo.VehicleAmount || 0) + (orderInfo.ServiceAmount || 0) + (orderInfo.PartAmount || 0);
 
-        // Map OrderInfo to bottom summary fields
-        this.receipt.TotalOrderValue = orderInfo.TotalPrice || 0;
-        this.receipt.PriorCollections = orderInfo.AmountPaid || 0;
-        this.receipt.CurrentRemainingDebt = orderInfo.DebtAmount || 0;
-        this.receipt.OrderNo = orderInfo.OrderID || this.receipt.OrderNo;
+        // Map Receipt breakdown info (from newly added Backend fields)
+        this.receipt.TotalOrderValue = receiptData.TotalOrderValue || 0;
+        this.receipt.PriorCollections = receiptData.PriorCollections || 0;
+        this.receipt.CurrentRemainingDebt = receiptData.CurrentRemainingDebt || 0;
+        this.receipt.OrderNo = receiptData.OrderNo || this.receipt.OrderNo;
         this.orderInfo = orderInfo;
 
         if (this.receipt.EffDate)

@@ -152,8 +152,8 @@
                             <div class="payment-form-row">
                                 <label class="payment-label">Hình thức thanh toán <span
                                         class="required-star">*</span></label>
-                                <ps-kendo-dropdown-list [data]="paymentTypeOptions" [textField]="'ListName'"
-                                    [valueField]="'Code'" [(ngModel)]="orderDetail.PaymentType" [valuePrimitive]="true"
+                                <ps-kendo-dropdown-list [data]="listpaymentmethod" [textField]="'ListName'"
+                                    [valueField]="'TypeOfList'" [(ngModel)]="orderDetail.PaymentType" [valuePrimitive]="true"
                                     (valueChange)="onPaymentTypeChange()">
                                 </ps-kendo-dropdown-list>
                             </div>

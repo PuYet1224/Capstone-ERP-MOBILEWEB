@@ -13,6 +13,8 @@ import { PSCoreApiService } from 'src/app/services/ps-core-api.service';
 import { PsCache } from 'src/app/services/utilities/ps-cache';
 import { SystemLoaderService } from 'src/app/views/system/services/system-loader.service';
 import { MtbikeApiService } from '../../services/mtbike-api.service';
+import { ConfigCacheService } from "src/app/services/core/config-cache.service";
+import { LSListTypeDataEnum } from 'src/app/models/enums/e-type/ls-list-type-data.enum';
 
 @Component({
   selector: 'mtb019-sal-consultant-total-vehicle',
@@ -43,6 +45,7 @@ export class Mtb019SalConsultantTotalVehicleComponent implements OnInit, OnDestr
     private mtbikeapi: MtbikeApiService,
     private coreApi: PSCoreApiService,
     private renderer: Renderer2,
+    private configCache: ConfigCacheService,
   ) { }
 
   //#region fields
@@ -55,12 +58,9 @@ export class Mtb019SalConsultantTotalVehicleComponent implements OnInit, OnDestr
   private arrUnsubscribe: Subscription[] = [];
 
   enumPaymentType = SALOrderDetailPaymentTypeEnum;
-  paymentTypeOptions = [
-    { Code: SALOrderDetailPaymentTypeEnum.LUMPSUM, ListName: 'Trả hết' },
-    { Code: SALOrderDetailPaymentTypeEnum.INSTALLMENT, ListName: 'Trả góp' },
-    { Code: SALOrderDetailPaymentTypeEnum.DEPOSIT, ListName: 'Đặt cọc' },
-  ];
+
   listFinanceCompany: any[] = [];
+  listpaymentmethod: any[] = [];
   statusContext: { Status: number; StatusName: string } | null = null;
   private paymentCache: Record<number, any> = {};
   private hasLoadedPartnerFinance = false;
@@ -99,6 +99,7 @@ export class Mtb019SalConsultantTotalVehicleComponent implements OnInit, OnDestr
 
   //#region lifecycle
   ngOnInit(): void {
+    this.getlistlslist();
     this.retailMaster = this.cache.parseValue(this.cache.getItem(KeyLocalStorageEnum.SAL_ORDER_MASTER)) || null;
     const orderDetailTemp = this.cache.getItem(KeyLocalStorageEnum.SAL_ORDER_DETAIL);
     if (orderDetailTemp) {
@@ -304,11 +305,24 @@ export class Mtb019SalConsultantTotalVehicleComponent implements OnInit, OnDestr
   //#endregion
 
   //#region API
+  private getlistlslist() {
+    this.subLoader.loader(true);
+    var temp = this.configCache.GetListLSList(LSListTypeDataEnum.PaymentType).subscribe((data) => {
+      this.listpaymentmethod = data;
+      this.subLoader.loader(false);
+    }, (err) => {
+      this.subLoader.loader(false);
+      this.notification.onError(`Lỗi lấy danh sách hình thức : ${err.message || err}`);
+    });
+    this.arrUnsubscribe.push(temp);
+  }
+
   private UpdateSALDetail(): void {
     if (!this.orderDetail || !this.orderDetail.Code) return;
     const sub = this.mtbikeapi.UpdateSALDetail(this.orderDetail).subscribe(
       res => {
         if (res.StatusCode === 0) {
+          this.GetSALPayment();
           this.notification.onSuccess('Thành công');
         } else if (res.ErrorString) {
           this.notification.onError(res.ErrorString);

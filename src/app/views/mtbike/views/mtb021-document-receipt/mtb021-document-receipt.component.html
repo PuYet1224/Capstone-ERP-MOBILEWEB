@@ -21,12 +21,18 @@
                     <span>Bao gồm các phiếu đã kết thúc</span>
                 </label>
             </div>
-            <ps-kendo-textbox [label]="'Tra cứu tư vấn viên'" [placeholder]="''" [(ngModel)]="selectedConsultant">
-            </ps-kendo-textbox>
+            
+            <ps-kendo-dropdown-list [label]="'Tư vấn viên'"
+                placeholder="'Chọn nhân viên tư vấn'"
+                [data]="listConsultants"
+                [textField]="'StaffName'"
+                [valueField]="'StaffName'"
+                [(ngModel)]="selectedConsultant">
+            </ps-kendo-dropdown-list>
         </div>
         <div psDialogConfirmBottomFooter>
-            <ps-kendo-button [theme]="''" (onClick)="openFilter(false)">Đóng</ps-kendo-button>
-            <ps-kendo-button [theme]="'primary'" (onClick)="onSearch()">Tìm</ps-kendo-button>
+            <ps-kendo-button [theme]="''" (onClick)="selectedConsultant = null; searchKeyword = ''; includeFinished = false; onSearch()">Thiết lập lại</ps-kendo-button>
+            <ps-kendo-button [theme]="'primary'" (onClick)="onSearch()">Tìm kiếm</ps-kendo-button>
         </div>
     </ps-dialog-confirm-bottom>
     <!-- END: SEARCH BOTTOM SHEET -->

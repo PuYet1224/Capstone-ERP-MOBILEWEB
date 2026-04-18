@@ -49,7 +49,8 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
   public isOpenedFilter = false;
   public searchKeyword = '';
   public includeFinished = false;
-  public selectedConsultant: string = '';
+  public selectedConsultant: any = null;
+  public listConsultants: any[] = [];
 
   public filter: State = {
     sort: [{ field: 'Code', dir: 'desc' }],
@@ -58,6 +59,7 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     ConfigDTO.dllpackage = 'document';
     this.cache.setItem(KeyLocalStorageEnum.DLLPACKAGE, 'document');
+    this.loadConsultants();
     this.loadData();
   }
 
@@ -70,8 +72,17 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
   //#region data loading
   private loadData(): void {
     this.loader.loader(true);
+    // Use forkJoin or ensure receipts are loaded before list if we want to search by receipt number
     this.loadAllReceipts();
     this.loadList();
+  }
+
+  private loadConsultants(): void {
+    this.api.GetListWOMConsultant({}).subscribe(res => {
+      if (res.StatusCode === 0) {
+        this.listConsultants = res.ObjectReturn?.Data || res.ObjectReturn || [];
+      }
+    });
   }
 
   private loadList(): void {
@@ -85,7 +96,42 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
               allItems.push({ ...item, isExpanded: false });
             });
           });
-          this.buildDisplayGroups(allItems);
+
+          // Fallback: Local filtering for grouped results (since server-side may ignore filter on groups)
+          let filteredItems = allItems;
+          if (this.searchKeyword?.trim()) {
+            const kw = this.searchKeyword.trim().toLowerCase();
+
+            // Find IDs of orders that have matching receipts
+            const matchingOrderCodes = this.allReceipts
+              .filter(r => (r.ReceiptNo && r.ReceiptNo.toLowerCase().includes(kw)))
+              .map(r => r.OrderMaster);
+
+            filteredItems = filteredItems.filter(i => {
+              const matchesDirect = (i.ID && i.ID.toLowerCase().includes(kw)) ||
+                (i.CustomerName && i.CustomerName.toLowerCase().includes(kw)) ||
+                (i.CustomerPhone && i.CustomerPhone.includes(kw)) ||
+                (i.SaleStaffName && i.SaleStaffName.toLowerCase().includes(kw));
+
+              const matchesReceipt = matchingOrderCodes.includes(i.Code);
+
+              // If matches via receipt, auto-expand to show it
+              if (matchesReceipt && !matchesDirect) {
+                i.isExpanded = true;
+              }
+
+              return matchesDirect || matchesReceipt;
+            });
+          }
+
+          if (this.selectedConsultant) {
+            const consultantName = (this.selectedConsultant.StaffName || this.selectedConsultant).toLowerCase();
+            filteredItems = filteredItems.filter(i =>
+              i.SaleStaffName && i.SaleStaffName.toLowerCase().includes(consultantName)
+            );
+          }
+
+          this.buildDisplayGroups(filteredItems);
         } else {
           this.notification.onError(`Lỗi tải danh sách: ${res.ErrorString}`);
         }
@@ -102,13 +148,13 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
   private buildFilter(): State {
     const filters: any[] = [];
 
-    // Always include "Đang xử lý" statuses (PENDING + PROCESSING)
+    // Group statuses: 1(New), 3(Pending), 4(Processing) are "Active"
     const statusFilters: any[] = [
+      { field: 'Status', operator: 'eq', value: SALOrderMasterStatusRetailEnum.NEW },
       { field: 'Status', operator: 'eq', value: SALOrderMasterStatusRetailEnum.PENDING },
       { field: 'Status', operator: 'eq', value: SALOrderMasterStatusRetailEnum.PROCESSING },
     ];
 
-    // When checkbox is checked, also include "Kết thúc" statuses (COMPLETE + CANCEL)
     if (this.includeFinished) {
       statusFilters.push(
         { field: 'Status', operator: 'eq', value: SALOrderMasterStatusRetailEnum.COMPLETE },
@@ -118,19 +164,20 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
 
     filters.push({ logic: 'or', filters: statusFilters });
 
-    if (this.searchKeyword.trim()) {
-      filters.push({
-        logic: 'or',
-        filters: [
-          { field: 'ID', operator: 'contains', value: this.searchKeyword },
-          { field: 'CustomerName', operator: 'contains', value: this.searchKeyword },
-          { field: 'CustomerPhone', operator: 'contains', value: this.searchKeyword },
-        ]
-      });
+    if (this.searchKeyword?.trim()) {
+      const keyword = this.searchKeyword.trim();
+      const searchFilters: any[] = [
+        { field: 'ID', operator: 'contains', value: keyword },
+        { field: 'CustomerName', operator: 'contains', value: keyword },
+        { field: 'CustomerPhone', operator: 'contains', value: keyword },
+      ];
+
+      filters.push({ logic: 'or', filters: searchFilters });
     }
 
-    if (this.selectedConsultant?.trim()) {
-      filters.push({ field: 'SaleStaffName', operator: 'contains', value: this.selectedConsultant });
+    if (this.selectedConsultant) {
+      const consultantName = this.selectedConsultant.StaffName || this.selectedConsultant;
+      filters.push({ field: 'SaleStaffName', operator: 'contains', value: consultantName });
     }
 
     return {
@@ -139,9 +186,31 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
     };
   }
 
+  private buildReceiptFilter(): State {
+    const filters: any[] = [];
+
+    if (this.searchKeyword?.trim()) {
+      const keyword = this.searchKeyword.trim();
+      filters.push({
+        logic: 'or',
+        filters: [
+          { field: 'ReceiptNo', operator: 'contains', value: keyword },
+          { field: 'OrderNo', operator: 'contains', value: keyword },
+          { field: 'CustomerName', operator: 'contains', value: keyword },
+          { field: 'CellPhone', operator: 'contains', value: keyword },
+        ]
+      });
+    }
+
+    return {
+      filter: filters.length > 0 ? { logic: 'and', filters } : undefined,
+    };
+  }
+
   private buildDisplayGroups(allItems: Mtb021DocumentReceiptComponent[]): void {
-    // Group 1: "Đang xử lý" = status PENDING(3) + PROCESSING(4)
+    // Group 1: "Đang xử lý" = status NEW(1) + PENDING(3) + PROCESSING(4)
     const processingItems = allItems.filter(i =>
+      i.Status === SALOrderMasterStatusRetailEnum.NEW ||
       i.Status === SALOrderMasterStatusRetailEnum.PENDING ||
       i.Status === SALOrderMasterStatusRetailEnum.PROCESSING
     );
@@ -176,7 +245,7 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
   }
 
   private loadAllReceipts(): void {
-    const sub = this.api.GetListSALReceipt({ filter: { logic: 'and', filters: [] } }).subscribe(
+    const sub = this.api.GetListSALReceipt(this.buildReceiptFilter()).subscribe(
       res => {
         if (res.StatusCode === 0) {
           this.allReceipts = res.ObjectReturn?.Data ?? res.ObjectReturn ?? [];
@@ -232,20 +301,27 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
   }
 
   onNavigateReceipt(receipt: SALOrderReceiptCusDTO, master: Mtb021DocumentReceiptComponent): void {
-    this.loader.loader(true);
-    this.loader.loader(false);
     this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, receipt);
     this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_MASTER, master);
-    this.router.navigate(['/mtbike/document/receipt']);
-    console.log(receipt);
 
+    // If receipt is still "New", go to Update page, otherwise go to Detail page
+    if (receipt.Code === 0) {
+      this.router.navigate(['/mtbike/document/receipt/update']);
+    } else {
+      this.router.navigate(['/mtbike/document/receipt']);
+    }
   }
 
   onCreateReceipt(master: Mtb021DocumentReceiptComponent): void {
+    const newReceipt = new SALOrderReceiptCusDTO();
+    newReceipt.OrderMaster = master.Code; // Link to master Order
+    newReceipt.CustomerName = master.CustomerName;
+    newReceipt.CellPhone = master.CustomerPhone;
+    newReceipt.Address = master.Address;
+
     this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_MASTER, master);
-    this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, new SALOrderReceiptCusDTO());
-    this.router.navigate(['/mtbike/document/receipt']);
-    console.log('áđá');
+    this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, newReceipt);
+    this.router.navigate(['/mtbike/document/receipt/update']);
   }
   //#endregion
 

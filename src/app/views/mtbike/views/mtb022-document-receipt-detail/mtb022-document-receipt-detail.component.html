@@ -167,17 +167,17 @@
       class="btn-confirm"
       [theme]="'primary'"
       (onClick)="confirmPayment()"
-      *ngIf="orderInfo?.Progress == 0"
+      *ngIf="receipt?.Status != 5 && receipt?.Status != 6 && receipt?.Status != 4 && !receipt?.IsConfirmedPayment"
     >
       Xác nhận thanh toán
     </ps-kendo-button>
 
-    <!-- Nút Đã thu tiền (Chỉ hiện khi progress > 0) -->
+    <!-- Nút Đã thu tiền (Chỉ hiện khi đã bấm xác nhận) -->
     <ps-kendo-button
       class="btn-received"
       [theme]="'primary'"
       (onClick)="receivedMoney()"
-      *ngIf="orderInfo?.Progress > 0"
+      *ngIf="(receipt?.Status != 5 && receipt?.Status != 6) && orderInfo.Progress < 100"
     >
       Đã thu tiền
     </ps-kendo-button>
