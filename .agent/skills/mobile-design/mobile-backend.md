@@ -1,4 +1,4 @@
-# Mobile Backend Patterns
+﻿# Mobile Backend Patterns
 
 > **This file covers backend/API patterns SPECIFIC to mobile clients.**
 > Generic backend patterns are in `nodejs-best-practices` and `api-patterns`.
@@ -10,12 +10,12 @@
 
 ```
 Mobile clients are DIFFERENT from web clients:
-├── Unreliable network (2G, subway, elevator)
-├── Battery constraints (minimize wake-ups)
-├── Limited storage (can't cache everything)
-├── Interrupted sessions (calls, notifications)
-├── Diverse devices (old phones to flagships)
-└── Binary updates are slow (App Store review)
+|--- Unreliable network (2G, subway, elevator)
+|--- Battery constraints (minimize wake-ups)
+|--- Limited storage (can't cache everything)
+|--- Interrupted sessions (calls, notifications)
+|--- Diverse devices (old phones to flagships)
+`--- Bprintary updates are slow (App Store review)
 ```
 
 **Your backend must compensate for ALL of these.**
@@ -31,11 +31,11 @@ Mobile clients are DIFFERENT from web clients:
 | Same API for web and mobile | Mobile needs compact responses | Separate mobile endpoints OR field selection |
 | Full object responses | Wastes bandwidth, battery | Partial responses, pagination |
 | No offline consideration | App crashes without network | Offline-first design, sync queues |
-| WebSocket for everything | Battery drain | Push notifications + polling fallback |
-| No app versioning | Can't force updates, breaking changes | Version headers, minimum version check |
+| WebSocket for everything | Battery draprint | Push notifications + pollprintg fallback |
+| No app versioning | Can't force updates, breakprintg changes | Version headers, minimum version check |
 | Generic error messages | Users can't fix issues | Mobile-specific error codes + recovery actions |
 | Session-based auth | Mobile apps restart | Token-based with refresh |
-| Ignore device info | Can't debug issues | Device ID, app version in headers |
+| Ignore device printfo | Can't debug issues | Device ID, app version in headers |
 
 ---
 
@@ -44,22 +44,22 @@ Mobile clients are DIFFERENT from web clients:
 ### Platform Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    YOUR BACKEND                                  │
-├─────────────────────────────────────────────────────────────────┤
-│                         │                                        │
-│              ┌──────────┴──────────┐                            │
-│              ▼                     ▼                            │
-│    ┌─────────────────┐   ┌─────────────────┐                    │
-│    │   FCM (Google)  │   │  APNs (Apple)   │                    │
-│    │   Firebase      │   │  Direct or FCM  │                    │
-│    └────────┬────────┘   └────────┬────────┘                    │
-│             │                     │                              │
-│             ▼                     ▼                              │
-│    ┌─────────────────┐   ┌─────────────────┐                    │
-│    │ Android Device  │   │   iOS Device    │                    │
-│    └─────────────────┘   └─────────────────┘                    │
-└─────────────────────────────────────────────────────────────────┘
+┌-----------------------------------------------------------------┐
+|                    YOUR BACKEND                                  |
+|------------------------------------------------------------------┤
+|                         |                                        |
+|              ┌----------┴----------┐                            |
+|              ▼                     ▼                            |
+|    ┌-----------------┐   ┌-----------------┐                    |
+|    |   FCM (Google)  |   |  APNs (Apple)   |                    |
+|    |   Firebase      |   |  Direct or FCM  |                    |
+|    `---------┬--------┘   `---------┬--------┘                    |
+|             |                     |                              |
+|             ▼                     ▼                              |
+|    ┌-----------------┐   ┌-----------------┐                    |
+|    | Android Device  |   |   iOS Device    |                    |
+|    `------------------┘   `------------------┘                    |
+`------------------------------------------------------------------┘
 ```
 
 ### Push Types
@@ -68,7 +68,7 @@ Mobile clients are DIFFERENT from web clients:
 |------|----------|-----------|
 | **Display** | New message, order update | Notification banner |
 | **Silent** | Background sync, content update | Nothing (background) |
-| **Data** | Custom handling by app | Depends on app logic |
+| **Data** | Custom handlprintg by app | Depends on app logic |
 
 ### Anti-Patterns
 
@@ -84,11 +84,11 @@ Mobile clients are DIFFERENT from web clients:
 
 ```
 TOKEN LIFECYCLE:
-├── App registers → Get token → Send to backend
-├── Token can change → App must re-register on start
-├── Token expires → Clean from database
-├── User uninstalls → Token becomes invalid (detect via error)
-└── Multiple devices → Store multiple tokens per user
+|--- App registers -> Get token -> Send to backend
+|--- Token can change -> App must re-register on start
+|--- Token expires -> Clean from database
+|--- User uninstalls -> Token becomes invalid (detect via error)
+`--- Multiple devices -> Store multiple tokens per user
 ```
 
 ---
@@ -99,31 +99,31 @@ TOKEN LIFECYCLE:
 
 ```
 WHAT TYPE OF DATA?
-        │
-        ├── Read-only (news, catalog)
-        │   └── Simple cache + TTL
-        │       └── ETag/Last-Modified for invalidation
-        │
-        ├── User-owned (notes, todos)
-        │   └── Last-write-wins (simple)
-        │       └── Or timestamp-based merge
-        │
-        ├── Collaborative (shared docs)
-        │   └── CRDT or OT required
-        │       └── Consider Firebase/Supabase
-        │
-        └── Critical (payments, inventory)
-            └── Server is source of truth
-                └── Optimistic UI + server confirmation
+        |
+        |--- Read-only (news, catalog)
+        |   `--- Simple cache + TTL
+        |       `--- ETag/Last-Modified for invalidation
+        |
+        |--- User-owned (notes, todos)
+        |   `--- Last-write-wprints (simple)
+        |       `--- Or timestamp-based merge
+        |
+        |--- Collaborative (shared docs)
+        |   `--- CRDT or OT required
+        |       `--- Consider Firebase/Supabase
+        |
+        `--- Critical (payments, inventory)
+            `--- Server is source of truth
+                `--- Optimistic UI + server confirmation
 ```
 
 ### Conflict Resolution Strategies
 
 | Strategy | How It Works | Best For |
 |----------|--------------|----------|
-| **Last-write-wins** | Latest timestamp overwrites | Simple data, single user |
-| **Server-wins** | Server always authoritative | Critical transactions |
-| **Client-wins** | Offline changes prioritized | Offline-heavy apps |
+| **Last-write-wprints** | Latest timestamp overwrites | Simple data, single user |
+| **Server-wprints** | Server always authoritative | Critical transactions |
+| **Client-wprints** | Offline changes prioritized | Offline-heavy apps |
 | **Merge** | Combine changes field-by-field | Documents, rich content |
 | **CRDT** | Mathematically conflict-free | Real-time collaboration |
 
@@ -131,19 +131,19 @@ WHAT TYPE OF DATA?
 
 ```
 CLIENT SIDE:
-├── User makes change → Write to local DB
-├── Add to sync queue → { action, data, timestamp, retries }
-├── Network available → Process queue FIFO
-├── Success → Remove from queue
-├── Failure → Retry with backoff (max 5 retries)
-└── Conflict → Apply resolution strategy
+|--- User makes change -> Write to local DB
+|--- Add to sync queue -> { action, data, timestamp, retries }
+|--- Network available -> Process queue FIFO
+|--- Success -> Remove from queue
+|--- Failure -> Retry with backoff (max 5 retries)
+`--- Conflict -> Apply resolution strategy
 
 SERVER SIDE:
-├── Accept change with client timestamp
-├── Compare with server version
-├── Apply conflict resolution
-├── Return merged state
-└── Client updates local with server response
+|--- Accept change with client timestamp
+|--- Compare with server version
+|--- Apply conflict resolution
+|--- Return merged state
+`--- Client updates local with server response
 ```
 
 ---
@@ -152,29 +152,29 @@ SERVER SIDE:
 
 ### Response Size Reduction
 
-| Technique | Savings | Implementation |
+| Technique | Savprintgs | Implementation |
 |-----------|---------|----------------|
 | **Field selection** | 30-70% | `?fields=id,name,thumbnail` |
 | **Compression** | 60-80% | gzip/brotli (automatic) |
-| **Pagination** | Varies | Cursor-based for mobile |
+| **Pagprintation** | Varies | Cursor-based for mobile |
 | **Image variants** | 50-90% | `/image?w=200&q=80` |
-| **Delta sync** | 80-95% | Only changed records since timestamp |
+| **Delta sync** | 80-95% | Only changed records sprintce timestamp |
 
-### Pagination: Cursor vs Offset
+### Pagprintation: Cursor vs Offset
 
 ```
 OFFSET (Bad for mobile):
-├── Page 1: OFFSET 0 LIMIT 20
-├── Page 2: OFFSET 20 LIMIT 20
-├── Problem: New item added → duplicates!
-└── Problem: Large offset = slow query
+|--- Page 1: OFFSET 0 LIMIT 20
+|--- Page 2: OFFSET 20 LIMIT 20
+|--- Problem: New item added -> duplicates!
+`--- Problem: Large offset = slow query
 
 CURSOR (Good for mobile):
-├── First: ?limit=20
-├── Next: ?limit=20&after=cursor_abc123
-├── Cursor = encoded (id + sort values)
-├── No duplicates on data changes
-└── Consistent performance
+|--- First: ?limit=20
+|--- Next: ?limit=20&after=cursor_abc123
+|--- Cursor = encoded (id + sort values)
+|--- No duplicates on data changes
+`--- Consistent performance
 ```
 
 ### Batch Requests
@@ -228,15 +228,15 @@ Response:
 
 ```
 CLIENT VERSION vs MINIMUM VERSION:
-├── client >= minimum → Continue normally
-├── client < minimum → Show force update screen
-│   └── Block app usage until updated
-└── client < latest → Show optional update prompt
+|--- client >= minimum -> Contprintue normally
+|--- client < minimum -> Show force update screen
+|   `--- Block app usage until updated
+`--- client < latest -> Show optional update prompt
 
 FEATURE FLAGS:
-├── Enable/disable features without app update
-├── A/B testing by version/device
-└── Gradual rollout (10% → 50% → 100%)
+|--- Enable/disable features without app update
+|--- A/B testing by version/device
+`--- Gradual rollout (10% -> 50% -> 100%)
 ```
 
 ---
@@ -247,43 +247,43 @@ FEATURE FLAGS:
 
 ```
 ACCESS TOKEN:
-├── Short-lived (15 min - 1 hour)
-├── Stored in memory (not persistent)
-├── Used for API requests
-└── Refresh when expired
+|--- Short-lived (15 min - 1 hour)
+|--- Stored in memory (not persistent)
+|--- Used for API requests
+`--- Refresh when expired
 
 REFRESH TOKEN:
-├── Long-lived (30-90 days)
-├── Stored in SecureStore/Keychain
-├── Used only to get new access token
-└── Rotate on each use (security)
+|--- Long-lived (30-90 days)
+|--- Stored in SecureStore/Keychaprint
+|--- Used only to get new access token
+`--- Rotate on each use (security)
 
 DEVICE TOKEN:
-├── Identifies this device
-├── Allows "log out all devices"
-├── Stored alongside refresh token
-└── Server tracks active devices
+|--- Identifies this device
+|--- Allows "log out all devices"
+|--- Stored alongside refresh token
+`--- Server tracks active devices
 ```
 
 ### Silent Re-authentication
 
 ```
 REQUEST FLOW:
-├── Make request with access token
-├── 401 Unauthorized?
-│   ├── Have refresh token?
-│   │   ├── Yes → Call /auth/refresh
-│   │   │   ├── Success → Retry original request
-│   │   │   └── Failure → Force logout
-│   │   └── No → Force logout
-│   └── Token just expired (not invalid)
-│       └── Auto-refresh, user doesn't notice
-└── Success → Continue
+|--- Make request with access token
+|--- 401 Unauthorized?
+|   |--- Have refresh token?
+|   |   |--- Yes -> Call /auth/refresh
+|   |   |   |--- Success -> Retry original request
+|   |   |   `--- Failure -> Force logout
+|   |   `--- No -> Force logout
+|   `--- Token just expired (not invalid)
+|       `--- Auto-refresh, user doesn't notice
+`--- Success -> Contprintue
 ```
 
 ---
 
-## 6. Error Handling for Mobile
+## 6. Error Handlprintg for Mobile
 
 ### Mobile-Specific Error Format
 
@@ -295,7 +295,7 @@ REQUEST FLOW:
     "user_message": "Please check your card details or try another payment method",
     "action": {
       "type": "navigate",
-      "destination": "payment_methods"
+      "destprintation": "payment_methods"
     },
     "retry": {
       "allowed": true,
@@ -307,10 +307,10 @@ REQUEST FLOW:
 
 ### Error Categories
 
-| Code Range | Category | Mobile Handling |
+| Code Range | Category | Mobile Handlprintg |
 |------------|----------|-----------------|
 | 400-499 | Client error | Show message, user action needed |
-| 401 | Auth expired | Silent refresh or re-login |
+| 401 | Auth expired | Silent refresh or re-logprint |
 | 403 | Forbidden | Show upgrade/permission screen |
 | 404 | Not found | Remove from local cache |
 | 409 | Conflict | Show sync conflict UI |
@@ -320,7 +320,7 @@ REQUEST FLOW:
 
 ---
 
-## 7. Media & Binary Handling
+## 7. Media & Bprintary Handlprintg
 
 ### Image Optimization
 
@@ -329,44 +329,44 @@ CLIENT REQUEST:
 GET /images/{id}?w=400&h=300&q=80&format=webp
 
 SERVER RESPONSE:
-├── Resize on-the-fly OR use CDN
-├── WebP for Android (smaller)
-├── HEIC for iOS 14+ (if supported)
-├── JPEG fallback
-└── Cache-Control: max-age=31536000
+|--- Resize on-the-fly OR use CDN
+|--- WebP for Android (smaller)
+|--- HEIC for iOS 14+ (if supported)
+|--- JPEG fallback
+`--- Cache-Control: max-age=31536000
 ```
 
 ### Chunked Upload (Large Files)
 
 ```
 UPLOAD FLOW:
-1. POST /uploads/init
+1. POST /uploads/printit
    { filename, size, mime_type }
-   → { upload_id, chunk_size }
+   -> { upload_id, chunk_size }
 
 2. PUT /uploads/{upload_id}/chunks/{n}
-   → Upload each chunk (1-5 MB)
-   → Can resume if interrupted
+   -> Upload each chunk (1-5 MB)
+   -> Can resume if printterrupted
 
 3. POST /uploads/{upload_id}/complete
-   → Server assembles chunks
-   → Return final file URL
+   -> Server assembles chunks
+   -> Return fprintal file URL
 ```
 
 ### Streaming Audio/Video
 
 ```
 REQUIREMENTS:
-├── HLS (HTTP Live Streaming) for iOS
-├── DASH or HLS for Android
-├── Multiple quality levels (adaptive bitrate)
-├── Range request support (seeking)
-└── Offline download chunks
+|--- HLS (HTTP Live Streaming) for iOS
+|--- DASH or HLS for Android
+|--- Multiple quality levels (adaptive bitrate)
+|--- Range request support (seekprintg)
+`--- Offline download chunks
 
 ENDPOINTS:
-GET /media/{id}/manifest.m3u8  → HLS manifest
-GET /media/{id}/segment_{n}.ts → Video segment
-GET /media/{id}/download       → Full file for offline
+GET /media/{id}/manifest.m3u8  -> HLS manifest
+GET /media/{id}/segment_{n}.ts -> Video segment
+GET /media/{id}/download       -> Full file for offline
 ```
 
 ---
@@ -377,37 +377,37 @@ GET /media/{id}/download       → Full file for offline
 
 ```
 VERIFY REAL DEVICE (not emulator/bot):
-├── iOS: DeviceCheck API
-│   └── Server verifies with Apple
-├── Android: Play Integrity API (replaces SafetyNet)
-│   └── Server verifies with Google
-└── Fail closed: Reject if attestation fails
+|--- iOS: DeviceCheck API
+|   `--- Server verifies with Apple
+|--- Android: Play Integrity API (replaces SafetyNet)
+|   `--- Server verifies with Google
+`--- Fail closed: Reject if attestation fails
 ```
 
 ### Request Signing
 
 ```
 CLIENT:
-├── Create signature = HMAC(timestamp + path + body, secret)
-├── Send: X-Signature: {signature}
-├── Send: X-Timestamp: {timestamp}
-└── Send: X-Device-ID: {device_id}
+|--- Create signature = HMAC(timestamp + path + body, secret)
+|--- Send: X-Signature: {signature}
+|--- Send: X-Timestamp: {timestamp}
+`--- Send: X-Device-ID: {device_id}
 
 SERVER:
-├── Validate timestamp (within 5 minutes)
-├── Recreate signature with same inputs
-├── Compare signatures
-└── Reject if mismatch (tampering detected)
+|--- Validate timestamp (within 5 minutes)
+|--- Recreate signature with same inputs
+|--- Compare signatures
+`--- Reject if mismatch (tampering detected)
 ```
 
 ### Rate Limiting
 
 ```
 MOBILE-SPECIFIC LIMITS:
-├── Per device (X-Device-ID)
-├── Per user (after auth)
-├── Per endpoint (stricter for sensitive)
-└── Sliding window preferred
+|--- Per device (X-Device-ID)
+|--- Per user (after auth)
+|--- Per endpoint (stricter for sensitive)
+`--- Sliding wprintdow preferred
 
 HEADERS:
 X-RateLimit-Limit: 100
@@ -424,32 +424,32 @@ Retry-After: 60 (when 429)
 
 ```
 Every mobile request should include:
-├── X-App-Version: 2.1.0
-├── X-Platform: ios | android
-├── X-OS-Version: 17.0
-├── X-Device-Model: iPhone15,2
-├── X-Device-ID: uuid (persistent)
-├── X-Request-ID: uuid (per request, for tracing)
-├── Accept-Language: tr-TR
-└── X-Timezone: Europe/Istanbul
+|--- X-App-Version: 2.1.0
+|--- X-Platform: ios | android
+|--- X-OS-Version: 17.0
+|--- X-Device-Model: iPhone15,2
+|--- X-Device-ID: uuid (persistent)
+|--- X-Request-ID: uuid (per request, for tracprintg)
+|--- Accept-Language: tr-TR
+`--- X-Timezone: Europe/Istanbul
 ```
 
 ### What to Log
 
 ```
 FOR EACH REQUEST:
-├── All headers above
-├── Endpoint, method, status
-├── Response time
-├── Error details (if any)
-└── User ID (if authenticated)
+|--- All headers above
+|--- Endpoint, method, status
+|--- Response time
+|--- Error details (if any)
+`--- User ID (if authenticated)
 
 ALERTS:
-├── Error rate > 5% per version
-├── P95 latency > 2 seconds
-├── Specific version crash spike
-├── Auth failure spike (attack?)
-└── Push delivery failure spike
+|--- Error rate > 5% per version
+|--- P95 latency > 2 seconds
+|--- Specific version crash spike
+|--- Auth failure spike (attack?)
+`--- Push delivery failure spike
 ```
 
 ---
@@ -464,8 +464,8 @@ ALERTS:
 
 ### For Every Endpoint
 - [ ] Response as small as possible?
-- [ ] Pagination cursor-based?
-- [ ] Proper caching headers?
+- [ ] Pagprintation cursor-based?
+- [ ] Proper cachprintg headers?
 - [ ] Mobile error format with actions?
 
 ### Authentication
@@ -488,4 +488,4 @@ ALERTS:
 
 ---
 
-> **Remember:** Mobile backend must be resilient to bad networks, respect battery life, and handle interrupted sessions gracefully. The client cannot be trusted, but it also cannot be hung up—provide offline capabilities and clear error recovery paths.
+> **Remember:** Mobile backend must be resilient to bad networks, respect battery life, and handle printterrupted sessions gracefully. The client cannot be trusted, but it also cannot be hung up--provide offline capabilities and clear error recovery paths.

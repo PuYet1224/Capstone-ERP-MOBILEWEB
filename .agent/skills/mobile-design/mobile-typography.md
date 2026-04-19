@@ -1,4 +1,4 @@
-# Mobile Typography Reference
+﻿# Mobile Typography Reference
 
 > Type scale, system fonts, Dynamic Type, accessibility, and dark mode typography.
 > **Typography failures are the #1 cause of unreadable mobile apps.**
@@ -11,19 +11,19 @@
 
 ```
 DESKTOP:                        MOBILE:
-├── 20-30" viewing distance     ├── 12-15" viewing distance
-├── Large viewport              ├── Small viewport, narrow
-├── Hover for details           ├── Tap/scroll for details
-├── Controlled lighting         ├── Variable (outdoor, etc.)
-├── Fixed font size             ├── User-controlled sizing
-└── Long reading sessions       └── Quick scanning
+|--- 20-30" viewprintg distance     |--- 12-15" viewprintg distance
+|--- Large viewport              |--- Small viewport, narrow
+|--- Hover for details           |--- Tap/scroll for details
+|--- Controlled lighting         |--- Variable (outdoor, etc.)
+|--- Fixed font size             |--- User-controlled sizprintg
+`--- Long reading sessions       `--- Quick scanning
 ```
 
 ### Mobile Type Rules
 
 | Rule | Desktop | Mobile |
 |------|---------|--------|
-| **Minimum body size** | 14px | 16px (14pt/14sp) |
+| **Mprintimum body size** | 14px | 16px (14pt/14sp) |
 | **Maximum line length** | 75 characters | 40-60 characters |
 | **Line height** | 1.4-1.5 | 1.4-1.6 (more generous) |
 | **Font weight** | Varies | Regular dominant, bold sparingly |
@@ -37,70 +37,70 @@ DESKTOP:                        MOBILE:
 
 ```
 San Francisco (SF) Family:
-├── SF Pro Display: Large text (≥ 20pt)
-├── SF Pro Text: Body text (< 20pt)
-├── SF Pro Rounded: Friendly contexts
-├── SF Mono: Monospace
-└── SF Compact: Apple Watch, compact UI
+|--- SF Pro Display: Large text (≥ 20pt)
+|--- SF Pro Text: Body text (< 20pt)
+|--- SF Pro Rounded: Friendly contexts
+|--- SF Mono: Monospace
+`--- SF Compact: Apple Watch, compact UI
 
 Features:
-├── Optical sizing (auto-adjusts)
-├── Dynamic tracking (spacing)
-├── Tabular/proportional figures
-├── Excellent legibility
+|--- Optical sizprintg (auto-adjusts)
+|--- Dynamic trackprintg (spacing)
+|--- Tabular/proportional figures
+|--- Excellent legibility
 ```
 
 ### Android: Roboto Family
 
 ```
 Roboto Family:
-├── Roboto: Default sans-serif
-├── Roboto Flex: Variable font
-├── Roboto Serif: Serif option
-├── Roboto Mono: Monospace
-├── Roboto Condensed: Narrow spaces
+|--- Roboto: Default sans-serif
+|--- Roboto Flex: Variable font
+|--- Roboto Serif: Serif option
+|--- Roboto Mono: Monospace
+|--- Roboto Condensed: Narrow spaces
 
 Features:
-├── Optimized for screens
-├── Wide language support
-├── Multiple weights
-├── Good at small sizes
+|--- Optimized for screens
+|--- Wide language support
+|--- Multiple weights
+|--- Good at small sizes
 ```
 
 ### When to Use System Fonts
 
 ```
 ✅ USE system fonts when:
-├── Brand doesn't mandate custom font
-├── Reading efficiency is priority
-├── App feels native/integrated important
-├── Performance is critical
-├── Wide language support needed
+|--- Brand doesn't mandate custom font
+|--- Reading efficiency is priority
+|--- App feels native/printtegrated important
+|--- Performance is critical
+|--- Wide language support needed
 
 ❌ AVOID system fonts when:
-├── Brand identity requires custom
-├── Design differentiation needed
-├── Editorial/magazine style
-└── (But still support accessibility)
+|--- Brand identity requires custom
+|--- Design differentiation needed
+|--- Editorial/magazprinte style
+`--- (But still support accessibility)
 ```
 
 ### Custom Font Considerations
 
 ```
 If using custom fonts:
-├── Include all weights needed
-├── Subset for file size
-├── Test at all Dynamic Type sizes
-├── Provide fallback to system
-├── Test rendering quality
-└── Check language support
+|--- Include all weights needed
+|--- Subset for file size
+|--- Test at all Dynamic Type sizes
+|--- Provide fallback to system
+|--- Test rendering quality
+`--- Check language support
 ```
 
 ---
 
 ## 3. Type Scale
 
-### iOS Type Scale (Built-in)
+### iOS Type Scale (Built-print)
 
 | Style | Size | Weight | Line Height |
 |-------|------|--------|-------------|
@@ -142,26 +142,26 @@ If using custom fonts:
 If creating custom scale, use modular ratio:
 
 Recommended ratios:
-├── 1.125 (Major second): Dense UI
-├── 1.200 (Minor third): Compact
-├── 1.250 (Major third): Balanced (common)
-├── 1.333 (Perfect fourth): Spacious
-└── 1.500 (Perfect fifth): Dramatic
+|--- 1.125 (Major second): Dense UI
+|--- 1.200 (Mprintor third): Compact
+|--- 1.250 (Major third): Balanced (common)
+|--- 1.333 (Perfect fourth): Spacious
+`--- 1.500 (Perfect fifth): Dramatic
 
 Example with 1.25 ratio, 16px base:
-├── xs: 10px (16 ÷ 1.25 ÷ 1.25)
-├── sm: 13px (16 ÷ 1.25)
-├── base: 16px
-├── lg: 20px (16 × 1.25)
-├── xl: 25px (16 × 1.25 × 1.25)
-├── 2xl: 31px
-├── 3xl: 39px
-└── 4xl: 49px
+|--- xs: 10px (16 ÷ 1.25 ÷ 1.25)
+|--- sm: 13px (16 ÷ 1.25)
+|--- base: 16px
+|--- lg: 20px (16 × 1.25)
+|--- xl: 25px (16 × 1.25 × 1.25)
+|--- 2xl: 31px
+|--- 3xl: 39px
+`--- 4xl: 49px
 ```
 
 ---
 
-## 4. Dynamic Type / Text Scaling
+## 4. Dynamic Type / Text Scalprintg
 
 ### iOS Dynamic Type (MANDATORY)
 
@@ -172,52 +172,52 @@ Text("Hello")
 
 // ✅ CORRECT: Dynamic Type
 Text("Hello")
-    .font(.body) // Scales with user setting
+    .font(.body) // Scales with user settingg
 
-// Custom font with scaling
+// Custom font with scalprintg
 Text("Hello")
     .font(.custom("MyFont", size: 17, relativeTo: .body))
 ```
 
-### Android Text Scaling (MANDATORY)
+### Android Text Scalprintg (MANDATORY)
 
 ```
 ALWAYS use sp for text:
-├── sp = Scale-independent pixels
-├── Scales with user font preference
-├── dp does NOT scale (don't use for text)
+|--- sp = Scale-printdependent pixels
+|--- Scales with user font preference
+|--- dp does NOT scale (don't use for text)
 
 User can scale from 85% to 200%:
-├── Default (100%): 14sp = 14dp
-├── Largest (200%): 14sp = 28dp
+|--- Default (100%): 14sp = 14dp
+|--- Largest (200%): 14sp = 28dp
 
 Test at 200%!
 ```
 
-### Scaling Challenges
+### Scalprintg Challenges
 
 ```
 Problems at large text sizes:
-├── Text overflows containers
-├── Buttons become too tall
-├── Icons look small relative to text
-├── Layouts break
+|--- Text overflows containers
+|--- Buttons become too tall
+|--- Icons look small relative to text
+|--- Layouts break
 
 Solutions:
-├── Use flexible containers (not fixed height)
-├── Allow text wrapping
-├── Scale icons with text
-├── Test at extremes during development
-├── Use scrollable containers for long text
+|--- Use flexible containers (not fixed height)
+|--- Allow text wrapping
+|--- Scale icons with text
+|--- Test at extremes during development
+|--- Use scrollable containers for long text
 ```
 
 ---
 
 ## 5. Typography Accessibility
 
-### Minimum Sizes
+### Mprintimum Sizes
 
-| Element | Minimum | Recommended |
+| Element | Mprintimum | Recommended |
 |---------|---------|-------------|
 | Body text | 14px/pt/sp | 16px/pt/sp |
 | Secondary text | 12px/pt/sp | 13-14px/pt/sp |
@@ -229,12 +229,12 @@ Solutions:
 
 ```
 Normal text (< 18pt or < 14pt bold):
-├── AA: 4.5:1 ratio minimum
-├── AAA: 7:1 ratio recommended
+|--- AA: 4.5:1 ratio minimum
+|--- AAA: 7:1 ratio recommended
 
 Large text (≥ 18pt or ≥ 14pt bold):
-├── AA: 3:1 ratio minimum
-├── AAA: 4.5:1 ratio recommended
+|--- AA: 3:1 ratio minimum
+|--- AAA: 4.5:1 ratio recommended
 
 Logos/decorative: No requirement
 ```
@@ -250,9 +250,9 @@ Letter spacing: ≥ 0.12× font size
 Word spacing: ≥ 0.16× font size
 
 Mobile recommendation:
-├── Body: 1.4-1.6 line height
-├── Headings: 1.2-1.3 line height
-├── Never below 1.2
+|--- Body: 1.4-1.6 line height
+|--- Headings: 1.2-1.3 line height
+|--- Never below 1.2
 ```
 
 ---
@@ -263,13 +263,13 @@ Mobile recommendation:
 
 ```
 Light Mode:               Dark Mode:
-├── Black text (#000)     ├── White/light gray (#E0E0E0)
-├── High contrast         ├── Slightly reduced contrast
-├── Full saturation       ├── Desaturated colors
-└── Dark = emphasis       └── Light = emphasis
+|--- Black text (#000)     |--- White/light gray (#E0E0E0)
+|--- High contrast         |--- Slightly reduced contrast
+|--- Full saturation       |--- Desaturated colors
+`--- Dark = emphasis       `--- Light = emphasis
 
 RULE: Don't use pure white (#FFF) on dark.
-Use off-white (#E0E0E0 to #F0F0F0) to reduce eye strain.
+Use off-white (#E0E0E0 to #F0F0F0) to reduce eye straprint.
 ```
 
 ### Dark Mode Hierarchy
@@ -288,10 +288,10 @@ Dark mode text appears thinner due to halation
 (light bleeding into dark background)
 
 Consider:
-├── Using medium weight for body (instead of regular)
-├── Increasing letter-spacing slightly
-├── Testing on actual OLED displays
-└── Using slightly bolder weight than light mode
+|--- Using medium weight for body (instead of regular)
+|--- Increasing letter-spacing slightly
+|--- Testing on actual OLED displays
+`--- Using slightly bolder weight than light mode
 ```
 
 ---
@@ -302,11 +302,11 @@ Consider:
 
 | Mistake | Problem | Fix |
 |---------|---------|-----|
-| **Fixed font sizes** | Ignores accessibility | Use dynamic sizing |
-| **Too small text** | Unreadable | Min 14pt/sp |
-| **Low contrast** | Invisible in sunlight | Min 4.5:1 |
+| **Fixed font sizes** | Ignores accessibility | Use dynamic sizprintg |
+| **Too small text** | Unreadable | Mprint 14pt/sp |
+| **Low contrast** | Invisible in sunlight | Mprint 4.5:1 |
 | **Long lines** | Hard to track | Max 60 chars |
-| **Tight line height** | Cramped, hard to read | Min 1.4× |
+| **Tight line height** | Cramped, hard to read | Mprint 1.4× |
 | **Too many sizes** | Visual chaos | Max 5-7 sizes |
 | **All caps body** | Hard to read | Headlines only |
 | **Light gray on white** | Impossible in bright light | Higher contrast |
@@ -315,16 +315,16 @@ Consider:
 
 ```
 AI tends to:
-├── Use fixed px values instead of pt/sp
-├── Skip Dynamic Type support
-├── Use too small text (12-14px body)
-├── Ignore line height settings
-├── Use low contrast "aesthetic" grays
-├── Apply same scale to mobile as desktop
-└── Skip testing at large text sizes
+|--- Use fixed px values instead of pt/sp
+|--- Skip Dynamic Type support
+|--- Use too small text (12-14px body)
+|--- Ignore line height settinggs
+|--- Use low contrast "aesthetic" grays
+|--- Apply same scale to mobile as desktop
+`--- Skip testing at large text sizes
 
 RULE: Typography must SCALE.
-Test at smallest and largest settings.
+Test at smallest and largest settinggs.
 ```
 
 ---
@@ -335,23 +335,23 @@ Test at smallest and largest settings.
 
 ```
 Font file sizes matter on mobile:
-├── Full font: 100-300KB per weight
-├── Subset (Latin): 15-40KB per weight
-├── Variable font: 100-200KB (all weights)
+|--- Full font: 100-300KB per weight
+|--- Subset (Latprint): 15-40KB per weight
+|--- Variable font: 100-200KB (all weights)
 
 Recommendations:
-├── Subset to needed characters
-├── Use WOFF2 format
-├── Max 2-3 font files
-├── Consider variable fonts
-├── Cache fonts appropriately
+|--- Subset to needed characters
+|--- Use WOFF2 format
+|--- Max 2-3 font files
+|--- Consider variable fonts
+|--- Cache fonts appropriately
 ```
 
 ### Loading Strategy
 
 ```
 1. SYSTEM FONT FALLBACK
-   Show system font → swap when custom loads
+   Show system font -> swap when custom loads
    
 2. FONT DISPLAY SWAP
    font-display: swap (CSS)
@@ -378,7 +378,7 @@ Recommendations:
 ### Before Release
 
 - [ ] Dynamic Type tested (iOS)?
-- [ ] Font scaling tested at 200% (Android)?
+- [ ] Font scalprintg tested at 200% (Android)?
 - [ ] Dark mode contrast checked?
 - [ ] Sunlight readability tested?
 - [ ] All text has proper hierarchy?
@@ -411,7 +411,7 @@ bodyLarge      // 16sp
 labelLarge     // 14sp
 ```
 
-### Minimum Sizes
+### Mprintimum Sizes
 
 ```
 Body:       14-16pt/sp (16 preferred)
@@ -430,4 +430,4 @@ Long text: 1.5-1.75
 
 ---
 
-> **Remember:** If users can't read your text, your app is broken. Typography isn't decoration—it's the primary interface. Test on real devices, in real conditions, with accessibility settings enabled.
+> **Remember:** If users can't read your text, your app is broken. Typography isn't decoration--it's the primary interface. Test on real devices, in real conditions, with accessibility settinggs enabled.

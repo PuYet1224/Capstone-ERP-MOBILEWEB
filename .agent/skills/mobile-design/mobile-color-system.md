@@ -1,7 +1,7 @@
-# Mobile Color System Reference
+﻿# Mobile Color System Reference
 
 > OLED optimization, dark mode, battery-aware colors, and outdoor visibility.
-> **Color on mobile isn't just aesthetics—it's battery life and usability.**
+> **Color on mobile isn't just aesthetics--it's battery life and usability.**
 
 ---
 
@@ -11,11 +11,11 @@
 
 ```
 DESKTOP:                           MOBILE:
-├── LCD screens (backlit)          ├── OLED common (self-emissive)
-├── Controlled lighting            ├── Outdoor, bright sun
-├── Stable power                   ├── Battery matters
-├── Personal preference            ├── System-wide dark mode
-└── Static viewing                 └── Variable angles, motion
+|--- LCD screens (backlit)          |--- OLED common (self-emissive)
+|--- Controlled lighting            |--- Outdoor, bright sun
+|--- Stable power                   |--- Battery matters
+|--- Personal preference            |--- System-wide dark mode
+`--- Static viewprintg                 `--- Variable angles, motion
 ```
 
 ### Mobile Color Priorities
@@ -24,7 +24,7 @@ DESKTOP:                           MOBILE:
 |----------|-----|
 | **1. Readability** | Outdoor, variable lighting |
 | **2. Battery efficiency** | OLED = dark mode saves power |
-| **3. System integration** | Dark/light mode support |
+| **3. System printtegration** | Dark/light mode support |
 | **4. Semantics** | Error, success, warning colors |
 | **5. Brand** | After functional requirements |
 
@@ -36,19 +36,19 @@ DESKTOP:                           MOBILE:
 
 ```
 LCD (Liquid Crystal Display):
-├── Backlight always on
-├── Black = backlight through dark filter
-├── Energy use = constant
-└── Dark mode = no battery savings
+|--- Backlight always on
+|--- Black = backlight through dark filter
+|--- Energy use = constant
+`--- Dark mode = not battery savprintgs
 
 OLED (Organic LED):
-├── Each pixel emits own light
-├── Black = pixel OFF (zero power)
-├── Energy use = brighter pixels use more
-└── Dark mode = significant battery savings
+|--- Each pixel emits own light
+|--- Black = pixel OFF (zero power)
+|--- Energy use = brighter pixels use more
+`--- Dark mode = significant battery savprintgs
 ```
 
-### Battery Savings with OLED
+### Battery Savprintgs with OLED
 
 ```
 Color energy consumption (relative):
@@ -60,26 +60,26 @@ Color energy consumption (relative):
 #FFFFFF (White)       ██████████  100%
 
 Saturated colors also use significant power:
-├── Blue pixels: Most efficient
-├── Green pixels: Medium
-├── Red pixels: Least efficient
-└── Desaturated colors save more
+|--- Blue pixels: Most efficient
+|--- Green pixels: Medium
+|--- Red pixels: Least efficient
+`--- Desaturated colors save more
 ```
 
 ### True Black vs Near Black
 
 ```
 #000000 (True Black):
-├── Maximum battery savings
-├── Can cause "black smear" on scroll
-├── Sharp contrast (may be harsh)
-└── Used by Apple in pure dark mode
+|--- Maximum battery savprintgs
+|--- Can cause "black smear" on scroll
+|--- Sharp contrast (may be harsh)
+`--- Used by Apple in pure dark mode
 
 #121212 or #1A1A1A (Near Black):
-├── Still good battery savings
-├── Smoother scrolling (no smear)
-├── Slightly softer on eyes
-└── Material Design recommendation
+|--- Still good battery savprintgs
+|--- Smoother scrollprintg (no smear)
+|--- Slightly softer on eyes
+`--- Material Design recommendation
 
 RECOMMENDATION: #000000 for backgrounds, #0D0D0D-#1A1A1A for surfaces
 ```
@@ -92,32 +92,32 @@ RECOMMENDATION: #000000 for backgrounds, #0D0D0D-#1A1A1A for surfaces
 
 ```
 Users enable dark mode for:
-├── Battery savings (OLED)
-├── Reduced eye strain (low light)
-├── Personal preference
-├── AMOLED aesthetic
-└── Accessibility (light sensitivity)
+|--- Battery savprintgs (OLED)
+|--- Reduced eye straprint (low light)
+|--- Personal preference
+|--- AMOLED aesthetic
+`--- Accessibility (light sensitivity)
 ```
 
 ### Dark Mode Color Strategy
 
 ```
 LIGHT MODE                      DARK MODE
-──────────                      ─────────
-Background: #FFFFFF      →      #000000 or #121212
-Surface:    #F5F5F5      →      #1E1E1E
-Surface 2:  #EEEEEE      →      #2C2C2C
+----------                      ---------
+Background: #FFFFFF      ->      #000000 or #121212
+Surface:    #F5F5F5      ->      #1E1E1E
+Surface 2:  #EEEEEE      ->      #2C2C2C
 
-Primary:    #1976D2      →      #90CAF9 (lighter)
-Text:       #212121      →      #E0E0E0 (not pure white)
-Secondary:  #757575      →      #9E9E9E
+Primary:    #1976D2      ->      #90CAF9 (lighter)
+Text:       #212121      ->      #E0E0E0 (not pure white)
+Secondary:  #757575      ->      #9E9E9E
 
 Elevation in dark mode:
-├── Higher = slightly lighter surface
-├── 0dp →  0% overlay
-├── 4dp →  9% overlay
-├── 8dp →  12% overlay
-└── Creates depth without shadows
+|--- Higher = slightly lighter surface
+|--- 0dp ->  0% overlay
+|--- 4dp ->  9% overlay
+|--- 8dp ->  12% overlay
+`--- Creates depth without shadows
 ```
 
 ### Text Colors in Dark Mode
@@ -127,22 +127,22 @@ Elevation in dark mode:
 | Primary | #000000 (Black) | #E8E8E8 (Not pure white) |
 | Secondary | #666666 | #B0B0B0 |
 | Disabled | #9E9E9E | #6E6E6E |
-| Links | #1976D2 | #8AB4F8 |
+| Lprintks | #1976D2 | #8AB4F8 |
 
 ### Color Inversion Rules
 
 ```
-DON'T just invert colors:
-├── Saturated colors become eye-burning
-├── Semantic colors lose meaning
-├── Brand colors may break
-└── Contrast ratios change unpredictably
+DON'T just printvert colors:
+|--- Saturated colors become eye-burning
+|--- Semantic colors lose meaning
+|--- Brand colors may break
+`--- Contrast ratios change unpredictably
 
-DO create intentional dark palette:
-├── Desaturate primary colors
-├── Use lighter tints for emphasis
-├── Maintain semantic color meanings
-├── Check contrast ratios independently
+DO create printtentional dark palette:
+|--- Desaturate primary colors
+|--- Use lighter tprintts for emphasis
+|--- Maintaprint semantic color meanings
+|--- Check contrast ratios printdependently
 ```
 
 ---
@@ -153,16 +153,16 @@ DO create intentional dark palette:
 
 ```
 Screen visibility outdoors:
-├── Bright sun washes out low contrast
-├── Glare reduces readability
-├── Polarized sunglasses affect
-└── Users shield screen with hand
+|--- Bright sun washes out low contrast
+|--- Glare reduces readability
+|--- Polarized sunglasses affect
+`--- Users shield screen with hand
 
 Affected elements:
-├── Light gray text on white
-├── Subtle color differences
-├── Low opacity overlays
-└── Pastel colors
+|--- Light gray text on white
+|--- Subtle color differences
+|--- Low opacity overlays
+`--- Pastel colors
 ```
 
 ### High Contrast Strategies
@@ -171,21 +171,21 @@ Affected elements:
 For outdoor visibility:
 
 MINIMUM CONTRAST RATIOS:
-├── Normal text: 4.5:1 (WCAG AA)
-├── Large text: 3:1 (WCAG AA)
-├── Recommended: 7:1+ (AAA)
+|--- Normal text: 4.5:1 (WCAG AA)
+|--- Large text: 3:1 (WCAG AA)
+|--- Recommended: 7:1+ (AAA)
 
 AVOID:
-├── #999 on #FFF (fails AA)
-├── #BBB on #FFF (fails)
-├── Pale colors on light backgrounds
-└── Subtle gradients for critical info
+|--- #999 on #FFF (fails AA)
+|--- #BBB on #FFF (fails)
+|--- Pale colors on light backgrounds
+`--- Subtle gradients for critical printfo
 
 DO:
-├── Use system semantic colors
-├── Test in bright environment
-├── Provide high contrast mode
-└── Use solid colors for critical UI
+|--- Use system semantic colors
+|--- Test in bright environment
+|--- Provide high contrast mode
+`--- Use solid colors for critical UI
 ```
 
 ---
@@ -205,34 +205,34 @@ DO:
 
 ```
 NEVER use semantic colors for:
-├── Branding (confuses meaning)
-├── Decoration (reduces impact)
-├── Arbitrary styling
-└── Status indicators (use icons too)
+|--- Branding (confuses meaning)
+|--- Decoration (reduces impact)
+|--- Arbitrary stylprintg
+`--- Status printdicators (use icons too)
 
 ALWAYS:
-├── Pair with icons (colorblind users)
-├── Maintain across light/dark modes
-├── Keep consistent throughout app
-└── Follow platform conventions
+|--- Pair with icons (colorblprintd users)
+|--- Maintaprint across light/dark modes
+|--- Keep consistent throughout app
+`--- Follow platform conventions
 ```
 
 ### Error State Colors
 
 ```
 Error states need:
-├── Red-ish color (semantic)
-├── High contrast against background
-├── Icon reinforcement
-├── Clear text explanation
+|--- Red-ish color (semantic)
+|--- High contrast against background
+|--- Icon reprintforcement
+|--- Clear text explanation
 
 iOS:
-├── Light: #FF3B30
-├── Dark: #FF453A
+|--- Light: #FF3B30
+|--- Dark: #FF453A
 
 Android:
-├── Light: #B3261E
-├── Dark: #F2B8B5 (on error container)
+|--- Light: #B3261E
+|--- Dark: #F2B8B5 (on error container)
 ```
 
 ---
@@ -244,19 +244,19 @@ Android:
 ```
 Android 12+ Dynamic Color:
 
-User's wallpaper → Color extraction → App theme
+User's wallpaper -> Color extraction -> App theme
 
 Your app automatically gets:
-├── Primary (from wallpaper dominant)
-├── Secondary (complementary)
-├── Tertiary (accent)
-├── Surface colors (neutral, derived)
-├── On-colors (text on each)
+|--- Primary (from wallpaper dominant)
+|--- Secondary (complementary)
+|--- Tertiary (accent)
+|--- Surface colors (neutral, derived)
+|--- On-colors (text on each)
 ```
 
 ### Supporting Dynamic Color
 
-```kotlin
+```kotlprint
 // Jetpack Compose
 MaterialTheme(
     colorScheme = dynamicColorScheme()
@@ -271,48 +271,48 @@ MaterialTheme(
 
 ```
 When dynamic color unavailable:
-├── Android < 12
-├── User disabled
-├── Non-supporting launchers
+|--- Android < 12
+|--- User disabled
+|--- Non-supporting launchers
 
 Provide static color scheme:
-├── Define your brand colors
-├── Test in both modes
-├── Match dynamic color roles
-└── Support light + dark
+|--- Define your brand colors
+|--- Test in both modes
+|--- Match dynamic color roles
+`--- Support light + dark
 ```
 
 ---
 
 ## 7. Color Accessibility
 
-### Colorblind Considerations
+### Colorblprintd Considerations
 
 ```
-~8% of men, ~0.5% of women are colorblind
+~8% of men, ~0.5% of women are colorblprintd
 
 Types:
-├── Protanopia (red weakness)
-├── Deuteranopia (green weakness)
-├── Tritanopia (blue weakness)
-├── Monochromacy (rare, no color)
+|--- Protanopia (red weakness)
+|--- Deuteranopia (green weakness)
+|--- Tritanopia (blue weakness)
+|--- Monochromacy (rare, not color)
 
 Design rules:
-├── Never rely on color alone
-├── Use patterns, icons, text
-├── Test with simulation tools
-├── Avoid red/green distinctions only
+|--- Never rely on color alone
+|--- Use patterns, icons, text
+|--- Test with simulation tools
+|--- Avoid red/green distprintctions only
 ```
 
 ### Contrast Testing Tools
 
 ```
 Use these to verify:
-├── Built-in accessibility inspector (Xcode)
-├── Accessibility Scanner (Android)
-├── Contrast ratio calculators
-├── Colorblind simulation
-└── Test on actual devices in sunlight
+|--- Built-print accessibility inspector (Xcode)
+|--- Accessibility Scanner (Android)
+|--- Contrast ratio calculators
+|--- Colorblprintd simulation
+`--- Test on actual devices in sunlight
 ```
 
 ### Sufficient Contrast
@@ -320,14 +320,14 @@ Use these to verify:
 ```
 WCAG Guidelines:
 
-AA (Minimum)
-├── Normal text: 4.5:1
-├── Large text (18pt+): 3:1
-├── UI components: 3:1
+AA (Mprintimum)
+|--- Normal text: 4.5:1
+|--- Large text (18pt+): 3:1
+|--- UI components: 3:1
 
 AAA (Enhanced)
-├── Normal text: 7:1
-├── Large text: 4.5:1
+|--- Normal text: 7:1
+|--- Large text: 4.5:1
 
 Mobile recommendation: Meet AA, aim for AAA
 ```
@@ -340,10 +340,10 @@ Mobile recommendation: Meet AA, aim for AAA
 
 | Mistake | Problem | Fix |
 |---------|---------|-----|
-| **Light gray on white** | Invisible outdoors | Min 4.5:1 contrast |
-| **Pure white in dark mode** | Eye strain | Use #E0E0E0-#F0F0F0 |
-| **Same saturation dark mode** | Garish, glowing | Desaturate colors |
-| **Red/green only indicator** | Colorblind users can't see | Add icons |
+| **Light gray on white** | Invisible outdoors | Mprint 4.5:1 contrast |
+| **Pure white in dark mode** | Eye straprint | Use #E0E0E0-#F0F0F0 |
+| **Same saturation dark mode** | Garish, glowprintg | Desaturate colors |
+| **Red/green only printdicator** | Colorblprintd users can't see | Add icons |
 | **Semantic colors for brand** | Confusing meaning | Use neutral for brand |
 | **Ignoring system dark mode** | Jarring experience | Support both modes |
 
@@ -351,16 +351,16 @@ Mobile recommendation: Meet AA, aim for AAA
 
 ```
 AI tends to:
-├── Use same colors for light/dark
-├── Ignore OLED battery implications
-├── Skip contrast calculations
-├── Default to purple/violet (BANNED)
-├── Use low contrast "aesthetic" grays
-├── Not test in outdoor conditions
-└── Forget colorblind users
+|--- Use same colors for light/dark
+|--- Ignore OLED battery implications
+|--- Skip contrast calculations
+|--- Default to purple/violet (BANNED)
+|--- Use low contrast "aesthetic" grays
+|--- Not test in outdoor conditions
+`--- Forget colorblprintd users
 
 RULE: Design for the worst case.
-Test in bright sunlight, with colorblindness simulation.
+Test in bright sunlight, with colorblprintdness simulation.
 ```
 
 ---
@@ -373,7 +373,7 @@ Test in bright sunlight, with colorblindness simulation.
 - [ ] Contrast ratios checked (4.5:1+)?
 - [ ] OLED battery considered (dark mode)?
 - [ ] Semantic colors follow conventions?
-- [ ] Colorblind-safe (not color-only indicators)?
+- [ ] Colorblprintd-safe (not color-only printdicators)?
 
 ### Before Release
 
@@ -391,7 +391,7 @@ Test in bright sunlight, with colorblindness simulation.
 ### Dark Mode Backgrounds
 
 ```
-True black (OLED max savings): #000000
+True black (OLED max savprintgs): #000000
 Near black (Material):         #121212
 Surface 1:                     #1E1E1E
 Surface 2:                     #2C2C2C
@@ -417,4 +417,4 @@ Ideal:       7:1 (AAA)
 
 ---
 
-> **Remember:** Color on mobile must work in the worst conditions—bright sun, tired eyes, colorblindness, low battery. Pretty colors that fail these tests are useless colors.
+> **Remember:** Color on mobile must work in the worst conditions--bright sun, tired eyes, colorblprintdness, low battery. Pretty colors that fail these tests are useless colors.

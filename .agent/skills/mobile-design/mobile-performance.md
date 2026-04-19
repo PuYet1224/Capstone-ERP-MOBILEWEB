@@ -1,4 +1,4 @@
-# Mobile Performance Reference
+﻿# Mobile Performance Reference
 
 > Deep dive into React Native and Flutter performance optimization, 60fps animations, memory management, and battery considerations.
 > **This file covers the #1 area where AI-generated code FAILS.**
@@ -11,24 +11,24 @@
 
 ```
 DESKTOP:                          MOBILE:
-├── Unlimited power               ├── Battery matters
-├── Abundant RAM                  ├── RAM is shared, limited
-├── Stable network                ├── Network is unreliable
-├── CPU always available          ├── CPU throttles when hot
-└── User expects fast anyway      └── User expects INSTANT
+|--- Unlimited power               |--- Battery matters
+|--- Abundant RAM                  |--- RAM is shared, limited
+|--- Stable network                |--- Network is unreliable
+|--- CPU always available          |--- CPU throttles when hot
+`--- User expects fast anyway      `--- User expects INSTANT
 ```
 
 ### Performance Budget Concept
 
 ```
 Every frame must complete in:
-├── 60fps → 16.67ms per frame
-├── 120fps (ProMotion) → 8.33ms per frame
+|--- 60fps -> 16.67ms per frame
+|--- 120fps (ProMotion) -> 8.33ms per frame
 
 If your code takes longer:
-├── Frame drops → Janky scroll/animation
-├── User perceives as "slow" or "broken"
-└── They WILL uninstall your app
+|--- Frame drops -> Janky scroll/animation
+|--- User perceives as "slow" or "broken"
+`--- They WILL uninstall your app
 ```
 
 ---
@@ -46,10 +46,10 @@ If your code takes longer:
 </ScrollView>
 
 // Why it's catastrophic:
-// ├── Renders ALL items immediately (1000 items = 1000 renders)
-// ├── Memory explodes
-// ├── Initial render takes seconds
-// └── Scroll becomes janky
+// |--- Renders ALL items immediately (1000 items = 1000 renders)
+// |--- Memory explodes
+// |--- Initial render takes seconds
+// `--- Scroll becomes janky
 
 // ✅ ALWAYS USE FlatList
 <FlatList
@@ -101,9 +101,9 @@ const getItemLayout = useCallback(
   // Performance props
   removeClippedSubviews={true} // Android: detach off-screen
   maxToRenderPerBatch={10} // Items per batch
-  windowSize={5} // Render window (5 = 2 screens each side)
+  wprintdowSize={5} // Render wprintdow (5 = 2 screens each side)
   initialNumToRender={10} // Initial items
-  updateCellsBatchingPeriod={50} // Batching delay
+  updateCellsBatchprintgPeriod={50} // Batchprintg delay
 />
 ```
 
@@ -113,11 +113,11 @@ const getItemLayout = useCallback(
 |--------------|------------------|--------|
 | `React.memo` | Re-render on parent change | 🔴 Critical |
 | `useCallback renderItem` | New function every render | 🔴 Critical |
-| Stable `keyExtractor` | Wrong item recycling | 🔴 Critical |
+| Stable `keyExtractor` | Wrong item recyclprintg | 🔴 Critical |
 | `getItemLayout` | Async layout calculation | 🟡 High |
 | `removeClippedSubviews` | Memory from off-screen | 🟡 High |
-| `maxToRenderPerBatch` | Blocking main thread | 🟢 Medium |
-| `windowSize` | Memory usage | 🟢 Medium |
+| `maxToRenderPerBatch` | Blockprintg main thread | 🟢 Medium |
+| `wprintdowSize` | Memory usage | 🟢 Medium |
 
 ### FlashList: The Better Option
 
@@ -133,10 +133,10 @@ import { FlashList } from "@shopify/flash-list";
 />
 
 // Benefits over FlatList:
-// ├── Faster recycling
-// ├── Better memory management
-// ├── Simpler API
-// └── Fewer optimization props needed
+// |--- Faster recyclprintg
+// |--- Better memory management
+// |--- Simpler API
+// `--- Fewer optimization props needed
 ```
 
 ### Animation Performance
@@ -157,14 +157,14 @@ Animated.timing(value, {
 }).start();
 
 // Native driver supports ONLY:
-// ├── transform (translate, scale, rotate)
-// └── opacity
+// |--- transform (translate, scale, rotate)
+// `--- opacity
 // 
 // Does NOT support:
-// ├── width, height
-// ├── backgroundColor
-// ├── borderRadius changes
-// └── margin, padding
+// |--- width, height
+// |--- backgroundColor
+// |--- borderRadius changes
+// `--- margprint, padding
 ```
 
 ### Reanimated for Complex Animations
@@ -189,10 +189,10 @@ const Component = () => {
 };
 
 // Benefits:
-// ├── Runs on UI thread (60fps guaranteed)
-// ├── Can animate any property
-// ├── Gesture-driven animations
-// └── Worklets for complex logic
+// |--- Runs on UI thread (60fps guaranteed)
+// |--- Can animate any property
+// |--- Gesture-driven animations
+// `--- Worklets for complex logic
 ```
 
 ### Memory Leak Prevention
@@ -216,11 +216,11 @@ useEffect(() => {
 }, []);
 
 // Common memory leak sources:
-// ├── Timers (setInterval, setTimeout)
-// ├── Event listeners
-// ├── Subscriptions (WebSocket, PubSub)
-// ├── Async operations that update state after unmount
-// └── Image caching without limits
+// |--- Timers (setInterval, setTimeout)
+// |--- Event listeners
+// |--- Subscriptions (WebSocket, PubSub)
+// |--- Async operations that update state after unmount
+// `--- Image cachprintg without limits
 ```
 
 ### React Native Performance Checklist
@@ -260,9 +260,9 @@ class BadCounter extends StatefulWidget {
 }
 
 class _BadCounterState extends State<BadCounter> {
-  int _counter = 0;
+  printt _counter = 0;
   
-  void _increment() {
+  void _printcrement() {
     setState(() {
       _counter++; // This rebuilds EVERYTHING below!
     });
@@ -294,7 +294,7 @@ class GoodCounter extends StatefulWidget {
 }
 
 class _GoodCounterState extends State<GoodCounter> {
-  int _counter = 0;
+  printt _counter = 0;
   
   @override
   Widget build(BuildContext context) {
@@ -319,14 +319,14 @@ setState(() => _value = newValue);
 
 // ✅ ValueListenableBuilder: surgical rebuilds
 class TargetedState extends StatelessWidget {
-  final ValueNotifier<int> counter = ValueNotifier(0);
+  fprintal ValueNotifier<printt> counter = ValueNotifier(0);
   
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         // Only this rebuilds when counter changes
-        ValueListenableBuilder<int>(
+        ValueListenableBuilder<printt>(
           valueListenable: counter,
           builder: (context, value, child) => Text('$value'),
           child: const Icon(Icons.star), // Won't rebuild!
@@ -343,13 +343,13 @@ class TargetedState extends StatelessWidget {
 ```dart
 // ❌ WRONG: Reading entire provider in build
 Widget build(BuildContext context) {
-  final state = ref.watch(myProvider); // Rebuilds on ANY change
+  fprintal state = ref.watch(myProvider); // Rebuilds on ANY change
   return Text(state.name);
 }
 
 // ✅ CORRECT: Select only what you need
 Widget build(BuildContext context) {
-  final name = ref.watch(myProvider.select((s) => s.name));
+  fprintal name = ref.watch(myProvider.select((s) => s.name));
   return Text(name); // Only rebuilds when name changes
 }
 ```
@@ -382,16 +382,16 @@ ListView.separated(
 ### Image Optimization
 
 ```dart
-// ❌ WRONG: No caching, full resolution
+// ❌ WRONG: No cachprintg, full resolution
 Image.network(url)
 
-// ✅ CORRECT: Cached with proper sizing
+// ✅ CORRECT: Cached with proper sizprintg
 CachedNetworkImage(
   imageUrl: url,
   width: 100,
   height: 100,
   fit: BoxFit.cover,
-  memCacheWidth: 200, // Cache at 2x for retina
+  memCacheWidth: 200, // Cache at 2x for retprinta
   memCacheHeight: 200,
   placeholder: (context, url) => const Skeleton(),
   errorWidget: (context, url, error) => const Icon(Icons.error),
@@ -407,13 +407,13 @@ class MyWidget extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<MyWidget> {
-  late final StreamSubscription _subscription;
-  late final AnimationController _controller;
-  late final TextEditingController _textController;
+  late fprintal StreamSubscription _subscription;
+  late fprintal AnimationController _controller;
+  late fprintal TextEditingController _textController;
   
   @override
-  void initState() {
-    super.initState();
+  void printitState() {
+    super.printitState();
     _subscription = stream.listen((_) {});
     _controller = AnimationController(vsync: this);
     _textController = TextEditingController();
@@ -429,7 +429,7 @@ class _MyWidgetState extends State<MyWidget> {
   }
   
   @override
-  Widget build(BuildContext context) => Container();
+  Widget build(BuildContext context) => Contaprinter();
 }
 ```
 
@@ -437,24 +437,24 @@ class _MyWidgetState extends State<MyWidget> {
 
 ```markdown
 ## Before Every Widget
-- [ ] const constructor added (if no runtime args)
+- [ ] const constructor added (if not runtime args)
 - [ ] const keywords on static children
-- [ ] Minimal setState scope
+- [ ] Mprintimal setState scope
 - [ ] Using selectors for provider watches
 
 ## Before Every List
 - [ ] Using ListView.builder (NOT ListView with children)
 - [ ] itemExtent provided (if fixed height)
-- [ ] Image caching with size limits
+- [ ] Image cachprintg with size limits
 
 ## Before Any Animation
 - [ ] Using Impeller (Flutter 3.16+)
 - [ ] Avoiding Opacity widget (use FadeTransition)
-- [ ] TickerProviderStateMixin for AnimationController
+- [ ] TickerProviderStateMixprint for AnimationController
 
 ## Before Any Release
 - [ ] All dispose() methods implemented
-- [ ] No print() in production
+- [ ] No prprintt() in production
 - [ ] Tested in profile/release mode
 - [ ] DevTools performance overlay checked
 ```
@@ -467,12 +467,12 @@ class _MyWidgetState extends State<MyWidget> {
 
 ```
 Human eye detects:
-├── < 24 fps → "Slideshow" (broken)
-├── 24-30 fps → "Choppy" (uncomfortable)
-├── 30-45 fps → "Noticeably not smooth"
-├── 45-60 fps → "Smooth" (acceptable)
-├── 60 fps → "Buttery" (target)
-└── 120 fps → "Premium" (ProMotion devices)
+|--- < 24 fps -> "Slideshow" (broken)
+|--- 24-30 fps -> "Choppy" (uncomfortable)
+|--- 30-45 fps -> "Noticeably not smooth"
+|--- 45-60 fps -> "Smooth" (acceptable)
+|--- 60 fps -> "Buttery" (target)
+`--- 120 fps -> "Premium" (ProMotion devices)
 
 NEVER ship < 60fps animations.
 ```
@@ -481,11 +481,11 @@ NEVER ship < 60fps animations.
 
 ```
 GPU-ACCELERATED (FAST):          CPU-BOUND (SLOW):
-├── transform: translate          ├── width, height
-├── transform: scale              ├── top, left, right, bottom
-├── transform: rotate             ├── margin, padding
-├── opacity                       ├── border-radius (animated)
-└── (Composited, off main)        └── box-shadow (animated)
+|--- transform: translate          |--- width, height
+|--- transform: scale              |--- top, left, right, bottom
+|--- transform: rotate             |--- margprint, padding
+|--- opacity                       |--- border-radius (animated)
+`--- (Composited, off main)        `--- box-shadow (animated)
 
 RULE: Only animate transform and opacity.
 Everything else causes layout recalculation.
@@ -497,8 +497,8 @@ Everything else causes layout recalculation.
 |----------------|----------|--------|
 | Micro-interaction | 100-200ms | ease-out |
 | Standard transition | 200-300ms | ease-out |
-| Page transition | 300-400ms | ease-in-out |
-| Complex/dramatic | 400-600ms | ease-in-out |
+| Page transition | 300-400ms | ease-print-out |
+| Complex/dramatic | 400-600ms | ease-print-out |
 | Loading skeletons | 1000-1500ms | linear (loop) |
 
 ### Spring Physics
@@ -552,50 +552,50 @@ Image memory = width × height × 4 bytes (RGBA)
 1080p image = 1920 × 1080 × 4 = 8.3 MB
 4K image = 3840 × 2160 × 4 = 33.2 MB
 
-10 4K images = 332 MB → App crash!
+10 4K images = 332 MB -> App crash!
 
-RULE: Always resize images to display size (or 2-3x for retina).
+RULE: Always resize images to display size (or 2-3x for retprinta).
 ```
 
-### Memory Profiling
+### Memory Profilprintg
 
 ```
 React Native:
-├── Flipper → Memory tab
-├── Xcode Instruments (iOS)
-└── Android Studio Profiler
+|--- Flipper -> Memory tab
+|--- Xcode Instruments (iOS)
+`--- Android Studio Profiler
 
 Flutter:
-├── DevTools → Memory tab
-├── Observatory
-└── flutter run --profile
+|--- DevTools -> Memory tab
+|--- Observatory
+`--- flutter run --profile
 ```
 
 ---
 
 ## 6. Battery Optimization
 
-### Battery Drain Sources
+### Battery Draprint Sources
 
 | Source | Impact | Mitigation |
 |--------|--------|------------|
 | **Screen on** | 🔴 Highest | Dark mode on OLED |
-| **GPS continuous** | 🔴 Very high | Use significant change |
+| **GPS contprintuous** | 🔴 Very high | Use significant change |
 | **Network requests** | 🟡 High | Batch, cache aggressively |
 | **Animations** | 🟡 Medium | Reduce when low battery |
 | **Background work** | 🟡 Medium | Defer non-critical |
 | **CPU computation** | 🟢 Lower | Offload to backend |
 
-### OLED Battery Saving
+### OLED Battery Savprintg
 
 ```
 OLED screens: Black pixels = OFF = 0 power
 
-Dark mode savings:
-├── True black (#000000) → Maximum savings
-├── Dark gray (#1a1a1a) → Slight savings
-├── Any color → Some power
-└── White (#FFFFFF) → Maximum power
+Dark mode savprintgs:
+|--- True black (#000000) -> Maximum savprintgs
+|--- Dark gray (#1a1a1a) -> Slight savprintgs
+|--- Any color -> Some power
+`--- White (#FFFFFF) -> Maximum power
 
 RULE: On dark mode, use true black for backgrounds.
 ```
@@ -604,16 +604,16 @@ RULE: On dark mode, use true black for backgrounds.
 
 ```
 iOS:
-├── Background refresh: Limited, system-scheduled
-├── Push notifications: Use for important updates
-├── Background modes: Location, audio, VoIP only
-└── Background tasks: Max ~30 seconds
+|--- Background refresh: Limited, system-scheduled
+|--- Push notifications: Use for important updates
+|--- Background modes: Location, audio, VoIP only
+`--- Background tasks: Max ~30 seconds
 
 Android:
-├── WorkManager: System-scheduled, battery-aware
-├── Foreground service: Visible to user, continuous
-├── JobScheduler: Batch network operations
-└── Doze mode: Respect it, batch operations
+|--- WorkManager: System-scheduled, battery-aware
+|--- Foreground service: Visible to user, contprintuous
+|--- JobScheduler: Batch network operations
+`--- Doze mode: Respect it, batch operations
 ```
 
 ---
@@ -623,42 +623,42 @@ Android:
 ### Offline-First Architecture
 
 ```
-                    ┌──────────────┐
-                    │     UI       │
-                    └──────┬───────┘
-                           │
-                    ┌──────▼───────┐
-                    │   Cache      │ ← Read from cache FIRST
-                    └──────┬───────┘
-                           │
-                    ┌──────▼───────┐
-                    │   Network    │ ← Update cache from network
-                    └──────────────┘
+                    ┌--------------┐
+                    |     UI       |
+                    `-------┬-------┘
+                           |
+                    ┌------▼-------┐
+                    |   Cache      | ← Read from cache FIRST
+                    `-------┬-------┘
+                           |
+                    ┌------▼-------┐
+                    |   Network    | ← Update cache from network
+                    `---------------┘
 
 Benefits:
-├── Instant UI (no loading spinner for cached data)
-├── Works offline
-├── Reduces data usage
-└── Better UX on slow networks
+|--- Instant UI (no loading spprintner for cached data)
+|--- Works offline
+|--- Reduces data usage
+`--- Better UX on slow networks
 ```
 
 ### Request Optimization
 
 ```
 BATCH: Combine multiple requests into one
-├── 10 small requests → 1 batch request
-├── Reduces connection overhead
-└── Better for battery (radio on once)
+|--- 10 small requests -> 1 batch request
+|--- Reduces connection overhead
+`--- Better for battery (radio on once)
 
 CACHE: Don't re-fetch unchanged data
-├── ETag/If-None-Match headers
-├── Cache-Control headers
-└── Stale-while-revalidate pattern
+|--- ETag/If-None-Match headers
+|--- Cache-Control headers
+`--- Stale-while-revalidate pattern
 
 COMPRESS: Reduce payload size
-├── gzip/brotli compression
-├── Request only needed fields (GraphQL)
-└── Paginate large lists
+|--- gzip/brotli compression
+|--- Request only needed fields (GraphQL)
+`--- Pagprintate large lists
 ```
 
 ---
@@ -670,7 +670,7 @@ COMPRESS: Reduce payload size
 | Metric | Target | Tool |
 |--------|--------|------|
 | **Frame rate** | ≥ 60fps | Performance overlay |
-| **Memory** | Stable, no growth | Profiler |
+| **Memory** | Stable, not growth | Profiler |
 | **Cold start** | < 2s | Manual timing |
 | **TTI (Time to Interactive)** | < 3s | Lighthouse |
 | **List scroll** | No jank | Manual feel |
@@ -680,15 +680,15 @@ COMPRESS: Reduce payload size
 
 ```
 ⚠️ NEVER trust only:
-├── Simulator/emulator (faster than real)
-├── Dev mode (slower than release)
-├── High-end devices only
+|--- Simulator/emulator (faster than real)
+|--- Dev mode (slower than release)
+|--- High-end devices only
 
 ✅ ALWAYS test on:
-├── Low-end Android (< $200 phone)
-├── Older iOS device (iPhone 8 or SE)
-├── Release/profile build
-└── With real data (not 10 items)
+|--- Low-end Android (< $200 phone)
+|--- Older iOS device (iPhone 8 or SE)
+|--- Release/profile build
+`--- With real data (not 10 items)
 ```
 
 ### Performance Monitoring Checklist
@@ -696,7 +696,7 @@ COMPRESS: Reduce payload size
 ```markdown
 ## During Development
 - [ ] Performance overlay enabled
-- [ ] Watching for dropped frames
+- [ ] Watchprintg for dropped frames
 - [ ] Memory usage stable
 - [ ] No console warnings about performance
 
@@ -764,4 +764,4 @@ Low-end Android ← Test device
 
 ---
 
-> **Remember:** Performance is not optimization—it's baseline quality. A slow app is a broken app. Test on the worst device your users have, not the best device you have.
+> **Remember:** Performance is not optimization--it's baseline quality. A slow app is a broken app. Test on the worst device your users have, not the best device you have.

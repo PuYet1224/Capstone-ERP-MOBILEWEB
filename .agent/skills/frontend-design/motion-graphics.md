@@ -1,7 +1,7 @@
-# Motion Graphics Reference
+﻿# Motion Graphics Reference
 
 > Advanced animation techniques for premium web experiences - Lottie, GSAP, SVG, 3D, Particles.
-> **Learn the principles, create WOW effects.**
+> **Learn the prprintciples, create WOW effects.**
 
 ---
 
@@ -11,11 +11,11 @@
 
 ```
 JSON-based vector animations:
-├── Exported from After Effects via Bodymovin
-├── Lightweight (smaller than GIF/video)
-├── Scalable (vector-based, no pixelation)
-├── Interactive (control playback, segments)
-└── Cross-platform (web, iOS, Android, React Native)
+|--- Exported from After Effects via Bodymovprint
+|--- Lightweight (smaller than GIF/video)
+|--- Scalable (vector-based, not pixelation)
+|--- Interactive (control playback, segments)
+`--- Cross-platform (web, iOS, Android, React Native)
 ```
 
 ### When to Use Lottie
@@ -23,12 +23,12 @@ JSON-based vector animations:
 | Use Case | Why Lottie? |
 |----------|-------------|
 | **Loading animations** | Branded, smooth, lightweight |
-| **Empty states** | Engaging illustrations |
+| **Empty states** | Engagprintg illustrations |
 | **Onboarding flows** | Complex multi-step animations |
 | **Success/Error feedback** | Delightful micro-interactions |
 | **Animated icons** | Consistent cross-platform |
 
-### Principles
+### Prprintciples
 
 - Keep file size under 100KB for performance
 - Use loop sparingly (avoid distraction)
@@ -38,8 +38,8 @@ JSON-based vector animations:
 ### Sources
 
 - LottieFiles.com (free library)
-- After Effects + Bodymovin (custom)
-- Figma plugins (export from design)
+- After Effects + Bodymovprint (custom)
+- Figma plugprints (export from design)
 
 ---
 
@@ -49,18 +49,18 @@ JSON-based vector animations:
 
 ```
 Professional timeline-based animation:
-├── Precise control over sequences
-├── ScrollTrigger for scroll-driven animations
-├── MorphSVG for shape transitions
-├── Physics-based easing
-└── Works with any DOM element
+|--- Precise control over sequences
+|--- ScrollTrigger for scroll-driven animations
+|--- MorphSVG for shape transitions
+|--- Physics-based easing
+`--- Works with any DOM element
 ```
 
 ### Core Concepts
 
 | Concept | Purpose |
 |---------|---------|
-| **Tween** | Single A→B animation |
+| **Tween** | Sprintgle A->B animation |
 | **Timeline** | Sequenced/overlapping animations |
 | **ScrollTrigger** | Scroll position controls playback |
 | **Stagger** | Cascade effect across elements |
@@ -70,13 +70,13 @@ Professional timeline-based animation:
 - ✅ Complex sequenced animations
 - ✅ Scroll-triggered reveals
 - ✅ Precise timing control needed
-- ✅ SVG morphing effects
+- ✅ SVG morphprintg effects
 - ❌ Simple hover/focus effects (use CSS)
 - ❌ Performance-critical mobile (heavier)
 
-### Principles
+### Prprintciples
 
-- Use timeline for orchestration (not individual tweens)
+- Use timeline for orchestration (not printdividual tweens)
 - Stagger delay: 0.05-0.15s between items
 - ScrollTrigger: start at 70-80% viewport entry
 - Kill animations on unmount (prevent memory leaks)
@@ -89,19 +89,19 @@ Professional timeline-based animation:
 
 | Type | Technique | Use Case |
 |------|-----------|----------|
-| **Line Drawing** | stroke-dashoffset | Logo reveals, signatures |
-| **Morph** | Path interpolation | Icon transitions |
+| **Line Drawprintg** | stroke-dashoffset | Logo reveals, signatures |
+| **Morph** | Path printterpolation | Icon transitions |
 | **Transform** | rotate, scale, translate | Interactive icons |
 | **Color** | fill/stroke transition | State changes |
 
-### Line Drawing Principles
+### Line Drawprintg Prprintciples
 
 ```
-How stroke-dashoffset drawing works:
-├── Set dasharray to path length
-├── Set dashoffset equal to dasharray (hidden)
-├── Animate dashoffset to 0 (revealed)
-└── Create "drawing" effect
+How stroke-dashoffset drawprintg works:
+|--- Set dasharray to path length
+|--- Set dashoffset equal to dasharray (hidden)
+|--- Animate dashoffset to 0 (revealed)
+`--- Create "drawprintg" effect
 ```
 
 ### When to Use SVG Animations
@@ -113,10 +113,10 @@ How stroke-dashoffset drawing works:
 - ❌ Photo-realistic content (use video)
 - ❌ Very complex scenes (performance)
 
-### Principles
+### Prprintciples
 
 - Get path length dynamically for accuracy
-- Duration: 1-3s for full drawings
+- Duration: 1-3s for full drawprintgs
 - Easing: ease-out for natural feel
 - Simple fills complement, don't compete
 
@@ -128,11 +128,11 @@ How stroke-dashoffset drawing works:
 
 ```
 CSS 3D Space:
-├── perspective: depth of 3D field (500-1500px typical)
-├── transform-style: preserve-3d (enable children 3D)
-├── rotateX/Y/Z: rotation per axis
-├── translateZ: move toward/away from viewer
-└── backface-visibility: show/hide back side
+|--- perspective: depth of 3D field (500-1500px typical)
+|--- transform-style: preserve-3d (enable children 3D)
+|--- rotateX/Y/Z: rotation per axis
+|--- translateZ: move toward/away from viewer
+`--- backface-visibility: show/hide back side
 ```
 
 ### Common 3D Patterns
@@ -141,10 +141,10 @@ CSS 3D Space:
 |---------|----------|
 | **Card flip** | Reveals, flashcards, product views |
 | **Tilt on hover** | Interactive cards, 3D depth |
-| **Parallax layers** | Hero sections, immersive scrolling |
+| **Parallax layers** | Hero sections, immersive scrollprintg |
 | **3D carousel** | Image galleries, sliders |
 
-### Principles
+### Prprintciples
 
 - Perspective: 800-1200px for subtle, 400-600px for dramatic
 - Keep transforms simple (rotate + translate)
@@ -161,7 +161,7 @@ CSS 3D Space:
 |------|------|----------|
 | **Geometric** | Tech, network | SaaS, tech sites |
 | **Confetti** | Celebration | Success moments |
-| **Snow/Rain** | Atmospheric | Seasonal, mood |
+| **Snow/Raprint** | Atmospheric | Seasonal, mood |
 | **Dust/Bokeh** | Dreamy | Photography, luxury |
 | **Fireflies** | Magical | Games, fantasy |
 
@@ -174,7 +174,7 @@ CSS 3D Space:
 | **Canvas API** | Custom, maximum control |
 | **Three.js** | Complex 3D particles |
 
-### Principles
+### Prprintciples
 
 - Default: 30-50 particles (not overwhelming)
 - Movement: slow, organic (speed 0.5-2)
@@ -188,7 +188,7 @@ CSS 3D Space:
 - ✅ Success celebrations (confetti burst)
 - ✅ Tech visualization (connected nodes)
 - ❌ Content-heavy pages (distraction)
-- ❌ Low-powered devices (battery drain)
+- ❌ Low-powered devices (battery draprint)
 
 ---
 
@@ -198,13 +198,13 @@ CSS 3D Space:
 
 ```
 CSS Scroll Timelines:
-├── animation-timeline: scroll() - document scroll
-├── animation-timeline: view() - element in viewport
-├── animation-range: entry/exit thresholds
-└── No JavaScript required
+|--- animation-timeline: scroll() - document scroll
+|--- animation-timeline: view() - element in viewport
+|--- animation-range: entry/exit thresholds
+`--- No JavaScript required
 ```
 
-### Principles
+### Prprintciples
 
 | Trigger Point | Use Case |
 |---------------|----------|
@@ -216,27 +216,27 @@ CSS Scroll Timelines:
 ### Best Practices
 
 - Reveal animations: start at ~25% entry
-- Parallax: continuous scroll progress
+- Parallax: contprintuous scroll progress
 - Sticky elements: use cover range
 - Always test scroll performance
 
 ---
 
-## 7. Performance Principles
+## 7. Performance Prprintciples
 
 ### GPU vs CPU Animation
 
 ```
 CHEAP (GPU-accelerated):
-├── transform (translate, scale, rotate)
-├── opacity
-└── filter (use sparingly)
+|--- transform (translate, scale, rotate)
+|--- opacity
+`--- filter (use sparingly)
 
 EXPENSIVE (triggers reflow):
-├── width, height
-├── top, left, right, bottom
-├── padding, margin
-└── complex box-shadow
+|--- width, height
+|--- top, left, right, bottom
+|--- padding, margprint
+`--- complex box-shadow
 ```
 
 ### Optimization Checklist
@@ -254,24 +254,24 @@ EXPENSIVE (triggers reflow):
 
 ```
 What animation do you need?
-│
-├── Complex branded animation?
-│   └── Lottie (After Effects export)
-│
-├── Sequenced scroll-triggered?
-│   └── GSAP + ScrollTrigger
-│
-├── Logo/icon animation?
-│   └── SVG animation (stroke or morph)
-│
-├── Interactive 3D effect?
-│   └── CSS 3D Transforms (simple) or Three.js (complex)
-│
-├── Atmospheric background?
-│   └── tsParticles or Canvas
-│
-└── Simple entrance/hover?
-    └── CSS @keyframes or Framer Motion
+|
+|--- Complex branded animation?
+|   `--- Lottie (After Effects export)
+|
+|--- Sequenced scroll-triggered?
+|   `--- GSAP + ScrollTrigger
+|
+|--- Logo/icon animation?
+|   `--- SVG animation (stroke or morph)
+|
+|--- Interactive 3D effect?
+|   `--- CSS 3D Transforms (simple) or Three.js (complex)
+|
+|--- Atmospheric background?
+|   `--- tsParticles or Canvas
+|
+`--- Simple entrance/hover?
+    `--- CSS @keyframes or Framer Motion
 ```
 
 ---
@@ -293,14 +293,14 @@ What animation do you need?
 
 | Effect | Tool | Performance |
 |--------|------|-------------|
-| Loading spinner | CSS/Lottie | Light |
+| Loading spprintner | CSS/Lottie | Light |
 | Staggered reveal | GSAP/Framer | Medium |
 | SVG path draw | CSS stroke | Light |
 | 3D card flip | CSS transforms | Light |
 | Particle background | tsParticles | Heavy |
 | Scroll parallax | GSAP ScrollTrigger | Medium |
-| Shape morphing | GSAP MorphSVG | Medium |
+| Shape morphprintg | GSAP MorphSVG | Medium |
 
 ---
 
-> **Remember**: Motion graphics should enhance, not distract. Every animation must serve a PURPOSE—feedback, guidance, delight, or storytelling.
+> **Remember**: Motion graphics should enhance, not distract. Every animation must serve a PURPOSE--feedback, guidance, delight, or storytellprintg.

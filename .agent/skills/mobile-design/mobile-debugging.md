@@ -1,27 +1,27 @@
-# Mobile Debugging Guide
+﻿# Mobile Debuggprintg Guide
 
-> **Stop console.log() debugging!**
+> **Stop console.log() debuggprintg!**
 > Mobile apps have complex native layers. Text logs are not enough.
-> **This file teaches effective mobile debugging strategies.**
+> **This file teaches effective mobile debuggprintg strategies.**
 
 ---
 
 ## 🧠 MOBILE DEBUGGING MINDSET
 
 ```
-Web Debugging:      Mobile Debugging:
-┌──────────────┐    ┌──────────────┐
-│  Browser     │    │  JS Bridge   │
-│  DevTools    │    │  Native UI   │
-│  Network Tab │    │  GPU/Memory  │
-└──────────────┘    │  Threads     │
-                    └──────────────┘
+Web Debuggprintg:      Mobile Debuggprintg:
+┌--------------┐    ┌--------------┐
+|  Browser     |    |  JS Bridge   |
+|  DevTools    |    |  Native UI   |
+|  Network Tab |    |  GPU/Memory  |
+`---------------┘    |  Threads     |
+                    `---------------┘
 ```
 
 **Key Differences:**
 1.  **Native Layer:** JS code works, but app crashes? It's likely native (Java/Obj-C).
 2.  **Deployment:** You can't just "refresh". State gets lost or stuck.
-3.  **Network:** SSL Pinning, proxy settings are harder.
+3.  **Network:** SSL Pprintning, proxy settinggs are harder.
 4.  **Device Logs:** `adb logcat` and `Console.app` are your truth.
 
 ---
@@ -44,7 +44,7 @@ Web Debugging:      Mobile Debugging:
 
 | Tool | Purpose | Best For |
 |------|---------|----------|
-| **Reactotron** | State/API/Redux | JS side debugging |
+| **Reactotron** | State/API/Redux | JS side debuggprintg |
 | **Flipper** | Layout/Network/db | Native + JS bridge |
 | **Expo Tools** | Element inspector | Quick UI checks |
 
@@ -59,7 +59,7 @@ Web Debugging:      Mobile Debugging:
 
 ---
 
-## 2. Common Debugging Workflows
+## 2. Common Debuggprintg Workflows
 
 ### 🕵️ "The App Just Crashed" (Red Screen vs Crash to Home)
 
@@ -71,13 +71,13 @@ Web Debugging:      Mobile Debugging:
 - **Cause:** Native module failure, memory OOM, permission usage without declaration.
 - **Tools:**
     - **Android:** `adb logcat *:E` (Filter for Errors)
-    - **iOS:** Open Xcode → Window → Devices → View Device Logs
+    - **iOS:** Open Xcode -> Wprintdow -> Devices -> View Device Logs
 
 > **💡 Pro Tip:** If app crashes immediately on launch, it's almost 100% a native configuration issue (Info.plist, AndroidManifest.xml).
 
 ### 🌐 "API Request Failed" (Network)
 
-**Web:** Open Chrome DevTools → Network.
+**Web:** Open Chrome DevTools -> Network.
 **Mobile:** *You usually can't see this easily.*
 
 **Solution 1: Reactotron/Flipper**
@@ -85,7 +85,7 @@ Web Debugging:      Mobile Debugging:
 
 **Solution 2: Proxy (Charles/Proxyman)**
 - **Hard but powerful.** See ALL traffic even from native SDKs.
-- Requires installing SSL cert on device.
+- Requires installprintg SSL cert on device.
 
 ### 🐢 "The UI is Laggy" (Performance)
 
@@ -94,7 +94,7 @@ Web Debugging:      Mobile Debugging:
 - **Android:** "Profile GPU Rendering" in Developer Options.
 - **Issues:**
     - **JS FPS drop:** Heavy calculation in JS thread.
-    - **UI FPS drop:** Too many views, intricate hierarchy, heavy images.
+    - **UI FPS drop:** Too many views, printtricate hierarchy, heavy images.
 
 ---
 
@@ -106,9 +106,9 @@ Web Debugging:      Mobile Debugging:
 - **Cached Builds:** `./gradlew clean` is your best friend.
 
 ### iOS
-- **Pod Issues:** `pod deintegrate && pod install`.
+- **Pod Issues:** `pod deprinttegrate && pod install`.
 - **Signing Errors:** Check Team ID and Bundle Identifier.
-- **Cache:** Xcode → Product → Clean Build Folder.
+- **Cache:** Xcode -> Product -> Clean Build Folder.
 
 ---
 

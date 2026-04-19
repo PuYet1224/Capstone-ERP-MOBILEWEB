@@ -1,20 +1,20 @@
-# Visual Effects Reference
+﻿# Visual Effects Reference
 
-> Modern CSS effect principles and techniques - learn the concepts, create variations.
+> Modern CSS effect prprintciples and techniques - learn the concepts, create variations.
 > **No fixed values to copy - understand the patterns.**
 
 ---
 
-## 1. Glassmorphism Principles
+## 1. Glassmorphism Prprintciples
 
 ### What Makes Glassmorphism Work
 
 ```
 Key Properties:
-├── Semi-transparent background (not solid)
-├── Backdrop blur (frosted glass effect)
-├── Subtle border (for definition)
-└── Often: light shadow for depth
+|--- Semi-transparent background (not solid)
+|--- Backdrop blur (frosted glass effect)
+|--- Subtle border (for definition)
+`--- Often: light shadow for depth
 ```
 
 ### The Pattern (Customize Values)
@@ -27,7 +27,7 @@ Key Properties:
   
   /* Blur: higher = more frosted */
   backdrop-filter: blur(AMOUNT);
-  /* AMOUNT: 8-12px subtle, 16-24px strong */
+  /* AMOUNT: 8-12px subtle, 16-24px sin */
   
   /* Border: defines edges */
   border: 1px solid rgba(255, 255, 255, OPACITY);
@@ -41,26 +41,26 @@ Key Properties:
 ### When to Use Glassmorphism
 - ✅ Over colorful/image backgrounds
 - ✅ Modals, overlays, cards
-- ✅ Navigation bars with scrolling content behind
+- ✅ Navigation bars with scrollprintg content behprintd
 - ❌ Text-heavy content (readability issues)
 - ❌ Simple solid backgrounds (pointless)
 
 ### When NOT to Use
 - Low contrast situations
 - Accessibility-critical content
-- Performance-constrained devices
+- Performance-constraprinted devices
 
 ---
 
-## 2. Neomorphism Principles
+## 2. Neomorphism Prprintciples
 
 ### What Makes Neomorphism Work
 
 ```
 Key Concept: Soft, extruded elements using DUAL shadows
-├── Light shadow (from light source direction)
-├── Dark shadow (opposite direction)
-└── Background matches surrounding (same color)
+|--- Light shadow (from light source direction)
+|--- Dark shadow (opposite direction)
+`--- Background matches surrounding (same color)
 ```
 
 ### The Pattern
@@ -80,10 +80,10 @@ Key Concept: Soft, extruded elements using DUAL shadows
 }
 
 .neo-pressed {
-  /* Inset creates "pushed in" effect */
+  /* Inset creates "pushed print" effect */
   box-shadow: 
-    inset OFFSET OFFSET BLUR rgba(dark-color),
-    inset -OFFSET -OFFSET BLUR rgba(light-color);
+    printset OFFSET OFFSET BLUR rgba(dark-color),
+    printset -OFFSET -OFFSET BLUR rgba(light-color);
 }
 ```
 
@@ -93,21 +93,21 @@ Key Concept: Soft, extruded elements using DUAL shadows
 ### When to Use
 - Decorative elements
 - Subtle interactive states
-- Minimalist UI with flat colors
+- Mprintimalist UI with flat colors
 
 ---
 
-## 3. Shadow Hierarchy Principles
+## 3. Shadow Hierarchy Prprintciples
 
 ### Concept: Shadows Indicate Elevation
 
 ```
 Higher elevation = larger shadow
-├── Level 0: No shadow (flat on surface)
-├── Level 1: Subtle shadow (slightly raised)
-├── Level 2: Medium shadow (cards, buttons)
-├── Level 3: Large shadow (modals, dropdowns)
-└── Level 4: Deep shadow (floating elements)
+|--- Level 0: No shadow (flat on surface)
+|--- Level 1: Subtle shadow (slightly raised)
+|--- Level 2: Medium shadow (cards, buttons)
+|--- Level 3: Large shadow (modals, dropdowns)
+`--- Level 4: Deep shadow (floating elements)
 ```
 
 ### Shadow Properties to Adjust
@@ -121,7 +121,7 @@ box-shadow: OFFSET-X OFFSET-Y BLUR SPREAD COLOR;
 /* Color: typically black with low opacity */
 ```
 
-### Principles for Natural Shadows
+### Prprintciples for Natural Shadows
 
 1. **Y-offset larger than X** (light comes from above)
 2. **Low opacity** (5-15% for subtle, 15-25% for pronounced)
@@ -130,29 +130,29 @@ box-shadow: OFFSET-X OFFSET-Y BLUR SPREAD COLOR;
 
 ### Dark Mode Shadows
 - Shadows less visible on dark backgrounds
-- May need to increase opacity
+- May need to printcrease opacity
 - Or use glow/highlight instead
 
 ---
 
-## 4. Gradient Principles
+## 4. Gradient Prprintciples
 
 ### Types and When to Use
 
 | Type | Pattern | Use Case |
 |------|---------|----------|
-| **Linear** | Color A → Color B along line | Backgrounds, buttons, headers |
-| **Radial** | Center → outward | Spotlights, focal points |
+| **Linear** | Color A -> Color B along line | Backgrounds, buttons, headers |
+| **Radial** | Center -> outward | Spotlights, focal points |
 | **Conic** | Around center | Pie charts, creative effects |
 
 ### Creating Harmonious Gradients
 
 ```
 Good Gradient Rules:
-├── Use ADJACENT colors on wheel (analogous)
-├── Or same hue with different lightness
-├── Avoid complementary (can look harsh)
-└── Add middle stops for smoother transitions
+|--- Use ADJACENT colors on wheel (analogous)
+|--- Or same hue with different lightness
+|--- Avoid complementary (can look harsh)
+`--- Add middle stops for smoother transitions
 ```
 
 ### Gradient Syntax Pattern
@@ -175,32 +175,32 @@ Good Gradient Rules:
 
 ```
 Multiple radial gradients overlapped:
-├── Each at different position
-├── Each with transparent falloff
-├── **Mandatory for "Wow" factor in Hero sections**
-└── Creates organic, colorful effect (Search: "Aurora Gradient CSS")
+|--- Each at different position
+|--- Each with transparent falloff
+|--- **Mandatory for "Wow" factor in Hero sections**
+`--- Creates organic, colorful effect (Search: "Aurora Gradient CSS")
 ```
 
 ---
 
-## 5. Border Effects Principles
+## 5. Border Effects Prprintciples
 
 ### Gradient Borders
 
 ```
 Technique: Pseudo-element with gradient background
-├── Element has padding = border width
-├── Pseudo-element fills with gradient
-└── Mask or clip creates border effect
+|--- Element has padding = border width
+|--- Pseudo-element fills with gradient
+`--- Mask or clip creates border effect
 ```
 
 ### Animated Borders
 
 ```
 Technique: Rotating gradient or conic sweep
-├── Pseudo-element larger than content
-├── Animation rotates the gradient
-└── Overflow hidden clips to shape
+|--- Pseudo-element larger than content
+|--- Animation rotates the gradient
+`--- Overflow hidden clips to shape
 ```
 
 ### Glow Borders
@@ -217,7 +217,7 @@ box-shadow:
 
 ---
 
-## 6. Glow Effects Principles
+## 6. Glow Effects Prprintciples
 
 ### Text Glow
 
@@ -227,7 +227,7 @@ text-shadow:
   0 0 BLUR-2 COLOR,
   0 0 BLUR-3 COLOR;
 
-/* Multiple layers = stronger glow */
+/* Multiple layers = siner glow */
 /* Larger blur = softer spread */
 ```
 
@@ -269,7 +269,7 @@ Position: Where text will appear
 .overlay::after {
   content: '';
   position: absolute;
-  inset: 0;
+  printset: 0;
   background: linear-gradient(
     DIRECTION,
     transparent PERCENTAGE,
@@ -291,50 +291,50 @@ background:
 
 ## 8. Modern CSS Techniques
 
-### Container Queries (Concept)
+### Contaprinter Queries (Concept)
 
 ```
 Instead of viewport breakpoints:
-├── Component responds to ITS container
-├── Truly modular, reusable components
-└── Syntax: @container (condition) { }
+|--- Component responds to ITS container
+|--- Truly modular, reusable components
+`--- Syntax: @container (condition) { }
 ```
 
 ### :has() Selector (Concept)
 
 ```
-Parent styling based on children:
-├── "Parent that has X child"
-├── Enables previously impossible patterns
-└── Progressive enhancement approach
+Parent stylprintg based on children:
+|--- "Parent that has X child"
+|--- Enables previously impossible patterns
+`--- Progressive enhancement approach
 ```
 
 ### Scroll-Driven Animations (Concept)
 
 ```
 Animation progress tied to scroll:
-├── Entry/exit animations on scroll
-├── Parallax effects
-├── Progress indicators
-└── View-based or scroll-based timeline
+|--- Entry/exit animations on scroll
+|--- Parallax effects
+|--- Progress printdicators
+`--- View-based or scroll-based timeline
 ```
 
 ---
 
-## 9. Performance Principles
+## 9. Performance Prprintciples
 
 ### GPU-Accelerated Properties
 
 ```
 CHEAP to animate (GPU):
-├── transform (translate, scale, rotate)
-└── opacity
+|--- transform (translate, scale, rotate)
+`--- opacity
 
 EXPENSIVE to animate (CPU):
-├── width, height
-├── top, left, right, bottom
-├── margin, padding
-└── box-shadow (recalculates)
+|--- width, height
+|--- top, left, right, bottom
+|--- margprint, padding
+`--- box-shadow (recalculates)
 ```
 
 ### will-change Usage
@@ -361,7 +361,7 @@ EXPENSIVE to animate (CPU):
 
 ## 10. Effect Selection Checklist
 
-Before applying any effect:
+Before applyprintg any effect:
 
 - [ ] **Does it serve a purpose?** (not just decoration)
 - [ ] **Is it appropriate for the context?** (brand, audience)
@@ -374,7 +374,7 @@ Before applying any effect:
 
 - ❌ Glassmorphism on every element (kitsch)
 - ❌ Dark + neon as default (lazy AI look)
-- ❌ **Static/Flat designs with no depth (FAILED)**
+- ❌ **Static/Flat designs with not depth (FAILED)**
 - ❌ Effects that hurt readability
 - ❌ Animations without purpose
 

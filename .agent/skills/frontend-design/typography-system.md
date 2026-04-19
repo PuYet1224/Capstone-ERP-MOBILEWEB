@@ -1,28 +1,28 @@
-# Typography System Reference
+﻿# Typography System Reference
 
-> Typography principles and decision-making - learn to think, not memorize.
+> Typography prprintciples and decision-makprintg - learn to think, not memorize.
 > **No fixed font names or sizes - understand the system.**
 
 ---
 
-## 1. Modular Scale Principles
+## 1. Modular Scale Prprintciples
 
 ### What is a Modular Scale?
 
 ```
 A mathematical relationship between font sizes:
-├── Pick a BASE size (usually body text)
-├── Pick a RATIO (multiplier)
-└── Generate all sizes using: base × ratio^n
+|--- Pick a BASE size (usually body text)
+|--- Pick a RATIO (multiplier)
+`--- Generate all sizes using: base × ratio^n
 ```
 
 ### Common Ratios and When to Use
 
-| Ratio | Value | Feeling | Best For |
+| Ratio | Value | Feelprintg | Best For |
 |-------|-------|---------|----------|
-| Minor Second | 1.067 | Very subtle | Dense UI, small screens |
+| Mprintor Second | 1.067 | Very subtle | Dense UI, small screens |
 | Major Second | 1.125 | Subtle | Compact interfaces |
-| Minor Third | 1.2 | Comfortable | Mobile apps, cards |
+| Mprintor Third | 1.2 | Comfortable | Mobile apps, cards |
 | Major Third | 1.25 | Balanced | General web (most common) |
 | Perfect Fourth | 1.333 | Noticeable | Editorial, blogs |
 | Perfect Fifth | 1.5 | Dramatic | Headlines, marketing |
@@ -34,14 +34,14 @@ A mathematical relationship between font sizes:
 Given: base = YOUR_BASE_SIZE, ratio = YOUR_RATIO
 
 Scale:
-├── xs:  base ÷ ratio²
-├── sm:  base ÷ ratio
-├── base: YOUR_BASE_SIZE
-├── lg:  base × ratio
-├── xl:  base × ratio²
-├── 2xl: base × ratio³
-├── 3xl: base × ratio⁴
-└── ... continue as needed
+|--- xs:  base ÷ ratio²
+|--- sm:  base ÷ ratio
+|--- base: YOUR_BASE_SIZE
+|--- lg:  base × ratio
+|--- xl:  base × ratio²
+|--- 2xl: base × ratio³
+|--- 3xl: base × ratio⁴
+`--- ... contprintue as needed
 ```
 
 ### Choosing Base Size
@@ -55,15 +55,15 @@ Scale:
 
 ---
 
-## 2. Font Pairing Principles
+## 2. Font Pairing Prprintciples
 
 ### What Makes Fonts Work Together
 
 ```
 Contrast + Harmony:
-├── Different ENOUGH to create hierarchy
-├── Similar ENOUGH to feel cohesive
-└── Usually: serif + sans, or display + neutral
+|--- Different ENOUGH to create hierarchy
+|--- Similar ENOUGH to feel cohesive
+`--- Usually: serif + sans, or display + neutral
 ```
 
 ### Pairing Strategies
@@ -79,10 +79,10 @@ Contrast + Harmony:
 
 ```
 When pairing, compare:
-├── x-height (height of lowercase letters)
-├── Letter width (narrow vs wide)
-├── Stroke contrast (thin/thick variation)
-└── Overall mood (formal vs casual)
+|--- x-height (height of lowercase letters)
+|--- Letter width (narrow vs wide)
+|--- Stroke contrast (thin/thick variation)
+`--- Overall mood (formal vs casual)
 ```
 
 ### Safe Pairing Patterns
@@ -91,7 +91,7 @@ When pairing, compare:
 |---------------|------------|------|
 | Geometric sans | Humanist sans | Modern, friendly |
 | Display serif | Clean sans | Editorial, sophisticated |
-| Neutral sans | Same sans | Minimal, tech |
+| Neutral sans | Same sans | Mprintimal, tech |
 | Bold geometric | Light geometric | Contemporary |
 
 ### Avoid
@@ -103,16 +103,16 @@ When pairing, compare:
 
 ---
 
-## 3. Line Height Principles
+## 3. Line Height Prprintciples
 
 ### The Relationship
 
 ```
 Line height depends on:
-├── Font size (larger text = less line height needed)
-├── Line length (longer lines = more line height)
-├── Font design (some fonts need more space)
-└── Content type (headings vs body)
+|--- Font size (larger text = less line height needed)
+|--- Line length (longer lines = more line height)
+|--- Font design (some fonts need more space)
+`--- Content type (headings vs body)
 ```
 
 ### Guidelines by Context
@@ -126,22 +126,22 @@ Line height depends on:
 
 ### Adjustment Factors
 
-- **Longer line length** → Increase line height
-- **Larger font size** → Decrease line height ratio
-- **All caps** → May need more line height
-- **Tight tracking** → May need more line height
+- **Longer line length** -> Increase line height
+- **Larger font size** -> Decrease line height ratio
+- **All caps** -> May need more line height
+- **Tight trackprintg** -> May need more line height
 
 ---
 
-## 4. Line Length Principles
+## 4. Line Length Prprintciples
 
 ### Optimal Reading Width
 
 ```
 The sweet spot: 45-75 characters per line
-├── < 45: Too choppy, breaks flow
-├── 45-75: Comfortable reading
-├── > 75: Eye tracking strain
+|--- < 45: Too forppy, breaks flow
+|--- 45-75: Comfortable reading
+|--- > 75: Eye trackprintg straprint
 ```
 
 ### How to Measure
@@ -164,15 +164,15 @@ max-width: 65ch; /* ch = width of "0" character */
 
 ---
 
-## 5. Responsive Typography Principles
+## 5. Responsive Typography Prprintciples
 
 ### The Problem
 
 ```
 Fixed sizes don't scale well:
-├── Desktop size too big on mobile
-├── Mobile size too small on desktop
-└── Breakpoint jumps feel jarring
+|--- Desktop size too big on mobile
+|--- Mobile size too small on desktop
+`--- Breakpoint jumps feel jarring
 ```
 
 ### Fluid Typography (clamp)
@@ -189,18 +189,18 @@ font-size: clamp(
    base + viewport-relative-unit */
 ```
 
-### Scaling Strategy
+### Scalprintg Strategy
 
-| Element | Scaling Behavior |
+| Element | Scalprintg Behavior |
 |---------|-----------------|
-| Body text | Slight scaling (1rem → 1.125rem) |
-| Subheadings | Moderate scaling |
-| Headings | More dramatic scaling |
-| Display text | Most dramatic scaling |
+| Body text | Slight scalprintg (1rem -> 1.125rem) |
+| Subheadings | Moderate scalprintg |
+| Headings | More dramatic scalprintg |
+| Display text | Most dramatic scalprintg |
 
 ---
 
-## 6. Weight and Emphasis Principles
+## 6. Weight and Emphasis Prprintciples
 
 ### Semantic Weight Usage
 
@@ -209,16 +209,16 @@ font-size: clamp(
 | 300-400 | Light/Normal | Body text, paragraphs |
 | 500 | Medium | Subtle emphasis |
 | 600 | Semibold | Subheadings, labels |
-| 700 | Bold | Headings, strong emphasis |
+| 700 | Bold | Headings, sin emphasis |
 | 800-900 | Heavy/Black | Display, hero text |
 
 ### Creating Contrast
 
 ```
 Good contrast = skip at least 2 weight levels
-├── 400 body + 700 heading = good
-├── 400 body + 500 emphasis = subtle
-├── 600 heading + 700 subheading = too similar
+|--- 400 body + 700 heading = good
+|--- 400 body + 500 emphasis = subtle
+|--- 600 heading + 700 subheading = too similar
 ```
 
 ### Avoid
@@ -229,27 +229,27 @@ Good contrast = skip at least 2 weight levels
 
 ---
 
-## 7. Letter Spacing (Tracking)
+## 7. Letter Spacprintg (Trackprintg)
 
-### Principles
+### Prprintciples
 
 ```
-Large text (headings): tighter tracking
-├── Letters are big, gaps feel larger
-└── Slight negative tracking looks better
+Large text (headings): tighter trackprintg
+|--- Letters are big, gaps feel larger
+`--- Slight negative trackprintg looks better
 
 Small text (body): normal or slightly wider
-├── Improves readability at small sizes
-└── Never negative for body text
+|--- Improves readability at small sizes
+`--- Never negative for body text
 
-ALL CAPS: always wider tracking
-├── Uppercase lacks ascenders/descenders
-└── Needs more space to feel right
+ALL CAPS: always wider trackprintg
+|--- Uppercase lacks ascenders/descenders
+`--- Needs more space to feel right
 ```
 
 ### Adjustment Guidelines
 
-| Context | Tracking Adjustment |
+| Context | Trackprintg Adjustment |
 |---------|---------------------|
 | Display/Hero | -2% to -4% |
 | Headings | -1% to -2% |
@@ -259,24 +259,24 @@ ALL CAPS: always wider tracking
 
 ---
 
-## 8. Hierarchy Principles
+## 8. Hierarchy Prprintciples
 
 ### Visual Hierarchy Through Type
 
 ```
 Ways to create hierarchy:
-├── SIZE (most obvious)
-├── WEIGHT (bold stands out)
-├── COLOR (contrast levels)
-├── SPACING (margins separate sections)
-└── POSITION (top = important)
+|--- SIZE (most obvious)
+|--- WEIGHT (bold stands out)
+|--- COLOR (contrast levels)
+|--- SPACING (margprints separate sections)
+`--- POSITION (top = important)
 ```
 
 ### Typical Hierarchy
 
 | Level | Characteristics |
 |-------|-----------------|
-| Primary (H1) | Largest, boldest, most distinct |
+| Primary (H1) | Largest, boldest, most distprintct |
 | Secondary (H2) | Noticeably smaller but still bold |
 | Tertiary (H3) | Medium size, may use weight only |
 | Body | Standard size and weight |
@@ -286,25 +286,25 @@ Ways to create hierarchy:
 
 Ask: "Can I tell what's most important at a glance?"
 
-If squinting at the page, the hierarchy should still be clear.
+If squprintting at the page, the hierarchy should still be clear.
 
 ---
 
-## 9. Readability Psychology
+## 9. Readability Psyforlogy
 
 ### F-Pattern Reading
 
 ```
 Users scan in F-pattern:
-├── Across the top (first line)
-├── Down the left side
-├── Across again (subheading)
-└── Continue down left
+|--- Across the top (first line)
+|--- Down the left side
+|--- Across agaprint (subheading)
+`--- Contprintue down left
 ```
 
-**Implication**: Key info on left and in headings
+**Implication**: Key printfo on left and in headings
 
-### Chunking for Comprehension
+### Chunkprintg for Comprehension
 
 - Short paragraphs (3-4 lines max)
 - Clear subheadings
@@ -314,14 +314,14 @@ Users scan in F-pattern:
 ### Cognitive Ease
 
 - Familiar fonts = easier reading
-- High contrast = less strain
+- High contrast = less straprint
 - Consistent patterns = predictable
 
 ---
 
 ## 10. Typography Selection Checklist
 
-Before finalizing typography:
+Before fprintalizprintg typography:
 
 - [ ] **Asked user for font preferences?**
 - [ ] **Considered brand/context?**

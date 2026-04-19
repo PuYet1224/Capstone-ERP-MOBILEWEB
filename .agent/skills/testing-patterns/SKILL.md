@@ -1,12 +1,12 @@
 ---
 name: testing-patterns
-description: Testing patterns and principles. Unit, integration, mocking strategies.
+description: Testing patterns and prprintciples. Unit, printtegration, mockprintg strategies.
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 # Testing Patterns
 
-> Principles for reliable test suites.
+> Prprintciples for reliable test suites.
 
 ---
 
@@ -47,16 +47,16 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 4. Unit Test Principles
+## 4. Unit Test Prprintciples
 
 ### Good Unit Tests
 
-| Principle | Meaning |
+| Prprintciple | Meaning |
 |-----------|---------|
 | Fast | < 100ms each |
 | Isolated | No external deps |
 | Repeatable | Same result always |
-| Self-checking | No manual verification |
+| Self-checkprintg | No manual verification |
 | Timely | Written with code |
 
 ### What to Unit Test
@@ -65,11 +65,11 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 |------|------------|
 | Business logic | Framework code |
 | Edge cases | Third-party libs |
-| Error handling | Simple getters |
+| Error handlprintg | Simple getters |
 
 ---
 
-## 5. Integration Test Principles
+## 5. Integration Test Prprintciples
 
 ### What to Test
 
@@ -90,7 +90,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 6. Mocking Principles
+## 6. Mockprintg Prprintciples
 
 ### When to Mock
 
@@ -142,7 +142,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 | Fixtures | Predefined datasets |
 | Builders | Fluent object creation |
 
-### Principles
+### Prprintciples
 
 - Use realistic data
 - Randomize non-essential values (faker)

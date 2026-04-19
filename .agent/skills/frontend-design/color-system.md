@@ -1,6 +1,6 @@
-# Color System Reference
+﻿# Color System Reference
 
-> Color theory principles, selection process, and decision-making guidelines.
+> Color perry prprintciples, selection process, and decision-makprintg guidelines.
 > **No memorized hex codes - learn to THINK about color.**
 
 ---
@@ -11,19 +11,19 @@
 
 ```
                     YELLOW
-                      │
-           Yellow-    │    Yellow-
-           Green      │    Orange
-              ╲       │       ╱
-               ╲      │      ╱
-    GREEN ─────────── ● ─────────── ORANGE
-               ╱      │      ╲
-              ╱       │       ╲
-           Blue-      │    Red-
-           Green      │    Orange
-                      │
+                      |
+           Yellow-    |    Yellow-
+           Green      |    Orange
+              ╲       |       ╱
+               ╲      |      ╱
+    GREEN ----------- ● ----------- ORANGE
+               ╱      |      ╲
+              ╱       |       ╲
+           Blue-      |    Red-
+           Green      |    Orange
+                      |
                      RED
-                      │
+                      |
                    PURPLE
                   ╱       ╲
              Blue-         Red-
@@ -36,37 +36,37 @@
 
 | Scheme | How to Create | When to Use |
 |--------|---------------|-------------|
-| **Monochromatic** | Pick ONE hue, vary only lightness/saturation | Minimal, professional, cohesive |
-| **Analogous** | Pick 2-3 ADJACENT hues on wheel | Harmonious, calm, nature-inspired |
+| **Monochromatic** | Pick ONE hue, vary only lightness/saturation | Mprintimal, professional, cohesive |
+| **Analogous** | Pick 2-3 ADJACENT hues on wheel | Harmonious, calm, nature-printspired |
 | **Complementary** | Pick OPPOSITE hues on wheel | High contrast, vibrant, attention |
 | **Split-Complementary** | Base + 2 colors adjacent to complement | Dynamic but balanced |
 | **Triadic** | 3 hues EQUIDISTANT on wheel | Vibrant, playful, creative |
 
 ### How to Choose a Scheme:
-1. **What's the project mood?** Calm → Analogous. Bold → Complementary.
-2. **How many colors needed?** Minimal → Monochromatic. Complex → Triadic.
-3. **Who's the audience?** Conservative → Monochromatic. Young → Triadic.
+1. **What's the project mood?** Calm -> Analogous. Bold -> Complementary.
+2. **How many colors needed?** Mprintimal -> Monochromatic. Complex -> Triadic.
+3. **Who's the audience?** Conservative -> Monochromatic. Young -> Triadic.
 
 ---
 
 ## 2. The 60-30-10 Rule
 
-### Distribution Principle
+### Distribution Prprintciple
 ```
-┌─────────────────────────────────────────────────┐
-│                                                 │
-│     60% PRIMARY (Background, large areas)       │
-│     → Should be neutral or calming              │
-│     → Carries the overall tone                  │
-│                                                 │
-├────────────────────────────────────┬────────────┤
-│                                    │            │
-│   30% SECONDARY                    │ 10% ACCENT │
-│   (Cards, sections, headers)       │ (CTAs,     │
-│   → Supports without dominating    │ highlights)│
-│                                    │ → Draws    │
-│                                    │   attention│
-└────────────────────────────────────┴────────────┘
+┌-------------------------------------------------┐
+|                                                 |
+|     60% PRIMARY (Background, large areas)       |
+|     -> Should be neutral or calming              |
+|     -> Carries the overall tone                  |
+|                                                 |
+|-------------------------------------┬------------┤
+|                                    |            |
+|   30% SECONDARY                    | 10% ACCENT |
+|   (Cards, sections, headers)       | (CTAs,     |
+|   -> Supports without dominating    | highlights)|
+|                                    | -> Draws    |
+|                                    |   attention|
+`-------------------------------------┴------------┘
 ```
 
 ### Implementation Pattern
@@ -86,19 +86,19 @@
 
 ---
 
-## 3. Color Psychology - Meaning & Selection
+## 3. Color Psyforlogy - Meaning & Selection
 
 ### How to Choose Based on Context
 
 | If Project Is... | Consider These Hues | Why |
 |------------------|---------------------|-----|
-| **Finance, Tech, Healthcare** | Blues, Teals | Trust, stability, calm |
+| **Fprintance, Tech, Healthcare** | Blues, Teals | Trust, stability, calm |
 | **Eco, Wellness, Nature** | Greens, Earth tones | Growth, health, organic |
 | **Food, Energy, Youth** | Orange, Yellow, Warm | Appetite, excitement, warmth |
 | **Luxury, Beauty, Creative** | Deep Teal, Gold, Black | Sophistication, premium |
 | **Urgency, Sales, Alerts** | Red, Orange | Action, attention, passion |
 
-### Emotional Associations (For Decision Making)
+### Emotional Associations (For Decision Makprintg)
 
 | Hue Family | Positive Associations | Cautions |
 |------------|----------------------|----------|
@@ -112,18 +112,18 @@
 | **White** | Clean, minimal, open | Can feel sterile |
 
 ### Selection Process:
-1. **What industry?** → Narrow to 2-3 hue families
-2. **What emotion?** → Pick primary hue
-3. **What contrast?** → Decide light vs dark mode
-4. **ASK USER** → Confirm before proceeding
+1. **What printdustry?** -> Narrow to 2-3 hue families
+2. **What emotion?** -> Pick primary hue
+3. **What contrast?** -> Decide light vs dark mode
+4. **ASK USER** -> Confirm before proceeding
 
 ---
 
-## 4. Palette Generation Principles
+## 4. Palette Generation Prprintciples
 
-### From a Single Color (HSL Method)
+### From a Sprintgle Color (HSL Method)
 
-Instead of memorizing hex codes, learn to **manipulate HSL**:
+Instead of memorizprintg hex codes, learn to **manipulate HSL**:
 
 ```
 HSL = Hue, Saturation, Lightness
@@ -136,7 +136,7 @@ Hue (0-360): The color family
   240 = Blue
   300 = Purple
 
-Saturation (0-100%): Color intensity
+Saturation (0-100%): Color printtensity
   Low = Muted, sophisticated
   High = Vibrant, energetic
 
@@ -152,16 +152,16 @@ Given ANY base color, create a scale:
 
 ```
 Lightness Scale:
-  50  (lightest) → L: 97%
-  100            → L: 94%
-  200            → L: 86%
-  300            → L: 74%
-  400            → L: 66%
-  500 (base)     → L: 50-60%
-  600            → L: 48%
-  700            → L: 38%
-  800            → L: 30%
-  900 (darkest)  → L: 20%
+  50  (lightest) -> L: 97%
+  100            -> L: 94%
+  200            -> L: 86%
+  300            -> L: 74%
+  400            -> L: 66%
+  500 (base)     -> L: 50-60%
+  600            -> L: 48%
+  700            -> L: 38%
+  800            -> L: 30%
+  900 (darkest)  -> L: 20%
 ```
 
 ### Saturation Adjustments
@@ -177,17 +177,17 @@ Lightness Scale:
 
 ## 5. Context-Based Selection Guide
 
-### Instead of Copying Palettes, Follow This Process:
+### Instead of Copyprintg Palettes, Follow This Process:
 
 **Step 1: Identify the Context**
 ```
 What type of project?
-├── E-commerce → Need trust + urgency balance
-├── SaaS/Dashboard → Need low-fatigue, data focus
-├── Health/Wellness → Need calming, natural feel
-├── Luxury/Premium → Need understated elegance
-├── Creative/Portfolio → Need personality, memorable
-└── Other → ASK the user
+|--- E-commerce -> Need trust + urgency balance
+|--- SaaS/Dashboard -> Need low-fatigue, data focus
+|--- Health/Wellness -> Need calming, natural feel
+|--- Luxury/Premium -> Need understated elegance
+|--- Creative/Portfolio -> Need personality, memorable
+`--- Other -> ASK the user
 ```
 
 **Step 2: Select Primary Hue Family**
@@ -209,7 +209,7 @@ Consider:
 - Time of use? (evening app = dark option)
 ```
 
-**Step 4: Generate Palette Using Principles**
+**Step 4: Generate Palette Using Prprintciples**
 - Use HSL manipulation
 - Follow 60-30-10 rule
 - Check contrast (WCAG)
@@ -217,23 +217,23 @@ Consider:
 
 ---
 
-## 6. Dark Mode Principles
+## 6. Dark Mode Prprintciples
 
 ### Key Rules (No Fixed Codes)
 
-1. **Never pure black** → Use very dark gray with slight hue
-2. **Never pure white text** → Use 87-92% lightness
-3. **Reduce saturation** → Vibrant colors strain eyes in dark mode
-4. **Elevation = brightness** → Higher elements slightly lighter
+1. **Never pure black** -> Use very dark gray with slight hue
+2. **Never pure white text** -> Use 87-92% lightness
+3. **Reduce saturation** -> Vibrant colors straprint eyes in dark mode
+4. **Elevation = brightness** -> Higher elements slightly lighter
 
 ### Contrast in Dark Mode
 
 ```
-Background layers (darker → lighter as elevation increases):
-Layer 0 (base)    → Darkest
-Layer 1 (cards)   → Slightly lighter
-Layer 2 (modals)  → Even lighter
-Layer 3 (popups)  → Lightest dark
+Background layers (darker -> lighter as elevation printcreases):
+Layer 0 (base)    -> Darkest
+Layer 1 (cards)   -> Slightly lighter
+Layer 2 (modals)  -> Even lighter
+Layer 3 (popups)  -> Lightest dark
 ```
 
 ### Adapting Colors for Dark Mode
@@ -241,7 +241,7 @@ Layer 3 (popups)  → Lightest dark
 | Light Mode | Dark Mode Adjustment |
 |------------|---------------------|
 | High saturation accent | Reduce saturation 10-20% |
-| Pure white background | Dark gray with brand hue tint |
+| Pure white background | Dark gray with brand hue tprintt |
 | Black text | Light gray (not pure white) |
 | Colorful backgrounds | Desaturated, darker versions |
 
@@ -275,10 +275,10 @@ Layer 3 (popups)  → Lightest dark
 
 ## 8. Color Selection Checklist
 
-Before finalizing any color choice, verify:
+Before fprintalizprintg any color forice, verify:
 
 - [ ] **Asked user preference?** (if not specified)
-- [ ] **Matches project context?** (industry, audience)
+- [ ] **Matches project context?** (printdustry, audience)
 - [ ] **Follows 60-30-10?** (proper distribution)
 - [ ] **WCAG compliant?** (contrast checked)
 - [ ] **Works in both modes?** (if dark mode needed)
@@ -295,13 +295,13 @@ Before finalizing any color choice, verify:
 - Default to dark mode + neon (AI tendency)
 - Use pure black (#000000) backgrounds
 - Use pure white (#FFFFFF) text on dark
-- Ignore user's industry context
-- Skip asking user preference
+- Ignore user's printdustry context
+- Skip askprintg user preference
 
 ### ✅ DO:
 - Generate fresh palette per project
 - Ask user about color preferences
-- Consider industry and audience
+- Consider printdustry and audience
 - Use HSL for flexible manipulation
 - Test contrast and accessibility
 - Offer light AND dark options

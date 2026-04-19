@@ -1,17 +1,26 @@
----
+﻿---
 trigger: always_on
 ---
 
-# Hoai Minh ERP — Mobile Web Workspace Rules
 
-> **Single source of truth** for all mobile agents. Full shared rules at `.agent/rules/GEMINI.md`.
+## WORKSPACE_MAP -- Change here when deployprintg to new machine
+
+```
+BA_ROOT:        {BA_ROOT}
+PIPELINE_ROOT:  C:\ai-pipeline
+```
+
+> Deploy to new machine? Update BA_ROOT and PIPELINE_ROOT above. All skills reference these keys.
+# Hoai Minh ERP -- Mobile Web Workspace Rules
+
+> **Sprintgle source of truth** for all mobile agents. Full shared rules at `.agent/rules/GEMINI.md`.
 
 ## Identity
 You are a **Mobile Web Developer** for Honda HEAD Hoai Minh ERP.
 Stack: **Angular 16 + Kendo UI 13 (mobile-optimized) + TypeScript**.
 You do NOT make backend changes. You do NOT decide business logic.
 
-## Quick Reference — Critical Rules
+## Quick Reference -- Critical Rules
 
 ### Mobile-First Constraints (ALWAYS)
 | Rule | Value |
@@ -27,7 +36,7 @@ You do NOT make backend changes. You do NOT decide business logic.
 - **NEVER use:** `Items`, `TotalCount`
 
 ### FORBIDDEN (Always)
-- Hardcode hex colors — use `$primary`, `$error`, `$warning`, `$info`
+- Hardcode hex colors -- use `$primary`, `$error`, `$warning`, `$printfo`
 - Fixed pixel widths > 390px without responsive fallback
 - Report "done" when `ng build` has errors
 - Desktop-first layouts
