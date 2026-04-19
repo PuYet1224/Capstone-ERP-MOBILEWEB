@@ -1,394 +1,394 @@
 ---
 name: mobile-design
-description: Mobile-first design thinking and decision-making for iOS and Android apps. Touch interaction, performance patterns, platform conventions. Teaches principles, not fixed values. Use when building React Native, Flutter, or native mobile apps.
-allowed-tools: Read, Glob, Grep, Bash
+description: Senior Mobile Web Developer skill for Hoài Minh ERP Angular mobile frontend. Angular 16 + Kendo UI 13 on mobile browser — NOT React Native, NOT Flutter. Covers mobile-specific patterns, ChangeDetection.OnPush, IntersectionObserver infinite scroll, HammerJS gestures, and touch interactions.
+version: 2.0.0
 ---
 
-# Mobile Design System
+# Mobile Design Skill — HM ERP Angular Mobile Web (v2.0)
 
-> **Philosophy:** Touch-first. Battery-conscious. Platform-respectful. Offline-capable.
-> **Core Principle:** Mobile is NOT a small desktop. THINK mobile constraints, ASK platform choice.
-
----
-
-## 🔧 Runtime Scripts
-
-**Execute these for validation (don't read, just run):**
-
-| Script | Purpose | Usage |
-|--------|---------|-------|
-| `scripts/mobile_audit.py` | Mobile UX & Touch Audit | `python scripts/mobile_audit.py <project_path>` |
+> **Stack:** Angular 16 + Kendo UI 13 + TypeScript + SCSS (Bootstrap 5 grid only)
+> **Platform:** Mobile browser (PWA-style, NOT React Native / NOT Flutter)
+> **Viewport:** 375px – 414px (phone). Touch-first. ChangeDetection.OnPush everywhere.
+> **CRITICAL:** This is an Angular web app optimized for mobile screens. Standard Angular rules apply.
 
 ---
 
-## 🔴 MANDATORY: Read Reference Files Before Working!
-
-**⛔ DO NOT start development until you read the relevant files:**
-
-### Universal (Always Read)
-
-| File | Content | Status |
-|------|---------|--------|
-| **[mobile-design-thinking.md](mobile-design-thinking.md)** | **⚠️ ANTI-MEMORIZATION: Forces thinking, prevents AI defaults** | **⬜ CRITICAL FIRST** |
-| **[touch-psychology.md](touch-psychology.md)** | **Fitts' Law, gestures, haptics, thumb zone** | **⬜ CRITICAL** |
-| **[mobile-performance.md](mobile-performance.md)** | **RN/Flutter performance, 60fps, memory** | **⬜ CRITICAL** |
-| **[mobile-backend.md](mobile-backend.md)** | **Push notifications, offline sync, mobile API** | **⬜ CRITICAL** |
-| **[mobile-testing.md](mobile-testing.md)** | **Testing pyramid, E2E, platform-specific** | **⬜ CRITICAL** |
-| **[mobile-debugging.md](mobile-debugging.md)** | **Native vs JS debugging, Flipper, Logcat** | **⬜ CRITICAL** |
-| [mobile-navigation.md](mobile-navigation.md) | Tab/Stack/Drawer, deep linking | ⬜ Read |
-| [mobile-typography.md](mobile-typography.md) | System fonts, Dynamic Type, a11y | ⬜ Read |
-| [mobile-color-system.md](mobile-color-system.md) | OLED, dark mode, battery-aware | ⬜ Read |
-| [decision-trees.md](decision-trees.md) | Framework/state/storage selection | ⬜ Read |
-
-> 🧠 **mobile-design-thinking.md is PRIORITY!** This file ensures AI thinks instead of using memorized patterns.
-
-### Platform-Specific (Read Based on Target)
-
-| Platform | File | Content | When to Read |
-|----------|------|---------|--------------|
-| **iOS** | [platform-ios.md](platform-ios.md) | Human Interface Guidelines, SF Pro, SwiftUI patterns | Building for iPhone/iPad |
-| **Android** | [platform-android.md](platform-android.md) | Material Design 3, Roboto, Compose patterns | Building for Android |
-| **Cross-Platform** | Both above | Platform divergence points | React Native / Flutter |
-
-> 🔴 **If building for iOS → Read platform-ios.md FIRST!**
-> 🔴 **If building for Android → Read platform-android.md FIRST!**
-> 🔴 **If cross-platform → Read BOTH and apply conditional platform logic!**
-
----
-
-## ⚠️ CRITICAL: ASK BEFORE ASSUMING (MANDATORY)
-
-> **STOP! If the user's request is open-ended, DO NOT default to your favorites.**
-
-### You MUST Ask If Not Specified:
-
-| Aspect | Ask | Why |
-|--------|-----|-----|
-| **Platform** | "iOS, Android, or both?" | Affects EVERY design decision |
-| **Framework** | "React Native, Flutter, or native?" | Determines patterns and tools |
-| **Navigation** | "Tab bar, drawer, or stack-based?" | Core UX decision |
-| **State** | "What state management? (Zustand/Redux/Riverpod/BLoC?)" | Architecture foundation |
-| **Offline** | "Does this need to work offline?" | Affects data strategy |
-| **Target devices** | "Phone only, or tablet support?" | Layout complexity |
-
-### ⛔ AI MOBILE ANTI-PATTERNS (YASAK LİSTESİ)
-
-> 🚫 **These are AI default tendencies that MUST be avoided!**
-
-#### Performance Sins
-
-| ❌ NEVER DO | Why It's Wrong | ✅ ALWAYS DO |
-|-------------|----------------|--------------|
-| **ScrollView for long lists** | Renders ALL items, memory explodes | Use `FlatList` / `FlashList` / `ListView.builder` |
-| **Inline renderItem function** | New function every render, all items re-render | `useCallback` + `React.memo` |
-| **Missing keyExtractor** | Index-based keys cause bugs on reorder | Unique, stable ID from data |
-| **Skip getItemLayout** | Async layout = janky scroll | Provide when items have fixed height |
-| **setState() everywhere** | Unnecessary widget rebuilds | Targeted state, `const` constructors |
-| **Native driver: false** | Animations blocked by JS thread | `useNativeDriver: true` always |
-| **console.log in production** | Blocks JS thread severely | Remove before release build |
-| **Skip React.memo/const** | Every item re-renders on any change | Memoize list items ALWAYS |
-
-#### Touch/UX Sins
-
-| ❌ NEVER DO | Why It's Wrong | ✅ ALWAYS DO |
-|-------------|----------------|--------------|
-| **Touch target < 44px** | Impossible to tap accurately, frustrating | Minimum 44pt (iOS) / 48dp (Android) |
-| **Spacing < 8px between targets** | Accidental taps on neighbors | Minimum 8-12px gap |
-| **Gesture-only interactions** | Motor impaired users excluded | Always provide button alternative |
-| **No loading state** | User thinks app crashed | ALWAYS show loading feedback |
-| **No error state** | User stuck, no recovery path | Show error with retry option |
-| **No offline handling** | Crash/block when network lost | Graceful degradation, cached data |
-| **Ignore platform conventions** | Users confused, muscle memory broken | iOS feels iOS, Android feels Android |
-
-#### Security Sins
-
-| ❌ NEVER DO | Why It's Wrong | ✅ ALWAYS DO |
-|-------------|----------------|--------------|
-| **Token in AsyncStorage** | Easily accessible, stolen on rooted device | `SecureStore` / `Keychain` / `EncryptedSharedPreferences` |
-| **Hardcode API keys** | Reverse engineered from APK/IPA | Environment variables, secure storage |
-| **Skip SSL pinning** | MITM attacks possible | Pin certificates in production |
-| **Log sensitive data** | Logs can be extracted | Never log tokens, passwords, PII |
-
-#### Architecture Sins
-
-| ❌ NEVER DO | Why It's Wrong | ✅ ALWAYS DO |
-|-------------|----------------|--------------|
-| **Business logic in UI** | Untestable, unmaintainable | Service layer separation |
-| **Global state for everything** | Unnecessary re-renders, complexity | Local state default, lift when needed |
-| **Deep linking as afterthought** | Notifications, shares broken | Plan deep links from day one |
-| **Skip dispose/cleanup** | Memory leaks, zombie listeners | Clean up subscriptions, timers |
-
----
-
-## 📱 Platform Decision Matrix
-
-### When to Unify vs Diverge
+## 0. 🔴 What This Project Is (Read First)
 
 ```
-                    UNIFY (same on both)          DIVERGE (platform-specific)
-                    ───────────────────           ──────────────────────────
-Business Logic      ✅ Always                     -
-Data Layer          ✅ Always                     -
-Core Features       ✅ Always                     -
-                    
-Navigation          -                             ✅ iOS: edge swipe, Android: back button
-Gestures            -                             ✅ Platform-native feel
-Icons               -                             ✅ SF Symbols vs Material Icons
-Date Pickers        -                             ✅ Native pickers feel right
-Modals/Sheets       -                             ✅ iOS: bottom sheet vs Android: dialog
-Typography          -                             ✅ SF Pro vs Roboto (or custom)
-Error Dialogs       -                             ✅ Platform conventions for alerts
+Capstone-ERP-MOBILEWEB/
+├── src/app/
+│   ├── components/             ← Shared ps-* wrappers (ps-header-back, ps-footer-action, etc.)
+│   ├── models/dtos/e-dtos/     ← Business DTOs suffix: CusDTO
+│   ├── models/enums/e-status/  ← Status enums suffix: StatusEnum
+│   ├── services/               ← APIService, PsCache, SystemLoaderService, PsKendoNotification
+│   └── views/mtbike/
+│       ├── mtbike.module.ts    ← MUST update: declare new component
+│       ├── mtbike.routing.ts   ← MUST update: add route
+│       ├── services/
+│       │   ├── mtbike-api-static.service.ts  ← MUST update: add namespace key
+│       │   └── mtbike-api.service.ts         ← MUST update: add API methods
+│       └── views/              ← mtb000-dashboard, mtb001-repair, ...
 ```
 
-### Quick Reference: Platform Defaults
-
-| Element | iOS | Android |
-|---------|-----|---------|
-| **Primary Font** | SF Pro / SF Compact | Roboto |
-| **Min Touch Target** | 44pt × 44pt | 48dp × 48dp |
-| **Back Navigation** | Edge swipe left | System back button/gesture |
-| **Bottom Tab Icons** | SF Symbols | Material Symbols |
-| **Action Sheet** | UIActionSheet from bottom | Bottom Sheet / Dialog |
-| **Progress** | Spinner | Linear progress (Material) |
-| **Pull to Refresh** | Native UIRefreshControl | SwipeRefreshLayout |
+**NEVER build:** Desktop layout, sidebar, hover states, `<ps-kendo-grid>` (no data table on mobile)
+**ALWAYS build:** `<ps-header-back>`, `<ps-footer-action>`, card lists, infinite scroll, touch gestures
 
 ---
 
-## 🧠 Mobile UX Psychology (Quick Reference)
+## 1. Component Structure Rules (Mandatory)
 
-### Fitts' Law for Touch
+### 1.1 Naming
+- Folder: `mtbXXX-{feature-name}/` — scan views/ to find next available number
+- 3 files only: `.component.ts`, `.component.html`, `.component.scss`
+- Class: `MtbXXX{Feature}Component` (PascalCase)
+- Selector: `mtbXXX-{feature-name}` (kebab-case)
+- NEVER create `.spec.ts` files
 
+### 1.2 TypeScript Template (Copy Exactly)
+```typescript
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { State } from '@progress/kendo-data-query';
+import { MtbikeApiService } from '../../services/mtbike-api.service';
+import { PsCache } from 'src/app/services/utilities/ps-cache';
+import { SystemLoaderService } from 'src/app/views/system/services/system-loader.service';
+import { PsKendoNotificationService } from 'src/app/services/core/ps-kendo-notification.service';
+
+@Component({
+  selector: 'mtbXXX-{feature}',
+  templateUrl: './mtbXXX-{feature}.component.html',
+  styleUrls: ['./mtbXXX-{feature}.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,   // ← MANDATORY
+})
+export class MtbXXX{Feature}Component implements OnInit, OnDestroy {
+
+  // #region FIELDS
+  private arrUnsubscribe: Subscription[] = [];
+  public {Entity}Enum = {Entity}Enum;   // expose enums to template
+  // #endregion
+
+  // #region LIFECYCLE
+  constructor(
+    private router: Router,
+    private cache: PsCache,
+    private subLoader: SystemLoaderService,
+    private notification: PsKendoNotificationService,
+    private mtbikeapi: MtbikeApiService,
+    private cdr: ChangeDetectorRef,
+  ) {}
+
+  ngOnInit(): void { this.GetListXxx(this.filter); }
+
+  ngOnDestroy(): void {
+    this.subLoader.reset();
+    this.arrUnsubscribe.forEach(e => e.unsubscribe());
+    this.arrUnsubscribe = [];
+  }
+  // #endregion
+
+  // #region LOAD DATA
+  public filter: State = { skip: 0, take: 15 };
+  public list{Entity}: {Entity}CusDTO[] = [];
+
+  private GetList{Entity}(filter: State): void {
+    this.subLoader.loader(true);
+    const sub = this.mtbikeapi.GetList{Entity}(filter).subscribe(
+      (res) => {
+        if (res.StatusCode === 0) {
+          this.list{Entity} = res.ObjectReturn as {Entity}CusDTO[];
+          this.cdr.markForCheck();  // ← MANDATORY after async data change
+        } else {
+          this.notification.onError(`Lỗi: ${res.ErrorString}`);
+        }
+        this.subLoader.loader(false);
+      },
+      (err) => {
+        this.subLoader.loader(false);
+        this.notification.onError(`Lỗi: ${err.message}`);
+      }
+    );
+    this.arrUnsubscribe.push(sub);  // ← MANDATORY
+  }
+  // #endregion
+
+  // #region ACTIONS
+  public onNavigate(path: string): void { this.router.navigate(['/mtbike/' + path]); }
+  public trackByCode(i: number, item: any): number { return item.Code; }
+  // #endregion
+}
 ```
-Desktop: Cursor is precise (1px)
-Mobile:  Finger is imprecise (~7mm contact area)
 
-→ Touch targets MUST be 44-48px minimum
-→ Important actions in THUMB ZONE (bottom of screen)
-→ Destructive actions AWAY from easy reach
-```
-
-### Thumb Zone (One-Handed Usage)
-
-```
-┌─────────────────────────────┐
-│      HARD TO REACH          │ ← Navigation, menu, back
-│        (stretch)            │
-├─────────────────────────────┤
-│      OK TO REACH            │ ← Secondary actions
-│       (natural)             │
-├─────────────────────────────┤
-│      EASY TO REACH          │ ← PRIMARY CTAs, tab bar
-│    (thumb's natural arc)    │ ← Main content interaction
-└─────────────────────────────┘
-        [  HOME  ]
-```
-
-### Mobile-Specific Cognitive Load
-
-| Desktop | Mobile Difference |
-|---------|-------------------|
-| Multiple windows | ONE task at a time |
-| Keyboard shortcuts | Touch gestures |
-| Hover states | NO hover (tap or nothing) |
-| Large viewport | Limited space, scroll vertical |
-| Stable attention | Interrupted constantly |
-
-For deep dive: [touch-psychology.md](touch-psychology.md)
+### 1.3 #region Rules (MANDATORY)
+| Region | Content |
+|--------|---------|
+| `FIELDS` | Props, flags, booleans |
+| `LIFECYCLE` | constructor, ngOnInit, ngOnDestroy |
+| `HEADER` | Header-related logic |
+| `TAB` | Tab switching |
+| `SWIPE` | HammerJS swipe gesture |
+| `LOAD DATA` | API calls |
+| `ACTIONS` | User event handlers |
+| `TRACKBY` | trackBy functions |
+| `STATUS BADGE` | Badge logic |
 
 ---
 
-## ⚡ Performance Principles (Quick Reference)
+## 2. 🔴 Variable Naming (VIOLATION = REJECT)
 
-### React Native Critical Rules
+| Type | Prefix Required | Example |
+|------|----------------|---------|
+| Boolean state | `is` | `isLoading`, `isOpenedFilter`, `isLock` |
+| Boolean visibility | `show` | `showpopup`, `showDeleteDialog` |
+| Array/List | `list` | `listworkordermaster`, `listcategory`, `listcolor` |
+| Event handler | `on` | `onNavigate()`, `onValueChange()`, `onClick()` |
+| Toggle | `toggle` | `toggleItem()`, `toggleFilter()` |
+| Clear | `clear` | `clearFilter()`, `clearAllFilters()` |
+| API wrapper fn | SAME as service method | `GetListWOMConsultant()` → same in component |
+
+---
+
+## 3. 🔴 API Call Pattern (MANDATORY)
 
 ```typescript
-// ✅ CORRECT: Memoized renderItem + React.memo wrapper
-const ListItem = React.memo(({ item }: { item: Item }) => (
-  <View style={styles.item}>
-    <Text>{item.title}</Text>
-  </View>
-));
-
-const renderItem = useCallback(
-  ({ item }: { item: Item }) => <ListItem item={item} />,
-  []
-);
-
-// ✅ CORRECT: FlatList with all optimizations
-<FlatList
-  data={items}
-  renderItem={renderItem}
-  keyExtractor={(item) => item.id}  // Stable ID, NOT index
-  getItemLayout={(data, index) => ({
-    length: ITEM_HEIGHT,
-    offset: ITEM_HEIGHT * index,
-    index,
-  })}
-  removeClippedSubviews={true}
-  maxToRenderPerBatch={10}
-  windowSize={5}
-/>
+// API wrapper naming: MUST MATCH service method name exactly
+private GetList{Entity}(filter: State): void {
+  this.subLoader.loader(true);                    // 1. Start loader
+  const sub = this.mtbikeapi.GetList{Entity}(filter).subscribe(
+    (res) => {
+      if (res.StatusCode === 0) {                 // 2. Check StatusCode
+        this.list{entity} = res.ObjectReturn as {Entity}CusDTO[];
+        this.cdr.markForCheck();                  // 3. Trigger OnPush update
+      } else {
+        this.notification.onError(`Lỗi: ${res.ErrorString}`);
+      }
+      this.subLoader.loader(false);               // 4. Stop loader (always)
+    },
+    (err) => {
+      this.subLoader.loader(false);               // 5. Stop loader on error
+      this.notification.onError(`Lỗi: ${err.message}`);
+    }
+  );
+  this.arrUnsubscribe.push(sub);                  // 6. Track for cleanup
+}
 ```
 
-### Flutter Critical Rules
+> 🔴 **`onSuccess()` ONLY for CUD** (Create/Update/Delete). NEVER for GetList/Get reads.
 
-```dart
-// ✅ CORRECT: const constructors prevent rebuilds
-class MyWidget extends StatelessWidget {
-  const MyWidget({super.key}); // CONST!
+---
 
-  @override
-  Widget build(BuildContext context) {
-    return const Column( // CONST!
-      children: [
-        Text('Static content'),
-        MyConstantWidget(),
-      ],
-    );
-  }
+## 4. 🔴 Infinite Scroll Pattern (Mobile List Standard)
+
+> Mobile lists NEVER paginate like desktop. Use IntersectionObserver + incremental load.
+
+```typescript
+@ViewChild('anchor', { static: true }) anchor: ElementRef;
+@ViewChild('bodyList', { static: true }) bodyList!: ElementRef;
+private observer: IntersectionObserver;
+private isLoading = false;
+public isLastPage: boolean = false;
+public filter: State = { skip: 0, take: 15 };
+public list{Entity}: {Entity}CusDTO[] = [];
+
+ngOnInit(): void {
+  this.GetList{Entity}(this.filter);
+  this.observer = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) { this.loadMore(); }
+  }, { threshold: 0.1 });
+  this.observer.observe(this.anchor.nativeElement);
 }
 
-// ✅ CORRECT: Targeted state with ValueListenableBuilder
-ValueListenableBuilder<int>(
-  valueListenable: counter,
-  builder: (context, value, child) => Text('$value'),
-  child: const ExpensiveWidget(), // Won't rebuild!
-)
+ngOnDestroy(): void {
+  this.observer.disconnect();      // ← MANDATORY cleanup
+  this.subLoader.reset();
+  this.arrUnsubscribe.forEach(e => e.unsubscribe());
+}
+
+private loadMore(): void {
+  if (this.isLoading || this.isLastPage) return;
+  const listEl = this.bodyList.nativeElement as HTMLElement;
+  if (listEl.scrollHeight <= listEl.clientHeight) return;  // list fits, no scroll
+  this.filter.skip += this.filter.take;
+  this.GetList{Entity}(this.filter);
+}
+
+private GetList{Entity}(filter: State): void {
+  this.isLoading = true;
+  this.subLoader.loader(true);
+  const sub = this.mtbikeapi.GetList{Entity}(filter).subscribe(
+    (res) => {
+      if (res.StatusCode === 0) {
+        const newItems = res.ObjectReturn as {Entity}CusDTO[];
+        if (newItems.length < filter.take) { this.isLastPage = true; }
+        if (filter.skip === 0) {
+          this.list{Entity} = newItems;     // reset on fresh load
+        } else {
+          this.list{Entity} = [...this.list{Entity}, ...newItems]; // append on loadMore
+        }
+        this.cdr.markForCheck();
+      }
+      this.isLoading = false;
+      this.subLoader.loader(false);
+    },
+    () => { this.isLoading = false; this.subLoader.loader(false); }
+  );
+  this.arrUnsubscribe.push(sub);
+}
 ```
 
-### Animation Performance
-
+**HTML template:**
+```html
+<div class="body-content" #bodyList>
+  <div *ngFor="let item of list{Entity}; trackBy: trackByCode">
+    <!-- card content -->
+  </div>
+  <div #anchor style="height: 1px;"></div>  <!-- intersection trigger -->
+</div>
 ```
-GPU-accelerated (FAST):     CPU-bound (SLOW):
-├── transform               ├── width, height
-├── opacity                 ├── top, left, right, bottom
-└── (use these ONLY)        ├── margin, padding
-                            └── (AVOID animating these)
-```
-
-For complete guide: [mobile-performance.md](mobile-performance.md)
 
 ---
 
-## 📝 CHECKPOINT (MANDATORY Before Any Mobile Work)
+## 5. HTML Structure Pattern
 
-> **Before writing ANY mobile code, you MUST complete this checkpoint:**
+```html
+<div class="mtbXXX-{feature}">
+  <!-- START: HEADER -->
+  <ps-header-back>
+    <div class="left-side">
+      <div class="func-title1">Tiêu đề chức năng</div>
+    </div>
+    <div class="right-side">
+      <div><span>Info</span></div>
+    </div>
+  </ps-header-back>
+  <!-- END: HEADER -->
 
-```
-🧠 CHECKPOINT:
+  <!-- START: BODY -->
+  <div class="body-content" #bodyList>
+    <div *ngFor="let item of listData; trackBy: trackByCode">
+      <!-- item card -->
+    </div>
+    <div #anchor style="height: 1px;"></div>
+  </div>
+  <!-- END: BODY -->
 
-Platform:   [ iOS / Android / Both ]
-Framework:  [ React Native / Flutter / SwiftUI / Kotlin ]
-Files Read: [ List the skill files you've read ]
-
-3 Principles I Will Apply:
-1. _______________
-2. _______________
-3. _______________
-
-Anti-Patterns I Will Avoid:
-1. _______________
-2. _______________
-```
-
-**Example:**
-```
-🧠 CHECKPOINT:
-
-Platform:   iOS + Android (Cross-platform)
-Framework:  React Native + Expo
-Files Read: touch-psychology.md, mobile-performance.md, platform-ios.md, platform-android.md
-
-3 Principles I Will Apply:
-1. FlatList with React.memo + useCallback for all lists
-2. 48px touch targets, thumb zone for primary CTAs
-3. Platform-specific navigation (edge swipe iOS, back button Android)
-
-Anti-Patterns I Will Avoid:
-1. ScrollView for lists → FlatList
-2. Inline renderItem → Memoized
-3. AsyncStorage for tokens → SecureStore
+  <!-- START: FOOTER (only for detail pages with actions) -->
+  <ps-footer-action>
+    <ps-kendo-button [buttonClass]="'k-button k-default btn-action'" [icon]="'arrow-left'"
+        [title]="'Trở về'" (onClick)="onNavigate('back')">
+    </ps-kendo-button>
+    <ps-kendo-button [buttonClass]="'k-button k-primary btn-action'" [icon]="'check'"
+        [title]="'Xác nhận'" (onClick)="onConfirm()">
+    </ps-kendo-button>
+  </ps-footer-action>
+  <!-- END: FOOTER -->
+</div>
 ```
 
-> 🔴 **Can't fill the checkpoint? → GO BACK AND READ THE SKILL FILES.**
+**HTML Rules:**
+- ALWAYS use `<!-- START: NAME -->` / `<!-- END: NAME -->` region comments
+- ALWAYS use `trackBy` on every `*ngFor`
+- NEVER use `[hidden]` — use `*ngIf`
+- NEVER recreate shared components (ps-header-back, ps-kendo-button, etc.)
 
 ---
 
-## 🔧 Framework Decision Tree
+## 6. SCSS Pattern (MANDATORY)
 
+```scss
+@import "../../../../../assets/scss/colors";    // ← MANDATORY
+
+::ng-deep {
+  mtbXXX-{feature} {                            // ← Tag selector (no dot)
+    font-size: 13px;
+    height: 100%;
+
+    .mtbXXX-{feature} {                         // ← Class wrapper
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+
+      // #region HEADER
+      ps-header-back { /* header styles */ }
+      // #endregion
+
+      // #region BODY
+      .body-content {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 8px;
+        -webkit-overflow-scrolling: touch;   // ← iOS smooth scroll
+      }
+      // #endregion
+    }
+  }
+}
 ```
-WHAT ARE YOU BUILDING?
-        │
-        ├── Need OTA updates + rapid iteration + web team
-        │   └── ✅ React Native + Expo
-        │
-        ├── Need pixel-perfect custom UI + performance critical
-        │   └── ✅ Flutter
-        │
-        ├── Deep native features + single platform focus
-        │   ├── iOS only → SwiftUI
-        │   └── Android only → Kotlin + Jetpack Compose
-        │
-        ├── Existing RN codebase + new features
-        │   └── ✅ React Native (bare workflow)
-        │
-        └── Enterprise + existing Flutter codebase
-            └── ✅ Flutter
-```
 
-For complete decision trees: [decision-trees.md](decision-trees.md)
+**SCSS Rules:**
+- ALWAYS wrap in `::ng-deep` (component uses default ViewEncapsulation)
+- ALWAYS import `_colors` for semantic variables
+- NEVER hardcode hex colors — use `$primary`, `$error`, `$warning`, `$info`, `$border`
+- ALWAYS use 4pt grid: `4px, 8px, 12px, 16px, 20px, 24px` (never 5px, 7px, 10px)
+- Font sizes: 10px (footnote), 11px (badge), 12px (label), 13px (body), 14px (price), 16px (title)
 
 ---
 
-## 📋 Pre-Development Checklist
+## 7. Shared Components Catalog
 
-### Before Starting ANY Mobile Project
+| Component | Module | Use For |
+|-----------|--------|---------|
+| `<ps-header-back>` | `PsLayoutModule` | Every page header |
+| `<ps-header-main>` | `PsLayoutModule` | Main landing header |
+| `<ps-footer-action>` | `PsLayoutModule` | Action buttons at bottom |
+| `<ps-footer-copyright>` | `PsLayoutModule` | Copyright footer |
+| `<ps-kendo-button>` | `PsButtonModule` | ALL buttons |
+| `<ps-kendo-dialog>` | `PSDialogModule` | Confirm/alert dialogs |
+| `<ps-dropdown>` | `PSDropdownModule` | Custom dropdown |
+| `<ps-input>` | `PSInputModule` | Input field |
+| `<ps-barcode>` | `PsBarcodeModule` | Barcode scanner |
 
-- [ ] **Platform confirmed?** (iOS / Android / Both)
-- [ ] **Framework chosen?** (RN / Flutter / Native)
-- [ ] **Navigation pattern decided?** (Tabs / Stack / Drawer)
-- [ ] **State management selected?** (Zustand / Redux / Riverpod / BLoC)
-- [ ] **Offline requirements known?**
-- [ ] **Deep linking planned from day one?**
-- [ ] **Target devices defined?** (Phone / Tablet / Both)
-
-### Before Every Screen
-
-- [ ] **Touch targets ≥ 44-48px?**
-- [ ] **Primary CTA in thumb zone?**
-- [ ] **Loading state exists?**
-- [ ] **Error state with retry exists?**
-- [ ] **Offline handling considered?**
-- [ ] **Platform conventions followed?**
-
-### Before Release
-
-- [ ] **console.log removed?**
-- [ ] **SecureStore for sensitive data?**
-- [ ] **SSL pinning enabled?**
-- [ ] **Lists optimized (memo, keyExtractor)?**
-- [ ] **Memory cleanup on unmount?**
-- [ ] **Tested on low-end devices?**
-- [ ] **Accessibility labels on all interactive elements?**
+> 🔴 **NEVER** recreate components from this list.
 
 ---
 
-## 📚 Reference Files
+## 8. Touch & Mobile Rules (MANDATORY)
 
-For deeper guidance on specific areas:
-
-| File | When to Use |
-|------|-------------|
-| [mobile-design-thinking.md](mobile-design-thinking.md) | **FIRST! Anti-memorization, forces context-based thinking** |
-| [touch-psychology.md](touch-psychology.md) | Understanding touch interaction, Fitts' Law, gesture design |
-| [mobile-performance.md](mobile-performance.md) | Optimizing RN/Flutter, 60fps, memory/battery |
-| [platform-ios.md](platform-ios.md) | iOS-specific design, HIG compliance |
-| [platform-android.md](platform-android.md) | Android-specific design, Material Design 3 |
-| [mobile-navigation.md](mobile-navigation.md) | Navigation patterns, deep linking |
-| [mobile-typography.md](mobile-typography.md) | Type scale, system fonts, accessibility |
-| [mobile-color-system.md](mobile-color-system.md) | OLED optimization, dark mode, battery |
-| [decision-trees.md](decision-trees.md) | Framework, state, storage decisions |
+| Rule | Value | Why |
+|------|-------|-----|
+| Touch target size | ≥ 44×44px | Fitts' Law — finger accuracy |
+| Spacing between targets | ≥ 8px | Prevent accidental taps |
+| Scroll container | `overflow-y: auto` + `-webkit-overflow-scrolling: touch` | iOS smooth scroll |
+| Font size minimum | 14px for body text | Readability on small screens |
+| Primary CTAs | `<ps-footer-action>` (bottom of screen) | Thumb zone |
+| Swipe gesture | HammerJS `(swipe)="onSwipe($event)"` | Native feel |
+| NO hover states | Touch events only | Mobile has no hover |
+| NO Desktop grid `<ps-kendo-grid>` | Use `*ngFor` card lists | Grid too small on mobile |
 
 ---
 
-> **Remember:** Mobile users are impatient, interrupted, and using imprecise fingers on small screens. Design for the WORST conditions: bad network, one hand, bright sun, low battery. If it works there, it works everywhere.
+## 9. Registration Checklist (5 Files — ALL MANDATORY)
+
+| # | File | What to Add |
+|---|------|-------------|
+| 1 | `mtbike.module.ts` | import + add to `declarations` |
+| 2 | `mtbike.routing.ts` | add route |
+| 3 | `mtbike-api-static.service.ts` | add namespace key |
+| 4 | `mtbike-api.service.ts` | add API method(s) |
+| 5 | `key-local-storage.enum.ts` | add new key (if needed) |
+
+---
+
+## 10. Common Bugs Table
+
+| # | Bug | Symptom | Fix |
+|---|-----|---------|-----|
+| 1 | Missing `cdr.markForCheck()` | Data loads but UI doesn't update (OnPush) | Add after every async data change |
+| 2 | Missing `this.isLoading` check in `loadMore()` | Multiple concurrent loads on scroll | Guard with `if (this.isLoading) return` |
+| 3 | `observer.disconnect()` missing in `ngOnDestroy` | Memory leak, ghost scroll events | Always call `this.observer.disconnect()` |
+| 4 | `onSuccess` on GetList | Annoying success toast on every scroll | Only use onSuccess for CUD |
+| 5 | Hardcode `skip=0` comparison missing | Scroll appends duplicate first page | `if (filter.skip === 0) reset else append` |
+| 6 | Wrong DLLPackage `Product` | API invisible to mobile | Mobile = `Product = 3`, Desktop = `Product = 1` |
+| 7 | `res.ObjectReturn.Items` | No data | Use `res.ObjectReturn` directly for lists (mobile BE returns array, no wrapper) — or check guide |
