@@ -334,38 +334,37 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
   sortTypeOfVehicle() {
     const list = [...this.liseVehicleCategory.ListTypeOfVehicle];
     this.filteredTypeOfVehicle = list.sort((a, b) => {
-      const indexA = this.selectedCategoryCodes.indexOf(a.Category);
-      const indexB = this.selectedCategoryCodes.indexOf(b.Category);
-      if (indexA !== -1 && indexB !== -1) return indexA - indexB;
-      if (indexA !== -1) return -1;
-      if (indexB !== -1) return 1;
+      const scoreA = this.selectedCategoryCodes.includes(a.Category) ? 1 : 0;
+      const scoreB = this.selectedCategoryCodes.includes(b.Category) ? 1 : 0;
+
+      if (scoreA !== scoreB) {
+        return scoreB - scoreA;
+      }
       return 0;
     });
   }
 
   sortVehicleColors() {
-    const colorList = [...this.liseVehicleCategory.ListGroupVehicleColor];
+    let colorList = [...this.liseVehicleCategory.ListGroupVehicleColor];
 
-    this.filteredVehicleColors = colorList.sort((a, b) => {
-      // Kiểm tra màu 'a' có thuộc Dòng xe hoặc Phân nhóm đang chọn không
-      const aHasSelectedVehicle = a.ListTypeOfVehicle.some(v => this.selectedVehicleCodes.includes(v));
-      const aHasSelectedCategory = a.ListCategory.some(c => this.selectedCategoryCodes.includes(c));
+    // Thực hiện sắp xếp ưu tiên (Priority Sort) thay vì lọc (Filter)
+    colorList.sort((a, b) => {
+      // 1. Ưu tiên cao nhất: Thuộc Dòng xe (TypeOfVehicle) đang chọn
+      const aMatchLine = this.selectedVehicleCodes.includes(a.Vehicle) || (a.ListTypeOfVehicle || []).some(v => this.selectedVehicleCodes.includes(v));
+      const bMatchLine = this.selectedVehicleCodes.includes(b.Vehicle) || (b.ListTypeOfVehicle || []).some(v => this.selectedVehicleCodes.includes(v));
 
-      // Kiểm tra màu 'b'
-      const bHasSelectedVehicle = b.ListTypeOfVehicle.some(v => this.selectedVehicleCodes.includes(v));
-      const bHasSelectedCategory = b.ListCategory.some(c => this.selectedCategoryCodes.includes(c));
+      if (aMatchLine !== bMatchLine) return bMatchLine ? 1 : -1;
 
-      // Ưu tiên 1 (Dòng xe): 2 điểm
-      // Ưu tiên 2 (Phân nhóm): 1 điểm
-      const scoreA = (aHasSelectedVehicle ? 2 : 0) + (aHasSelectedCategory ? 1 : 0);
-      const scoreB = (bHasSelectedVehicle ? 2 : 0) + (bHasSelectedCategory ? 1 : 0);
+      // 2. Ưu tiên tiếp theo: Thuộc Phân nhóm xe (Category) đang chọn
+      const aMatchCat = (a.ListCategory || []).some(c => this.selectedCategoryCodes.includes(c));
+      const bMatchCat = (b.ListCategory || []).some(c => this.selectedCategoryCodes.includes(c));
 
-      if (scoreA !== scoreB) {
-        return scoreB - scoreA;
-      }
+      if (aMatchCat !== bMatchCat) return bMatchCat ? 1 : -1;
 
       return 0;
     });
+
+    this.filteredVehicleColors = colorList;
   }
 
   clearCategoryFilter() {
@@ -475,11 +474,58 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
     const sub = this.mtbikeapi.GetListVehicleOptions().subscribe(res => {
       if (res.StatusCode === 0) {
         const data = res.ObjectReturn || {};
+        const vehicles = data.Vehicles || [];
+        const types = data.TypeOfVehicles || [];
+        const colors = data.Colors || [];
+
+        // 1. Build Category List (Phân nhóm xe) from Vehicles array
+        let categories = data.Categories || [];
+        if (categories.length === 0) {
+          categories = vehicles.map(v => ({
+            Code: v.Code,
+            Category: v.VehicleName || v.CategoryName
+          }));
+        }
+
+        // 2. Enrich Colors with relationship data for filtering/sorting
+        colors.forEach(c => {
+          const v = vehicles.find(vh => vh.Code === c.Vehicle);
+          if (v) {
+            c.ListTypeOfVehicle = c.ListTypeOfVehicle || [v.TypeOfVehicle];
+            c.ListCategory = c.ListCategory || [v.Code];
+          } else {
+            c.ListTypeOfVehicle = c.ListTypeOfVehicle || [];
+            c.ListCategory = c.ListCategory || [];
+          }
+        });
+
+        // 3. Enrich TypeOfVehicles with Category info
+        types.forEach(t => {
+          if (!t.Category) {
+            const v = vehicles.find(vh => vh.TypeOfVehicle === t.Code);
+            if (v) {
+              t.Category = v.Code;
+            }
+          }
+        });
+
+        // 4. Calculate PriceRange if missing
+        let priceRange = data.PriceRange || { MinPrice: 0, MaxPrice: 0 };
+        if (priceRange.MinPrice === 0 && priceRange.MaxPrice === 0 && colors.length > 0) {
+          const prices = colors.map(c => c.Price).filter(p => p > 0);
+          if (prices.length > 0) {
+            priceRange = {
+              MinPrice: Math.min(...prices),
+              MaxPrice: Math.max(...prices)
+            };
+          }
+        }
+
         this.liseVehicleCategory = {
-          ListVehicleCategory: data.VehicleCategory || [],
-          ListTypeOfVehicle: data.TypeOfVehicle || [],
-          ListGroupVehicleColor: data.GroupVehicleColor || [],
-          PriceRange: data.PriceRange || { MinPrice: 0, MaxPrice: 0 }
+          ListVehicleCategory: categories,
+          ListTypeOfVehicle: types,
+          ListGroupVehicleColor: colors,
+          PriceRange: priceRange
         };
 
         this.filteredTypeOfVehicle = [...this.liseVehicleCategory.ListTypeOfVehicle];
