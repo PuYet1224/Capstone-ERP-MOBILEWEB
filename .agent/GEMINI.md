@@ -1,13 +1,13 @@
-﻿---
+---
 trigger: always_on
 ---
 
 
-## WORKSPACE_MAP -- Change here when deployprintg to new machine
+## WORKSPACE_MAP -- Change here when deploying to new machine
 
 ```
-BA_ROOT:        {BA_ROOT}
-PIPELINE_ROOT:  C:\ai-pipeline
+BA_ROOT:        C:\Users\lala0\Capstone-ERP-BA
+PIPELINE_ROOT:  C:\ai.pipeline\Hoai-Minh-Project
 ```
 
 > Deploy to new machine? Update BA_ROOT and PIPELINE_ROOT above. All skills reference these keys.

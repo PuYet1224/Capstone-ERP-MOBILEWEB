@@ -1,4 +1,4 @@
-﻿---
+---
 trigger: always_on
 ---
 
@@ -42,9 +42,10 @@ trigger: always_on
 
 ### Workspace Paths
 
-- Mobile workspace: `C:\Users\lala0\Capstone-ERP-MOBILEWEB`
-- BE workspace: `C:\Users\lala0\Capstone-ERP-API-VSA`
-- FE Desktop workspace: `C:\Users\lala0\Capstone-ERP-WEB`
+> Paths are resolved from WORKSPACE_MAP in `.agent/GEMINI.md`. Do NOT hardcode absolute paths here.
+- Mobile workspace: this workspace root (injected by IDE at session start)
+- BA workspace: `{BA_ROOT}` (set in WORKSPACE_MAP)
+- Pipeline folder: `{PIPELINE_ROOT}` (set in WORKSPACE_MAP)
 
 ---
 
@@ -109,7 +110,7 @@ Before ANY new API works on mobile:
 |---|---|
 | `figma_read` Figma Desktop live | ✅ "Reading from **Figma Desktop (live)**" |
 | `.design-archive/*.png` | ✅ "Reading from **archived images** at `.design-archive/`" |
-| `C:\ai.pipeline\designs\*.png` | ✅ "Reading from **pipeline images**" |
+| `{PIPELINE_ROOT}\designs\*.png` | ✅ "Reading from **pipeline images**" |
 | Current code files | ✅ "Reading from **current code**" |
 
 ### ABSOLUTELY FORBIDDEN:
