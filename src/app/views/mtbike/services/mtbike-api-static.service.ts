@@ -60,6 +60,7 @@ export const fconsultant = {
   UpdateSALStatus: '',
   UpdateSALService: '',
   UpdateSALPromotion: '',
+  UpdateSALPartItem: '',
 
   //Add
   AddSALSelectedVehicles: '',

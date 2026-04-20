@@ -123,7 +123,7 @@
                 <div class="form-header">Phụ kiện ráp kèm</div>
                 <div class="form-fields">
                     <ps-kendo-dropdown-list [label]="'Phân nhóm phụ tùng'" [data]="listPartCategory"
-                        [textField]="'Category'" [valueField]="'Code'" [(ngModel)]="partcategory"
+                        [textField]="'CategoryName'" [valueField]="'Code'" [(ngModel)]="partcategory"
                         [valuePrimitive]="false" (valueChange)="onPartCategoryChange()"
                         [disabled]="!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator">
                     </ps-kendo-dropdown-list>

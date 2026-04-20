@@ -1,1286 +1,1297 @@
-@import "../../../../../assets/scss/colors";
+@import '../../../../../assets/scss/colors';
 
 ::ng-deep {
-    mtb011-sal-consultant-vehicle {
-        font-size: 13px;
-        height: 100%;
-
-        .mtb011-retail-vehicle {
-            height: 100%;
-
-            ps-header-back {
-                .ps-header {
-                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-                    .header-right {
-                        height: fit-content;
-                        display: flex;
-                        width: calc(100% - 44px);
-                        justify-content: space-between;
-                        align-items: center;
-                        gap: 8px;
-
-                        .left-side {
-                            min-width: 128px;
-                            width: 128px;
-
-                            .func-title1 {
-                                font-weight: bold;
-                                text-transform: uppercase;
-                                color: $primary;
-                            }
-                        }
-
-                        .right-side {
-                            text-align: end;
-                            width: calc(100% - 136px);
-
-                            div {
-
-                                span,
-                                .marquee-content {
-                                    font-weight: bold;
-                                }
-
-                                span {
-                                    color: $error;
-                                }
-
-                                .marquee-content {
-                                    color: $info;
-                                }
-                            }
-
-                            .marquee-wrapper {
-                                width: 100%;
-                                overflow: hidden;
-                                white-space: nowrap;
-                                position: relative;
-
-                                .marquee-content {
-                                    display: inline-block;
-                                    white-space: nowrap;
-                                    transform: translateX(0);
-                                }
-
-                                .marquee-content.running {
-                                    transform: translateX(70%);
-                                    animation: slide-left 8s linear infinite;
-                                }
-
-                                @keyframes slide-left {
-                                    from {
-                                        transform: translateX(70%);
-                                    }
-
-                                    to {
-                                        transform: translateX(-100%);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            .action-tabs {
-                padding: 8px;
-                background: $white;
-                display: flex;
-                gap: 8px;
-                background: transparent;
-
-                .filter-box {
-                    position: relative;
-                    display: flex;
-                    flex: 1;
-
-                    ps-kendo-textbox {
-                        flex: 1;
-
-                        .kendo-textbox {
-                            position: relative; // BẮT BUỘC
-
-                            &::before {
-                                content: '\e8b6';
-                                font-family: "Material Symbols Outlined";
-                                position: absolute;
-                                left: 8px;
-                                top: 50%;
-                                transform: translateY(-50%);
-                                font-size: 16px;
-                                color: $secondary;
-                                pointer-events: none;
-                                z-index: 999;
-                                background: $white;
-                                width: 20px;
-                            }
-
-                            .k-input-inner {
-                                height: 24px;
-                                border-bottom: 1px dashed $border;
-                                padding-left: 20px;
-                            }
-                        }
-                    }
-
-                    .tags {
-                        background: $white;
-                        gap: 4px;
-                        display: flex;
-                        top: 8px;
-                        left: 28px;
-                        position: absolute;
-                        z-index: 9;
-                        width: calc(100% - 38px);
-                        overflow: auto;
-                        padding-bottom: 6px;
-
-                        .category {
-                            padding: 2px 4px;
-                            background: $background-primary;
-                            border-radius: 8px;
-                            border: 1px solid $primary;
-                            color: $primary;
-                            white-space: nowrap;
-                            font-size: 8px;
-                            background: $white;
-                        }
-                    }
-                }
-
-
-                .filter-popup {
-                    left: 8px;
-                    top: 102px;
-                    width: calc(100% - 16px);
-                    position: absolute;
-                    border-radius: 8px;
-                    border: 1px solid $primary;
-                    z-index: 9;
-
-                    .content {
-                        gap: 16px;
-                        flex-direction: column;
-                        display: flex;
-                        padding: 8px;
-                        background: $white;
-                        border-radius: 8px;
-
-                        .vehicle-category {
-                            display: flex;
-                            flex-direction: column;
-                            gap: 4px;
-
-                            .row-1 {
-                                display: flex;
-                                line-height: 1;
-                                justify-content: space-between;
-
-                                .delete {
-                                    color: $info;
-                                    font-style: italic;
-                                }
-                            }
-
-                            .row-2 {
-                                display: flex;
-                                flex-wrap: wrap;
-                                gap: 8px;
-                                max-height: 117px;
-                                overflow: auto;
-                                align-content: flex-start;
-
-                                div {
-                                    padding: 8px;
-                                    border: 1px solid transparent;
-                                    line-height: 1;
-                                    white-space: nowrap;
-                                    border-radius: 8px;
-                                    background: rgba($background-primary, 0.5);
-
-                                    &.active {
-                                        background: $white;
-                                        color: $primary;
-                                        border: 1px solid $primary
-                                    }
-                                }
-                            }
-                        }
-
-                        .price {
-                            position: relative;
-                            width: 100%;
-                            display: flex;
-                            flex-direction: column;
-                            gap: 4px;
-
-                            .row-1 {
-                                display: flex;
-                                line-height: 1;
-                                justify-content: space-between;
-
-                                .delete {
-                                    color: $info;
-                                    font-style: italic;
-                                }
-                            }
-
-                            .row-2 {
-                                display: flex;
-                                flex-direction: column;
-                                gap: 8px;
-
-                                .display {
-                                    position: relative;
-                                    width: 100%;
-                                    display: flex;
-                                    justify-content: space-between;
-
-                                    ps-kendo-numeric-textbox {
-                                        width: 128px;
-                                        z-index: 9;
-                                    }
-
-                                    .connect-line {
-                                        top: 17px;
-                                        height: 1px;
-                                        background: $border;
-                                        position: absolute;
-                                        width: 100%;
-                                        z-index: 1;
-                                    }
-                                }
-
-                                .range {
-                                    padding: 4px 0;
-
-                                    .input {
-
-                                        input {
-                                            -webkit-appearance: none;
-                                            appearance: none;
-                                            position: absolute;
-                                            pointer-events: none;
-                                            z-index: 3;
-                                            height: 3px;
-                                            bottom: 0;
-                                            width: 100%;
-                                            opacity: 0;
-                                            margin: 0;
-                                        }
-
-                                        input::-webkit-slider-thumb {
-                                            -webkit-appearance: none;
-                                            appearance: none;
-                                            pointer-events: all;
-                                            border-radius: 50%;
-                                            cursor: pointer;
-                                            width: 18px;
-                                            height: 18px;
-                                        }
-
-                                    }
-
-                                    .slide {
-                                        position: absolute;
-                                        bottom: 3px;
-                                        height: 1px;
-                                        background: $border;
-                                        left: 9px;
-                                        right: 9px;
-
-                                        .line {
-                                            position: absolute;
-                                            left: 0;
-                                            right: 0;
-                                            bottom: 0;
-                                            height: 1px;
-                                            background-color: $primary;
-                                        }
-
-                                        .thumb {
-                                            position: absolute;
-                                            z-index: 2;
-                                            text-align: left;
-                                            border: 1px solid $primary;
-                                            background-color: $white;
-                                            border-radius: 50%;
-                                            outline: none;
-                                            top: -4px;
-                                            height: 8px;
-                                            width: 8px;
-                                            margin-left: -4px;
-                                        }
-                                    }
-                                }
-
-                            }
-                        }
-
-                        .filter-btn {
-                            width: 100%;
-                            display: flex;
-                            justify-content: flex-end;
-                            gap: 8px;
-
-                            ps-kendo-button {
-
-                                button {
-                                    width: fit-content;
-
-                                    .k-button-text {
-                                        text-transform: none;
-
-                                        .text {
-                                            font-size: 13px;
-                                        }
-                                    }
-                                }
-
-                                &:last-child {
-                                    .k-button-text {
-                                        .text {
-                                            color: $white;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                    }
-                }
-
-                .tool-btn {
-                    button {
-                        width: 36px;
-                        height: 36px;
-                        border: 1px solid $border;
-                        position: relative;
-
-                        .k-button-text {
-                            .material-icons {
-                                width: 20px;
-                                height: 20px;
-                                font-size: 20px;
-                            }
-
-                            .text {
-                                font-size: 13px;
-                            }
-
-                            .total {
-                                position: absolute;
-                                top: 2px;
-                                right: 2px;
-                                border-radius: 999px;
-                                background: $white;
-                                border: 1px solid $error;
-                                color: $error;
-                                width: 16px;
-                                height: 16px;
-                                font-size: 9px;
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                            }
-                        }
-                    }
-
-                    &.active {
-                        button {
-                            border: 1px solid $primary;
-                            background: $white;
-                        }
-                    }
-
-                    &.active-cart {
-                        button {
-                            border: 1px solid $primary;
-                            background: $white;
-
-                            .total {
-                                background: $error;
-                                border: 1px solid $error;
-                                color: $white;
-                            }
-
-                        }
-                    }
-
-                    &.active-fav {
-                        button {
-                            border: 1px solid $primary;
-                            background: $white;
-
-                            span {
-                                color: #FD7676;
-                                font-variation-settings: "FILL" 1, "wght" 400, "opsz" 24;
-                            }
-                        }
-                    }
-                }
-
-                ps-kendo-dropdown-list {
-                    width: 98px;
-
-                    .kendo-dropdown-list {
-                        kendo-dropdownlist {
-                            kendo-popup {
-                                top: 102px !important;
-                                left: auto !important;
-                                right: 8px !important;
-                                min-width: 121px !important;
-                            }
-                        }
-                    }
-                }
-
-            }
-
-            .filter {
-                display: flex;
+  mtb011-sal-consultant-vehicle {
+    font-size: 13px;
+    height: 100%;
+
+    .mtb011-retail-vehicle {
+      height: 100%;
+
+      ps-header-back {
+        .ps-header {
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+          .header-right {
+            height: fit-content;
+            display: flex;
+            width: calc(100% - 44px);
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+
+            .left-side {
+              min-width: 128px;
+              width: 128px;
+
+              .func-title1 {
                 font-weight: bold;
-                gap: 4px;
-                align-items: center;
-                justify-content: flex-end;
-                margin: 8px;
-                height: 20px;
+                text-transform: uppercase;
+                color: $primary;
+              }
+            }
+
+            .right-side {
+              text-align: end;
+              width: calc(100% - 136px);
+
+              div {
+                span,
+                .marquee-content {
+                  font-weight: bold;
+                }
 
                 span {
-                    display: flex;
-                    font-size: 13px;
-
-                    &.highlight {
-                        color: $primary;
-
-                        span {
-                            color: $primary;
-                        }
-                    }
+                  color: $error;
                 }
-            }
 
-            .retail-body {
-                height: calc(100% - 168px);
-                margin-bottom: 8px;
-                overflow: auto;
+                .marquee-content {
+                  color: $info;
+                }
+              }
+
+              .marquee-wrapper {
+                width: 100%;
+                overflow: hidden;
+                white-space: nowrap;
+                position: relative;
+
+                .marquee-content {
+                  display: inline-block;
+                  white-space: nowrap;
+                  transform: translateX(0);
+                }
+
+                .marquee-content.running {
+                  transform: translateX(70%);
+                  animation: slide-left 8s linear infinite;
+                }
+
+                @keyframes slide-left {
+                  from {
+                    transform: translateX(70%);
+                  }
+
+                  to {
+                    transform: translateX(-100%);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .action-tabs {
+        padding: 8px;
+        background: $white;
+        display: flex;
+        gap: 8px;
+        background: transparent;
+
+        .filter-box {
+          position: relative;
+          display: flex;
+          flex: 1;
+
+          ps-kendo-textbox {
+            flex: 1;
+
+            .kendo-textbox {
+              position: relative; // BẮT BUỘC
+
+              &::before {
+                content: '\e8b6';
+                font-family: 'Material Symbols Outlined';
+                position: absolute;
+                left: 8px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 16px;
+                color: $secondary;
+                pointer-events: none;
+                z-index: 999;
+                background: $white;
+                width: 20px;
+              }
+
+              .k-input-inner {
+                height: 24px;
+                border-bottom: 1px dashed $border;
+                padding-left: 20px;
+              }
+            }
+          }
+
+          .tags {
+            background: $white;
+            gap: 4px;
+            display: flex;
+            top: 8px;
+            left: 28px;
+            position: absolute;
+            z-index: 9;
+            width: calc(100% - 38px);
+            overflow: auto;
+            padding-bottom: 6px;
+
+            .category {
+              padding: 2px 4px;
+              background: $background-primary;
+              border-radius: 8px;
+              border: 1px solid $primary;
+              color: $primary;
+              white-space: nowrap;
+              font-size: 8px;
+              background: $white;
+            }
+          }
+        }
+
+        .filter-popup {
+          left: 8px;
+          top: 102px;
+          width: calc(100% - 16px);
+          position: absolute;
+          border-radius: 8px;
+          border: 1px solid $primary;
+          z-index: 9;
+
+          .content {
+            gap: 16px;
+            flex-direction: column;
+            display: flex;
+            padding: 8px;
+            background: $white;
+            border-radius: 8px;
+
+            .vehicle-category {
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+
+              .row-1 {
                 display: flex;
+                line-height: 1;
+                justify-content: space-between;
+
+                .delete {
+                  color: $info;
+                  font-style: italic;
+                }
+              }
+
+              .row-2 {
+                display: flex;
+                flex-wrap: wrap;
                 gap: 8px;
-                flex-direction: column;
-                padding: 0 8px;
-
-                .product-list {
-                    height: fit-content;
-                    width: 100%;
-                    position: relative;
-                    border-radius: 8px;
-                    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-
-                    .top-content {
-                        background: $white;
-                        height: 60px;
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: center;
-                        padding: 8px;
-                        gap: 8px;
-                        border-top-left-radius: 8px;
-                        border-top-right-radius: 8px;
-                        position: relative;
-
-                        &.border-card {
-                            border-bottom-left-radius: 8px;
-                            border-bottom-right-radius: 8px;
-                        }
-
-                        .row-1 {
-                            font-weight: bold;
-                            line-height: 1;
-                            width: calc(100% - 28px);
-                            overflow: hidden;
-                            white-space: nowrap;
-                            text-overflow: ellipsis;
-                            font-weight: bold;
-                            line-height: 1;
-
-                        }
-
-                        .row-2 {
-
-                            span {
-                                font-weight: bold;
-                                color: $primary;
-                                font-size: 16px;
-
-                            }
-                        }
-
-                        .arrow {
-                            position: absolute;
-                            top: 18px;
-                            right: 8px;
-                            height: 20px;
-                            width: 20px;
-
-                            .material-icons {
-                                font-size: 20px;
-                            }
-                        }
-                    }
-
-                    .bot-content {
-                        .bot-content-list {
-
-                            position: relative;
-                            display: flex;
-                            padding: 8px;
-                            background: $white;
-                            gap: 8px;
-                            align-items: center;
-                            border-top: 1px solid $border;
-
-                            &:last-child {
-                                border-bottom-left-radius: 8px;
-                                border-bottom-right-radius: 8px;
-                            }
-
-                            .column-1 {
-                                position: relative;
-
-                                img {
-                                    width: 112px;
-                                    height: 84px;
-                                    border-radius: 8px;
-                                    border: 1px dotted $border;
-                                }
-
-                                .care {
-                                    position: absolute;
-                                    right: 8px;
-                                    bottom: 8px;
-                                    line-height: 1;
-                                    height: 18px;
-                                    padding: 4px;
-                                    font-style: italic;
-                                    background: $error;
-                                    border-radius: 8px;
-                                    font-size: 8px;
-                                    color: $white;
-                                    font-weight: normal;
-                                    display: flex;
-                                    align-items: center;
-
-                                    &.higher {
-                                        background: $primary;
-                                    }
-
-                                    &.equal {
-                                        background: $warning;
-                                    }
-                                }
-                            }
-
-                            .column-2 {
-                                height: 84px;
-                                display: flex;
-                                flex-direction: column;
-                                justify-content: space-between;
-                                width: 100%;
-
-                                .row-1 {
-                                    display: flex;
-                                    flex-direction: column;
-                                    gap: 4px;
-
-                                    .material-icons {
-                                        font-size: 20px;
-                                        width: 20px;
-                                        height: 20px;
-                                    }
-
-                                    .color,
-                                    .price {
-                                        display: flex;
-                                        align-items: center;
-                                        gap: 8px;
-
-
-                                    }
-
-                                    .color {
-                                        span {
-                                            font-weight: bold;
-
-                                            &:nth-of-type(2) {
-                                                margin-right: 4px;
-                                                white-space: nowrap;
-                                                text-overflow: ellipsis;
-                                            }
-                                        }
-
-
-
-                                        .check {
-                                            color: $primary;
-                                        }
-                                    }
-
-                                    .price {
-                                        span {
-                                            font-weight: bold;
-                                            color: $primary;
-                                            font-size: 20px;
-
-                                            &:last-child {
-                                                font-size: 16px;
-                                            }
-                                        }
-                                    }
-
-                                }
-
-                                .row-2 {
-                                    display: flex;
-                                    gap: 8px;
-
-                                    ps-kendo-button {
-                                        &:first-child {
-                                            flex: 1;
-
-                                            button {
-                                                width: 100%;
-                                            }
-                                        }
-
-                                        &.ware-house {
-                                            button {
-                                                width: 36px;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            .compare-important {
-                                position: absolute;
-                                display: flex;
-                                flex-direction: column;
-                                gap: 7px;
-                                bottom: 45px;
-                                right: 8px;
-
-                                span {
-                                    font-size: 20px;
-                                    width: 20px;
-                                    height: 20px;
-                                    color: $secondary;
-
-                                    &.active-com {
-                                        color: $info;
-                                    }
-
-                                    &.active-fav {
-                                        color: #FD7676;
-                                        font-variation-settings: "FILL" 1, "wght" 400, "opsz" 24;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-
-                }
-
-                .product-list2 {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 8px;
-
-                    .card-item {
-                        // .bot-content-list {
-
-                        height: 124px;
-                        padding: 8px;
-                        border-radius: 8px;
-                        background: $white;
-                        position: relative;
-                        display: flex;
-                        background: $white;
-                        gap: 8px;
-                        align-items: center;
-                        box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-
-                        .column-1 {
-                            position: relative;
-
-                            .img-frame {
-                                display: flex;
-                                width: 112px;
-                                height: 108px;
-                                border-radius: 8px;
-                                border: 1px dotted $border;
-                                align-items: center;
-
-                                img {
-                                    height: 80px;
-                                    width: 100%;
-                                }
-                            }
-
-                            .care {
-                                position: absolute;
-                                right: 8px;
-                                bottom: 8px;
-                                line-height: 1;
-                                height: 18px;
-                                padding: 4px;
-                                font-style: italic;
-                                background: $error;
-                                border-radius: 8px;
-                                font-size: 8px;
-                                color: $white;
-                                font-weight: normal;
-                                display: flex;
-                                align-items: center;
-
-                                &.higher {
-                                    background: $primary;
-                                }
-
-                                &.equal {
-                                    background: $warning;
-                                }
-                            }
-                        }
-
-                        .column-2 {
-                            height: 108px;
-                            display: flex;
-                            flex-direction: column;
-                            justify-content: space-between;
-                            width: calc(100% - 120px);
-
-                            .row-0 {
-                                font-weight: bold;
-                                white-space: nowrap;
-                                overflow: hidden;
-                                text-overflow: ellipsis;
-                                width: 100%;
-                                line-height: 1;
-                            }
-
-                            .row-1 {
-                                display: flex;
-                                flex-direction: column;
-                                gap: 4px;
-
-                                .material-icons {
-                                    font-size: 20px;
-                                    width: 20px;
-                                    height: 20px;
-                                }
-
-                                .color,
-                                .price {
-                                    display: flex;
-                                    align-items: center;
-                                    gap: 8px;
-                                    line-height: 1;
-
-                                }
-
-                                .color {
-                                    span {
-                                        font-weight: bold;
-
-                                        &:nth-of-type(2) {
-                                            margin-right: 4px;
-                                        }
-                                    }
-
-
-
-                                    .check {
-                                        color: $primary;
-                                    }
-                                }
-
-                                .price {
-                                    span {
-                                        font-weight: bold;
-                                        color: $primary;
-                                        font-size: 20px;
-
-                                        &:last-child {
-                                            font-size: 16px;
-                                        }
-                                    }
-                                }
-
-                            }
-
-                            .row-2 {
-                                display: flex;
-                                gap: 8px;
-
-                                ps-kendo-button {
-                                    &:first-child {
-                                        flex: 1;
-
-                                        button {
-                                            width: 100%;
-                                        }
-                                    }
-
-                                    &.ware-house {
-                                        button {
-                                            width: 36px;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        .compare-important {
-                            position: absolute;
-                            display: flex;
-                            flex-direction: column;
-                            gap: 6px;
-                            bottom: 47px;
-                            right: 8px;
-
-                            span {
-                                font-size: 20px;
-                                width: 20px;
-                                height: 20px;
-                                color: $secondary;
-
-                                &.active-com {
-                                    color: $info;
-                                }
-
-                                &.active-fav {
-                                    color: #FD7676;
-                                    font-variation-settings: "FILL" 1, "wght" 400, "opsz" 24;
-                                }
-                            }
-                        }
-
-                        // }
-                    }
-                }
-
-                .compare-btn {
-                    position: fixed;
-                    bottom: 60px;
-                    right: 8px;
-                    padding: 8px;
-                    border: 1px solid $info;
+                max-height: 117px;
+                overflow: auto;
+                align-content: flex-start;
+
+                div {
+                  padding: 8px;
+                  border: 1px solid transparent;
+                  line-height: 1;
+                  white-space: nowrap;
+                  border-radius: 8px;
+                  background: rgba($background-primary, 0.5);
+
+                  &.active {
                     background: $white;
-                    border-radius: 16px;
-                    color: $info;
-                    line-height: 1;
+                    color: $primary;
+                    border: 1px solid $primary;
+                  }
                 }
+              }
             }
 
-            ps-footer-action {
-                .footer-action {
+            .price {
+              position: relative;
+              width: 100%;
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+
+              .row-1 {
+                display: flex;
+                line-height: 1;
+                justify-content: space-between;
+
+                .delete {
+                  color: $info;
+                  font-style: italic;
+                }
+              }
+
+              .row-2 {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+
+                .display {
+                  position: relative;
+                  width: 100%;
+                  display: flex;
+                  justify-content: space-between;
+
+                  ps-kendo-numeric-textbox {
+                    width: 128px;
+                    z-index: 9;
+                  }
+
+                  .connect-line {
+                    top: 17px;
+                    height: 1px;
+                    background: $border;
+                    position: absolute;
+                    width: 100%;
+                    z-index: 1;
+                  }
+                }
+
+                .range {
+                  padding: 4px 0;
+
+                  .input {
+                    input {
+                      -webkit-appearance: none;
+                      appearance: none;
+                      position: absolute;
+                      pointer-events: none;
+                      z-index: 3;
+                      height: 3px;
+                      bottom: 0;
+                      width: 100%;
+                      opacity: 0;
+                      margin: 0;
+                    }
+
+                    input::-webkit-slider-thumb {
+                      -webkit-appearance: none;
+                      appearance: none;
+                      pointer-events: all;
+                      border-radius: 50%;
+                      cursor: pointer;
+                      width: 18px;
+                      height: 18px;
+                    }
+                  }
+
+                  .slide {
+                    position: absolute;
+                    bottom: 3px;
+                    height: 1px;
+                    background: $border;
+                    left: 9px;
+                    right: 9px;
+
+                    .line {
+                      position: absolute;
+                      left: 0;
+                      right: 0;
+                      bottom: 0;
+                      height: 1px;
+                      background-color: $primary;
+                    }
+
+                    .thumb {
+                      position: absolute;
+                      z-index: 2;
+                      text-align: left;
+                      border: 1px solid $primary;
+                      background-color: $white;
+                      border-radius: 50%;
+                      outline: none;
+                      top: -4px;
+                      height: 8px;
+                      width: 8px;
+                      margin-left: -4px;
+                    }
+                  }
+                }
+              }
+            }
+
+            .filter-btn {
+              width: 100%;
+              display: flex;
+              justify-content: flex-end;
+              gap: 8px;
+
+              ps-kendo-button {
+                button {
+                  width: fit-content;
+
+                  .k-button-text {
+                    text-transform: none;
+
+                    .text {
+                      font-size: 13px;
+                    }
+                  }
+                }
+
+                &:last-child {
+                  .k-button-text {
+                    .text {
+                      color: $white;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        .tool-btn {
+          button {
+            width: 36px;
+            height: 36px;
+            border: 1px solid $border;
+            position: relative;
+
+            .k-button-text {
+              .material-icons {
+                width: 20px;
+                height: 20px;
+                font-size: 20px;
+              }
+
+              .text {
+                font-size: 13px;
+              }
+
+              .total {
+                position: absolute;
+                top: 2px;
+                right: 2px;
+                border-radius: 999px;
+                background: $white;
+                border: 1px solid $error;
+                color: $error;
+                width: 16px;
+                height: 16px;
+                font-size: 9px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+            }
+          }
+
+          &.active {
+            button {
+              border: 1px solid $primary;
+              background: $white;
+            }
+          }
+
+          &.active-cart {
+            button {
+              border: 1px solid $primary;
+              background: $white;
+
+              .total {
+                background: $error;
+                border: 1px solid $error;
+                color: $white;
+              }
+            }
+          }
+
+          &.active-fav {
+            button {
+              border: 1px solid $primary;
+              background: $white;
+
+              span {
+                color: #fd7676;
+                font-variation-settings:
+                  'FILL' 1,
+                  'wght' 400,
+                  'opsz' 24;
+              }
+            }
+          }
+        }
+
+        ps-kendo-dropdown-list {
+          width: 98px;
+
+          .kendo-dropdown-list {
+            kendo-dropdownlist {
+              kendo-popup {
+                top: 102px !important;
+                left: auto !important;
+                right: 8px !important;
+                min-width: 121px !important;
+              }
+            }
+          }
+        }
+      }
+
+      .filter {
+        display: flex;
+        font-weight: bold;
+        gap: 4px;
+        align-items: center;
+        justify-content: flex-end;
+        margin: 8px;
+        height: 20px;
+
+        span {
+          display: flex;
+          font-size: 13px;
+
+          &.highlight {
+            color: $primary;
+
+            span {
+              color: $primary;
+            }
+          }
+        }
+      }
+
+      .retail-body {
+        height: calc(100% - 168px);
+        margin-bottom: 8px;
+        overflow: auto;
+        display: flex;
+        gap: 8px;
+        flex-direction: column;
+        padding: 0 8px;
+
+        .product-list {
+          height: fit-content;
+          width: 100%;
+          position: relative;
+          border-radius: 8px;
+          box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+
+          .top-content {
+            background: $white;
+            height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 8px;
+            gap: 8px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            position: relative;
+
+            &.border-card {
+              border-bottom-left-radius: 8px;
+              border-bottom-right-radius: 8px;
+            }
+
+            .row-1 {
+              font-weight: bold;
+              line-height: 1;
+              width: calc(100% - 28px);
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              font-weight: bold;
+              line-height: 1;
+            }
+
+            .row-2 {
+              span {
+                font-weight: bold;
+                color: $primary;
+                font-size: 16px;
+              }
+            }
+
+            .arrow {
+              position: absolute;
+              top: 18px;
+              right: 8px;
+              height: 20px;
+              width: 20px;
+
+              .material-icons {
+                font-size: 20px;
+              }
+            }
+          }
+
+          .bot-content {
+            .bot-content-list {
+              position: relative;
+              display: flex;
+              padding: 8px;
+              background: $white;
+              gap: 8px;
+              align-items: center;
+              border-top: 1px solid $border;
+
+              &:last-child {
+                border-bottom-left-radius: 8px;
+                border-bottom-right-radius: 8px;
+              }
+
+              .column-1 {
+                position: relative;
+
+                img {
+                  width: 112px;
+                  height: 84px;
+                  border-radius: 8px;
+                  border: 1px dotted $border;
+                }
+
+                .care {
+                  position: absolute;
+                  right: 8px;
+                  bottom: 8px;
+                  line-height: 1;
+                  height: 18px;
+                  padding: 4px;
+                  font-style: italic;
+                  background: $error;
+                  border-radius: 8px;
+                  font-size: 8px;
+                  color: $white;
+                  font-weight: normal;
+                  display: flex;
+                  align-items: center;
+
+                  &.higher {
+                    background: $primary;
+                  }
+
+                  &.equal {
+                    background: $warning;
+                  }
+                }
+              }
+
+              .column-2 {
+                height: 84px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                width: 100%;
+
+                .row-1 {
+                  display: flex;
+                  flex-direction: column;
+                  gap: 4px;
+
+                  .material-icons {
+                    font-size: 20px;
+                    width: 20px;
+                    height: 20px;
+                  }
+
+                  .color,
+                  .price {
                     display: flex;
                     align-items: center;
                     gap: 8px;
-                    padding: 8px;
-                    height: fit-content;
+                  }
 
-                    ps-kendo-button {
-                        button {
+                  .color {
+                    span {
+                      font-weight: bold;
 
-                            .k-button-text {
-                                text-transform: none;
-
-                                .material-icons {
-                                    width: 20px;
-                                    height: 20px;
-                                    font-size: 20px;
-                                }
-
-                                .text {
-                                    font-size: 13px;
-                                }
-                            }
-                        }
-
-                        &:nth-child(3),
-                        &:nth-child(4) {
-                            flex: 1;
-
-                            button {
-                                width: 100%;
-                                height: 36px;
-                            }
-
-                            .text {
-                                color: $white;
-                            }
-                        }
-
-                        &:nth-child(1),
-                        &:nth-child(2) {
-                            button {
-                                width: 36px;
-                                height: 36px;
-                                border: 1px solid $border;
-                            }
-                        }
+                      &:nth-of-type(2) {
+                        margin-right: 4px;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                      }
                     }
 
+                    .check {
+                      color: $primary;
+                    }
+                  }
+
+                  .price {
+                    span {
+                      font-weight: bold;
+                      color: $primary;
+                      font-size: 20px;
+
+                      &:last-child {
+                        font-size: 16px;
+                      }
+                    }
+                  }
                 }
+
+                .row-2 {
+                  display: flex;
+                  gap: 8px;
+
+                  ps-kendo-button {
+                    &:first-child {
+                      flex: 1;
+
+                      button {
+                        width: 100%;
+                      }
+                    }
+
+                    &.ware-house {
+                      button {
+                        width: 36px;
+                      }
+                    }
+                  }
+                }
+              }
+
+              .compare-important {
+                position: absolute;
+                display: flex;
+                flex-direction: column;
+                gap: 7px;
+                bottom: 45px;
+                right: 8px;
+
+                span {
+                  font-size: 20px;
+                  width: 20px;
+                  height: 20px;
+                  color: $secondary;
+
+                  &.active-com {
+                    color: $info;
+                  }
+
+                  &.active-fav {
+                    color: #fd7676;
+                    font-variation-settings:
+                      'FILL' 1,
+                      'wght' 400,
+                      'opsz' 24;
+                  }
+                }
+              }
             }
-
-            .dialog-stock {
-                .ps-dialog-confirm {
-                    kendo-popup {
-                        width: 306px;
-                        height: fit-content;
-
-                        .k-popup {
-                            div[psDialogConfirmHeader] {
-                                font-size: 13px;
-                                color: $primary;
-                                text-transform: none;
-                            }
-
-                            div[psDialogConfirmBody] {
-                                height: fit-content;
-                            }
-
-                            div[psDialogConfirmFooter] {
-                                justify-content: center;
-                                font-size: 13px;
-                                font-weight: bold;
-                                text-transform: none;
-                            }
-                        }
-                    }
-                }
-
-                .main-title {
-                    text-align: center;
-                    width: 100%;
-
-                    .top-content {
-                        display: flex;
-                        gap: 8px;
-                        position: relative;
-
-                        .column-1 {
-                            img {
-                                width: 112px;
-                                height: 84px;
-                                border-radius: 8px;
-                                border: 1px dotted $border;
-                            }
-                        }
-
-                        .column-2 {
-                            display: flex;
-                            flex-direction: column;
-                            gap: 8px;
-                            font-size: 13px;
-
-                            .row-1 {
-                                font-weight: bold;
-                            }
-
-                            .row-2 {
-
-                                display: flex;
-                                flex-direction: column;
-                                gap: 8px;
-
-                                .color,
-                                .price {
-                                    display: flex;
-                                    align-items: center;
-                                    gap: 8px;
-
-                                    span {
-                                        font-size: 20px;
-
-                                        &:last-child {
-                                            font-size: 13px;
-                                        }
-                                    }
-                                }
-
-                                .price {
-                                    display: flex;
-                                    align-items: center;
-                                    gap: 8px;
-
-                                    span {
-                                        color: $primary;
-
-                                        &:last-child {
-                                            font-size: 16px;
-                                            font-weight: bold;
-                                        }
-                                    }
-                                }
-
-                                .color {
-                                    span {
-                                        font-weight: bold;
-
-                                    }
-
-                                }
-                            }
-                        }
-                    }
-
-                    .bot-content {
-                        margin-top: 8px;
-                        padding: 8px;
-                        border-top: 1px solid $border;
-
-                        .bot-title {
-                            font-weight: bold;
-                            text-align: left;
-                            font-size: 13px;
-                        }
-
-                        .bot-list {
-                            display: flex;
-                            gap: 8px;
-                            flex-direction: column;
-                            padding-left: 16px;
-
-                            .item {
-                                display: flex;
-                                justify-content: space-between;
-                                font-size: 13px;
-
-                                .none {
-                                    color: $error;
-                                }
-                            }
-                        }
-                    }
-                }
-
-
-            }
-
-            .dialog-compare {
-
-                .ps-dialog-confirm {
-                    kendo-popup {
-                        width: calc(100% - 16px);
-                        height: calc(100% - 16px);
-
-                        .k-popup {
-
-                            .test {
-                                display: flex;
-                                flex-direction: column;
-                            }
-
-                            div[psDialogConfirmHeader] {
-                                font-size: 13px;
-                                color: $primary;
-                                text-transform: none;
-                                display: flex;
-                                justify-content: space-between;
-                                padding: 0 8px;
-
-                                div,
-                                span {
-                                    color: $white;
-                                    font-weight: bold;
-                                }
-                            }
-
-                            div[psDialogConfirmBody] {
-                                height: 100%;
-                                overflow: auto;
-                                align-items: flex-start;
-                                padding: 0;
-                                justify-content: flex-start;
-                                padding-bottom: 8px;
-                                font-size: 13px;
-
-                                .compare-scroll-wrapper {
-                                    height: 100%;
-                                    width: 100%;
-                                    overflow: auto;
-                                    padding: 0 8px;
-                                }
-
-                                .header-group-container {
-                                    position: sticky;
-                                    top: 0;
-                                    z-index: 99999;
-
-                                    .button-row {
-                                        padding: 0;
-
-                                        .values {
-                                            .button-item {
-                                                ps-kendo-button {
-                                                    width: 152px;
-                                                    display: flex;
-
-                                                    button {
-                                                        width: 100%;
-
-                                                        span {
-                                                            justify-content: center;
-                                                        }
-                                                    }
-                                                }
-                                            }
-
-                                            .value-item {
-                                                color: $secondary;
-
-                                                &.text-different {
-                                                    color: $error !important;
-                                                }
-                                            }
-
-                                        }
-                                    }
-                                }
-
-                                .spec-row {
-                                    width: 100%;
-                                    padding: 8px 0;
-                                    position: relative;
-                                    overflow-x: visible;
-                                    overflow-y: hidden;
-
-                                    scrollbar-width: none; // Firefox
-                                    -ms-overflow-style: none; // IE
-                                    // position: relative;
-                                    // overflow: hidden;
-
-
-
-                                    &:nth-of-type(odd) {
-                                        background: $background-primary;
-                                    }
-
-                                    &.header-row {
-                                        background: $white;
-                                        padding: 8px 0;
-                                    }
-
-                                    &.header-row {
-
-                                        .values {
-                                            align-items: flex-start;
-
-                                            span {
-                                                font-weight: bold;
-                                                line-height: 1;
-                                            }
-
-                                            .value-item {
-                                                color: $secondary;
-
-                                                &.text-different {
-                                                    color: $error !important;
-                                                }
-                                            }
-                                        }
-                                    }
-
-
-                                    .label {
-                                        position: sticky;
-                                        left: 0;
-                                        min-width: 140px;
-                                        z-index: 10;
-                                        font-weight: bold;
-                                    }
-
-
-                                    .values {
-
-                                        &:first-child {
-                                            padding-top: 0;
-                                        }
-
-                                        display: flex;
-                                        gap: 8px;
-                                        align-items: flex-end;
-                                        height: fit-content;
-                                        min-width: 100%;
-                                        width: max-content;
-
-                                        .image-item {
-                                            display: flex;
-                                            flex-direction: column;
-                                            min-width: 152px;
-                                            width: 152px;
-                                            gap: 8px;
-                                            position: relative;
-
-                                            img {
-                                                border: 1px dotted $border;
-                                                width: 152px;
-                                                height: 104px;
-                                                border-radius: 8px;
-                                            }
-
-                                            .name {
-                                                font-weight: bold;
-                                            }
-
-                                            .material-icons {
-                                                position: absolute;
-                                                bottom: 40px;
-                                                right: 8px;
-                                                color: $info;
-                                                min-width: 24px;
-                                                width: 24px;
-                                                font-size: 24px;
-                                                font-variation-settings: "FILL" var(--f, 0), "wght" var(--w, 300), "opsz" var(--o, 24);
-
-                                                &:last-child {
-                                                    bottom: 8px;
-                                                    color: $error;
-                                                }
-                                            }
-                                        }
-
-                                        span {
-                                            min-width: 152px;
-                                            width: 152px;
-                                        }
-
-                                        .value-item {
-                                            color: $secondary;
-
-                                            &.text-different {
-                                                color: $error !important;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            div[psDialogConfirmFooter] {
-                                justify-content: center;
-                                font-size: 13px;
-                                font-weight: bold;
-                                text-transform: none;
-                            }
-                        }
-                    }
-                }
-            }
+          }
         }
+
+        .product-list2 {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+
+          .card-item {
+            // .bot-content-list {
+
+            height: 124px;
+            padding: 8px;
+            border-radius: 8px;
+            background: $white;
+            position: relative;
+            display: flex;
+            background: $white;
+            gap: 8px;
+            align-items: center;
+            box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+
+            .column-1 {
+              position: relative;
+
+              .img-frame {
+                display: flex;
+                width: 112px;
+                height: 108px;
+                border-radius: 8px;
+                border: 1px dotted $border;
+                align-items: center;
+
+                img {
+                  height: 80px;
+                  width: 100%;
+                }
+              }
+
+              .care {
+                position: absolute;
+                right: 8px;
+                bottom: 8px;
+                line-height: 1;
+                height: 18px;
+                padding: 4px;
+                font-style: italic;
+                background: $error;
+                border-radius: 8px;
+                font-size: 8px;
+                color: $white;
+                font-weight: normal;
+                display: flex;
+                align-items: center;
+
+                &.higher {
+                  background: $primary;
+                }
+
+                &.equal {
+                  background: $warning;
+                }
+              }
+            }
+
+            .column-2 {
+              height: 108px;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              width: calc(100% - 120px);
+
+              .row-0 {
+                font-weight: bold;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                width: 100%;
+                line-height: 1;
+              }
+
+              .row-1 {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+
+                .material-icons {
+                  font-size: 20px;
+                  width: 20px;
+                  height: 20px;
+                }
+
+                .color,
+                .price {
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                  line-height: 1;
+                }
+
+                .color {
+                  span {
+                    font-weight: bold;
+
+                    &:nth-of-type(2) {
+                      margin-right: 4px;
+                    }
+                  }
+
+                  .check {
+                    color: $primary;
+                  }
+                }
+
+                .price {
+                  span {
+                    font-weight: bold;
+                    color: $primary;
+                    font-size: 20px;
+
+                    &:last-child {
+                      font-size: 16px;
+                    }
+                  }
+                }
+              }
+
+              .row-2 {
+                display: flex;
+                gap: 8px;
+
+                ps-kendo-button {
+                  &:first-child {
+                    flex: 1;
+
+                    button {
+                      width: 100%;
+                    }
+                  }
+
+                  &.ware-house {
+                    button {
+                      width: 36px;
+                    }
+                  }
+                }
+              }
+            }
+
+            .compare-important {
+              position: absolute;
+              display: flex;
+              flex-direction: column;
+              gap: 6px;
+              bottom: 47px;
+              right: 8px;
+
+              span {
+                font-size: 20px;
+                width: 20px;
+                height: 20px;
+                color: $secondary;
+
+                &.active-com {
+                  color: $info;
+                }
+
+                &.active-fav {
+                  color: #fd7676;
+                  font-variation-settings:
+                    'FILL' 1,
+                    'wght' 400,
+                    'opsz' 24;
+                }
+              }
+            }
+
+            // }
+          }
+        }
+
+        .compare-btn {
+          position: fixed;
+          bottom: 60px;
+          right: 8px;
+          padding: 8px;
+          border: 1px solid $info;
+          background: $white;
+          border-radius: 16px;
+          color: $info;
+          line-height: 1;
+        }
+      }
+
+      ps-footer-action {
+        .footer-action {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 8px;
+          height: fit-content;
+
+          ps-kendo-button {
+            button {
+              .k-button-text {
+                text-transform: none;
+
+                .material-icons {
+                  width: 20px;
+                  height: 20px;
+                  font-size: 20px;
+                }
+
+                .text {
+                  font-size: 13px;
+                }
+              }
+            }
+
+            &:nth-child(3),
+            &:nth-child(4) {
+              flex: 1;
+
+              button {
+                width: 100%;
+                height: 36px;
+              }
+
+              .text {
+                color: $white;
+              }
+            }
+
+            &:nth-child(1),
+            &:nth-child(2) {
+              button {
+                width: 36px;
+                height: 36px;
+                border: 1px solid $border;
+              }
+            }
+          }
+        }
+      }
+
+      .dialog-stock {
+        .ps-dialog-confirm {
+          kendo-popup {
+            width: 306px;
+            height: fit-content;
+
+            .k-popup {
+              div[psDialogConfirmHeader] {
+                font-size: 13px;
+                color: $primary;
+                text-transform: none;
+              }
+
+              div[psDialogConfirmBody] {
+                height: fit-content;
+              }
+
+              div[psDialogConfirmFooter] {
+                justify-content: center;
+                font-size: 13px;
+                font-weight: bold;
+                text-transform: none;
+              }
+            }
+          }
+        }
+
+        .main-title {
+          text-align: center;
+          width: 100%;
+
+          .top-content {
+            display: flex;
+            gap: 8px;
+            position: relative;
+
+            .column-1 {
+              img {
+                width: 112px;
+                height: 84px;
+                border-radius: 8px;
+                border: 1px dotted $border;
+              }
+            }
+
+            .column-2 {
+              display: flex;
+              flex-direction: column;
+              gap: 8px;
+              font-size: 13px;
+
+              .row-1 {
+                font-weight: bold;
+              }
+
+              .row-2 {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+
+                .color,
+                .price {
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+
+                  span {
+                    font-size: 20px;
+
+                    &:last-child {
+                      font-size: 13px;
+                    }
+                  }
+                }
+
+                .price {
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+
+                  span {
+                    color: $primary;
+
+                    &:last-child {
+                      font-size: 16px;
+                      font-weight: bold;
+                    }
+                  }
+                }
+
+                .color {
+                  span {
+                    font-weight: bold;
+                  }
+                }
+              }
+            }
+          }
+
+          .bot-content {
+            margin-top: 8px;
+            padding: 8px;
+            border-top: 1px solid $border;
+
+            .bot-title {
+              font-weight: bold;
+              text-align: left;
+              font-size: 13px;
+              margin-bottom: 8px;
+            }
+
+            .bot-list {
+              display: flex;
+              gap: 12px;
+              flex-direction: column;
+
+              .item {
+                display: flex;
+                justify-content: space-between;
+                font-size: 13px;
+                align-items: center;
+
+                .head-name {
+                  &.out-of-stock {
+                    color: $error !important;
+                  }
+
+                  &.is-local {
+                    color: $primary !important;
+                    font-weight: bold;
+                  }
+                }
+
+                .head-quantity {
+                  font-weight: bold;
+                  color: $secondary;
+
+                  &.is-local {
+                    color: $primary !important;
+                    font-size: 15px;
+                  }
+
+                  &:not(.is-local) {
+                    color: #4caf50; // Green for stars as in design? Or keep secondary.
+                    // The design shows green stars in some parts, but let's stick to secondary if unsure.
+                    // Actually the stars in the design look green.
+                    color: #4caf50;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .dialog-stock {
+        .top-content {
+          .column-2 {
+            .row-1 {
+              font-weight: bold !important;
+              font-size: 14px !important;
+              color: $secondary;
+              line-height: 1.2;
+              margin-bottom: 4px;
+            }
+          }
+        }
+      }
     }
+
+    .dialog-compare {
+      .ps-dialog-confirm {
+        kendo-popup {
+          width: calc(100% - 16px);
+          height: calc(100% - 16px);
+
+          .k-popup {
+            .test {
+              display: flex;
+              flex-direction: column;
+            }
+
+            div[psDialogConfirmHeader] {
+              font-size: 13px;
+              color: $primary;
+              text-transform: none;
+              display: flex;
+              justify-content: space-between;
+              padding: 0 8px;
+
+              div,
+              span {
+                color: $white;
+                font-weight: bold;
+              }
+            }
+
+            div[psDialogConfirmBody] {
+              height: 100%;
+              overflow: auto;
+              align-items: flex-start;
+              padding: 0;
+              justify-content: flex-start;
+              padding-bottom: 8px;
+              font-size: 13px;
+
+              .compare-scroll-wrapper {
+                height: 100%;
+                width: 100%;
+                overflow: auto;
+                padding: 0 8px;
+              }
+
+              .header-group-container {
+                position: sticky;
+                top: 0;
+                z-index: 99999;
+
+                .button-row {
+                  padding: 0;
+
+                  .values {
+                    .button-item {
+                      ps-kendo-button {
+                        width: 152px;
+                        display: flex;
+
+                        button {
+                          width: 100%;
+
+                          span {
+                            justify-content: center;
+                          }
+                        }
+                      }
+                    }
+
+                    .value-item {
+                      color: $secondary;
+
+                      &.text-different {
+                        color: $error !important;
+                      }
+                    }
+                  }
+                }
+              }
+
+              .spec-row {
+                width: 100%;
+                padding: 8px 0;
+                position: relative;
+                overflow-x: visible;
+                overflow-y: hidden;
+
+                scrollbar-width: none; // Firefox
+                -ms-overflow-style: none; // IE
+                // position: relative;
+                // overflow: hidden;
+
+                &:nth-of-type(odd) {
+                  background: $background-primary;
+                }
+
+                &.header-row {
+                  background: $white;
+                  padding: 8px 0;
+                }
+
+                &.header-row {
+                  .values {
+                    align-items: flex-start;
+
+                    span {
+                      font-weight: bold;
+                      line-height: 1;
+                    }
+
+                    .value-item {
+                      color: $secondary;
+
+                      &.text-different {
+                        color: $error !important;
+                      }
+                    }
+                  }
+                }
+
+                .label {
+                  position: sticky;
+                  left: 0;
+                  min-width: 140px;
+                  z-index: 10;
+                  font-weight: bold;
+                }
+
+                .values {
+                  &:first-child {
+                    padding-top: 0;
+                  }
+
+                  display: flex;
+                  gap: 8px;
+                  align-items: flex-end;
+                  height: fit-content;
+                  min-width: 100%;
+                  width: max-content;
+
+                  .image-item {
+                    display: flex;
+                    flex-direction: column;
+                    min-width: 152px;
+                    width: 152px;
+                    gap: 8px;
+                    position: relative;
+
+                    img {
+                      border: 1px dotted $border;
+                      width: 152px;
+                      height: 104px;
+                      border-radius: 8px;
+                    }
+
+                    .name {
+                      font-weight: bold;
+                    }
+
+                    .material-icons {
+                      position: absolute;
+                      bottom: 40px;
+                      right: 8px;
+                      color: $info;
+                      min-width: 24px;
+                      width: 24px;
+                      font-size: 24px;
+                      font-variation-settings:
+                        'FILL' var(--f, 0),
+                        'wght' var(--w, 300),
+                        'opsz' var(--o, 24);
+
+                      &:last-child {
+                        bottom: 8px;
+                        color: $error;
+                      }
+                    }
+                  }
+
+                  span {
+                    min-width: 152px;
+                    width: 152px;
+                  }
+
+                  .value-item {
+                    color: $secondary;
+
+                    &.text-different {
+                      color: $error !important;
+                    }
+                  }
+                }
+              }
+            }
+
+            div[psDialogConfirmFooter] {
+              justify-content: center;
+              font-size: 13px;
+              font-weight: bold;
+              text-transform: none;
+            }
+          }
+        }
+      }
+    }
+  }
 }

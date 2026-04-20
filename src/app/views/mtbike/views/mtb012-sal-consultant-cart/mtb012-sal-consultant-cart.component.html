@@ -66,15 +66,15 @@
                             <div class="item-category" (click)="$event.stopPropagation()">
                                 <div class="item-service"
                                     (click)="onNavigate('/mtbike/consultant/services', item, event)">
-                                    {{item.TotalOrderServices ?? 0}} dịch vụ
+                                    {{item.TotalService ?? 0}} dịch vụ
                                 </div>
                                 <div (click)="onNavigate('/mtbike/consultant/parts', item, event)" class="item-part">
-                                    {{item.TotalOrderPart ?? 0}}
+                                    {{item.TotalPart ?? 0}}
                                     phụ kiện
                                 </div>
                                 <div (click)="onNavigate('/mtbike/consultant/promotion', item, event)"
                                     class="item-part">
-                                    {{ item.TotalOrderDiscount }} CTKM
+                                    {{ item.TotalPromotion ?? 0 }} CTKM
                                 </div>
                             </div>
                         </div>
@@ -133,19 +133,6 @@
                                         <lucide-icon name="circle-dollar-sign" [size]="20"
                                             color="#126633"></lucide-icon>
                                         {{v.Price| number:'1.0-0' }}
-                                    </div>
-                                    <div class="counter">
-                                        <span class="material-icons" (click)="onRemoveTransfer(v)">
-                                            remove
-                                        </span>
-
-                                        <ps-kendo-textbox [(ngModel)]="v.Quantity" (focus)="onFocusVehicle(v)"
-                                            (blur)="onBlurTransfer(v)">
-                                        </ps-kendo-textbox>
-
-                                        <span class="material-icons" (click)="onAddTransfer(v)">
-                                            add
-                                        </span>
                                     </div>
                                 </div>
                             </div>

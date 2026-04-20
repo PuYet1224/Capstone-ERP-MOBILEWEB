@@ -185,7 +185,7 @@
                                 </ps-kendo-button>
                                 <ps-kendo-button class="tool-btn ware-house"
                                     *ngIf="!item.ListStock[0].Quantity && item.ListStock[1].Quantity"
-                                    (onClick)="showpopup = true; onGetStock(item)">
+                                    (onClick)="showpopup = true; onGetStock(item, card)">
                                     <span class="material-icons">warehouse</span>
                                 </ps-kendo-button>
                                 <!-- <ps-kendo-button class="tool-btn ware-house"
@@ -263,7 +263,7 @@
                                 Đặt xe
                             </ps-kendo-button>
                             <ps-kendo-button *ngIf="!item.ListStock[0].Quantity && item.ListStock[1].Quantity"
-                                class="tool-btn ware-house" (onClick)="showpopup = true">
+                                class="tool-btn ware-house" (onClick)="showpopup = true; onGetStock(item, card)">
                                 <span class="material-icons">warehouse</span>
                             </ps-kendo-button>
                             <ps-kendo-button
@@ -341,8 +341,10 @@
                     </div>
                     <div class="bot-list">
                         <div class="item" *ngFor="let item of listStock.ListStock">
-                            <div [class.none]="item.StockQuanlity == '' " class="head-name">{{item.BriefName}}</div>
-                            <div [class.none]="item.StockQuanlity == '' " class="head-quantity">{{item.StockQuanlity}}
+                            <div [class.out-of-stock]="item.IsOutOfStock" [class.is-local]="item.IsLocal"
+                                class="head-name">{{item.BriefName}}</div>
+                            <div [class.is-local]="item.IsLocal" class="head-quantity">
+                                {{item.StockQuanlity}}
                             </div>
                         </div>
                     </div>

@@ -778,6 +778,7 @@ const data = Array.isArray(raw) ? raw : ((raw as any) && (raw as any).Data) ? (r
     partItem.Code = this.currentPartItem && this.currentPartItem.Code ? this.currentPartItem.Code : 0;
     partItem.OrderDetail = this.orderDetail.Code;
     partItem.TypeOfPart = this.typeofpart.Code;
+    partItem.IsChecked = true;
     partItem.TypeOfPartSpecs = this.typeofpartspecs && this.typeofpartspecs.Code ? this.typeofpartspecs.Code : 0;
     partItem.BaseUnit = (this.unit as any).Code || 0;
     partItem.BaseUnitName = this.unit && this.unit.ListName ? this.unit.ListName : '';
@@ -814,8 +815,13 @@ const data = Array.isArray(raw) ? raw : ((raw as any) && (raw as any).Data) ? (r
   }
 
   private DeleteSALPartItem() {
+    const partItem = new SALOrderDetailPartItemCusDTO();
+    partItem.OrderDetail = this.orderDetail.Code;
+    partItem.TypeOfPart = this.typeofpart.Code;
+    partItem.IsChecked = false;
+
     this.subLoader.loader(true);
-    const sub = this.mtbikeapi.DeleteSALPartItem(this.currentPartItem).subscribe(
+    const sub = this.mtbikeapi.UpdateSALPartItem(partItem).subscribe(
       res => {
         this.subLoader.loader(false);
         if (res.StatusCode === 0) {

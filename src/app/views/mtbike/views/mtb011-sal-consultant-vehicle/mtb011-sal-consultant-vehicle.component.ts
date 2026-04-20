@@ -945,19 +945,45 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
   //#region POPUP STOCK
   //
   //
-  public onGetStock(item) {
+  public onGetStock(item, card?: any) {
+    // 1. Đảm bảo lấy đủ tên xe từ item hoặc card cha
+    this.listStock = { ...item };
+    if (card) {
+      this.listStock.VehicleName = item.VehicleName || card.VehicleName;
+      this.listStock.TypeOfVehicleName = item.TypeOfVehicleName || card.TypeOfVehicleName;
+    }
+    this.listStock.ListStock = [];
+
     const param = new SALOrderDetailCusDTO();
     param.Master = this.salorderdetail.Master;
     param.VehicleColor = item.Code;
     this.GetListStockForOrder(param);
   }
-  //
-  //
+
   private GetListStockForOrder(param: SALOrderDetailCusDTO) {
     this.subLoader.loader(true);
     const sub = this.mtbikeapi.GetListStockForOrder(param).subscribe(res => {
       if (res.StatusCode === 0) {
-        this.listStock = res.ObjectReturn;
+        const apiData = res.ObjectReturn || [];
+        this.listStock.ListStock = apiData.map(s => {
+          let displayQty = '';
+          // Cửa hàng hiện tại (local) hiện số thật, các cửa hàng khác hiện dấu sao
+          if (s.IsLocal) {
+            displayQty = s.Quantity > 0 ? s.Quantity.toString() : '';
+          } else {
+            if (s.Quantity > 10) displayQty = '***';
+            else if (s.Quantity > 5) displayQty = '**';
+            else if (s.Quantity > 0) displayQty = '*';
+          }
+
+          return {
+            BriefName: s.HeadName || s.WarehouseName,
+            StockQuanlity: displayQty,
+            IsOutOfStock: s.Quantity === 0,
+            IsLocal: s.IsLocal
+          };
+        });
+
         this.subLoader.loader(false);
       } else {
         this.subLoader.loader(false);
