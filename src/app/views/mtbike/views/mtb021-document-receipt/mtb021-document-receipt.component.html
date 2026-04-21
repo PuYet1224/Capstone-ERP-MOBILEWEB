@@ -22,13 +22,13 @@
                 </label>
             </div>
             
-            <ps-kendo-dropdown-list [label]="'Tư vấn viên'"
+            <!-- <ps-kendo-dropdown-list [label]="'Tư vấn viên'"
                 placeholder="'Chọn nhân viên tư vấn'"
                 [data]="listConsultants"
                 [textField]="'StaffName'"
                 [valueField]="'StaffName'"
                 [(ngModel)]="selectedConsultant">
-            </ps-kendo-dropdown-list>
+            </ps-kendo-dropdown-list> -->
         </div>
         <div psDialogConfirmBottomFooter>
             <ps-kendo-button [theme]="''" (onClick)="openFilter(false)">Đóng</ps-kendo-button>
@@ -142,7 +142,7 @@
                             </div>
 
                             <!-- Create new receipt -->
-                            <div class="create-receipt" *ngIf="item.HasDeposit" (click)="onCreateReceipt(item)">
+                            <div class="create-receipt" *ngIf="item.HasDeposit && item.AmountPaid < item.TotalPrice" (click)="onCreateReceipt(item)">
                                 <span class="material-icons">add</span>
                                 Tạo mới phiếu thu
                             </div>

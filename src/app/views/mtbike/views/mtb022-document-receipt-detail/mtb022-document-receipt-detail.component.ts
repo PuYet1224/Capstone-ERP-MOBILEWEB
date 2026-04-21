@@ -214,12 +214,16 @@ export class Mtb022DocumentReceiptDetailComponent {
     this.receipt.Status = 4; // Đang xử lý
     this.updateReceipt(() => {
       this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
-      this.notification.onSuccess('Đã thu tiền và chuyển trạng thái Đang xử lý');
+      this.notification.onSuccess('Thành công');
       this.onnavigate('/mtbike/document/receipt');
     });
   }
 
   public toggleConfirmReceived(isOpen: boolean): void {
+    if (isOpen && (!this.receipt.Signature || PsString.isNullOrWhitespace(this.receipt.Signature))) {
+      this.notification.onWarning("Vui lòng ký tên");
+      return;
+    }
     this.showConfirmReceived = isOpen;
   }
 
@@ -312,35 +316,10 @@ export class Mtb022DocumentReceiptDetailComponent {
     if (!e || PsString.isNullOrWhitespace(e))
       return;
 
-    const properties = ['Signature'];
-    const param: UpdatePropertiesInterface<SALOrderReceiptCusDTO> = {
-      DTO: {
-        ...this.receipt,
-        Signature: e
-      },
-      Properties: properties,
-    };
-
-    this.loader.loader(true);
-    const sub = this.api.UpdateSALReceipt(param.DTO).subscribe(
-      (res) => {
-        this.loader.loader(false);
-        if (res.StatusCode === 0) {
-          this.receipt.Signature = e;
-          this.receiptcopy.Signature = e;
-          this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
-          this.notification.onSuccess('Thành công');
-          this.closeSignaturePopup();
-        } else {
-          this.notification.onError(`Lỗi: ${res.ErrorString}`);
-        }
-      },
-      (err) => {
-        this.loader.loader(false);
-        this.notification.onError(`Lỗi: ${err.message || err}`);
-      }
-    );
-    this.arrUnsubscribe.push(sub);
+    this.receipt.Signature = e;
+    this.receiptcopy.Signature = e;
+    this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
+    this.closeSignaturePopup();
   }
 
   print() {
