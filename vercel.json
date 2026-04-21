@@ -1,17 +1,17 @@
 {
   "buildCommand": "ng build --configuration=prod",
   "outputDirectory": "dist/hoaiminh-erp",
+  "functions": {
+    "api/proxy-api/[...path].js": {
+      "maxDuration": 30
+    },
+    "api/proxy-identity/[...path].js": {
+      "maxDuration": 30
+    }
+  },
   "rewrites": [
     {
-      "source": "/api/proxy-api/(.*)",
-      "destination": "/api/proxy-api/$1"
-    },
-    {
-      "source": "/api/proxy-identity/(.*)",
-      "destination": "/api/proxy-identity/$1"
-    },
-    {
-      "source": "/(.*)",
+      "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
   ],
