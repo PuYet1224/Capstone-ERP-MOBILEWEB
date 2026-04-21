@@ -578,6 +578,11 @@
                 justify-content: space-between;
                 width: 100%;
 
+                &.centered {
+                  justify-content: center;
+                  gap: 10px;
+                }
+
                 .row-1 {
                   display: flex;
                   flex-direction: column;
@@ -746,6 +751,11 @@
               flex-direction: column;
               justify-content: space-between;
               width: calc(100% - 120px);
+
+              &.centered {
+                justify-content: center;
+                gap: 10px;
+              }
 
               .row-0 {
                 font-weight: bold;

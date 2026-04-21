@@ -28,12 +28,13 @@ export class ViewsComponent implements OnInit, OnDestroy {
     var listurl = url.split('/');
     if (!listurl.includes('menu') && !listurl.includes('store') && !listurl.includes('login')) {
       var funcdll = listurl[2];
-
-      // Try to find a more specific DLL in nested segments
-      for (let i = listurl.length - 1; i >= 2; i--) {
-        if (MtbikeApiStaticService.getNamespace(listurl[i])) {
-          funcdll = listurl[i];
-          break;
+      // Ưu tiên lấy DLL từ segment 2, chỉ tìm sâu hơn nếu segment 2 không phải namespace hợp lệ
+      if (!MtbikeApiStaticService.getNamespace(funcdll) && listurl.length > 3) {
+        for (let i = 3; i < listurl.length; i++) {
+          if (MtbikeApiStaticService.getNamespace(listurl[i])) {
+            funcdll = listurl[i];
+            break;
+          }
         }
       }
 

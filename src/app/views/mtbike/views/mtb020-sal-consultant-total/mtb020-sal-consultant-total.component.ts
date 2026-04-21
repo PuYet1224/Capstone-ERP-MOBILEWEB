@@ -47,6 +47,8 @@ export class Mtb020SalConsultantTotalComponent implements OnInit, OnDestroy, Aft
     const list = this.listDetails as any[];
     const z = { v: 0, vat: 0, svc: 0, part: 0, discount: 0, lumpsum: 0, deposit: 0 };
     const o = list.reduce((acc, r) => {
+      if (r.IsOrderLock !== true) return acc;
+
       const v = r.BasePrice ?? r.Price ?? 0;
       const vat = r.VATAmount ?? 0;
       const svc = Array.isArray(r.ListService) ? r.ListService.reduce((s: number, x: any) => s + (x.Price ?? x.Amount ?? 0), 0) : (r.TotalService ?? 0);

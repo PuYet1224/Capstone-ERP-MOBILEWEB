@@ -361,9 +361,11 @@
           ps-kendo-button {
             height: 36px;
             border-radius: 8px;
+            flex: 1;
+            width: auto;
 
-            &:nth-child(1),
-            &:nth-child(2) {
+            &:nth-child(1):nth-last-child(3),
+            &:nth-child(2):nth-last-child(2) {
               flex-shrink: 0;
               width: 36px;
 
@@ -482,7 +484,7 @@
 
         .form-fields {
           width: 100%;
-          padding: 8px;
+          padding-top: 8px;
           display: flex;
           flex-direction: column;
           gap: 8px;
@@ -530,7 +532,6 @@
           align-items: center;
           gap: 8px;
           padding: 0 8px 8px;
-          width: calc(100% - 16px);
           margin: 0 auto;
           box-sizing: border-box;
 
@@ -554,7 +555,7 @@
                 border-color: $primary;
                 color: $white;
 
-                .text {
+                .k-button-text {
                   color: $white;
                 }
               }

@@ -81,7 +81,7 @@
                         <div class="service-item" *ngFor="let promotion of promotionlist; let i = index" [class.checked]="promotion.IsChecked">
                             <label [for]="promotion.Code + '_' + i">
                                 <div class="group-checkbox">
-                                    <ps-kendo-checkbox [(ngModel)]="promotion.IsChecked" [id]="promotion.Code + '_' + i"
+                                    <ps-kendo-checkbox [(ngModel)]="promotion.IsChecked" [id]="promotion.Code + '_' + i" [disabled]="detail?.MasterStatus != enummasterstt.NEW"
                                                        (onchecked)="onpromotionchecked(promotion)">
                                     </ps-kendo-checkbox>
                                     <div class="group-text">

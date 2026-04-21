@@ -351,7 +351,7 @@ const data = Array.isArray(raw) ? raw : ((raw as any) && (raw as any).Data) ? (r
   public FunctionPermissionDTO = FunctionPermissionDTO;
 
   public onAddNewPart() {
-    if (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator) return;
+    if ((!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator) || this.retailMaster?.Status != 1) return;
     this.isEditMode = false;
     this.resetForm();
 
@@ -365,7 +365,6 @@ const data = Array.isArray(raw) ? raw : ((raw as any) && (raw as any).Data) ? (r
   }
 
   public onEditPart(part: SALOrderDetailPartItemCusDTO) {
-    if (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator) return;
     if (!part || !part.Code || !part.TypeOfPart) return;
 
     this.isEditMode = true;

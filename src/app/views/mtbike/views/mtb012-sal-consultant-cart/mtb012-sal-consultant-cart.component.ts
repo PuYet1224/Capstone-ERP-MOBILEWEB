@@ -342,6 +342,10 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
 
   }
 
+  public hasCheckedItems(item: any): boolean {
+    return item.ListGroupOrderDetail && item.ListGroupOrderDetail.some((v: any) => v.IsChecked);
+  }
+
 
   //#endregion
 

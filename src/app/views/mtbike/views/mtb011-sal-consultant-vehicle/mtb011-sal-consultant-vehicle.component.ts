@@ -13,6 +13,7 @@ import { SALVehicleCusDTO } from 'src/app/models/dtos/e-dtos/sal-vehicle.dto.';
 import { FunctionPermissionDTO } from 'src/app/models/dtos/function-permission.dto';
 import { UpdateStatusInterface } from 'src/app/models/dtos/update-status.interface';
 import { SALOrderDetailTypeDataEnum } from 'src/app/models/enums/e-type/sal-order-detail-type-data.enum';
+import { SALOrderMasterStatusRetailEnum } from 'src/app/models/enums/e-status/sal-order-master-status-retail.enum';
 import { KeyLocalStorageEnum } from 'src/app/models/enums/key-local-storage.enum';
 import { PsKendoNotificationService } from 'src/app/services/core/ps-kendo-notification.service';
 import { PsCache } from 'src/app/services/utilities/ps-cache';
@@ -104,6 +105,7 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
   public canBuyCompare: boolean;
   public FunctionPermissionDTO = FunctionPermissionDTO;
   public SALOrderDetailTypeDataEnum = SALOrderDetailTypeDataEnum;
+  public SALOrderMasterStatusRetailEnum = SALOrderMasterStatusRetailEnum;
   private vehicleColorCache = new Map<string, LSVehicleColorCusDTO>();
   public listStock: LSVehicleColorCusDTO = new LSVehicleColorCusDTO();
 
