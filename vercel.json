@@ -1,28 +1,18 @@
 {
   "buildCommand": "ng build --configuration=prod",
   "outputDirectory": "dist/hoaiminh-erp",
-  "functions": {
-    "api/proxy-api/[...path].js": {
-      "maxDuration": 30
-    },
-    "api/proxy-identity/[...path].js": {
-      "maxDuration": 30
-    }
-  },
   "rewrites": [
     {
-      "source": "/((?!api/).*)",
-      "destination": "/index.html"
-    }
-  ],
-  "headers": [
+      "source": "/api/proxy-identity/:path*",
+      "destination": "http://identity.hoaiminh.vn/:path*"
+    },
     {
-      "source": "/api/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, DELETE, OPTIONS, PATCH" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization, X-Requested-With, Accept, Company, Language, Data-Type, Priority" }
-      ]
+      "source": "/api/proxy-api/:path*",
+      "destination": "http://puyet1224-001:Puyet1224%40@puyet1224-001-site1.jtempurl.com/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
