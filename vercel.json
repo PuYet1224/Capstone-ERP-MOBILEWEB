@@ -1,11 +1,34 @@
 {
   "version": 2,
-  "buildCommand": "ng build --configuration=prod",
-  "outputDirectory": "dist/hoaiminh-erp",
-  "rewrites": [
+  "builds": [
     {
-      "source": "/((?!api/).*)",
-      "destination": "/index.html"
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "buildCommand": "ng build --configuration=prod",
+        "outputDirectory": "dist/hoaiminh-erp"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/proxy-api/(.*)",
+      "dest": "/api/proxy-api/[...slug].js"
+    },
+    {
+      "src": "/api/proxy-identity/(.*)",
+      "dest": "/api/proxy-identity/[...slug].js"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
