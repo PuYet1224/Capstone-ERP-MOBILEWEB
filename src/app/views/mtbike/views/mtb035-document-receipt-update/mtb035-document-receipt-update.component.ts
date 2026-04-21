@@ -104,13 +104,19 @@ export class Mtb035DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
       this.receipt.TransferAmount = this.receipt.TransferAmount || 0;
     }
     this.receipt.CollectedAmount = (this.receipt.CashAmount || 0) + (this.receipt.TransferAmount || 0);
-
-    this.onBlur();
+    
+    if (this.receipt.Code === 0) {
+      this.updateReceipt();
+    } else {
+      this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
+      this.receiptcopy = { ...this.receipt };
+    }
   }
 
   public onCashAmountChange(val: number): void {
     this.receipt.CashAmount = val || 0;
     this.receipt.CollectedAmount = (this.receipt.CashAmount || 0) + (this.receipt.TransferAmount || 0);
+    this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
   }
 
   public onTransferAmountChange(val: number): void {
@@ -121,6 +127,7 @@ export class Mtb035DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
       this.receipt.CashAmount = 0;
     }
     this.receipt.CollectedAmount = (this.receipt.CashAmount || 0) + (this.receipt.TransferAmount || 0);
+    this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
   }
 
   public validateForm(): boolean {
@@ -166,7 +173,8 @@ export class Mtb035DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
 
   public onBlur(): void {
     if (this.checkDataChanged()) {
-      this.updateReceipt();
+      this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
+      this.receiptcopy = { ...this.receipt };
     }
   }
 

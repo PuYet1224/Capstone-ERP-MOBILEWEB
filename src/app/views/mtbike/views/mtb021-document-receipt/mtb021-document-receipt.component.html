@@ -142,7 +142,7 @@
                             </div>
 
                             <!-- Create new receipt -->
-                            <div class="create-receipt" *ngIf="item.HasDeposit" (click)="onCreateReceipt(item)">
+                            <div class="create-receipt" *ngIf="item.HasDeposit && item.AmountPaid < item.TotalPrice" (click)="onCreateReceipt(item)">
                                 <span class="material-icons">add</span>
                                 Tạo mới phiếu thu
                             </div>

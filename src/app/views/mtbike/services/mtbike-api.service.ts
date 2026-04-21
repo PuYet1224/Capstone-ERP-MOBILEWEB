@@ -1296,9 +1296,10 @@ export class MtbikeApiService {
     });
   }
 
-  public GetListSALMaster(param: State): Observable<ResponseDTO> {
+  public GetListSALMaster(param: any): Observable<ResponseDTO> {
     return new Observable<ResponseDTO>((obs) => {
-      this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).GetListSALMaster, toDataSourceRequest(param))
+      const payload = { ...toDataSourceRequest(param), isExcludeInstallment: param.isExcludeInstallment };
+      this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).GetListSALMaster, payload)
         .subscribe((res: ResponseDTO) => {
           obs.next(res);
           obs.complete();
@@ -1348,9 +1349,10 @@ export class MtbikeApiService {
     });
   }
 
-  public GetListSALReceipt(param: State): Observable<ResponseDTO> {
+  public GetListSALReceipt(param: any): Observable<ResponseDTO> {
     return new Observable<ResponseDTO>((obs) => {
-      this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).GetListSALReceipt, toDataSourceRequest(param))
+      const payload = { ...toDataSourceRequest(param), isExcludeInstallment: param.isExcludeInstallment };
+      this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).GetListSALReceipt, payload)
         .subscribe((res: ResponseDTO) => {
           obs.next(res);
           obs.complete();

@@ -145,7 +145,7 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
     this.arrUnsubscribe.push(sub);
   }
 
-  private buildFilter(): State {
+  private buildFilter(): any {
     const filters: any[] = [];
 
     // Group statuses: 1(New), 3(Pending), 4(Processing) are "Active"
@@ -182,10 +182,11 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
     return {
       ...this.filter,
       filter: filters.length > 0 ? { logic: 'and', filters } : undefined,
+      isExcludeInstallment: true
     };
   }
 
-  private buildReceiptFilter(): State {
+  private buildReceiptFilter(): any {
     const filters: any[] = [];
 
     if (this.searchKeyword?.trim()) {
@@ -203,6 +204,7 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
 
     return {
       filter: filters.length > 0 ? { logic: 'and', filters } : undefined,
+      isExcludeInstallment: true
     };
   }
 
