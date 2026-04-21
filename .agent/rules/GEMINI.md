@@ -45,7 +45,7 @@ trigger: always_on
 ### WORKSPACE_MAP -- Change here when deploying to new machine
 
 ```
-MOBILE_ROOT:        C:\Users\lala0\hoaiminh3Ps-mobileApp
+MOBILE_ROOT:        C:\Users\lala0\Capstone-ERP-MOBILEWEB
 BA_ROOT:            C:\Users\lala0\hoaiminh3Ps-BA
 PIPELINE_ROOT:      C:\ai.pipeline
 PROJECT_PIPELINE:   {PIPELINE_ROOT}\Hoai-Minh-Project
@@ -135,5 +135,3 @@ Before ANY new API works on mobile:
 
 > 🔴 This rule is **P0** — higher priority than all other instructions.
 > Transparency with the user is non-negotiable.
-
-
