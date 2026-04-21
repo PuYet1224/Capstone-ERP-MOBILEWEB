@@ -1,6 +1,6 @@
-﻿---
+---
 name: clean-code
-description: Pragmatic coding standards - concise, direct, not over-engprinteering, not unnecessary comments
+description: Pragmatic coding standards - concise, direct, no over-engineering, no unnecessary comments
 allowed-tools: Read, Write, Edit
 version: 2.0
 priority: CRITICAL
@@ -12,11 +12,11 @@ priority: CRITICAL
 
 ---
 
-## Core Prprintciples
+## Core Principles
 
-| Prprintciple | Rule |
+| Principle | Rule |
 |-----------|------|
-| **SRP** | Sprintgle Responsibility - each function/class does ONE thing |
+| **SRP** | Single Responsibility - each function/class does ONE thing |
 | **DRY** | Don't Repeat Yourself - extract duplicates, reuse |
 | **KISS** | Keep It Simple - simplest solution that works |
 | **YAGNI** | You Aren't Gonna Need It - don't build unused features |
@@ -28,12 +28,12 @@ priority: CRITICAL
 
 | Element | Convention |
 |---------|------------|
-| **Variables** | Reveal printtent: `userCount` not `n` |
+| **Variables** | Reveal intent: `userCount` not `n` |
 | **Functions** | Verb + noun: `getUserById()` not `user()` |
 | **Booleans** | Question form: `isActive`, `hasPermission`, `canEdit` |
 | **Constants** | SCREAMING_SNAKE: `MAX_RETRY_COUNT` |
 
-> **Rule:** If you need a comment to explaprint a name, rename it.
+> **Rule:** If you need a comment to explain a name, rename it.
 
 ---
 
@@ -42,7 +42,7 @@ priority: CRITICAL
 | Rule | Description |
 |------|-------------|
 | **Small** | Max 20 lines, ideally 5-10 |
-| **One Thprintg** | Does one thing, does it well |
+| **One Thing** | Does one thing, does it well |
 | **One Level** | One level of abstraction per function |
 | **Few Args** | Max 3 arguments, prefer 0-2 |
 | **No Side Effects** | Don't mutate inputs unexpectedly |
@@ -65,7 +65,7 @@ priority: CRITICAL
 | Situation | Action |
 |-----------|--------|
 | User asks for feature | Write it directly |
-| User reports bug | Fix it, don't explaprint |
+| User reports bug | Fix it, don't explain |
 | No clear requirement | Ask, don't assume |
 
 ---
@@ -76,7 +76,7 @@ priority: CRITICAL
 |-----------|-------|
 | Comment every line | Delete obvious comments |
 | Helper for one-liner | Inline the code |
-| Factory for 2 objects | Direct printstantiation |
+| Factory for 2 objects | Direct instantiation |
 | utils.ts with 1 function | Put code where used |
 | "First we import..." | Just write code |
 | Deep nesting | Guard clauses |
@@ -87,7 +87,7 @@ priority: CRITICAL
 
 ## 🔴 Before Editing ANY File (THINK FIRST!)
 
-**Before changprintg a file, ask yourself:**
+**Before changing a file, ask yourself:**
 
 | Question | Why |
 |----------|-----|
@@ -99,8 +99,8 @@ priority: CRITICAL
 **Quick Check:**
 ```
 File to edit: UserService.ts
-`--- Who imports this? -> UserController.ts, AuthController.ts
-`--- Do they need changes too? -> Check function signatures
+└── Who imports this? → UserController.ts, AuthController.ts
+└── Do they need changes too? → Check function signatures
 ```
 
 > 🔴 **Rule:** Edit the file + all dependent files in the SAME task.
@@ -114,88 +114,42 @@ File to edit: UserService.ts
 |----|-------|
 | Write code directly | Write tutorials |
 | Let code self-document | Add obvious comments |
-| Fix bugs immediately | Explaprint the fix first |
+| Fix bugs immediately | Explain the fix first |
 | Inline small things | Create unnecessary files |
 | Name things clearly | Use abbreviations |
 | Keep functions small | Write 100+ line functions |
 
-> **Remember: The user wants workprintg code, not a programming lesson.**
+> **Remember: The user wants working code, not a programming lesson.**
 
 ---
 
 ## 🔴 Self-Check Before Completing (MANDATORY)
 
-**Before sayprintg "task complete", verify:**
+**Before saying "task complete", verify:**
 
 | Check | Question |
 |-------|----------|
 | ✅ **Goal met?** | Did I do exactly what user asked? |
 | ✅ **Files edited?** | Did I modify all necessary files? |
 | ✅ **Code works?** | Did I test/verify the change? |
-| ✅ **No errors?** | Lprintt and TypeScript pass? |
+| ✅ **No errors?** | Lint and TypeScript pass? |
 | ✅ **Nothing forgotten?** | Any edge cases missed? |
 
 > 🔴 **Rule:** If ANY check fails, fix it before completing.
 
 ---
 
-## Verification Scripts (MANDATORY)
+## Verification (MANDATORY)
 
-> 🔴 **CRITICAL:** Each agent runs ONLY their own skill's scripts after completing work.
+> 🔴 **CRITICAL:** After completing work, verify with Angular CLI.
 
-### Agent -> Script Mapping
+### Verification Commands
 
-| Agent | Script | Command |
-|-------|--------|---------|
-| **frontend-specialist** | UX Audit | `python .agent/skills/frontend-design/scripts/ux_audit.py .` |
-| **frontend-specialist** | A11y Check | `python .agent/skills/frontend-design/scripts/accessibility_checker.py .` |
-| **backend-specialist** | API Validator | `python .agent/skills/api-patterns/scripts/api_validator.py .` |
-| **mobile-developer** | Mobile Audit | `python .agent/skills/mobile-design/scripts/mobile_audit.py .` |
-| **database-architect** | Schema Validate | `python .agent/skills/database-design/scripts/schema_validator.py .` |
-| **security-auditor** | Security Scan | `python .agent/skills/vulnerability-scanner/scripts/security_scan.py .` |
-| **seo-specialist** | SEO Check | `python .agent/skills/seo-fundamentals/scripts/seo_checker.py .` |
-| **seo-specialist** | GEO Check | `python .agent/skills/geo-fundamentals/scripts/geo_checker.py .` |
-| **performance-optimizer** | Lighthouse | `python .agent/skills/performance-profilprintg/scripts/lighthouse_audit.py <url>` |
-| **test-engprinteer** | Test Runner | `python .agent/skills/testing-patterns/scripts/test_runner.py .` |
-| **test-engprinteer** | Playwright | `python .agent/skills/webapp-testing/scripts/playwright_runner.py <url>` |
-| **Any agent** | Lprintt Check | `python .agent/skills/lprintt-and-validate/scripts/lprintt_runner.py .` |
-| **Any agent** | Type Coverage | `python .agent/skills/lprintt-and-validate/scripts/type_coverage.py .` |
-| **Any agent** | i18n Check | `python .agent/skills/i18n-localization/scripts/i18n_checker.py .` |
+| Check | Command | When |
+|-------|---------|------|
+| **Build** | `ng build` | After every code change |
+| **Lint** | `ng lint` (if configured) | Before PR |
+| **Visual** | Check at 375px viewport | After UI changes |
 
-> ❌ **WRONG:** `test-engprinteer` running `ux_audit.py`
-> ✅ **CORRECT:** `frontend-specialist` running `ux_audit.py`
-
----
-
-### 🔴 Script Output Handlprintg (READ -> SUMMARIZE -> ASK)
-
-**When running a validation script, you MUST:**
-
-1. **Run the script** and capture ALL output
-2. **Parse the output** - identify errors, warnings, and passes
-3. **Summarize to user** in this format:
-
-```markdown
-## Script Results: [script_name.py]
-
-### ❌ Errors Found (X items)
-- [File:Line] Error description 1
-- [File:Line] Error description 2
-
-### ⚠️ Warnings (Y items)
-- [File:Line] Warning description
-
-### ✅ Passed (Z items)
-- Check 1 passed
-- Check 2 passed
-
-**Should I fix the X errors?**
-```
-
-4. **Wait for user confirmation** before fixprintg
-5. **After fixprintg** -> Re-run script to confirm
-
-> 🔴 **VIOLATION:** Running script and ignoring output = FAILED task.
-> 🔴 **VIOLATION:** Auto-fixprintg without askprintg = Not allowed.
-> 🔴 **Rule:** Always READ output -> SUMMARIZE -> ASK -> then fix.
+> 🔴 **Rule:** A task is NOT complete until `ng build` passes with 0 errors.
 
