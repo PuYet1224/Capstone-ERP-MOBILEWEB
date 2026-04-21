@@ -27,7 +27,7 @@
                 <div class="group-services">
                     <label [for]="promotion.Code + '_' + i">
                         <div class="group-checkbox">
-                            <ps-kendo-checkbox [(ngModel)]="promotion.IsChecked" [id]="promotion.Code + '_' + i" class="service-checkbox"
+                            <ps-kendo-checkbox [(ngModel)]="promotion.IsChecked" [id]="promotion.Code + '_' + i" class="service-checkbox" [disabled]="master?.Status != enummasterstt.NEW"
                                                (onchecked)="onuncheck(promotion, false)">
                             </ps-kendo-checkbox>
                             <div class="group-text">
@@ -48,14 +48,14 @@
                 </div>
 
                 <div class="section-group" *ngIf="promotion.IsChecked == true">
-                    <ps-kendo-checkbox label="Áp dụng cho tất cả" [(ngModel)]="promotion.IsAll" [id]="promotion.Code + '_' + i + '_' + promotion.IsAll"
+                    <ps-kendo-checkbox label="Áp dụng cho tất cả" [(ngModel)]="promotion.IsAll" [id]="promotion.Code + '_' + i + '_' + promotion.IsAll" [disabled]="master?.Status != enummasterstt.NEW"
                                        (onchecked)="oncheckall(promotion)"></ps-kendo-checkbox>
                     <span class="price">{{formatprice(promotion.Price)}}đ</span>
                 </div>
 
                 <ng-container *ngIf="promotion.IsChecked == true && !promotion.IsAll">
                     <div class="section-group" *ngFor="let chill of promotion.ListOrderDetail">
-                        <ps-kendo-checkbox [(ngModel)]="chill.IsChecked" [id]="promotion.Code + '_' + i + '_' + chill.Code"
+                        <ps-kendo-checkbox [(ngModel)]="chill.IsChecked" [id]="promotion.Code + '_' + i + '_' + chill.Code" [disabled]="master?.Status != enummasterstt.NEW"
                                            (onchecked)="onitemchecked(promotion, chill)">
                         </ps-kendo-checkbox>
                         <label class="group-vehicle" [for]="promotion.Code + '_' + i + '_' + chill.Code">

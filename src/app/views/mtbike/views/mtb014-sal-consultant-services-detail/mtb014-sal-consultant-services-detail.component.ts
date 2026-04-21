@@ -170,7 +170,7 @@ export class Mtb014SalConsultantServicesDetailComponent implements OnInit, OnDes
   }
 
   public onservicechecked(service: CSServiceMasterCusDTO) {
-    if (this.detail.Status != this.enumdetailstt.NEW || (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator))
+    if (this.detail.MasterStatus != this.enummasterstt.NEW || (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator))
       return;
 
     const updateParam: SALOrderDetailServiceCusDTO = {
@@ -208,11 +208,7 @@ export class Mtb014SalConsultantServicesDetailComponent implements OnInit, OnDes
     const sub = this.mtbikeapi.UpdateSALService(param)
       .subscribe((res) => {
         if (res.StatusCode === 0) {
-          if (param.IsChecked)
-            this.detail.TotalService += 1;
-          else
-            this.detail.TotalService -= 1;
-
+          this.getconsutantorderdetail(this.detail.Code);
           this.subLoader.loader(false);
           this.notification.onSuccess('Thành công');
         } else {

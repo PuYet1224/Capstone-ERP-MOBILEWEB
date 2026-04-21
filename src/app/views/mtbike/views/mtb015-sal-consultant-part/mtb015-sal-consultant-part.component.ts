@@ -192,6 +192,7 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
   }
 
   toggleVehicleSelect(v: SALOrderDetailCusDTO): void {
+    if (this.retailMaster?.Status != 1) return;
     if (!v || v.Code == null) return;
     if (this.selectedDetailCodes.has(v.Code)) {
       if (this.selectedDetailCodes.size > 1) this.selectedDetailCodes.delete(v.Code);
@@ -381,19 +382,29 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
       return;
     }
     if (this.isSaving) return;
-    const dto = new SALOrderDetailPartItemCusDTO();
-    dto.Code = this.editingPartItem.Code;
+    const detailCodes = [...this.selectedDetailCodes];
+    const calls = detailCodes.map((detailCode) => {
+      const dto = new SALOrderDetailPartItemCusDTO();
+      dto.Code = (detailCode === this.originalDetailCode) ? this.editingPartItem.Code : this.getExistingPartCode(detailCode);
+      dto.OrderDetail = detailCode;
+      dto.TypeOfPart = this.editingPartItem.TypeOfPart;
+      dto.IsChecked = false;
+      return this.mtbikeapi.UpdateSALPartItem(dto);
+    });
     this.isSaving = true;
     this.subLoader.loader(true);
-    const sub = this.mtbikeapi.DeleteSALPartItem(dto).subscribe({
-      next: (res) => {
+    const sub = forkJoin(calls).subscribe({
+      next: (results) => {
         this.isSaving = false;
         this.subLoader.loader(false);
-        if (res && res.StatusCode === 0) {
+        if (results.every((r) => r && r.StatusCode === 0)) {
           this.notification.onSuccess('Thành công');
           this.refreshlist();
           this.onClosePopup();
-        } else this.notification.onError(res && res.ErrorString || 'Thất bại');
+        } else {
+          const err = results.find((r) => r && r.StatusCode !== 0);
+          this.notification.onError(err && err.ErrorString || 'Thất bại');
+        }
       },
       error: (err) => { this.isSaving = false; this.subLoader.loader(false); this.notification.onError(err && err.message || 'Thất bại'); },
     });
@@ -407,6 +418,7 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
   private buildPartItemDTO(orderDetailCode: number): SALOrderDetailPartItemCusDTO {
     const dto = new SALOrderDetailPartItemCusDTO();
     dto.OrderDetail = orderDetailCode;
+    dto.IsChecked = true;
     if (this.isEditMode && this.editingPartItem) {
       dto.TypeOfPart = this.editingPartItem.TypeOfPart ?? 0;
       dto.TypeOfPartSpecs = this.editingPartItem.TypeOfPartSpecs ?? 0;

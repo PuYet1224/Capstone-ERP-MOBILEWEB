@@ -334,67 +334,18 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
     const param = new SALOrderDetailCusDTO();
     param.Master = this.retailMaster.Code;
     param.HeadTransfer = item.Code;
+    param.TypeData = SALOrderDetailTypeDataEnum.TRANSFER;
     param.VehicleColor = v.VehicleColorCode;
     param.Quantity = v.Quantity;
+    param.IsChecked = v.IsChecked;
     this.UpdateSALDetail(param);
 
   }
 
-  public onBlurTransfer(v: any) {
-    if (this.oldOrderQuantity === v.Quantity) return;
-
-    if (v.Quantity < 0 || isNaN(v.Quantity)) {
-      this.notification.onWarning("Số lượng không hợp lệ");
-      v.Quantity = this.oldOrderQuantity;
-      return;
-    }
-
-    const diff = v.Quantity - this.oldOrderQuantity;
-
-    if (diff > 0) {
-      if (v.Quantity > v.StockQuantity) {
-        this.notification.onWarning("Vượt quá số lượng tồn");
-        v.Quantity = this.oldOrderQuantity; // Reset về giá trị cũ
-        return;
-      }
-      this.callApiAddTransfer(v, diff);
-    } else if (diff < 0) {
-      this.callApiDeleteTransfer(v, Math.abs(diff));
-    }
+  public hasCheckedItems(item: any): boolean {
+    return item.ListGroupOrderDetail && item.ListGroupOrderDetail.some((v: any) => v.IsChecked);
   }
 
-  public onAddTransfer(v: any) {
-    if (v.Quantity + 1 > v.StockQuantity) {
-      this.notification.onWarning("Vượt quá số lượng tồn");
-      return;
-    }
-    this.callApiAddTransfer(v, 1);
-  }
-
-  public onRemoveTransfer(v: any) {
-    if (v.Quantity <= 0) return;
-    this.callApiDeleteTransfer(v, 1);
-  }
-
-  private callApiAddTransfer(v: any, qty: number) {
-    const param = new LSVehicleColorCusDTO();
-    param.Master = this.retailMaster.Code;
-    param.Code = v.VehicleColorCode;
-    param.OrderQuantity = qty;
-    param.OrderTypeData = SALOrderDetailTypeDataEnum.TRANSFER;
-
-    this.AddSALSelectedVehicles(param);
-  }
-
-  private callApiDeleteTransfer(v: any, qty: number) {
-    const param = new LSVehicleColorCusDTO();
-    param.Master = this.retailMaster.Code;
-    param.Code = v.VehicleColorCode;
-    param.OrderQuantity = qty;
-    param.OrderTypeData = SALOrderDetailTypeDataEnum.TRANSFER;
-
-    this.DeleteSALSelectedVehicles(param);
-  }
 
   //#endregion
 

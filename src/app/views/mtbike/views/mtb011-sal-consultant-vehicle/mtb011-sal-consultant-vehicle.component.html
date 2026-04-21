@@ -156,7 +156,7 @@
                                 [class.equal]="item.OtherOrderQuantity == (item.ListStock[0].Quantity + item.ListStock[1].Quantity) ">SL
                                 quan tâm ({{item.OtherOrderQuantity}})</span>
                         </div>
-                        <div class="column-2">
+                        <div class="column-2" [class.centered]="retailMaster?.Status != 1">
                             <div class="row-1">
                                 <div class="color">
                                     <span class="material-icons">palette</span>
@@ -170,37 +170,32 @@
                             </div>
                             <div class="row-2">
                                 <ps-kendo-button (onClick)="onBuyVehicle(item, SALOrderDetailTypeDataEnum.BUY)"
-                                    *ngIf="item.ListStock[0].Quantity > 0" class="tool-btn" [theme]="'primary'">
+                                    *ngIf="retailMaster?.Status == 1 && item.ListStock[0].Quantity > 0" class="tool-btn" [theme]="'primary'">
                                     Mua xe
                                 </ps-kendo-button>
                                 <ps-kendo-button (onClick)="onBuyVehicle(item, SALOrderDetailTypeDataEnum.TRANSFER)"
-                                    *ngIf="item.ListStock[0].Quantity <= 0 && item.ListStock[1].Quantity > 0"
+                                    *ngIf="retailMaster?.Status == 1 && item.ListStock[0].Quantity <= 0 && item.ListStock[1].Quantity > 0"
                                     class="tool-btn" [theme]="'warning'">
                                     Điều xe
                                 </ps-kendo-button>
                                 <ps-kendo-button (onClick)="onBuyVehicle(item, SALOrderDetailTypeDataEnum.BOOK)"
-                                    *ngIf="item.ListStock[0].Quantity <= 0 && item.ListStock[1].Quantity <= 0"
+                                    *ngIf="retailMaster?.Status == 1 && item.ListStock[0].Quantity <= 0 && item.ListStock[1].Quantity <= 0"
                                     class="tool-btn" [theme]="'secondary'">
                                     Đặt xe
                                 </ps-kendo-button>
                                 <ps-kendo-button class="tool-btn ware-house"
-                                    *ngIf="!item.ListStock[0].Quantity && item.ListStock[1].Quantity"
-                                    (onClick)="showpopup = true; onGetStock(item)">
+                                    *ngIf="retailMaster?.Status == 1 && !item.ListStock[0].Quantity && item.ListStock[1].Quantity"
+                                    (onClick)="showpopup = true; onGetStock(item, card)">
                                     <span class="material-icons">warehouse</span>
                                 </ps-kendo-button>
-                                <!-- <ps-kendo-button class="tool-btn ware-house"
-                                    (onClick)="showpopup = true; onGetStock(itemitem
-                                    
-                                    <span class="material-icons">warehouse</span>
-                                </ps-kendo-button> -->
                                 <ps-kendo-button
-                                    *ngIf="(item.BuyQuantity + item.TransferQuantity + item.BookingQuantity) > 0"
+                                    *ngIf="retailMaster?.Status == 1 && (item.BuyQuantity + item.TransferQuantity + item.BookingQuantity) > 0"
                                     class="tool-btn" [theme]="'error'" (onClick)="onDeleteVehicle(item)">
                                     Xóa
                                 </ps-kendo-button>
                             </div>
                         </div>
-                        <div class="compare-important">
+                        <div class="compare-important" *ngIf="retailMaster?.Status == 1">
                             <span [class.active-com]="item.IsCompare" class="material-icons"
                                 (click)="onToggleCompare(item)">
                                 copyright
@@ -228,7 +223,7 @@
                             [class.equal]="item.OtherOrderQuantity == (item.ListStock[0].Quantity + item.ListStock[1].Quantity) ">SL
                             quan tâm ({{item.OtherOrderQuantity}})</span>
                     </div>
-                    <div class="column-2">
+                    <div class="column-2" [class.centered]="retailMaster?.Status != 1">
                         <div class="row-0">
                             {{card.TypeOfVehicleName}} | {{card.VehicleName}}
                         </div>
@@ -248,32 +243,32 @@
                             </div>
                         </div>
                         <div class="row-2">
-                            <ps-kendo-button (onClick)="onBuyVehicle(item, SALOrderDetailTypeDataEnum.BUY)"
-                                *ngIf="item.ListStock[0].Quantity > 0" class="tool-btn" [theme]="'primary'">
+                            <ps-kendo-button min-width="128px" (onClick)="onBuyVehicle(item, SALOrderDetailTypeDataEnum.BUY)"
+                                *ngIf="retailMaster?.Status == 1 && item.ListStock[0].Quantity > 0" class="tool-btn" [theme]="'primary'">
                                 Mua xe
                             </ps-kendo-button>
                             <ps-kendo-button (onClick)="onBuyVehicle(item, SALOrderDetailTypeDataEnum.TRANSFER)"
-                                *ngIf="item.ListStock[0].Quantity <= 0 && item.ListStock[1].Quantity > 0"
+                                *ngIf="retailMaster?.Status == 1 && item.ListStock[0].Quantity <= 0 && item.ListStock[1].Quantity > 0"
                                 class="tool-btn" [theme]="'warning'">
                                 Điều xe
                             </ps-kendo-button>
                             <ps-kendo-button (onClick)="onBuyVehicle(item, SALOrderDetailTypeDataEnum.BOOK)"
-                                *ngIf="item.ListStock[0].Quantity <= 0 && item.ListStock[1].Quantity <= 0"
+                                *ngIf="retailMaster?.Status == 1 && item.ListStock[0].Quantity <= 0 && item.ListStock[1].Quantity <= 0"
                                 class="tool-btn" [theme]="'secondary'">
                                 Đặt xe
                             </ps-kendo-button>
-                            <ps-kendo-button *ngIf="!item.ListStock[0].Quantity && item.ListStock[1].Quantity"
-                                class="tool-btn ware-house" (onClick)="showpopup = true">
+                            <ps-kendo-button *ngIf="retailMaster?.Status == 1 && !item.ListStock[0].Quantity && item.ListStock[1].Quantity"
+                                class="tool-btn ware-house" (onClick)="showpopup = true; onGetStock(item, card)">
                                 <span class="material-icons">warehouse</span>
                             </ps-kendo-button>
                             <ps-kendo-button
-                                *ngIf="(item.BuyQuantity + item.TransferQuantity + item.BookingQuantity) > 0"
+                                *ngIf="retailMaster?.Status == 1 && (item.BuyQuantity + item.TransferQuantity + item.BookingQuantity) > 0"
                                 class="tool-btn" [theme]="'error'" (onClick)="onDeleteVehicle(item)">
                                 Xóa
                             </ps-kendo-button>
                         </div>
                     </div>
-                    <div class="compare-important">
+                    <div class="compare-important" *ngIf="retailMaster?.Status == 1">
                         <span [class.active-com]="item.IsCompare" class="material-icons"
                             (click)="onToggleCompare(item)">
                             copyright
@@ -300,7 +295,7 @@
         <ps-kendo-button (onClick)="onNavigate('/mtbike/consultant')">
             <span class="material-icons">list_alt</span>
         </ps-kendo-button>
-        <ps-kendo-button [theme]="'error'" [disabled]="FunctionPermissionDTO.approver && !FunctionPermissionDTO.master" (onClick)="onCancel()">
+        <ps-kendo-button *ngIf="retailMaster?.Status == 1 && retailMaster?.Code > 0" [theme]="'error'" [disabled]="FunctionPermissionDTO.approver && !FunctionPermissionDTO.master" (onClick)="onCancel()">
             <span class="text">Hủy giao dịch</span>
         </ps-kendo-button>
         <ps-kendo-button (onClick)="onNavigate('/mtbike/consultant/cart')" [theme]="'primary'"
@@ -341,8 +336,10 @@
                     </div>
                     <div class="bot-list">
                         <div class="item" *ngFor="let item of listStock.ListStock">
-                            <div [class.none]="item.StockQuanlity == '' " class="head-name">{{item.BriefName}}</div>
-                            <div [class.none]="item.StockQuanlity == '' " class="head-quantity">{{item.StockQuanlity}}
+                            <div [class.out-of-stock]="item.IsOutOfStock" [class.is-local]="item.IsLocal"
+                                class="head-name">{{item.BriefName}}</div>
+                            <div [class.is-local]="item.IsLocal" class="head-quantity">
+                                {{item.StockQuanlity}}
                             </div>
                         </div>
                     </div>
@@ -380,7 +377,7 @@
                                         <span class="material-icons" cdkDragHandle>
                                             open_with
                                         </span>
-                                        <span class="material-icons" (click)="onRemoveFromCompare(compareVehicles[j])">
+                                        <span *ngIf="retailMaster?.Status == 1" class="material-icons" (click)="onRemoveFromCompare(compareVehicles[j])">
                                             delete
                                         </span>
                                         <ng-template cdkDragPreview></ng-template>
@@ -396,7 +393,7 @@
                             </div>
                         </div>
 
-                        <div *ngIf="i === 2" #specRow class="spec-row button-row" (scroll)="onSpecRowScroll($event)">
+                        <div *ngIf="i === 2 && retailMaster?.Status == 1" #specRow class="spec-row button-row" (scroll)="onSpecRowScroll($event)">
                             <div class="label"></div>
                             <div class="values">
                                 <div class="button-item" *ngFor="let item of compareVehicles; let j = index">

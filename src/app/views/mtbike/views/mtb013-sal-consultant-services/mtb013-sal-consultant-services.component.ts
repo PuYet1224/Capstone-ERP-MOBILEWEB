@@ -125,7 +125,7 @@ export class Mtb013SalConsultantServicesComponent implements OnInit, OnDestroy {
   }
 
   public onservicechecked(service: CSServiceMasterCusDTO, detail: SALOrderDetailCusDTO) {
-    if (detail.Status != this.enumdetailstt.NEW || this.master.Status != this.enummasterstt.NEW || (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator))
+    if (this.master.Status != this.enummasterstt.NEW || (!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator))
       return;
 
     const updateParam: SALOrderDetailServiceCusDTO = {

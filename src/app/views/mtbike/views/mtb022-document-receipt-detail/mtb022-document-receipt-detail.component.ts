@@ -58,12 +58,6 @@ export class Mtb022DocumentReceiptDetailComponent {
 
     this.getsalreceipt(this.receipt, true);
     this.getlistlslist();
-
-    // Mock vehicle list for testing
-    this.listvehicle = [
-      { Code: 1, VehicleName: 'Honda Wave', CollectedAmount: 5000000, RemainingAmount: 5000000, PaymentType: 1, IsChecked: false } as any
-    ];
-    this.listvehiclecopy = this.listvehicle.map(x => ({ ...x }));
   }
 
   ngOnDestroy(): void {

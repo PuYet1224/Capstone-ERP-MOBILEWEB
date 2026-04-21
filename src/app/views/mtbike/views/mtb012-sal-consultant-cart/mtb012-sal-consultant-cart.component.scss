@@ -8,6 +8,19 @@
         .mtb011-retail-vehicle {
             height: 100%;
 
+            &.readonly {
+                .retail-body {
+                    .product-list {
+                        .swipe-wrapper {
+                            &.swiped .product {
+                                transform: translateX(-210px) !important;
+                                box-shadow: 4px 0 8px -4px rgba(0, 0, 0, 0.3);
+                            }
+                        }
+                    }
+                }
+            }
+
             ps-header-back {
                 .ps-header {
                     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -361,6 +374,15 @@
 
                         &.swiped .product {
                             transform: translateX(-288px);
+                            box-shadow: 4px 0 8px -4px rgba(0, 0, 0, 0.3);
+                        }
+                    }
+
+                    &.readonly {
+                        .swipe-wrapper {
+                            &.swiped .product {
+                                transform: translateX(-205px);
+                            }
                         }
                     }
 
@@ -464,8 +486,6 @@
                                                     display: inline;
                                                     white-space: nowrap;
                                                     overflow: hidden;
-                                                    text-overflow: ellipsis;
-                                                    width: calc(100% - 88px);
                                                 }
 
                                                 .counter {

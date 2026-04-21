@@ -1,4 +1,4 @@
-<div class="mtb011-retail-vehicle">
+<div class="mtb011-retail-vehicle" [class.readonly]="retailMaster?.Status != 1">
     <!-- START: HEADER -->
     <ps-header-back>
         <div class="left-side">
@@ -29,8 +29,8 @@
     </div>
 
     <div class="retail-body">
-        <div class="product-list"
-            *ngFor="let item of (typeactive == 'buy' ? listVehicle : listVehicle2) || []; let i = index">
+        <ng-container *ngFor="let item of (typeactive == 'buy' ? listVehicle : listVehicle2) || []; let i = index">
+            <div class="product-list" *ngIf="retailMaster?.Status == 1 || (typeactive == 'buy' ? true : hasCheckedItems(item))">
             <div class="swipe-wrapper" *ngIf="typeactive == 'buy'" (swipeleft)="onSwipeLeft(item, i)"
                 (swiperight)="onSwipeRight(item)" [class.swiped]="item.swiped">
                 <div class="product" (click)="onshowAction(item)">
@@ -53,12 +53,12 @@
                                     {{item.Price| number:'1.0-0' }}
                                 </div>
                                 <div class="counter" (click)="$event.stopPropagation()">
-                                    <span class="material-icons" (click)="onConfirmDelete(item, 'delete-one')">
+                                    <span *ngIf="retailMaster?.Status == 1" class="material-icons" (click)="onConfirmDelete(item, 'delete-one')">
                                         remove
                                     </span>
-                                    <ps-kendo-textbox [(ngModel)]="item.OrderQuantity" (focus)="onFocusVehicle(item)"
+                                    <ps-kendo-textbox [disabled]="retailMaster?.Status != 1 || item.IsOrderLock" [(ngModel)]="item.OrderQuantity" (focus)="onFocusVehicle(item)"
                                         (blur)="onAddMultiVehicle(item)"></ps-kendo-textbox>
-                                    <span class="material-icons" (click)="onAddVehicle(item)">
+                                    <span *ngIf="retailMaster?.Status == 1" class="material-icons" (click)="onAddVehicle(item)">
                                         add
                                     </span>
                                 </div>
@@ -66,24 +66,24 @@
                             <div class="item-category" (click)="$event.stopPropagation()">
                                 <div class="item-service"
                                     (click)="onNavigate('/mtbike/consultant/services', item, event)">
-                                    {{item.TotalOrderServices ?? 0}} dịch vụ
+                                    {{item.TotalService ?? 0}} dịch vụ
                                 </div>
                                 <div (click)="onNavigate('/mtbike/consultant/parts', item, event)" class="item-part">
-                                    {{item.TotalOrderPart ?? 0}}
+                                    {{item.TotalPart ?? 0}}
                                     phụ kiện
                                 </div>
                                 <div (click)="onNavigate('/mtbike/consultant/promotion', item, event)"
                                     class="item-part">
-                                    {{ item.TotalOrderDiscount }} CTKM
+                                    {{ item.TotalPromotion ?? 0 }} CTKM
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <ps-kendo-button *ngIf="!item.IsOrderLock" (onClick)="onClickLock(item)"><span
+                    <ps-kendo-button *ngIf="retailMaster?.Status == 1 && !item.IsOrderLock" (onClick)="onClickLock(item)"><span
                             class="material-icons">
                             lock
                         </span> Chốt mua</ps-kendo-button>
-                    <ps-kendo-button class="unlock" *ngIf="item.IsOrderLock" (onClick)="onClickUnlock(item)"><span
+                    <ps-kendo-button class="unlock" *ngIf="retailMaster?.Status == 1 && item.IsOrderLock" (onClick)="onClickUnlock(item)"><span
                             class="material-icons">
                             lock_open_right
                         </span> Bỏ chốt</ps-kendo-button>
@@ -91,7 +91,7 @@
                         [innerHTML]="{ Status: item.OrderTypeData, StatusName: item.OrderTypeData == 1 ? 'Có sẵn' : item.OrderTypeData == 2 ? 'Điều xe' : 'Đặt xe'} | SALOrderDetailTypeData">
                     </div>
                 </div>
-                <button class="btn-delete" (click)="onDelete(item)">Xóa</button>
+                <button *ngIf="retailMaster?.Status == 1" class="btn-delete" (click)="onDelete(item)">Xóa</button>
                 <button class="btn-delete btn-services" (click)="onSetItem(item, 'services-detail')">Dịch vụ</button>
                 <button class="btn-delete btn-part" (click)="onSetItem(item, 'parts-detail')">Phụ kiện</button>
                 <button class="btn-delete btn-discount" (click)="onSetItem(item, 'promotion-detail')">CTKM</button>
@@ -114,9 +114,10 @@
                         </span>
                     </div>
                     <div class="bot-content" *ngIf="!isCollapsed(i)">
-                        <div class="product" *ngFor="let v of item.ListGroupOrderDetail">
-                            <ps-kendo-checkbox [(ngModel)]="v.IsChecked"
-                                (onchecked)="onchecked(item, v)"></ps-kendo-checkbox>
+                        <ng-container *ngFor="let v of item.ListGroupOrderDetail">
+                            <div class="product" *ngIf="retailMaster?.Status == 1 || v.IsChecked">
+                                <ps-kendo-checkbox [disabled]="retailMaster?.Status != 1" [(ngModel)]="v.IsChecked"
+                                    (onchecked)="onchecked(item, v)"></ps-kendo-checkbox>
                             <div class="vehicle">
                                 <img [src]="v.ImageSetting1" alt="">
                             </div>
@@ -134,26 +135,15 @@
                                             color="#126633"></lucide-icon>
                                         {{v.Price| number:'1.0-0' }}
                                     </div>
-                                    <div class="counter">
-                                        <span class="material-icons" (click)="onRemoveTransfer(v)">
-                                            remove
-                                        </span>
-
-                                        <ps-kendo-textbox [(ngModel)]="v.Quantity" (focus)="onFocusVehicle(v)"
-                                            (blur)="onBlurTransfer(v)">
-                                        </ps-kendo-textbox>
-
-                                        <span class="material-icons" (click)="onAddTransfer(v)">
-                                            add
-                                        </span>
-                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            </div>
+                        </ng-container>
                     </div>
                 </div>
             </div>
         </div>
+    </ng-container>
     </div>
 
     <div class="action-tabs tabs2">
@@ -172,12 +162,12 @@
         <ps-kendo-button (onClick)="onNavigate('/mtbike/consultant')">
             <span class="material-icons">list_alt</span>
         </ps-kendo-button>
-        <ps-kendo-button [theme]="'error'" [disabled]="FunctionPermissionDTO.approver && !FunctionPermissionDTO.master" (onClick)="onCancelTransaction()">
+        <ps-kendo-button *ngIf="retailMaster?.Status == 1 && retailMaster?.Code > 0" [theme]="'error'" [disabled]="FunctionPermissionDTO.approver && !FunctionPermissionDTO.master" (onClick)="onCancelTransaction()">
             <span class="text">Hủy giao dịch</span>
         </ps-kendo-button>
         <ps-kendo-button (onClick)="onNavigate('/mtbike/consultant/total')" [theme]="'primary'"
             [disabled]="FunctionPermissionDTO.approver && !FunctionPermissionDTO.master">
-            <span class="text">Gửi thanh toán</span>
+            <span class="text">Tiếp tục</span>
         </ps-kendo-button>
 
     </ps-footer-action>
