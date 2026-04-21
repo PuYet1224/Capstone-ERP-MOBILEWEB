@@ -777,6 +777,7 @@ const data = Array.isArray(raw) ? raw : ((raw as any) && (raw as any).Data) ? (r
     partItem.Code = this.currentPartItem && this.currentPartItem.Code ? this.currentPartItem.Code : 0;
     partItem.OrderDetail = this.orderDetail.Code;
     partItem.TypeOfPart = this.typeofpart.Code;
+    partItem.TypeOfPartName = this.typeofpart.TypeOfPart || '';
     partItem.IsChecked = true;
     partItem.TypeOfPartSpecs = this.typeofpartspecs && this.typeofpartspecs.Code ? this.typeofpartspecs.Code : 0;
     partItem.BaseUnit = (this.unit as any).Code || 0;
