@@ -19,6 +19,7 @@ import { LSListTypeDataEnum } from 'src/app/models/enums/e-type/ls-list-type-dat
 })
 export class Mtb035DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
   public receipt: SALOrderReceiptCusDTO = new SALOrderReceiptCusDTO();
+  public receiptcopy: SALOrderReceiptCusDTO = new SALOrderReceiptCusDTO();
   private arrUnsubscribe: Subscription[] = [];
 
   public listPaymentMethods: ListDTO[] = [
@@ -45,8 +46,16 @@ export class Mtb035DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
       const parsed = this.cache.parseValue(cachedReceipt);
       this.receipt = { ...this.receipt, ...parsed };
 
-      if (this.receipt.Code > 0 || (this.receipt.OrderMaster > 0 && this.receipt.Code === 0)) {
+      if (this.receipt.Code > 0) {
         this.getsalreceipt(this.receipt);
+      } else {
+        // Inherit from master if missing for new receipts
+        const masterCached = this.cache.getItem(KeyLocalStorageEnum.SAL_ORDER_MASTER);
+        if (masterCached) {
+          const master = this.cache.parseValue(masterCached);
+          if (!this.receipt.CustomerName) this.receipt.CustomerName = master.CustomerName;
+          if (!this.receipt.CellPhone) this.receipt.CellPhone = master.CustomerPhone;
+        }
       }
       this.getlistlslist();
       this.initPaymentAmounts();
@@ -106,6 +115,11 @@ export class Mtb035DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
 
   public onTransferAmountChange(val: number): void {
     this.receipt.TransferAmount = val || 0;
+    if (this.receipt.PaymentMethod === 1) {
+      this.receipt.TransferAmount = 0;
+    } else if (this.receipt.PaymentMethod === 2) {
+      this.receipt.CashAmount = 0;
+    }
     this.receipt.CollectedAmount = (this.receipt.CashAmount || 0) + (this.receipt.TransferAmount || 0);
   }
 
@@ -136,13 +150,7 @@ export class Mtb035DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
     return isValid;
   }
 
-  public confirmPayment(): void {
-    if (!this.validateForm()) {
-      return;
-    }
-    this.receipt.IsConfirmedPayment = true;
-    this.updateReceipt();
-  }
+
 
   public receivedMoney(): void {
     if (this.orderInfo.Progress > 0) {
@@ -157,7 +165,20 @@ export class Mtb035DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
   }
 
   public onBlur(): void {
-    this.updateReceipt();
+    if (this.checkDataChanged()) {
+      this.updateReceipt();
+    }
+  }
+
+  private checkDataChanged(): boolean {
+    return this.receipt.CustomerName !== this.receiptcopy.CustomerName ||
+      this.receipt.CellPhone !== this.receiptcopy.CellPhone ||
+      this.receipt.Description !== this.receiptcopy.Description ||
+      this.receipt.PaymentMethod !== this.receiptcopy.PaymentMethod;
+  }
+
+  public onAmountBlur(): void {
+    this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
   }
 
   //#region api get
@@ -181,10 +202,19 @@ export class Mtb035DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
         const receiptData = result.Receipt || {};
         const orderInfo = result.OrderInfo || {};
 
-        // Merge API data into local receipt but preserve some FE fields
-        const isConfirmed = this.receipt.IsConfirmedPayment;
-        this.receipt = Object.assign(new SALOrderReceiptCusDTO(), receiptData);
-        this.receipt.IsConfirmedPayment = isConfirmed;
+        // Merge API data into local receipt but preserve current edits
+        const serverReceipt = Object.assign(new SALOrderReceiptCusDTO(), receiptData);
+        this.receipt = {
+          ...serverReceipt,
+          CollectedAmount: this.receipt.CollectedAmount,
+          CashAmount: this.receipt.CashAmount,
+          TransferAmount: this.receipt.TransferAmount,
+          PaymentMethod: this.receipt.PaymentMethod,
+          Description: this.receipt.Description,
+          CustomerName: this.receipt.CustomerName,
+          CellPhone: this.receipt.CellPhone,
+          Address: this.receipt.Address,
+        };
 
         // Ensure date is valid for kendo-date-picker if any
         if (this.receipt.EffDate) this.receipt.EffDate = new Date(this.receipt.EffDate);
@@ -192,6 +222,7 @@ export class Mtb035DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
 
         // Map financial breakdown
         this.orderInfo = orderInfo;
+        this.receiptcopy = Object.assign(new SALOrderReceiptCusDTO(), this.receipt);
 
         this.initPaymentAmounts();
         this.loader.loader(false);
@@ -208,9 +239,6 @@ export class Mtb035DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
   //#endregion
 
   private updateReceipt(callback?: () => void): void {
-    if (!this.receipt || (!this.receipt.Code && !this.receipt.OrderMaster)) {
-      return;
-    }
 
     // Always ensure CollectedAmount is up-to-date before sending
     if (this.receipt.PaymentMethod === 1) {
@@ -239,6 +267,7 @@ export class Mtb035DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
             callback();
           } else {
             this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
+            this.receiptcopy = Object.assign(new SALOrderReceiptCusDTO(), this.receipt);
             this.notification.onSuccess('Thành công');
           }
         } else {
@@ -253,6 +282,10 @@ export class Mtb035DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
   }
 
   public goBack(): void {
-    this.router.navigate(['/mtbike/document/receipt']);
+    if (this.receipt.Code === 0) {
+      this.router.navigate(['/mtbike/document']);
+    } else {
+      this.router.navigate(['/mtbike/document/receipt']);
+    }
   }
 }

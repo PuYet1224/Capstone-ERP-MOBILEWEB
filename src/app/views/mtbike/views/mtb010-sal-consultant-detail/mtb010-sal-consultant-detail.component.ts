@@ -34,8 +34,10 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
   ngOnInit(): void {
     var temp = this.cache.getItem(KeyLocalStorageEnum.SAL_ORDER_MASTER);
     let retailMaster = this.cache.parseValue(temp);
-    this.retailDetailDTOcopy = retailMaster;
-    if (retailMaster.Code) {
+    this.retailDetailDTO = { ...retailMaster };
+    this.retailDetailDTOcopy = { ...retailMaster };
+    this.masterStatus = retailMaster.Status ?? SALOrderMasterStatusRetailEnum.NEW;
+    if (retailMaster && retailMaster.Code) {
       this.GetSALMaster(retailMaster);
     }
     this.getlisthrlist();
@@ -55,6 +57,7 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
   private isShowNoti: boolean = false;
   public listgender: ListDTO[] = [];
   public fieldName: string;
+  public masterStatus: number = SALOrderMasterStatusRetailEnum.NEW;
   public firstLoad: boolean = true;
 
   onNavigate(field: string) {
@@ -137,6 +140,7 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
         this.retailDetailDTO = res.ObjectReturn;
         this.retailDetailDTOcopy.ID = this.retailDetailDTO.ID;
         this.retailDetailDTOcopy.Code = this.retailDetailDTO.Code;
+        this.masterStatus = this.retailDetailDTO.Status;
         this.subLoader.loader(false);
       } else {
         this.subLoader.loader(false);
@@ -169,6 +173,7 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
         if (res.StatusCode == 0) {
           this.retailDetailDTO = res.ObjectReturn;
           this.retailDetailDTOcopy = { ...this.retailDetailDTO };
+          this.masterStatus = this.retailDetailDTO.Status;
           this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_MASTER, this.retailDetailDTO);
           this.notification.onSuccess(`Thành công`);
           this.subLoader.loader(false);
@@ -201,6 +206,7 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
           this.retailDetailDTOcopy.Status = SALOrderMasterStatusRetailEnum.PENDING;
           this.retailDetailDTOcopy.Code = this.retailDetailDTO.Code;
           this.retailDetailDTOcopy.CustomerName = this.retailDetailDTO.CustomerName;
+          this.masterStatus = this.retailDetailDTOcopy.Status;
           this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_MASTER, this.retailDetailDTOcopy);
           this.router.navigate(['/mtbike/consultant/vehicle']);
           this.subLoader.loader(false);
