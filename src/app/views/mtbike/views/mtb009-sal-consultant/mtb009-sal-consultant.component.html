@@ -1,4 +1,4 @@
-<div class="mtb009-retail">
+﻿<div class="mtb009-retail">
     <!-- START: HEADER -->
     <ps-header-back>
         <div class="left-side">
@@ -13,7 +13,7 @@
         (close)="openFilterPopup($event)">
         <div psDialogConfirmBottomBody>
             <ps-kendo-textbox [label]="'Tra cứu phiếu tư vấn bán lẻ'"
-                [placeholder]="'Tra cứu theo thông tin sđt, tên khách hàng hoặc mã phiếu'" [(ngModel)]="searchKeyword">
+                [placeholder]="'Tra cứu theo thông tin số điện thoại, tên khách hàng hoặc mã phiếu'" [(ngModel)]="searchKeyword">
             </ps-kendo-textbox>
             <ps-filter-status [label]="'Trạng thái phiếu'" [data]="progressStatusTree" [field]="'Status'"
                 [valueField]="'Status'" (changedValue)="onStatusFilterChange($event)">

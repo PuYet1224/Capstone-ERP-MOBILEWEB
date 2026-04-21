@@ -1,4 +1,4 @@
-@import '../../../../../assets/scss/colors';
+﻿@import '../../../../../assets/scss/colors';
 
 ::ng-deep {
   mtb011-sal-consultant-vehicle {
@@ -98,7 +98,7 @@
             flex: 1;
 
             .kendo-textbox {
-              position: relative; // BẮT BUỘC
+                position: relative; // BẮT BUỘC
 
               &::before {
                 content: '\e8b6';

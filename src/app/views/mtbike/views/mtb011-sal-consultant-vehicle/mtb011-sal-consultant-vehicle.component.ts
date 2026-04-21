@@ -1,4 +1,4 @@
-import { moveItemInArray } from '@angular/cdk/drag-drop';
+﻿import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -347,26 +347,9 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
   }
 
   sortVehicleColors() {
-    let colorList = [...this.liseVehicleCategory.ListGroupVehicleColor];
-
-    // Thực hiện sắp xếp ưu tiên (Priority Sort) thay vì lọc (Filter)
-    colorList.sort((a, b) => {
-      // 1. Ưu tiên cao nhất: Thuộc Dòng xe (TypeOfVehicle) đang chọn
-      const aMatchLine = this.selectedVehicleCodes.includes(a.Vehicle) || (a.ListTypeOfVehicle || []).some(v => this.selectedVehicleCodes.includes(v));
-      const bMatchLine = this.selectedVehicleCodes.includes(b.Vehicle) || (b.ListTypeOfVehicle || []).some(v => this.selectedVehicleCodes.includes(v));
-
-      if (aMatchLine !== bMatchLine) return bMatchLine ? 1 : -1;
-
-      // 2. Ưu tiên tiếp theo: Thuộc Phân nhóm xe (Category) đang chọn
-      const aMatchCat = (a.ListCategory || []).some(c => this.selectedCategoryCodes.includes(c));
-      const bMatchCat = (b.ListCategory || []).some(c => this.selectedCategoryCodes.includes(c));
-
-      if (aMatchCat !== bMatchCat) return bMatchCat ? 1 : -1;
-
-      return 0;
-    });
-
-    this.filteredVehicleColors = colorList;
+    // When using representative colors, sorting by vehicle line is no longer accurate as colors are shared.
+    // Therefore, we only need to display the list of representative colors.
+    this.filteredVehicleColors = [...this.liseVehicleCategory.ListGroupVehicleColor];
   }
 
   clearCategoryFilter() {
@@ -523,10 +506,23 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
           }
         }
 
+        const baseColors = ["Đen", "Đỏ", "Trắng", "Xanh", "Xám", "Bạc", "Vàng", "Nâu", "Cam"];
+        let representativeColors: any[] = [];
+        baseColors.forEach(b => {
+           if (colors.some((c: any) => c.ColorName && c.ColorName.toLowerCase().includes(b.toLowerCase()))) {
+               representativeColors.push({
+                  Code: b,
+                  ColorName: b,
+                  ListTypeOfVehicle: [],
+                  ListCategory: []
+               });
+           }
+        });
+
         this.liseVehicleCategory = {
           ListVehicleCategory: categories,
           ListTypeOfVehicle: types,
-          ListGroupVehicleColor: colors,
+          ListGroupVehicleColor: representativeColors,
           PriceRange: priceRange
         };
 
@@ -541,15 +537,15 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
         this.subLoader.loader(false);
       } else {
         this.subLoader.loader(false);
-        this.notification.onError(`Lỗi lấy lựa chọn: ${res.ErrorString}`);
+        this.notification.onError(`Lỗi: ${res.ErrorString}`);
       }
     }, err => {
       this.subLoader.loader(false);
-      this.notification.onError(`Lỗi lấy lựa chọn: ${err.message}`);
+      this.notification.onError(`Lỗi: ${err.message}`);
     });
     this.arrUnsubscribe.push(sub);
   }
-  //#endgerion
+  //#endregion
 
   //#region POPUP SORT
   public currentSortCode: number = 1;
@@ -900,11 +896,11 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
         this.subLoader.loader(false);
       } else {
         this.subLoader.loader(false);
-        this.notification.onError(`Lỗi lấy danh sách xe: ${res.ErrorString}`);
+        this.notification.onError(`Lỗi: ${res.ErrorString}`);
       }
     }, err => {
       this.subLoader.loader(false);
-      this.notification.onError(`Lỗi lấy danh sách xe: ${err.message}`);
+      this.notification.onError(`Lỗi: ${err.message}`);
     });
     this.arrUnsubscribe.push(sub);
   }
@@ -933,22 +929,17 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
           this.notification.onSuccess('Hủy giao dịch thành công');
           this.router.navigate(['/mtbike/consultant']);
         } else {
-          this.notification.onError(res.ErrorString || 'Lỗi khi hủy giao dịch');
+          this.notification.onError(`Lỗi: ${res.ErrorString}`);
         }
       }, err => {
         this.subLoader.loader(false);
-        this.notification.onError(err.message);
+        this.notification.onError(`Lỗi: ${err.message}`);
       });
       this.arrUnsubscribe.push(sub);
     }
   }
-  //endregion
 
-  //#region POPUP STOCK
-  //
-  //
-  public onGetStock(item, card?: any) {
-    // 1. Đảm bảo lấy đủ tên xe từ item hoặc card cha
+  onGetStock(item: any, card?: any) {
     this.listStock = { ...item };
     if (card) {
       this.listStock.VehicleName = item.VehicleName || card.VehicleName;
@@ -989,11 +980,11 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
         this.subLoader.loader(false);
       } else {
         this.subLoader.loader(false);
-        this.notification.onError(`Lỗi lấy danh sách head tồn: ${res.ErrorString}`);
+        this.notification.onError(`Lỗi: ${res.ErrorString}`);
       }
     }, err => {
       this.subLoader.loader(false);
-      this.notification.onError(`Lỗi lấy danh sách head tồn: ${err.message}`);
+      this.notification.onError(`Lỗi: ${err.message}`);
     });
     this.arrUnsubscribe.push(sub);
   }
@@ -1014,11 +1005,11 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
         this.subLoader.loader(false);
       } else {
         this.subLoader.loader(false);
-        this.notification.onError(`Lỗi cập nhật: ${res.ErrorString}`);
+        this.notification.onError(`Lỗi: ${res.ErrorString}`);
       }
     }, err => {
       this.subLoader.loader(false);
-      this.notification.onError(`Lỗi cập nhật: ${err.message}`);
+      this.notification.onError(`Lỗi: ${err.message}`);
     });
     this.arrUnsubscribe.push(sub);
   }
@@ -1031,13 +1022,13 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
           this.subLoader.loader(false);
           this.retailMaster.Status = param.Status;
         } else {
-          this.notification.onError(`Lỗi cập nhật phiếu: ${res.ErrorString}`);
+          this.notification.onError(`Lỗi: ${res.ErrorString}`);
         }
         this.subLoader.loader(false);
       },
       (err) => {
         this.subLoader.loader(false);
-        this.notification.onError(`Lỗi cập nhật phiếu: ${err.message}`);
+        this.notification.onError(`Lỗi: ${err.message}`);
       }
     );
     this.arrUnsubscribe.push(temp);
@@ -1051,11 +1042,11 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
         this.subLoader.loader(false);
       } else {
         this.subLoader.loader(false);
-        this.notification.onError(`Lỗi cập nhật: ${res.ErrorString}`);
+        this.notification.onError(`Lỗi: ${res.ErrorString}`);
       }
     }, err => {
       this.subLoader.loader(false);
-      this.notification.onError(`Lỗi cập nhật: ${err.message}`);
+      this.notification.onError(`Lỗi: ${err.message}`);
     });
     this.arrUnsubscribe.push(sub);
   }

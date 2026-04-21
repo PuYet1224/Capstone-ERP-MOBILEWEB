@@ -249,27 +249,47 @@ export class Mtb009SalConsultantComponent implements OnDestroy, OnInit {
     }
   }
 
+  public static listCache = new Map<string, SALOrderMasterGroup[]>();
+  public static clearCache() {
+    Mtb009SalConsultantComponent.listCache.clear();
+  }
+
   private GetListSALMaster(filter: State, isRefresh: boolean = false) {
     this.isLoading = true;
     this.loader.loader(true);
 
-    const temp = this.api.GetListSALMaster(filter).subscribe((res) => {
+    const cacheKey = JSON.stringify(filter);
+    if (!isRefresh && Mtb009SalConsultantComponent.listCache.has(cacheKey)) {
+        this.listRetailMaster = Mtb009SalConsultantComponent.listCache.get(cacheKey)!;
+        this.openSet.clear();
+        this.listRetailMaster.forEach((_, index) => this.openSet.add(index));
+        this.isLoading = false;
+        this.loader.loader(false);
+        return;
+    }
+
+    const apiFilter = JSON.parse(JSON.stringify(filter));
+    if (!apiFilter.filter) apiFilter.filter = { logic: 'and', filters: [] };
+    apiFilter.filter.filters.push({ field: 'BypassCache', operator: 'eq', value: new Date().getTime() });
+
+    const temp = this.api.GetListSALMaster(apiFilter).subscribe((res) => {
       if (res.StatusCode === 0) {
         this.listRetailMaster = res.ObjectReturn as SALOrderMasterGroup[];
+        Mtb009SalConsultantComponent.listCache.set(cacheKey, this.listRetailMaster);
         this.openSet.clear();
         this.listRetailMaster.forEach((_, index) => {
           this.openSet.add(index);
         });
         this.loader.loader(false);
       } else {
-        this.notification.onError(`Lỗi lấy danh sách phiếu bán lẻ : ${res.ErrorString}`);
+        this.notification.onError(`Lỗi lấy danh sách phiếu bán lẻ: ${res.ErrorString}`);
       }
       this.isLoading = false;
       this.loader.loader(false);
     }, (err) => {
       this.isLoading = false;
       this.loader.loader(false);
-      this.notification.onError(`Lỗi lấy danh sách phiếu bán lẻ : ${err.message}`);
+      this.notification.onError(`Lỗi lấy danh sách phiếu bán lẻ: ${err.message}`);
     });
 
     this.arrUnsubscribe.push(temp);

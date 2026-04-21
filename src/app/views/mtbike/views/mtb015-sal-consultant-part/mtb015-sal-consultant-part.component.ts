@@ -316,8 +316,10 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
     this.listSalVehicleParts.forEach((v) => {
       if (v != null && v.Code != null) this.selectedDetailCodes.add(v.Code);
     });
-    const orderDetail = this.listSalVehicleParts[0];
-    if (!orderDetail || !orderDetail.Code) {
+    const orderDetail = new SALOrderDetailCusDTO();
+    orderDetail.Master = this.retailMaster.Code;
+    orderDetail.Code = 0;
+    if (!orderDetail || !orderDetail.Master) {
       this.notification.onError('Không có xe');
       return;
     }
@@ -486,13 +488,15 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
             this.selectedDetailCodes = new Set(stillSelected);
           }
         } else {
-          this.partFilterApplied = false;
+          this.partFilterApplied = true; // Still true so we don't fall back to showing all
           this.applicableVehicleCodes = [];
+          this.selectedDetailCodes = new Set();
         }
       },
       () => {
-        this.partFilterApplied = false;
+        this.partFilterApplied = true;
         this.applicableVehicleCodes = [];
+        this.selectedDetailCodes = new Set();
       }
     );
     this.arrUnsubscribe.push(sub);
@@ -529,8 +533,10 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
   }
 
   private getunitandcategory(): void {
-    const detail = this.listSalVehicleParts[0];
-    if (!detail || !detail.Code || (this.listUnit.length && this.listPartCategory.length)) return;
+    const detail = new SALOrderDetailCusDTO();
+    detail.Master = this.retailMaster.Code;
+    detail.Code = 0;
+    if (!detail || !detail.Master || (this.listUnit.length && this.listPartCategory.length)) return;
     this.getpopupdata(detail);
   }
 
@@ -550,8 +556,10 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
   }
 
   private GetListSALTypeOfPart(): void {
-    const orderDetail = this.listSalVehicleParts[0];
-    if (!orderDetail || !orderDetail.Code || !this.partcategory || !this.partcategory.Code) return;
+    const orderDetail = new SALOrderDetailCusDTO();
+    orderDetail.Master = this.retailMaster.Code;
+    orderDetail.Code = 0;
+    if (!orderDetail || !orderDetail.Master || !this.partcategory || !this.partcategory.Code) return;
 
     const cacheKey = this.partcategory.Code || 0;
     const cachedTypes = this.typeOfPartCache[cacheKey];
@@ -578,8 +586,10 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
   }
 
   private GetListSALTypeOfPartSpecs(param: LSTypeOfPartCusDTO): void {
-    const orderDetail = this.listSalVehicleParts[0];
-    if (!orderDetail || !orderDetail.Code || !param || !param.Code) return;
+    const orderDetail = new SALOrderDetailCusDTO();
+    orderDetail.Master = this.retailMaster.Code;
+    orderDetail.Code = 0;
+    if (!orderDetail || !orderDetail.Master || !param || !param.Code) return;
 
     const cacheKey = param.Code || 0;
     const cachedSpecs = this.typeOfPartSpecsCache[cacheKey];
