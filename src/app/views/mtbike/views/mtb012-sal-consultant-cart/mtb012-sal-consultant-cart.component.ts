@@ -395,7 +395,9 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
 
     const temp = this.api.AddSALSelectedVehicles(param).subscribe((res) => {
       if (res.StatusCode === 0) {
-        this.listVehicle = res.ObjectReturn;
+        if (res.ObjectReturn && res.ObjectReturn.Message) {
+          this.notification.onSuccess(res.ObjectReturn.Message);
+        }
         this.GetListSALSelectedVehicle(this.retailMaster);
         this.loader.loader(false);
       } else {
@@ -415,7 +417,9 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
 
     const temp = this.api.DeleteSALSelectedVehicles(param).subscribe((res) => {
       if (res.StatusCode === 0) {
-        this.listVehicle = res.ObjectReturn;
+        if (res.ObjectReturn && res.ObjectReturn.Message) {
+          this.notification.onSuccess(res.ObjectReturn.Message);
+        }
         this.GetListSALSelectedVehicle(this.retailMaster);
         this.loader.loader(false);
       } else {

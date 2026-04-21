@@ -14,7 +14,7 @@ import { PsKendoNotificationService } from 'src/app/services/core/ps-kendo-notif
 import { PsCache } from 'src/app/services/utilities/ps-cache';
 import { SystemLoaderService } from 'src/app/views/system/services/system-loader.service';
 import { MtbikeApiService } from '../../services/mtbike-api.service';
-
+import { Mtb009SalConsultantComponent } from '../mtb009-sal-consultant/mtb009-sal-consultant.component';
 
 @Component({
   selector: 'mtb010-sal-consultant-detail',
@@ -118,20 +118,12 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
   onValueChange(field: string) {
     if (this.retailDetailDTO[field] === this.retailDetailDTOcopy[field]) { return; }
 
-    // const phoneRegex = /^0\d{9}$/;
-    // if (!phoneRegex.test(phone)) {
-    //   this.notification.onWarning('Số điện thoại không hợp lệ (phải gồm 10 số và bắt đầu bằng 0)');
-    //   return;
-    // }
-
     this.retailDetailDTOcopy = { ...this.retailDetailDTO };
     
     let props = [field];
-    if (field === 'CustomerPhone' && this.retailDetailDTOcopy.CustomerName) {
-        props.push('CustomerName');
-    }
-    if (field === 'CustomerName' && this.retailDetailDTOcopy.CustomerPhone) {
-        props.push('CustomerPhone');
+    if (field === 'CustomerName' || field === 'CustomerGender') {
+        if (this.retailDetailDTOcopy.CustomerPhone) props.push('CustomerPhone');
+        if (field === 'CustomerGender' && this.retailDetailDTOcopy.CustomerName) props.push('CustomerName');
     }
 
     let param: UpdatePropertiesInterface<SALOrderMasterCusDTO> = {
@@ -169,6 +161,8 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
         this.retailDetailDTOcopy.Code = this.retailDetailDTO.Code;
         this.masterStatus = this.retailDetailDTO.Status;
         
+        this.fixCustomerGender();
+
         Mtb010SalConsultantDetailComponent.detailCache.set(this.retailDetailDTO.Code, { ...this.retailDetailDTO });
 
         this.subLoader.loader(false);
@@ -193,6 +187,7 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
     var temp = this.configCache.GetListHRList(HRListTypeDataEnum.GENDER).subscribe((data) => {
       this.listgender = data;
       Mtb010SalConsultantDetailComponent.genderCache = data;
+      this.fixCustomerGender();
       this.subLoader.loader(false);
     }, (err) => {
       this.subLoader.loader(false);
@@ -212,13 +207,32 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
 
           this.retailDetailDTO = res.ObjectReturn;
 
-          if (!this.retailDetailDTO.CustomerName && prevName) this.retailDetailDTO.CustomerName = prevName;
+          if (!this.retailDetailDTO.CustomerName && prevName) {
+            this.retailDetailDTO.CustomerName = prevName;
+            
+            // If we only sent CustomerPhone and the name came back empty, 
+            // it means BE created a new loyal customer with a blank name.
+            // We should immediately save the prevName to the DB!
+            const isPhoneUpdateOnly = param?.Properties.includes('CustomerPhone') && !param?.Properties.includes('CustomerName');
+            if (isPhoneUpdateOnly) {
+               let fixParam: UpdatePropertiesInterface<SALOrderMasterCusDTO> = {
+                 DTO: this.retailDetailDTOcopy,
+                 Properties: ['CustomerName', 'CustomerPhone']
+               };
+               this.UpdateSALMaster(fixParam);
+            }
+          }
           if (!this.retailDetailDTO.CustomerPhone && prevPhone) this.retailDetailDTO.CustomerPhone = prevPhone;
 
           this.retailDetailDTOcopy = { ...this.retailDetailDTO };
           this.masterStatus = this.retailDetailDTO.Status;
+          
+          this.fixCustomerGender();
+
           this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_MASTER, this.retailDetailDTO);
           
+          Mtb009SalConsultantComponent.clearCache();
+
           if (this.retailDetailDTO.Code) {
               Mtb010SalConsultantDetailComponent.detailCache.set(this.retailDetailDTO.Code, { ...this.retailDetailDTO });
           }
@@ -227,7 +241,7 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
           this.subLoader.loader(false);
           if (this.firstLoad && this.fieldName == 'continue') {
             if (!this.retailDetailDTOcopy.CustomerName) {
-              this.notification.onWarning('Tên khách hàng không được để trống');
+        this.notification.onWarning('Tên khách hàng không được để trống');
               return;
             }
             this.firstLoad = false;
@@ -258,6 +272,7 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
           this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_MASTER, this.retailDetailDTOcopy);
           this.router.navigate(['/mtbike/consultant/vehicle']);
           this.subLoader.loader(false);
+          Mtb009SalConsultantComponent.clearCache();
         } else {
           this.notification.onError(`Lỗi cập nhật phiếu: ${res.ErrorString}`);
         }
@@ -269,5 +284,16 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
       }
     );
     this.arrUnsubscribe.push(temp);
+  }
+
+  private fixCustomerGender() {
+      // Fix BE DTO mismatch: BE returns Code but FE dropdown expects OrderBy
+      if (this.retailDetailDTO.CustomerGender && this.listgender && this.listgender.length > 0) {
+          const matchedGender = this.listgender.find(g => g.Code === this.retailDetailDTO.CustomerGender);
+          if (matchedGender) {
+              this.retailDetailDTO.CustomerGender = matchedGender.OrderBy;
+              this.retailDetailDTOcopy.CustomerGender = matchedGender.OrderBy;
+          }
+      }
   }
 }
