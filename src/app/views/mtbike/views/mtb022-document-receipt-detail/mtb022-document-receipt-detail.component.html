@@ -44,23 +44,9 @@
           <span class="label">Số điện thoại</span>
           <span class="value">{{ receipt?.CellPhone }}</span>
         </div>
-        <div class="info-row full-width">
-          <span class="label">Địa chỉ</span>
-          <span class="value">{{ receipt?.Address }}</span>
-        </div>
         <div class="info-row">
           <span class="label">Phương thức thanh toán</span>
           <span class="value">{{ receipt?.PaymentMethodName }}</span>
-        </div>
-        <div class="info-sub-group" *ngIf="receipt?.PaymentMethod !== 1">
-          <div class="sub-row">
-            <span class="sub-label">+ Ngân hàng:</span>
-            <span class="sub-value">{{ receipt?.Bank }}</span>
-          </div>
-          <div class="sub-row">
-            <span class="sub-label">+ Số tài khoản:</span>
-            <span class="sub-value">{{ receipt?.BankAccount }}</span>
-          </div>
         </div>
         <div class="info-row full-width">
           <span class="label">Mô tả</span>
@@ -156,27 +142,39 @@
   <ps-dialog-confirm-signature [open]="showSignaturePopup" (close)="closeSignaturePopup()" (save)="save($event)">
   </ps-dialog-confirm-signature>
 
+  <ps-dialog-confirm [theme]="'primary'" [open]="showConfirmReceived">
+    <div psDialogConfirmHeader>Xác nhận thu tiền</div>
+    <div psDialogConfirmBody>
+      <div class="main-title">
+        <span>Xác nhận khách hàng mang đủ tiền mặt / chuyển khoản</span>
+        <br />
+        <div class="hightline" *ngIf="showConfirmReceived">
+          Số tiền: {{ receipt?.CollectedAmount || 0 | number }}đ
+        </div>
+      </div>
+      <div class="sub-title">
+        Hệ thống sẽ ghi nhận và chuyển trạng thái <span>ĐANG XỬ LÝ</span>
+      </div>
+    </div>
+    <div psDialogConfirmFooter>
+      <ps-kendo-button (onClick)="toggleConfirmReceived(false)">Hủy</ps-kendo-button>
+      <ps-kendo-button [theme]="'primary'" (onClick)="receivedMoney()">Xác nhận</ps-kendo-button>
+    </div>
+  </ps-dialog-confirm>
+
   <!-- START: FOOTER -->
   <ps-footer-action>
     <ps-kendo-button class="btn-back" (onClick)="onnavigate('/mtbike/document')">
       <span class="material-icons">arrow_back</span>
     </ps-kendo-button>
 
-    <!-- Nút Xác nhận thanh toán -->
-    <ps-kendo-button
-      class="btn-confirm"
-      [theme]="'primary'"
-      (onClick)="confirmPayment()"
-      *ngIf="receipt?.Status != 5 && receipt?.Status != 6 && receipt?.Status != 4 && !receipt?.IsConfirmedPayment"
-    >
-      Xác nhận thanh toán
-    </ps-kendo-button>
+
 
     <!-- Nút Đã thu tiền (Chỉ hiện khi đã bấm xác nhận) -->
     <ps-kendo-button
       class="btn-received"
       [theme]="'primary'"
-      (onClick)="receivedMoney()"
+      (onClick)="toggleConfirmReceived(true)"
       *ngIf="(receipt?.Status != 5 && receipt?.Status != 6) && orderInfo.Progress < 100"
     >
       Đã thu tiền

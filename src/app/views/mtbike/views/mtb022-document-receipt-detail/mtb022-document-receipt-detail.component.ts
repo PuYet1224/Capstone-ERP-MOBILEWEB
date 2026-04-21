@@ -50,9 +50,6 @@ export class Mtb022DocumentReceiptDetailComponent {
     var temp = this.cache.getItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT);
     var receipt = this.cache.parseValue(temp) || new SALOrderReceiptCusDTO();
     this.receipt = receipt;
-    if (this.receipt.Status >= 4) {
-      this.receipt.IsConfirmedPayment = true;
-    }
     
     this.receiptcopy = { ...this.receipt };
 
@@ -76,6 +73,7 @@ export class Mtb022DocumentReceiptDetailComponent {
   public FunctionPermissionDTO = FunctionPermissionDTO;
 
   public orderInfo: any = {};
+  public showConfirmReceived: boolean = false;
 
   public onnavigate(field: string) {
     this.router.navigate([field]);
@@ -208,19 +206,11 @@ export class Mtb022DocumentReceiptDetailComponent {
     this.updateReceipt();
   }
 
-  public confirmPayment(): void {
-    if (this.receipt.TotalOrderValue > 0) {
-      const totalCollected = (this.receipt.PriorCollections || 0) + (this.receipt.CollectedAmount || 0);
-      const progress = (totalCollected / this.receipt.TotalOrderValue) * 100;
-      this.receipt.Progress = progress > 100 ? 100 : progress;
-    }
-    this.receipt.IsConfirmedPayment = true;
-    this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
-    this.notification.onSuccess('Xác nhận thanh toán thành công');
-  }
+
 
   public receivedMoney(): void {
     // Luôn cho phép gửi progress và cập nhật status khi đã xác nhận
+    this.showConfirmReceived = false;
     this.receipt.Status = 4; // Đang xử lý
     this.updateReceipt(() => {
       this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
@@ -229,8 +219,12 @@ export class Mtb022DocumentReceiptDetailComponent {
     });
   }
 
+  public toggleConfirmReceived(isOpen: boolean): void {
+    this.showConfirmReceived = isOpen;
+  }
+
   private updateReceipt(callback?: () => void): void {
-    if (!this.receipt || this.receipt.Code === 0) {
+    if (!this.receipt) {
       return;
     }
 
@@ -377,10 +371,25 @@ export class Mtb022DocumentReceiptDetailComponent {
         const orderInfo = result.OrderInfo || {};
 
         // Map Receipt basic info
-        this.receipt = Object.assign(new SALOrderReceiptCusDTO(), receiptData);
-        this.receipt.IsConfirmedPayment = param.IsConfirmedPayment || false;
+        const serverReceipt = Object.assign(new SALOrderReceiptCusDTO(), receiptData);
+        
+        // Preserve local changes from cache/current state
+        this.receipt = {
+          ...serverReceipt,
+          CollectedAmount: this.receipt.CollectedAmount,
+          CashAmount: this.receipt.CashAmount,
+          TransferAmount: this.receipt.TransferAmount,
+          PaymentMethod: this.receipt.PaymentMethod,
+          Description: this.receipt.Description,
+          CustomerName: this.receipt.CustomerName,
+          CellPhone: this.receipt.CellPhone,
+          Address: this.receipt.Address,
+          Signature: this.receipt.Signature || serverReceipt.Signature
+        };
 
         // Map OrderInfo to womMaster for breakdown details
+        this.womMaster.CustomerName = orderInfo.CustomerName;
+        this.womMaster.CustomerPhone = orderInfo.CustomerPhone;
         this.womMaster.VehiclePrice = orderInfo.VehicleAmount || 0;
         this.womMaster.ServiceTotal = orderInfo.ServiceAmount || 0;
         this.womMaster.PartTotal = orderInfo.PartAmount || 0;
@@ -389,7 +398,7 @@ export class Mtb022DocumentReceiptDetailComponent {
         this.womMaster.TotalPayment = orderInfo.TotalBillAmount || 0;
         this.womMaster.TotalBeforeDiscount = (orderInfo.VehicleAmount || 0) + (orderInfo.ServiceAmount || 0) + (orderInfo.PartAmount || 0);
 
-        // Map Receipt breakdown info (from newly added Backend fields)
+        // Map Receipt breakdown info
         this.receipt.TotalOrderValue = receiptData.TotalOrderValue || 0;
         this.receipt.PriorCollections = receiptData.PriorCollections || 0;
         this.receipt.CurrentRemainingDebt = receiptData.CurrentRemainingDebt || 0;

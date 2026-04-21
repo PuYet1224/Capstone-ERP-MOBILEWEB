@@ -31,7 +31,7 @@
             </ps-kendo-dropdown-list>
         </div>
         <div psDialogConfirmBottomFooter>
-            <ps-kendo-button [theme]="''" (onClick)="selectedConsultant = null; searchKeyword = ''; includeFinished = false; onSearch()">Thiết lập lại</ps-kendo-button>
+            <ps-kendo-button [theme]="''" (onClick)="openFilter(false)">Đóng</ps-kendo-button>
             <ps-kendo-button [theme]="'primary'" (onClick)="onSearch()">Tìm kiếm</ps-kendo-button>
         </div>
     </ps-dialog-confirm-bottom>

@@ -440,6 +440,31 @@
           }
         }
       }
+      ps-dialog-confirm {
+        .main-title {
+          text-align: center;
+          span {
+            font-weight: 600;
+            color: $secondary;
+          }
+          .hightline {
+            font-weight: bold;
+            font-size: 16px;
+            color: $primary;
+            margin-top: 8px;
+          }
+        }
+        .sub-title {
+          text-align: center;
+          margin-top: 12px;
+          font-size: 12px;
+          color: $placeholder;
+          span {
+            font-weight: bold;
+            color: $error;
+          }
+        }
+      }
     }
   }
 }

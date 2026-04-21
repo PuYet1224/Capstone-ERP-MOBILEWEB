@@ -85,7 +85,7 @@
         <ps-kendo-button (onClick)="onNavigate('to-list')">
             <span class="material-icons">list_alt</span>
         </ps-kendo-button>
-        <ps-kendo-button [theme]="'primary'" (onClick)="onSendPayment()">
+        <ps-kendo-button *ngIf="retailMaster?.Status == 1" [theme]="'primary'" (onClick)="onSendPayment()">
             <span class="text">Gửi thanh toán</span>
         </ps-kendo-button>
     </ps-footer-action>

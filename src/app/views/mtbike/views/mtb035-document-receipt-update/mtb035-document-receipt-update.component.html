@@ -25,7 +25,7 @@
             label="Khách hàng (*)"
             placeholder="Nhập tên khách hàng"
             [(ngModel)]="receipt.CustomerName"
-            [disabled]="receipt.Status == 4 || receipt.IsConfirmedPayment"
+            [disabled]="receipt.Code === 0 || receipt.Status == 4"
             (blur)="onBlur()"
           >
           </ps-kendo-textbox>
@@ -36,7 +36,7 @@
             label="Số điện thoại"
             placeholder="Nhập số điện thoại"
             [(ngModel)]="receipt.CellPhone"
-            [disabled]="receipt.Status == 4 || receipt.IsConfirmedPayment"
+            [disabled]="receipt.Code === 0 || receipt.Status == 4"
             (blur)="onBlur()"
           >
           </ps-kendo-textbox>
@@ -58,7 +58,7 @@
             valueField="TypeOfList"
             [valuePrimitive]="true"
             [(ngModel)]="receipt.PaymentMethod"
-            [disabled]="(receipt.Status == 4 || receipt.IsConfirmedPayment) && (receipt.Progress >= 100)"
+            [disabled]="receipt.IsLockPayment"
             (valueChange)="onPaymentMethodChange($event)"
           >
           </ps-kendo-dropdown-list>
@@ -74,9 +74,9 @@
                 format="n0"
                 placeholder="0"
                 [(ngModel)]="receipt.CashAmount"
-                [disabled]="(receipt.Status == 4 || receipt.IsConfirmedPayment) && (receipt.Progress >= 100)"
+                [disabled]="receipt.IsLockPayment"
                 (valueChange)="onCashAmountChange($event)"
-                (blur)="onBlur()"
+                (blur)="onAmountBlur()"
               >
               </ps-kendo-numeric-textbox>
               <span class="amount-postfix">{{ receipt.CollectedAmount | number: '1.0-0' }}đ</span>
@@ -93,9 +93,9 @@
                 [spinners]="false"
                 format="n0"
                 [(ngModel)]="receipt.TransferAmount"
-                [disabled]="(receipt.Status == 4 || receipt.IsConfirmedPayment) && ( receipt.Progress >= 100)"
+                [disabled]="receipt.IsLockPayment"
                 (valueChange)="onTransferAmountChange($event)"
-                (blur)="onBlur()"
+                (blur)="onAmountBlur()"
               >
               </ps-kendo-numeric-textbox>
               <span class="amount-postfix">{{ receipt.CollectedAmount | number: '1.0-0' }}đ</span>
@@ -108,7 +108,7 @@
             label="Mô tả"
             placeholder="Nhập mô tả"
             [(ngModel)]="receipt.Description"
-            [disabled]="(receipt.Status == 4 || receipt.IsConfirmedPayment) && ( receipt.Progress >= 100)"
+            [disabled]="receipt.Code === 0 || receipt.Status == 4"
             (blur)="onBlur()"
           >
           </ps-kendo-textarea>
@@ -122,43 +122,49 @@
         <span class="order-id">#{{ orderInfo.OrderID }}</span>
       </div>
       <div class="card-body">
+        <!-- ... (Các dòng Tiền xe, dịch vụ, phụ tùng giữ nguyên) ... -->
+
+        <div class="separator"></div>
+
+        <!-- Bổ sung 3 dòng theo màn hình Tư vấn -->
         <div class="summary-row">
-          <span>Tổng tiền đơn hàng:</span>
-          <span class="value">{{ orderInfo.TotalPrice | number: '1.0-0' }}đ</span>
+          <span>Trả thẳng:</span>
+          <span class="value">{{ orderInfo.LumpSumAmount | number: '1.0-0' }}đ</span>
         </div>
-        <div class="summary-row" *ngIf="orderInfo.VehicleAmount > 0">
-          <span>Tiền xe:</span>
-          <span class="value">{{ orderInfo.VehicleAmount | number: '1.0-0' }}đ</span>
+        <div class="summary-row">
+          <span>Đặt cọc:</span>
+          <span class="value">{{ orderInfo.DepositAmount | number: '1.0-0' }}đ</span>
         </div>
-        <div class="summary-row" *ngIf="orderInfo.ServiceAmount > 0">
-          <span>Tiền dịch vụ:</span>
-          <span class="value">{{ orderInfo.ServiceAmount | number: '1.0-0' }}đ</span>
-        </div>
-        <div class="summary-row" *ngIf="orderInfo.PartAmount > 0">
-          <span>Tiền phụ tùng:</span>
-          <span class="value">{{ orderInfo.PartAmount | number: '1.0-0' }}đ</span>
-        </div>
-        <div class="summary-row highlight">
-          <span>Đã thu trước đó:</span>
-          <span class="value text-success">{{ receipt.PriorCollections | number: '1.0-0' }}đ</span>
-        </div>
-        <div class="summary-row highlight">
-          <span>Còn nợ:</span>
-          <span class="value text-danger">{{ (receipt.TotalOrderValue - receipt.PriorCollections) | number: '1.0-0' }}đ</span>
-        </div>
-        <div class="total-bar">
-          <span>SỐ TIỀN THU LẦN NÀY:</span>
-          <span class="value">{{ receipt.CollectedAmount | number: '1.0-0' }}đ</span>
+        <div class="summary-row">
+          <span>Dư nợ (Ngân hàng/Trả góp):</span>
+          <span class="value text-primary">{{ orderInfo.InstallmentAmount | number: '1.0-0' }}đ</span>
         </div>
 
-        <!-- Progress Bar -->
+        <div class="separator"></div>
+
+        <div class="summary-row highlight">
+          <span>Đã thu trước đó:</span>
+          <span class="value text-success">{{ orderInfo.AmountPaidOthers | number: '1.0-0' }}đ</span>
+        </div>
+        <div class="summary-row highlight">
+          <span>Còn nợ thực tế:</span>
+          <!-- Số tiền cần phải thu thêm bằng tiền mặt/CK -->
+          <span class="value text-danger">{{ orderInfo.DebtAmount | number: '1.0-0' }}đ</span>
+        </div>
+
+        <div class="total-bar">
+          <span>SỐ TIỀN THU LẦN NÀY:</span>
+          <span class="value highlight-gold">{{ receipt.CollectedAmount | number: '1.0-0' }}đ</span>
+        </div>
+
+        <!-- Progress Bar: Dùng trực tiếp Progress từ Backend -->
         <div class="progress-section">
           <div class="progress-info">
-            <span>Tiến độ thu tiền:</span>
-            <span class="progress-value">{{ ((receipt.PriorCollections + receipt.CollectedAmount) / receipt.TotalOrderValue) * 100 | number: '1.0-0' }}%</span>
+            <span>Tiến độ thu tiền mặt:</span>
+            <span class="progress-value">{{ orderInfo.Progress | number: '1.0-2' }}%</span>
           </div>
           <div class="progress-track">
-            <div class="progress-fill" [style.width.%]="((receipt.PriorCollections + receipt.CollectedAmount) / receipt.TotalOrderValue) * 100"></div>
+            <div class="progress-fill" [style.width.%]="orderInfo.Progress"></div>
           </div>
         </div>
       </div>
@@ -169,15 +175,6 @@
   <div class="footer-actions">
     <ps-kendo-button class="btn-back" (onClick)="goBack()">
       <span class="material-icons">arrow_back</span>
-    </ps-kendo-button>
-
-    <ps-kendo-button
-      class="btn-confirm"
-      [theme]="'primary'"
-      (onClick)="confirmPayment()"
-      *ngIf="receipt.Status != 4 && !receipt.IsConfirmedPayment"
-    >
-      Xác nhận thanh toán
     </ps-kendo-button>
   </div>
 </div>

@@ -77,7 +77,7 @@ padding-bottom: 8px;
                                 }
                             }
 
-                            ps-kendo-textbox {
+                            ps-kendo-textbox,ps-kendo-dropdown-list {
                                 width: 100%;
                             }
                         }
@@ -277,6 +277,7 @@ font-weight: bold;
                             display: flex;
                             flex-direction: column;
                             gap: 4px;
+border-top: 1px solid $border;
 
 
                             &:active {
