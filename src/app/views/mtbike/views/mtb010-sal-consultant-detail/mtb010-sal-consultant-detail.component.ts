@@ -125,22 +125,52 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
     // }
 
     this.retailDetailDTOcopy = { ...this.retailDetailDTO };
+    
+    let props = [field];
+    if (field === 'CustomerPhone' && this.retailDetailDTOcopy.CustomerName) {
+        props.push('CustomerName');
+    }
+    if (field === 'CustomerName' && this.retailDetailDTOcopy.CustomerPhone) {
+        props.push('CustomerPhone');
+    }
+
     let param: UpdatePropertiesInterface<SALOrderMasterCusDTO> = {
       DTO: this.retailDetailDTOcopy,
-      Properties: [field]
+      Properties: props
     };
     this.UpdateSALMaster(param);
   }
 
 
+  private static detailCache = new Map<number, SALOrderMasterCusDTO>();
+  private static genderCache: ListDTO[] = [];
+
   private GetSALMaster(param: SALOrderMasterCusDTO) {
-    this.subLoader.loader(true);
-    const sub = this.mtbikeapi.GetSALMaster(param).subscribe(res => {
-      if (res.StatusCode === 0) {
-        this.retailDetailDTO = res.ObjectReturn;
+    if (param.Code && Mtb010SalConsultantDetailComponent.detailCache.has(param.Code)) {
+        this.retailDetailDTO = { ...Mtb010SalConsultantDetailComponent.detailCache.get(param.Code)! };
         this.retailDetailDTOcopy.ID = this.retailDetailDTO.ID;
         this.retailDetailDTOcopy.Code = this.retailDetailDTO.Code;
         this.masterStatus = this.retailDetailDTO.Status;
+        return;
+    }
+
+    this.subLoader.loader(true);
+    const sub = this.mtbikeapi.GetSALMaster(param).subscribe(res => {
+      if (res.StatusCode === 0) {
+        const prevName = this.retailDetailDTO.CustomerName;
+        const prevPhone = this.retailDetailDTO.CustomerPhone;
+
+        this.retailDetailDTO = res.ObjectReturn;
+
+        if (!this.retailDetailDTO.CustomerName && prevName) this.retailDetailDTO.CustomerName = prevName;
+        if (!this.retailDetailDTO.CustomerPhone && prevPhone) this.retailDetailDTO.CustomerPhone = prevPhone;
+
+        this.retailDetailDTOcopy.ID = this.retailDetailDTO.ID;
+        this.retailDetailDTOcopy.Code = this.retailDetailDTO.Code;
+        this.masterStatus = this.retailDetailDTO.Status;
+        
+        Mtb010SalConsultantDetailComponent.detailCache.set(this.retailDetailDTO.Code, { ...this.retailDetailDTO });
+
         this.subLoader.loader(false);
       } else {
         this.subLoader.loader(false);
@@ -154,9 +184,15 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
   }
 
   private getlisthrlist() {
+    if (Mtb010SalConsultantDetailComponent.genderCache && Mtb010SalConsultantDetailComponent.genderCache.length > 0) {
+        this.listgender = Mtb010SalConsultantDetailComponent.genderCache;
+        return;
+    }
+
     this.subLoader.loader(true);
     var temp = this.configCache.GetListHRList(HRListTypeDataEnum.GENDER).subscribe((data) => {
       this.listgender = data;
+      Mtb010SalConsultantDetailComponent.genderCache = data;
       this.subLoader.loader(false);
     }, (err) => {
       this.subLoader.loader(false);
@@ -171,10 +207,22 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
     var temp = this.mtbikeapi.UpdateSALMaster(param).subscribe(
       (res) => {
         if (res.StatusCode == 0) {
+          const prevName = this.retailDetailDTOcopy.CustomerName;
+          const prevPhone = this.retailDetailDTOcopy.CustomerPhone;
+
           this.retailDetailDTO = res.ObjectReturn;
+
+          if (!this.retailDetailDTO.CustomerName && prevName) this.retailDetailDTO.CustomerName = prevName;
+          if (!this.retailDetailDTO.CustomerPhone && prevPhone) this.retailDetailDTO.CustomerPhone = prevPhone;
+
           this.retailDetailDTOcopy = { ...this.retailDetailDTO };
           this.masterStatus = this.retailDetailDTO.Status;
           this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_MASTER, this.retailDetailDTO);
+          
+          if (this.retailDetailDTO.Code) {
+              Mtb010SalConsultantDetailComponent.detailCache.set(this.retailDetailDTO.Code, { ...this.retailDetailDTO });
+          }
+
           this.notification.onSuccess(`Thành công`);
           this.subLoader.loader(false);
           if (this.firstLoad && this.fieldName == 'continue') {

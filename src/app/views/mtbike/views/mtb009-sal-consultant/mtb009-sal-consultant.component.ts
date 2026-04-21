@@ -249,13 +249,26 @@ export class Mtb009SalConsultantComponent implements OnDestroy, OnInit {
     }
   }
 
+  private static listCache = new Map<string, SALOrderMasterGroup[]>();
+
   private GetListSALMaster(filter: State, isRefresh: boolean = false) {
     this.isLoading = true;
     this.loader.loader(true);
 
+    const cacheKey = JSON.stringify(filter);
+    if (!isRefresh && Mtb009SalConsultantComponent.listCache.has(cacheKey)) {
+        this.listRetailMaster = Mtb009SalConsultantComponent.listCache.get(cacheKey)!;
+        this.openSet.clear();
+        this.listRetailMaster.forEach((_, index) => this.openSet.add(index));
+        this.isLoading = false;
+        this.loader.loader(false);
+        return;
+    }
+
     const temp = this.api.GetListSALMaster(filter).subscribe((res) => {
       if (res.StatusCode === 0) {
         this.listRetailMaster = res.ObjectReturn as SALOrderMasterGroup[];
+        Mtb009SalConsultantComponent.listCache.set(cacheKey, this.listRetailMaster);
         this.openSet.clear();
         this.listRetailMaster.forEach((_, index) => {
           this.openSet.add(index);
