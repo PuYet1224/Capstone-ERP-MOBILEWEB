@@ -13,11 +13,11 @@ import { MtbikeApiService } from '../../services/mtbike-api.service';
 import { ConfigCacheService } from 'src/app/services/core/config-cache.service';
 import { LSListTypeDataEnum } from 'src/app/models/enums/e-type/ls-list-type-data.enum';
 @Component({
-  selector: 'mtb035-document-receipt-update',
-  templateUrl: './mtb035-document-receipt-update.component.html',
-  styleUrls: ['./mtb035-document-receipt-update.component.scss'],
+  selector: 'mtb023-document-receipt-update',
+  templateUrl: './mtb023-document-receipt-update.component.html',
+  styleUrls: ['./mtb023-document-receipt-update.component.scss'],
 })
-export class Mtb035DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
+export class Mtb023DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
   public receipt: SALOrderReceiptCusDTO = new SALOrderReceiptCusDTO();
   public receiptcopy: SALOrderReceiptCusDTO = new SALOrderReceiptCusDTO();
   private arrUnsubscribe: Subscription[] = [];

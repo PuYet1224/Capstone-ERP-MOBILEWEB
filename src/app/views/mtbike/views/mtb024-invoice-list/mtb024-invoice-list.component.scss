@@ -1,8 +1,8 @@
 @import '../../../../../assets/scss/colors';
 
 ::ng-deep {
-  mtb021-document-receipt {
-    .mtb021-document-receipt {
+  mtb024-invoice-list {
+    .mtb024-invoice-list {
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -77,8 +77,7 @@
                 }
               }
 
-              ps-kendo-textbox,
-              ps-kendo-dropdown-list {
+              ps-kendo-textbox {
                 width: 100%;
               }
             }
@@ -267,7 +266,7 @@
             }
           }
 
-          // ========== RECEIPT SECTION ==========
+          // ========== INVOICE SECTION (Matched to Receipt Section) ==========
           .receipt-section {
             border-top: 1px solid $border;
 
@@ -279,6 +278,7 @@
               flex-direction: column;
               gap: 4px;
               border-top: 1px solid $border;
+              position: relative;
 
               &:active {
                 background: $hover-green;
@@ -332,17 +332,14 @@
                       background: $purple-100;
                       color: $purple-700;
                     }
-
                     &.pm-transfer {
                       background: $blue-100;
                       color: $blue-700;
                     }
-
                     &.pm-card {
                       background: $amber-100;
                       color: $amber-700;
                     }
-
                     &.pm-mixed {
                       background: $pink-100;
                       color: $pink-700;
@@ -367,14 +364,21 @@
 
               .r-info {
                 display: flex;
-                align-items: center;
-                gap: 12px;
-                flex-wrap: wrap;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+
+                .r-info-row {
+                  display: flex;
+                  align-items: center;
+                  gap: 12px;
+                  width: 100%;
+                }
 
                 .r-info-item {
                   display: flex;
                   align-items: center;
-                  gap: 2px;
+                  gap: 4px;
                   font-size: 11px;
                   color: $secondary;
 
@@ -382,45 +386,19 @@
                     font-size: 13px;
                     color: $primary;
                   }
+
+                  .r-vehicle {
+                    font-size: 11px;
+                    font-weight: 700;
+                    color: $secondary;
+                  }
                 }
               }
 
               .r-meta {
-                display: flex;
-                gap: 12px;
-                flex-wrap: wrap;
-
-                .r-meta-item {
-                  font-size: 11px;
-                  color: $secondary;
-
-                  .r-meta-label {
-                    color: $secondary;
-                    opacity: 0.7;
-                  }
-                }
-              }
-            }
-
-            .create-receipt {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              gap: 4px;
-              padding: 12px;
-              font-size: 12px;
-              font-weight: 600;
-              color: $primary;
-              cursor: pointer;
-              border-top: 1px dashed rgba($primary, 0.3);
-              background: #12643325;
-
-              .material-icons {
-                font-size: 16px;
-              }
-
-              &:active {
-                background: $hover-green;
+                position: absolute;
+                bottom: 8px;
+                right: 12px;
               }
             }
           }
@@ -440,25 +418,21 @@
             border-color: $border;
             background: transparent;
           }
-
           &.status-pending {
             color: $white;
             border-color: $warning;
             background: $warning;
           }
-
           &.status-processing {
             color: $white;
             border-color: $info;
             background: $info;
           }
-
           &.status-complete {
             color: $primary;
             border-color: $primary;
             background: transparent;
           }
-
           &.status-cancel {
             color: $error;
             border-color: $error;
@@ -501,7 +475,7 @@
             button {
               width: 100%;
               height: 36px;
-              border: 1px solid $border;
+              border: 1px solid $border !important;
               border-radius: 8px;
             }
           }

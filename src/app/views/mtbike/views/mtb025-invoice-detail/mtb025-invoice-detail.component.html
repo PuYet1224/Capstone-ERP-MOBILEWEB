@@ -1,0 +1,221 @@
+<div class="mtb025-invoice-detail">
+  <!-- START: HEADER -->
+  <ps-header-back>
+    <div class="left-side">
+      <div class="func-title1">Thanh toán bán hàng</div>
+      <div class="func-title2">Thông tin chứng từ</div>
+    </div>
+  </ps-header-back>
+  <!-- END: HEADER -->
+
+  <!-- START: BODY -->
+  <div class="customer-body">
+    <div class="body-container">
+      <div class="container-body">
+        <div class="title">Thông tin xuất hóa đơn</div>
+        <div class="content">
+          <!-- Custom Dropdown for Invoice Type -->
+          <ps-kendo-dropdown-list
+            [label]="'Loại hóa đơn'"
+            [data]="invoiceTypes"
+            textField="ListName"
+            valueField="TypeOfList"
+            [(ngModel)]="invoice.VATType"
+            [valuePrimitive]="true"
+            (valueChange)="onValueChange('VATType')"
+          >
+          </ps-kendo-dropdown-list>
+
+          <!-- CASE: Cá nhân (VATType == 1) -->
+          <div class="input-fields personal-case" *ngIf="invoice.VATType == 1">
+            <ps-kendo-textbox
+              [label]="'Số căn cước công dân'"
+              [(ngModel)]="invoice['VATCCCD']"
+              (blur)="onValueChange('VATCCCD')"
+            ></ps-kendo-textbox>
+            <ps-kendo-textbox
+              [label]="'Số chứng minh nhân dân'"
+              [(ngModel)]="invoice['VATCMND']"
+              (blur)="onValueChange('VATCMND')"
+            ></ps-kendo-textbox>
+
+            <ps-kendo-datepicker
+              [label]="'Ngày cấp'"
+              [(ngModel)]="invoice['VATEffDate']"
+              (valueChange)="onValueChange('VATEffDate')"
+            ></ps-kendo-datepicker>
+
+            <div class="row-flex align-end">
+              <ps-kendo-textbox
+                [label]="'Khách hàng'"
+                [(ngModel)]="invoice.VATCustomerName"
+                (blur)="onValueChange('VATCustomerName')"
+                class="flex-3"
+              ></ps-kendo-textbox>
+              <ps-kendo-dropdown-list
+                [label]="''"
+                [data]="listGender"
+                [(ngModel)]="invoice['VATGender']"
+                [textField]="'ListName'"
+                [valueField]="'Code'"
+                [valuePrimitive]="true"
+                (valueChange)="onValueChange('VATGender')"
+                class="flex-1"
+              ></ps-kendo-dropdown-list>
+            </div>
+
+            <ps-kendo-textbox
+              [label]="'Số hộ chiếu'"
+              [(ngModel)]="invoice.VATPassport"
+              (blur)="onValueChange('VATPassport')"
+            ></ps-kendo-textbox>
+
+            <div class="dob-group">
+              <label class="ps-label">Ngày tháng năm sinh</label>
+              <div class="row-flex">
+                <ps-kendo-dropdown-list
+                  [data]="listYear"
+                  [(ngModel)]="invoice['VATYear']"
+                  (valueChange)="onValueChange('VATYear')"
+                  class="flex-1"
+                ></ps-kendo-dropdown-list>
+                <ps-kendo-dropdown-list
+                  [data]="listMonth"
+                  [(ngModel)]="invoice['VATMonth']"
+                  (valueChange)="onValueChange('VATMonth')"
+                  class="flex-1"
+                ></ps-kendo-dropdown-list>
+                <ps-kendo-dropdown-list
+                  [data]="listDay"
+                  [(ngModel)]="invoice['VATDay']"
+                  (valueChange)="onValueChange('VATDay')"
+                  class="flex-1"
+                ></ps-kendo-dropdown-list>
+              </div>
+            </div>
+
+            <ps-kendo-textbox
+              [label]="'Email'"
+              placeholder="abc@gmail.com"
+              [(ngModel)]="invoice.VATEmail"
+              (blur)="onValueChange('VATEmail')"
+            ></ps-kendo-textbox>
+
+            <ps-kendo-textbox
+              [label]="'Tỉnh thành'"
+              [(ngModel)]="invoice['VATProvince']"
+              (blur)="onValueChange('VATProvince')"
+            ></ps-kendo-textbox>
+            <ps-kendo-textbox
+              [label]="'Phường xã'"
+              [(ngModel)]="invoice['VATWard']"
+              (blur)="onValueChange('VATWard')"
+            ></ps-kendo-textbox>
+          </div>
+
+          <!-- CASE: Doanh nghiệp (VATType == 2) hoặc Đơn vị công (VATType == 3) -->
+          <div class="input-fields" *ngIf="invoice.VATType == 2 || invoice.VATType == 3">
+            <ps-kendo-textbox
+              [label]="invoice.VATType == 3 ? 'Mã đơn vị' : 'Mã số thuế'"
+              [placeholder]="invoice.VATType == 3 ? 'Nhập mã đơn vị' : 'Nhập mã số thuế'"
+              [(ngModel)]="invoice.VATCompanyTax"
+              (blur)="onValueChange('VATCompanyTax')"
+            >
+            </ps-kendo-textbox>
+
+            <ps-kendo-textbox
+              [label]="invoice.VATType == 3 ? 'Tên đơn vị' : 'Tên công ty / doanh nghiệp'"
+              [placeholder]="invoice.VATType == 3 ? 'Nhập tên đơn vị' : 'Nhập tên công ty'"
+              [(ngModel)]="invoice.VATCompanyName"
+              (blur)="onValueChange('VATCompanyName')"
+            >
+            </ps-kendo-textbox>
+            <ps-kendo-textbox
+              [label]="invoice.VATType == 3 ? 'Tên người đại diện' : 'Tên chủ sở hữu công ty / doanh nghiệp'"
+              [(ngModel)]="invoice.VATCustomerName"
+              (blur)="onValueChange('VATCustomerName')"
+            >
+            </ps-kendo-textbox>
+            <ps-kendo-textbox
+              [label]="invoice.VATType == 3 ? 'Số điện thoại người đại diện' : 'Số điện thoại chủ sở hữu'"
+              [(ngModel)]="invoice.VATCellPhone"
+              (blur)="onValueChange('VATCellPhone')"
+            >
+            </ps-kendo-textbox>
+            <ps-kendo-textbox
+              [label]="'Email'"
+              placeholder="abc@gmail.com"
+              [(ngModel)]="invoice.VATEmail"
+              (blur)="onValueChange('VATEmail')"
+            ></ps-kendo-textbox>
+          </div>
+
+          <ps-kendo-textarea
+            [label]="'Địa chỉ'"
+            placeholder="Nhập địa chỉ"
+            [(ngModel)]="invoice.VATAddress"
+            (blur)="onValueChange('VATAddress')"
+          >
+          </ps-kendo-textarea>
+
+          <ps-kendo-textarea
+            [label]="'Ghi chú'"
+            placeholder="Ghi chú thêm"
+            [(ngModel)]="invoice.VATNote"
+            (blur)="onValueChange('VATNote')"
+          >
+          </ps-kendo-textarea>
+        </div>
+      </div>
+
+      <!-- START: THÔNG TIN LIÊN HỆ -->
+      <div class="container-body" *ngIf="invoice.VATType == 1">
+        <div class="title">Thông tin liên hệ</div>
+        <div class="content">
+          <ps-kendo-textbox
+            [label]="'Số di động'"
+            [(ngModel)]="invoice.VATCellPhone"
+            (blur)="onValueChange('VATCellPhone')"
+          ></ps-kendo-textbox>
+
+          <div class="zalo-group">
+            <ps-kendo-checkbox
+              [label]="'Là số di động'"
+              [(ngModel)]="invoice['VATIsSamePhone']"
+              (valueChange)="onValueChange('VATIsSamePhone')"
+            ></ps-kendo-checkbox>
+            <ps-kendo-textbox
+              [label]="'Zalo'"
+              [(ngModel)]="invoice['VATZalo']"
+              (blur)="onValueChange('VATZalo')"
+            ></ps-kendo-textbox>
+          </div>
+
+          <ps-kendo-textbox
+            [label]="'Email liên hệ'"
+            [(ngModel)]="invoice['VATContactEmail']"
+            (blur)="onValueChange('VATContactEmail')"
+          ></ps-kendo-textbox>
+        </div>
+      </div>
+      <!-- END: THÔNG TIN LIÊN HỆ -->
+    </div>
+  </div>
+  <!-- END: BODY -->
+
+  <!-- START: FOOTER -->
+  <ps-footer-action>
+    <ps-kendo-button (onClick)="onBack()">
+      <span class="material-icons">arrow_back</span>
+    </ps-kendo-button>
+    <ps-kendo-button [theme]="'primary'" (onClick)="onUpdate()">
+      <span class="text">Xuất hóa đơn</span>
+    </ps-kendo-button>
+  </ps-footer-action>
+  <!-- END: FOOTER -->
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <kendo-loader type="converging-dots" themeColor="primary" size="large"></kendo-loader>
+  </div>
+</div>

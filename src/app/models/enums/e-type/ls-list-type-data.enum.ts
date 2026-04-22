@@ -8,5 +8,8 @@ export enum LSListTypeDataEnum {
   // Time = 6,
 
   //Phương thức thanh toán
-  PaymentMethod = 6
+  PaymentMethod = 6,
+
+  //Loại hóa đơn
+  InvoiceType = 7
 }

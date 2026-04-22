@@ -1497,10 +1497,27 @@ export class MtbikeApiService {
     });
   }
 
-  public UpdateSALInvoice(param: SALOrderInvoiceDetailCusDTO[]) {
+  public UpdateSALInvoice(param: UpdatePropertiesInterface<SALOrderInvoiceCusDTO>) {
     return new Observable<ResponseDTO>((obs) => {
       const ns = MtbikeApiStaticService.getNamespace(this.config.GetDLL());
       this.api.post(ns.UpdateSALInvoice, param)
+        .subscribe(
+          (res: ResponseDTO) => {
+            obs.next(res);
+            obs.complete();
+          },
+          (errors) => {
+            obs.error(errors);
+            obs.complete();
+          }
+        );
+    });
+  }
+
+  public ExportSALInvoicePdf(param: any) {
+    return new Observable<ResponseDTO>((obs) => {
+      const ns = MtbikeApiStaticService.getNamespace(this.config.GetDLL());
+      this.api.post(ns.ExportSALInvoicePdf, param)
         .subscribe(
           (res: ResponseDTO) => {
             obs.next(res);

@@ -1,6 +1,6 @@
 
 import { SALOrderDetailCusDTO } from "./sal-order-detail.dto";
-class SALOrderMasterDTO {
+export class SALOrderMasterDTO {
   Code: number = 0;
   ID: string = '';
   Customer: number;

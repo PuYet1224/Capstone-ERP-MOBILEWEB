@@ -20,10 +20,12 @@ import { Mtb017SalConsultantPromotionComponent } from './views/mtb017-sal-consul
 import { Mtb018SalConsultantPromotionDetailComponent } from './views/mtb018-sal-consultant-promotion-detail/mtb018-sal-consultant-promotion-detail.component';
 import { Mtb019SalConsultantTotalVehicleComponent } from './views/mtb019-sal-consultant-total-vehicle/mtb019-sal-consultant-total-vehicle.component';
 import { Mtb020SalConsultantTotalComponent } from './views/mtb020-sal-consultant-total/mtb020-sal-consultant-total.component';
-import { Mtb034SalPolicyComponent } from './views/mtb034-sal-policy/mtb034-sal-policy.component';
+
 import { Mtb021DocumentReceiptComponent } from './views/mtb021-document-receipt/mtb021-document-receipt.component';
 import { Mtb022DocumentReceiptDetailComponent } from './views/mtb022-document-receipt-detail/mtb022-document-receipt-detail.component';
-import { Mtb035DocumentReceiptUpdateComponent } from './views/mtb035-document-receipt-update/mtb035-document-receipt-update.component';
+import { Mtb023DocumentReceiptUpdateComponent } from './views/mtb023-document-receipt-update/mtb023-document-receipt-update.component';
+import { Mtb024InvoiceListComponent } from './views/mtb024-invoice-list/mtb024-invoice-list.component';
+import { Mtb025InvoiceDetailComponent } from './views/mtb025-invoice-detail/mtb025-invoice-detail.component';
 
 export const MtbikeRouting: Routes = [
   {
@@ -119,17 +121,22 @@ export const MtbikeRouting: Routes = [
     path: 'document/receipt',
     component: Mtb022DocumentReceiptDetailComponent,
   },
-  {
-    path: 'promotion',
-    component: Mtb034SalPolicyComponent,
-  },
+
   {
     path: 'document',
     component: Mtb021DocumentReceiptComponent,
   },
   {
     path: 'document/receipt/update',
-    component: Mtb035DocumentReceiptUpdateComponent,
+    component: Mtb023DocumentReceiptUpdateComponent,
+  },
+  {
+    path: 'payment',
+    component: Mtb024InvoiceListComponent,
+  },
+  {
+    path: 'payment/detail',
+    component: Mtb025InvoiceDetailComponent,
   },
 
 ];
