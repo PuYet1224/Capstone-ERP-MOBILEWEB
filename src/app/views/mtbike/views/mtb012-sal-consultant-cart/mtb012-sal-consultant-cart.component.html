@@ -53,12 +53,12 @@
                                     {{item.Price| number:'1.0-0' }}
                                 </div>
                                 <div class="counter" (click)="$event.stopPropagation()">
-                                    <span *ngIf="retailMaster?.Status == 1" class="material-icons" (click)="onConfirmDelete(item, 'delete-one')">
+                                    <span *ngIf="retailMaster?.Status == 1" class="material-icons" [class.disabled]="item.IsOrderLock" (click)="!item.IsOrderLock && onConfirmDelete(item, 'delete-one')">
                                         remove
                                     </span>
                                     <ps-kendo-textbox [disabled]="retailMaster?.Status != 1 || item.IsOrderLock" [(ngModel)]="item.OrderQuantity" (focus)="onFocusVehicle(item)"
                                         (blur)="onAddMultiVehicle(item)"></ps-kendo-textbox>
-                                    <span *ngIf="retailMaster?.Status == 1" class="material-icons" (click)="onAddVehicle(item)">
+                                    <span *ngIf="retailMaster?.Status == 1" class="material-icons" [class.disabled]="item.IsOrderLock" (click)="!item.IsOrderLock && onAddVehicle(item)">
                                         add
                                     </span>
                                 </div>

@@ -48,24 +48,27 @@
                                 orderDetail.TypeData == 2 ? 'Điều xe' : 'Đặt xe') }}
                             </span>
                             <div class="vehicle-image">
-                                <img [src]="(orderDetail && orderDetail.ImageSetting1) || (orderDetail && orderDetail.VehicleImage) || ''"
-                                    alt="" />
+                                <img [src]="orderDetail.VehicleImage" alt="" />
+<span
+                            class="material-icons">
+                            lock_open_right
+                        </span>
                             </div>
                             <div class="vehicle-info">
                                 <div class="info-row">
                                     <span class="label">Dòng xe:</span>
-                                    <span class="value">{{ orderDetail && orderDetail.TypeOfVehicleName }}</span>
+                                    <span class="value">{{ orderDetail.TypeOfVehicleName }}</span>
                                 </div>
                                 <div class="info-row">
                                     <span class="label">Loại xe:</span>
-                                    <span class="value">{{ orderDetail && orderDetail.VehicleName }}</span>
+                                    <span class="value">{{ orderDetail.VehicleName }}</span>
                                 </div>
                                 <div class="info-row">
                                     <span class="label">Màu xe:</span>
-                                    <span class="value">{{ orderDetail && orderDetail.VehicleColorName }}</span>
+                                    <span class="value">{{ orderDetail.VehicleColorName }}</span>
                                 </div>
                                 <div class="infor-last-row">
-                                    <span>{{ orderDetail && orderDetail['TotalService'] != null ?
+                                    <span>{{ orderDetail['TotalService'] != null ?
                                         orderDetail['TotalService'] : listService.length }} dịch vụ</span>
                                     <span>{{ listPart.length }} phụ kiện</span>
                                     <span>{{ getDiscountLabel() }}</span>

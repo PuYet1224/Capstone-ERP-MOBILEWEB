@@ -231,6 +231,7 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   }
 
   public onAddVehicle(item: LSVehicleColorCusDTO) {
+    if (item.IsOrderLock) return;
     const currentHeadStock = item.ListStock[0].Quantity || 0;
     const otherHeadStock = item.ListStock[1].Quantity || 0;
 
@@ -267,6 +268,7 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   public pendingStockParam: LSVehicleColorCusDTO | null = null;
 
   public onAddMultiVehicle(item: LSVehicleColorCusDTO) {
+    if (item.IsOrderLock) return;
     if (this.oldOrderQuantity === item.OrderQuantity) return;
 
     const diff = item.OrderQuantity - this.oldOrderQuantity;

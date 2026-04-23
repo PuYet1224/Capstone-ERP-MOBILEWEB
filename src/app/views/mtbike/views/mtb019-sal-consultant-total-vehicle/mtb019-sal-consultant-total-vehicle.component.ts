@@ -373,11 +373,7 @@ export class Mtb019SalConsultantTotalVehicleComponent implements OnInit, OnDestr
       res => {
         this.subLoader.loader(false);
         if (res.StatusCode === 0 && res.ObjectReturn) {
-          const pay = res.ObjectReturn as Record<string, any>;
-          Object.keys(pay).forEach(k => (this.orderDetail as any)[k] = pay[k]);
-          this.setdetailimg(this.orderDetail);
-          this.paymentCache[code] = { ...this.orderDetail };
-          this.setStatusContext(this.orderDetail);
+          this.orderDetail = res.ObjectReturn;
           if (this.orderDetail.PaymentType === SALOrderDetailPaymentTypeEnum.INSTALLMENT)
             this.loadListPartnerFinance();
           this.syncCurrentDetailToList();

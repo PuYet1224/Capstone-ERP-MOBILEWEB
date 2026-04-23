@@ -1,4 +1,4 @@
-@import "../../../../../assets/scss/colors";
+@import '../../../../../assets/scss/colors';
 
 ::ng-deep {
   mtb016-sal-consultant-part-detail {
@@ -40,7 +40,6 @@
               width: calc(100% - 136px);
 
               div {
-
                 span,
                 .marquee-content {
                   font-weight: bold;
@@ -415,7 +414,8 @@
                 border: 1px solid $border !important;
                 background-color: $white !important;
 
-                .material-icons, .text {
+                .material-icons,
+                .text {
                   color: $secondary;
                 }
               }
@@ -519,14 +519,15 @@
           input,
           .k-input,
           .k-input-inner,
-          .k-numerictextbox input {}
+          .k-numerictextbox input {
+          }
 
           .k-label {
             margin-bottom: 4px;
           }
 
-          kendo-label+.k-input,
-          .k-label+input {
+          kendo-label + .k-input,
+          .k-label + input {
             margin-top: 4px;
           }
 
@@ -535,7 +536,7 @@
             gap: 8px;
             width: 100%;
 
-            >* {
+            > * {
               flex: 1;
               min-width: 0;
             }
@@ -562,7 +563,6 @@
           box-sizing: border-box;
 
           ps-kendo-button {
-
             &:first-child,
             &:nth-child(2) {
               button {
@@ -582,7 +582,9 @@
                 color: $white;
 
                 .k-button-text {
-                  color: $white;
+                  .text {
+                    color: $white;
+                  }
                 }
               }
             }
