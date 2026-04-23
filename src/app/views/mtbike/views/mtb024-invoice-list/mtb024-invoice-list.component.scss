@@ -328,21 +328,21 @@
                       font-size: 11px;
                     }
 
-                    &.pm-cash {
-                      background: $purple-100;
-                      color: $purple-700;
+                    &.business {
+                      background: $green-100;
+                      color: $green-700;
                     }
                     &.pm-transfer {
                       background: $blue-100;
                       color: $blue-700;
                     }
-                    &.pm-card {
-                      background: $amber-100;
-                      color: $amber-700;
-                    }
-                    &.pm-mixed {
+                    &.public {
                       background: $pink-100;
                       color: $pink-700;
+                    }
+                    &.personal {
+                      background: $purple-100;
+                      color: $purple-700;
                     }
                   }
 

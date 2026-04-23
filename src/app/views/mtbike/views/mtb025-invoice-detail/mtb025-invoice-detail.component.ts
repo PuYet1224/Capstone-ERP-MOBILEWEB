@@ -11,6 +11,8 @@ import { ListDTO } from 'src/app/models/dtos/e-dtos/list.dto';
 import { PsCache } from 'src/app/services/utilities/ps-cache';
 import { KeyLocalStorageEnum } from 'src/app/models/enums/key-local-storage.enum';
 import { UpdatePropertiesInterface } from 'src/app/models/dtos/update-properties.interface';
+import { GetConfigService } from 'src/app/services/core/ps-get-config.service';
+import { LSHeadCusDTO } from 'src/app/models/dtos/e-dtos/ls-head.dto';
 
 @Component({
   selector: 'mtb025-invoice-detail',
@@ -35,6 +37,9 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   public listYear: number[] = [];
   public listMonth: number[] = Array.from({ length: 12 }, (_, i) => i + 1);
   public listDay: number[] = Array.from({ length: 31 }, (_, i) => i + 1);
+  public currentheader: LSHeadCusDTO = this.configService.GetHead();
+
+
 
   constructor(
     private route: ActivatedRoute,
@@ -42,7 +47,8 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     private apiService: MtbikeApiService,
     private notification: PsKendoNotificationService,
     private configCache: ConfigCacheService,
-    private cache: PsCache
+    private cache: PsCache,
+    private configService: GetConfigService,
   ) { 
     // Init years
     const currentYear = new Date().getFullYear();
@@ -116,10 +122,63 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   }
 
   onUpdate(): void {
+    // Validation for VATType == 1 (Personal)
+    if (this.invoice.VATType == 1) {
+      if (!this.invoice.VATType) {
+        this.notification.onWarning('Vui lòng chọn Loại hóa đơn');
+        return;
+      }
+      if (!this.invoice['VATCCCD']) {
+        this.notification.onWarning('Vui lòng nhập Số căn cước công dân');
+        return;
+      }
+      if (!this.invoice.VATCustomerName) {
+        this.notification.onWarning('Vui lòng nhập tên Khách hàng');
+        return;
+      }
+      if (!this.invoice['VATProvince']) {
+        this.notification.onWarning('Vui lòng nhập Tỉnh thành');
+        return;
+      }
+      if (!this.invoice['VATWard']) {
+        this.notification.onWarning('Vui lòng nhập Phường xã');
+        return;
+      }
+      if (!this.invoice.VATCellPhone) {
+        this.notification.onWarning('Vui lòng nhập Số di động');
+        return;
+      }
+    }
+
+    // Validation for VATType == 2 (Business) or VATType == 3 (Public Service)
+    if (this.invoice.VATType == 2 || this.invoice.VATType == 3) {
+      const isPublic = this.invoice.VATType == 3;
+      if (!this.invoice.VATCustomerName) {
+        this.notification.onWarning('Vui lòng nhập tên Người mua hàng');
+        return;
+      }
+      if (!this.invoice.VATCompanyTax) {
+        this.notification.onWarning(`Vui lòng nhập ${isPublic ? 'Mã đơn vị' : 'Mã số thuế'}`);
+        return;
+      }
+      if (!this.invoice.VATCompanyName) {
+        this.notification.onWarning(`Vui lòng nhập ${isPublic ? 'Tên đơn vị' : 'Tên công ty / doanh nghiệp'}`);
+        return;
+      }
+      if (!this.invoice.VATEmail) {
+        this.notification.onWarning('Vui lòng nhập Email');
+        return;
+      }
+      if (!this.invoice.VATAddress) {
+        this.notification.onWarning('Vui lòng nhập Địa chỉ');
+        return;
+      }
+    }
+
     this.isLoading = true;
 
     // Gọi API Export PDF từ Backend
-    const param = { Code: this.invoice.Code, Type: this.invoice.VATType };
+    const param = { Code: this.invoice.Code, Type: this.invoice.VATType, HeadName: this.currentheader.HeadName, TaxCode: this.currentheader.TaxCode, Address: this.currentheader.Address };
 
     this.apiService.ExportSALInvoicePdf(param).subscribe({
       next: (res: any) => {
@@ -145,14 +204,14 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
           link.download = fileName;
           link.click();
 
-          this.notification.onSuccess('Đã xuất Hóa đơn PDF thành công!');
+          this.notification.onSuccess('Xuất hóa đơn thành công!');
         } else {
-          this.notification.onError(`Lỗi xuất PDF: ${res.ErrorString}`);
+          this.notification.onError(`Lỗi xuất hóa đơn: ${res.ErrorString}`);
         }
       },
       error: (err) => {
         this.isLoading = false;
-        this.notification.onError('Lỗi kết nối khi xuất PDF');
+        this.notification.onError('Lỗi kết nối khi xuất hóa đơn');
       }
     });
   }
@@ -168,7 +227,13 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
       DTO: this.invoice,
       Properties: [prop]
     };
-    console.log(param);
+    
+    // Ensure VATType is a number if it's the property being changed
+    if (prop === 'VATType' && this.invoice.VATType) {
+      this.invoice.VATType = Number(this.invoice.VATType);
+    }
+
+    console.log('Updating prop:', prop, 'Value:', this.invoice[prop]);
 
     const sub = this.apiService.UpdateSALInvoice(param).subscribe({
       next: (res: ResponseDTO) => {
@@ -178,6 +243,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
           this.invoice[prop] = this.invoiceCopy[prop];
         }
         else {
+          console.log(this.invoice.VATType);
           this.invoice = res.ObjectReturn;
           this.invoiceCopy = { ...res.ObjectReturn };
           this.notification.onSuccess(`Thành công`);
@@ -191,6 +257,30 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     });
 
     this.arrUnsubscribe.push(sub);
+  }
+
+  onSamePhoneChange(e: any): void {
+    if (e === true) {
+      this.invoice['VATZalo'] = '';
+      // Update both properties
+      const param: UpdatePropertiesInterface<SALOrderInvoiceCusDTO> = {
+        DTO: this.invoice,
+        Properties: ['VATIsSamePhone', 'VATZalo']
+      };
+
+      const sub = this.apiService.UpdateSALInvoice(param).subscribe({
+        next: (res: ResponseDTO) => {
+          if (res.StatusCode === 0) {
+            this.invoice = res.ObjectReturn;
+            this.invoiceCopy = { ...res.ObjectReturn };
+            this.notification.onSuccess(`Thành công`);
+          }
+        }
+      });
+      this.arrUnsubscribe.push(sub);
+    } else {
+      this.onValueChange('VATIsSamePhone');
+    }
   }
 
 }

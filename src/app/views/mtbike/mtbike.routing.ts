@@ -26,6 +26,7 @@ import { Mtb022DocumentReceiptDetailComponent } from './views/mtb022-document-re
 import { Mtb023DocumentReceiptUpdateComponent } from './views/mtb023-document-receipt-update/mtb023-document-receipt-update.component';
 import { Mtb024InvoiceListComponent } from './views/mtb024-invoice-list/mtb024-invoice-list.component';
 import { Mtb025InvoiceDetailComponent } from './views/mtb025-invoice-detail/mtb025-invoice-detail.component';
+import { Mtb026InvoiceIssueComponent } from './views/mtb026-invoice-issue/mtb026-invoice-issue.component';
 
 export const MtbikeRouting: Routes = [
   {
@@ -136,6 +137,14 @@ export const MtbikeRouting: Routes = [
   },
   {
     path: 'payment/detail',
+    component: Mtb025InvoiceDetailComponent,
+  },
+  {
+    path: 'invoice-issue',
+    component: Mtb026InvoiceIssueComponent,
+  },
+  {
+    path: 'invoice-issue/detail',
     component: Mtb025InvoiceDetailComponent,
   },
 
