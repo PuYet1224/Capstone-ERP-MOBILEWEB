@@ -309,6 +309,10 @@ export class Mtb022DocumentReceiptDetailComponent {
   }
 
   public openSignaturePopup() {
+    if (this.receipt.Status >= 4) {
+      this.notification.onWarning("Phiếu thu đã được xác nhận không thể ký");
+      return;
+    }
     this.showSignaturePopup = true;
   }
 

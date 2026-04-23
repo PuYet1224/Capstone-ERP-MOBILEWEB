@@ -1,4 +1,4 @@
-﻿import { moveItemInArray } from '@angular/cdk/drag-drop';
+import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -65,6 +65,7 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
   //#endregion
 
   private arrUnsubscribe: Subscription[] = [];
+  public showCancelConfirm: boolean = false;
   public showpopup: boolean = false;
   public comparepopup: boolean = false;
   public headCode: any;
@@ -913,29 +914,19 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
 
   onCancel() {
     if (this.retailMaster && this.retailMaster.Code > 0) {
-      if (!confirm('Bạn có chắc chắn muốn hủy giao dịch này không?')) {
-        return;
-      }
+      this.showCancelConfirm = true;
+    }
+  }
 
+  onConfirmCancelTransaction() {
+    this.showCancelConfirm = false;
+    if (this.retailMaster && this.retailMaster.Code > 0) {
       const param: UpdateStatusInterface<SALOrderMasterCusDTO> = {
         ListDTO: [this.retailMaster],
-        Status: 6 // CANCEL
+        Status: SALOrderMasterStatusRetailEnum.CANCEL
       };
 
-      this.subLoader.loader(true);
-      const sub = this.mtbikeapi.UpdateSALStatus(param).subscribe(res => {
-        this.subLoader.loader(false);
-        if (res.StatusCode == 0) {
-          this.notification.onSuccess('Hủy giao dịch thành công');
-          this.router.navigate(['/mtbike/consultant']);
-        } else {
-          this.notification.onError(`Lỗi: ${res.ErrorString}`);
-        }
-      }, err => {
-        this.subLoader.loader(false);
-        this.notification.onError(`Lỗi: ${err.message}`);
-      });
-      this.arrUnsubscribe.push(sub);
+      this.UpdateSALMasterStatus(param);
     }
   }
 
@@ -1014,17 +1005,20 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
     this.arrUnsubscribe.push(sub);
   }
 
-  private UpdateSALStatus(param: UpdateStatusInterface<SALOrderMasterCusDTO>) {
+  private UpdateSALMasterStatus(param: UpdateStatusInterface<SALOrderMasterCusDTO>) {
     this.subLoader.loader(true);
-    var temp = this.mtbikeapi.UpdateSALStatus(param).subscribe(
+    var temp = this.mtbikeapi.UpdateSALMasterStatus(param).subscribe(
       (res) => {
+        this.subLoader.loader(false);
         if (res.StatusCode == 0) {
-          this.subLoader.loader(false);
+          this.notification.onSuccess(`Thành công`);
           this.retailMaster.Status = param.Status;
+          if (param.Status == SALOrderMasterStatusRetailEnum.CANCEL) {
+            this.router.navigate(['/mtbike/consultant']);
+          }
         } else {
           this.notification.onError(`Lỗi: ${res.ErrorString}`);
         }
-        this.subLoader.loader(false);
       },
       (err) => {
         this.subLoader.loader(false);

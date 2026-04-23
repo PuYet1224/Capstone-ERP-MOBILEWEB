@@ -163,15 +163,11 @@ export class Mtb009SalConsultantComponent implements OnDestroy, OnInit {
 
   onSetItem(item: SALOrderMasterCusDTO) {
     this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_MASTER, item);
-    // if (item.Status == SALOrderMasterStatusRetailEnum.VEHICLESELECTION) {
-    //   this.router.navigate(['/mtbike/consultant/vehicle']);
-    // } else if (item.Status == SALOrderMasterStatusRetailEnum.VEHICLEBUY) {
-    //   this.router.navigate(['/mtbike/consultant/cart']);
-    // } else if (item.Status == SALOrderMasterStatusRetailEnum.SUCCESS) {
-    //   this.router.navigate(['/mtbike/consultant/cart']);
-    // }
-    // else {
-    this.router.navigate(['/mtbike/consultant/detail']);
+    if (item.Status == SALOrderMasterStatusRetailEnum.PROCESSING) {
+      this.router.navigate(['/mtbike/consultant/total']);
+    } else {
+      this.router.navigate(['/mtbike/consultant/detail']);
+    }
   }
 
   public openFilterPopup(v: boolean) {

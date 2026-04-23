@@ -52,6 +52,7 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
   public retailDetailDTO: SALOrderMasterCusDTO = new SALOrderMasterCusDTO();
   public retailDetailDTOcopy: SALOrderMasterCusDTO = new SALOrderMasterCusDTO();
   private arrUnsubscribe: Subscription[] = [];
+  public showCancelConfirm: boolean = false;
   public FunctionPermissionDTO = FunctionPermissionDTO;
   public SALOrderMasterStatusRetailEnum = SALOrderMasterStatusRetailEnum;
   private isShowNoti: boolean = false;
@@ -89,17 +90,20 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
 
   onCancel() {
     if (this.retailDetailDTO.Code > 0) {
-      if (!confirm('Bạn có chắc chắn muốn hủy giao dịch này không?')) {
-        return;
-      }
+      this.showCancelConfirm = true;
+    }
+  }
 
+  onConfirmCancelTransaction() {
+    this.showCancelConfirm = false;
+    if (this.retailDetailDTO.Code > 0) {
       const param: UpdateStatusInterface<SALOrderMasterCusDTO> = {
         ListDTO: [this.retailDetailDTO],
         Status: SALOrderMasterStatusRetailEnum.CANCEL
       };
 
       this.subLoader.loader(true);
-      const sub = this.mtbikeapi.UpdateSALStatus(param).subscribe(res => {
+      const sub = this.mtbikeapi.UpdateSALMasterStatus(param).subscribe(res => {
         this.subLoader.loader(false);
         if (res.StatusCode == 0) {
           this.notification.onSuccess('Hủy giao dịch thành công');
@@ -133,6 +137,35 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
     this.UpdateSALMaster(param);
   }
 
+
+  onComplete(): void {
+    if (!this.retailDetailDTO.Code) {
+      this.notification.onWarning('Không có phiếu để hoàn tất');
+      return;
+    }
+    const param: UpdateStatusInterface<SALOrderMasterCusDTO> = {
+      ListDTO: [{ Code: this.retailDetailDTO.Code } as SALOrderMasterCusDTO],
+      Status: SALOrderMasterStatusRetailEnum.COMPLETE,
+    };
+    this.subLoader.loader(true);
+    const sub = this.mtbikeapi.UpdateSALMasterStatus(param).subscribe(
+      res => {
+        this.subLoader.loader(false);
+        if (res.StatusCode === 0) {
+          this.notification.onSuccess('Thành công');
+          this.retailDetailDTO = { ...this.retailDetailDTO, Status: SALOrderMasterStatusRetailEnum.COMPLETE, StatusName: 'Hoàn tất' } as any;
+          this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_MASTER, this.retailDetailDTO);
+        } else {
+          this.notification.onError(res.ErrorString || 'Thất bại');
+        }
+      },
+      err => {
+        this.subLoader.loader(false);
+        this.notification.onError(err && err.message ? err.message : 'Thất bại');
+      }
+    );
+    this.arrUnsubscribe.push(sub);
+  }
 
   private static detailCache = new Map<number, SALOrderMasterCusDTO>();
   private static genderCache: ListDTO[] = [];
