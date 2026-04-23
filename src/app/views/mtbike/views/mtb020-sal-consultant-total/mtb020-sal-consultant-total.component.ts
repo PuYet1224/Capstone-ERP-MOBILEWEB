@@ -49,11 +49,13 @@ export class Mtb020SalConsultantTotalComponent implements OnInit, OnDestroy, Aft
     const o = list.reduce((acc, r) => {
       if (r.IsOrderLock !== true) return acc;
 
-      const v = r.BasePrice ?? r.Price ?? 0;
-      const vat = r.VATAmount ?? 0;
-      const svc = Array.isArray(r.ListService) ? r.ListService.reduce((s: number, x: any) => s + (x.Price ?? x.Amount ?? 0), 0) : (r.TotalService ?? 0);
-      const part = Array.isArray(r.ListPart) ? r.ListPart.reduce((s: number, x: any) => s + (x.TotalPrice ?? (x.UnitPrice ?? 0) * (x.Quantity ?? 0)), 0) : (r.TotalPart ?? 0);
-      const discount = r.DiscountAmount ?? 0;
+      const v = r.BasePrice || r.Price || 0;
+      const vat = r.VATAmount || 0;
+      const svcArraySum = Array.isArray(r.ListService) ? r.ListService.reduce((s: number, x: any) => s + (x.Price || x.Amount || 0), 0) : 0;
+      const svc = svcArraySum || r.ServiceAmount || 0;
+      const partArraySum = Array.isArray(r.ListPart) ? r.ListPart.reduce((s: number, x: any) => s + (x.TotalPrice || ((x.UnitPrice || 0) * (x.Quantity || 0))), 0) : 0;
+      const part = partArraySum || r.PartAmount || 0;
+      const discount = r.DiscountAmount || r.PromotionAmount || r.TotalDiscount || 0;
       const itemNet = v + vat + svc + part - discount;
 
       const isLumpsum = r.PaymentType === L;

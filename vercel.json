@@ -1,18 +1,34 @@
 {
-  "buildCommand": "ng build --configuration=prod",
-  "outputDirectory": "dist/hoaiminh-erp",
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/api/proxy-identity/:path*",
-      "destination": "http://identity.hoaiminh.vn/:path*"
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
     },
     {
-      "source": "/api/proxy-api/:path*",
-      "destination": "http://puyet1224-001:Puyet1224%40@puyet1224-001-site1.jtempurl.com/:path*"
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "buildCommand": "ng build --configuration=prod",
+        "outputDirectory": "dist/hoaiminh-erp"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/proxy-api/(.*)",
+      "dest": "/api/proxy-api/[...slug].js"
     },
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "/api/proxy-identity/(.*)",
+      "dest": "/api/proxy-identity/[...slug].js"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }

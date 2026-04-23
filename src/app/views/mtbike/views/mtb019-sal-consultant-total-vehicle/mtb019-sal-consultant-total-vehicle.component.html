@@ -103,7 +103,7 @@
                                 </div>
                                 <div class="price-row" *ngFor="let service of listService">
                                     <span class="price-label">{{ service.ServiceName || service.Name }}</span>
-                                    <span class="price-value">{{ (service.Price ?? service.Amount ?? 0) | number:'1.0-0'
+                                    <span class="price-value">{{ (service.Price || service.Amount || 0) | number:'1.0-0'
                                         }}₫</span>
                                 </div>
                             </div>
@@ -114,11 +114,11 @@
                                 <div class="price-row part-item" *ngFor="let part of listPart">
                                     <span class="price-label part-label-wrap">
                                         <span class="part-name">{{ part.TypeOfPartName }}</span>
-                                        <span class="part-unit-price" *ngIf="(part.Quantity ?? 0) >= 2">({{
-                                            (part.UnitPrice ?? 0) | number:'1.0-0' }}đ/1 {{ part.BaseUnitName || 'cái'
+                                        <span class="part-unit-price" *ngIf="(part.Quantity || 0) >= 2">({{
+                                            (part.UnitPrice || 0) | number:'1.0-0' }}đ/1 {{ part.BaseUnitName || 'cái'
                                             }})</span>
                                     </span>
-                                    <span class="price-value">{{ (part.TotalPrice ?? (part.UnitPrice * (part.Quantity ??
+                                    <span class="price-value">{{ (part.TotalPrice || (part.UnitPrice * (part.Quantity ||
                                         0))) | number:'1.0-0' }}₫</span>
                                 </div>
                             </div>
@@ -127,13 +127,13 @@
                             <div class="price-group">
                                 <div class="summary-row bold">
                                     <span class="summary-label">TỔNG TRƯỚC GIẢM GIÁ</span>
-                                    <span class="summary-value">{{ (orderDetail['TotalAmount'] ?? 0) | number:'1.0-0'
+                                    <span class="summary-value">{{ (orderDetail['TotalAmount'] || 0) | number:'1.0-0'
                                         }}₫</span>
                                 </div>
                                 <div class="summary-row promotional">
                                     <span class="summary-label">Giảm giá (Khuyến mãi):</span>
-                                    <span class="summary-value discount">{{ (orderDetail['DiscountAmount'] ?? 0) === 0 ?
-                                        '' : '- ' }}{{ (orderDetail['DiscountAmount'] ?? 0) | number:'1.0-0' }}₫</span>
+                                    <span class="summary-value discount">{{ (orderDetail['DiscountAmount'] || orderDetail['PromotionAmount'] || orderDetail['TotalDiscount'] || 0) === 0 ?
+                                        '' : '- ' }}{{ (orderDetail['DiscountAmount'] || orderDetail['PromotionAmount'] || orderDetail['TotalDiscount'] || 0) | number:'1.0-0' }}₫</span>
                                 </div>
                             </div>
                             <div class="price-separator-line"></div>
