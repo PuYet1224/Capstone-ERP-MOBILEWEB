@@ -76,11 +76,11 @@ export class Mtb022DocumentReceiptDetailComponent {
   public showConfirmReceived: boolean = false;
 
   public onnavigate(field: string) {
-    if (field.includes('vehicles')) {
-      this.cache.setItem(KeyLocalStorageEnum.SAL_RECEIPT, this.receipt);
-    }
     if (field.includes('update')) {
       this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
+    }
+    if (field.includes('vehicles')) {
+      this.cache.setItem(KeyLocalStorageEnum.SAL_RECEIPT, this.receipt);
     }
     this.router.navigate([field]);
   }

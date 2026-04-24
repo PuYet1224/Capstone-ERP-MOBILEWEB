@@ -46,7 +46,7 @@
         </div>
         <div class="info-row">
           <span class="label">Phương thức thanh toán</span>
-          <span class="value">{{ receipt?.PaymentMethodName }}</span>
+          <span class="value">{{ receipt.PaymentMethod == 1 ? 'Tiền mặt' : 'Chuyển khoản' }}</span>
         </div>
         <div class="info-row full-width">
           <span class="label">Mô tả</span>

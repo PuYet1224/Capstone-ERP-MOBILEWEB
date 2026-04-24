@@ -37,7 +37,7 @@
               [valueField]="'TypeOfList'"
               [textField]="'ListName'"
               [valuePrimitive]="true"
-              [disabled]="ordermaster > 3"
+              [disabled]="receipt.Status > 3"
               (valueChange)="onValueChange(item, 'PaymentType', $event)"
             ></ps-kendo-dropdown-list>
           </div>
@@ -51,7 +51,7 @@
               [(ngModel)]="item.DurationMethod"
               [valueField]="'Code'"
               [textField]="'Name'"
-              [disabled]="ordermaster > 3"
+              [disabled]="receipt.Status > 3"
               [valuePrimitive]="true"
               (valueChange)="onValueChange(item, 'DurationMethod', $event)"
             ></ps-kendo-dropdown-list>
@@ -63,7 +63,7 @@
             <ps-kendo-numeric-textbox
               format="n0"
               [label]="'Số tiền cọc (*)'"
-              [disabled]="ordermaster > 3"
+              [disabled]="receipt.Status > 3"
               [(ngModel)]="item.DepositAmount"
               (blur)="onValueChange(item, 'DepositAmount', item.DepositAmount)"
             ></ps-kendo-numeric-textbox>
