@@ -12,6 +12,7 @@ import { ListDTO } from 'src/app/models/dtos/e-dtos/list.dto';
 import { MtbikeApiService } from '../../services/mtbike-api.service';
 import { ConfigCacheService } from 'src/app/services/core/config-cache.service';
 import { LSListTypeDataEnum } from 'src/app/models/enums/e-type/ls-list-type-data.enum';
+import { SALOrderMasterCusDTO } from 'src/app/models/dtos/e-dtos/sal-order-master.dto';
 @Component({
   selector: 'mtb023-document-receipt-update',
   templateUrl: './mtb023-document-receipt-update.component.html',
@@ -21,6 +22,7 @@ export class Mtb023DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
   public receipt: SALOrderReceiptCusDTO = new SALOrderReceiptCusDTO();
   public receiptcopy: SALOrderReceiptCusDTO = new SALOrderReceiptCusDTO();
   private arrUnsubscribe: Subscription[] = [];
+  master: SALOrderMasterCusDTO = new SALOrderMasterCusDTO();
 
   public listPaymentMethods: ListDTO[] = [
     { TypeOfList: 1, Name: 'Tiền mặt' } as any,
@@ -45,12 +47,15 @@ export class Mtb023DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
     if (cachedReceipt) {
       const parsed = this.cache.parseValue(cachedReceipt);
       this.receipt = { ...this.receipt, ...parsed };
+      const masterCached = this.cache.getItem(KeyLocalStorageEnum.SAL_ORDER_MASTER);
+      this.master = this.cache.parseValue(masterCached);
 
       if (this.receipt.Code > 0) {
         this.getsalreceipt(this.receipt);
       } else {
         // Inherit from master if missing for new receipts
         const masterCached = this.cache.getItem(KeyLocalStorageEnum.SAL_ORDER_MASTER);
+        this.master = this.cache.parseValue(masterCached);
         if (masterCached) {
           const master = this.cache.parseValue(masterCached);
           if (!this.receipt.CustomerName) this.receipt.CustomerName = master.CustomerName;
@@ -104,7 +109,7 @@ export class Mtb023DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
       this.receipt.TransferAmount = this.receipt.TransferAmount || 0;
     }
     this.receipt.CollectedAmount = (this.receipt.CashAmount || 0) + (this.receipt.TransferAmount || 0);
-    
+
     if (this.receipt.Code === 0) {
       this.updateReceipt();
     } else {
@@ -186,7 +191,21 @@ export class Mtb023DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
   }
 
   public onAmountBlur(): void {
+    if ((this.receipt.PaymentMethod == 1 && this.receipt.CashAmount > this.orderInfo.DebtAmount) ||
+      (this.receipt.PaymentMethod == 2 && this.receipt.TransferAmount > this.orderInfo.DebtAmount)) {
+      this.notification.onWarning('Số tiền không được vượt quá số tiền còn nợ.');
+      if (this.receipt.PaymentMethod == 1) {
+        this.receipt.CashAmount = this.orderInfo.DebtAmount;
+        this.receipt.CollectedAmount = this.orderInfo.DebtAmount;
     this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
+      }
+      else if (this.receipt.PaymentMethod == 2) {
+        this.receipt.TransferAmount = this.orderInfo.DebtAmount;
+        this.receipt.CollectedAmount = this.orderInfo.DebtAmount;
+        this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
+      }
+      return;
+    }
   }
 
   //#region api get

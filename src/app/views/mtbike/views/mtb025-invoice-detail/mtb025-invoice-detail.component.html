@@ -41,8 +41,8 @@
           <ps-kendo-dropdown-list
             [label]="'Loại hóa đơn (*)'"
             [data]="invoiceTypes"
-            textField="ListName"
-            valueField="TypeOfList"
+            [textField]="'ListName'"
+            [valueField]="'TypeOfList'"
             [(ngModel)]="invoice.VATType"
             [valuePrimitive]="true"
             (valueChange)="onValueChange('VATType')"

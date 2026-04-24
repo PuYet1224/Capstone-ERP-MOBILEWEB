@@ -157,7 +157,7 @@
                                         class="required-star">*</span></label>
                                 <ps-kendo-dropdown-list [data]="listpaymentmethod" [textField]="'ListName'"
                                     [valueField]="'TypeOfList'" [(ngModel)]="orderDetail.PaymentType" [valuePrimitive]="true"
-                                    (valueChange)="onPaymentTypeChange()">
+                                    (valueChange)="onPaymentTypeChange()" [disabled]="retailMaster.Status >= 3">
                                 </ps-kendo-dropdown-list>
                             </div>
                             <div class="payment-form-row"
@@ -167,7 +167,7 @@
                                 <ps-kendo-dropdown-list [data]="listFinanceCompany" [textField]="'ListName'"
                                     [valueField]="'Code'" [(ngModel)]="orderDetail.FinanceCompany"
                                     [valuePrimitive]="true" (valueChange)="onFinanceCompanyChangeByCode($event)"
-                                    [placeholder]="'Chọn công ty tài chính'">
+                                    [placeholder]="'Chọn công ty tài chính'" [disabled]="retailMaster.Status >= 3" >
                                 </ps-kendo-dropdown-list>
                             </div>
                             <div class="payment-form-row" *ngIf="orderDetail.PaymentType === enumPaymentType.DEPOSIT">
@@ -175,7 +175,7 @@
                                 <ps-kendo-numeric-textbox
                                     [ngModel]="(orderDetail.DepositAmount != null && orderDetail.DepositAmount !== 0) ? orderDetail.DepositAmount : null"
                                     (ngModelChange)="orderDetail.DepositAmount = $event ?? 0" [format]="'n0'"
-                                    [placeholder]="'Nhập số tiền đặt cọc'" (blur)="onDepositAmountBlur()">
+                                    [placeholder]="'Nhập số tiền đặt cọc'" (blur)="onDepositAmountBlur()"  [disabled]="retailMaster.Status >= 3">
                                 </ps-kendo-numeric-textbox>
                             </div>
                         </div>

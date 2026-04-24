@@ -54,4 +54,5 @@ export class SALOrderReceiptCusDTO extends SALOrderReceiptDTO {
   IsConfirmedPayment: boolean = false;
   IsLockCustomer: boolean = false;
   IsLockPayment: boolean = false;
+  TrueRemainingDebt: number = 0;
 }

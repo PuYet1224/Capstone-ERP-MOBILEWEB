@@ -28,4 +28,5 @@ export enum KeyLocalStorageEnum {
   CONFIG_CS_LIST = 'config_cs_list',
   SYSTEM_CONFIG = 'system_config',
   CONFIG_VERSION = 'config_version',
+  SAL_RECEIPT = 'sal_receipt',
 }

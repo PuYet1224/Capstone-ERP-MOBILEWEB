@@ -48,6 +48,7 @@ import { Mtb023DocumentReceiptUpdateComponent } from './views/mtb023-document-re
 import { Mtb024InvoiceListComponent } from './views/mtb024-invoice-list/mtb024-invoice-list.component';
 import { Mtb025InvoiceDetailComponent } from './views/mtb025-invoice-detail/mtb025-invoice-detail.component';
 import { Mtb026InvoiceIssueComponent } from './views/mtb026-invoice-issue/mtb026-invoice-issue.component';
+import { Mtb027ReceiptVehicleDetailComponent } from './views/mtb027-receipt-vehicle-detail/mtb027-receipt-vehicle-detail.component';
 @NgModule({
   imports: [
     RouterModule.forChild(MtbikeRouting),
@@ -97,6 +98,7 @@ import { Mtb026InvoiceIssueComponent } from './views/mtb026-invoice-issue/mtb026
     Mtb024InvoiceListComponent,
     Mtb025InvoiceDetailComponent,
     Mtb026InvoiceIssueComponent,
+    Mtb027ReceiptVehicleDetailComponent,
     WOMProgressStatusPipe,
     SALOrderMasterStatusRetailPipe,
     SALOrderDetailStatusPipe,

@@ -74,7 +74,7 @@
                 format="n0"
                 placeholder="0"
                 [(ngModel)]="receipt.CashAmount"
-                [disabled]="receipt.IsLockPayment"
+                [disabled]="master.Status <= 3"
                 (valueChange)="onCashAmountChange($event)"
                 (blur)="onAmountBlur()"
               >
@@ -93,7 +93,8 @@
                 [spinners]="false"
                 format="n0"
                 [(ngModel)]="receipt.TransferAmount"
-                [disabled]="receipt.IsLockPayment"
+                [disabled]="master.Status <= 3"
+                [disabled]="true"
                 (valueChange)="onTransferAmountChange($event)"
                 (blur)="onAmountBlur()"
               >

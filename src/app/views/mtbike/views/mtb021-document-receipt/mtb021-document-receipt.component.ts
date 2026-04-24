@@ -181,8 +181,7 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
 
     return {
       ...this.filter,
-      filter: filters.length > 0 ? { logic: 'and', filters } : undefined,
-      isExcludeInstallment: true
+      filter: filters.length > 0 ? { logic: 'and', filters } : undefined
     };
   }
 
@@ -203,8 +202,7 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
     }
 
     return {
-      filter: filters.length > 0 ? { logic: 'and', filters } : undefined,
-      isExcludeInstallment: true
+      filter: filters.length > 0 ? { logic: 'and', filters } : undefined
     };
   }
 

@@ -1,0 +1,100 @@
+<div class="mtb027-receipt-vehicle">
+  <!-- HEADER -->
+  <ps-header-back>
+    <div class="left-side">
+      <div class="func-title1">Thanh toán bán hàng</div>
+      <div class="func-title2">Chi tiết phiếu thu</div>
+    </div>
+    <div class="right-side">
+      <div class="receipt-no">{{ receiptNo }}</div>
+    </div>
+  </ps-header-back>
+
+  <!-- BODY -->
+  <div class="vehicle-list-body">
+    <div class="vehicle-card" *ngFor="let item of listVehicles; let i = index">
+      <!-- Card Header -->
+      <div class="card-header" [class.cancelled]="item._cancelled">
+        <div class="vehicle-img">
+          <img [src]="item.ImageSetting1" [alt]="item.VehicleName" />
+        </div>
+        <div class="vehicle-info">
+          <div class="vehicle-name">{{ item.VehicleName }} | {{ item.ColorName }}</div>
+          <div class="vehicle-price">
+            Đơn giá: <strong>{{ item.Price | number: '1.0-0' }}đ</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Body: Interactive Fields -->
+      <div class="card-body" *ngIf="!item._cancelled">
+        <div class="info-row-item">
+          <div class="dropdown-wrapper">
+            <ps-kendo-dropdown-list
+              [label]="'Hình thức thanh toán (*)'"
+              [data]="listPaymentType"
+              [(ngModel)]="item.PaymentType"
+              [valueField]="'TypeOfList'"
+              [textField]="'ListName'"
+              [valuePrimitive]="true"
+              [disabled]="ordermaster > 3"
+              (valueChange)="onValueChange(item, 'PaymentType', $event)"
+            ></ps-kendo-dropdown-list>
+          </div>
+        </div>
+
+        <div class="info-row-item" *ngIf="item.PaymentType === paymentTypeEnum.INSTALLMENT">
+          <div class="dropdown-wrapper">
+            <ps-kendo-dropdown-list
+              [label]="'Công ty tài chính (*)'"
+              [data]="listFinanceCompany"
+              [(ngModel)]="item.DurationMethod"
+              [valueField]="'Code'"
+              [textField]="'Name'"
+              [disabled]="ordermaster > 3"
+              [valuePrimitive]="true"
+              (valueChange)="onValueChange(item, 'DurationMethod', $event)"
+            ></ps-kendo-dropdown-list>
+          </div>
+        </div>
+
+        <div class="info-row-item" *ngIf="item.PaymentType === paymentTypeEnum.DEPOSIT">
+          <div class="input-wrapper">
+            <ps-kendo-numeric-textbox
+              format="n0"
+              [label]="'Số tiền cọc (*)'"
+              [disabled]="ordermaster > 3"
+              [(ngModel)]="item.DepositAmount"
+              (blur)="onValueChange(item, 'DepositAmount', item.DepositAmount)"
+            ></ps-kendo-numeric-textbox>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cancelled state -->
+      <div class="cancelled-info" *ngIf="item._cancelled">
+        <div class="cancel-row">
+          <span class="cancel-label">Lý do:</span>
+          <span class="cancel-value">{{ item._cancelReason }}</span>
+        </div>
+        <div class="cancel-row" *ngIf="item._cancelNote">
+          <span class="cancel-label">Mô tả:</span>
+          <span class="cancel-value">{{ item._cancelNote }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="empty-state" *ngIf="listVehicles.length === 0">
+      <span class="material-icons">directions_bike</span>
+      <p>Không có dữ liệu xe</p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <ps-footer-action>
+    <ps-kendo-button (onClick)="onNavigate('/mtbike/document/receipt')">
+      <span class="material-icons">arrow_back</span>
+    </ps-kendo-button>
+  </ps-footer-action>
+</div>

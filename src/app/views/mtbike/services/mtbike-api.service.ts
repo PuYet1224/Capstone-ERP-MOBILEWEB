@@ -1777,4 +1777,43 @@ export class MtbikeApiService {
         });
     });
   }
+
+  public GetSALReceiptVehicles(param: { Code: number }): Observable<ResponseDTO> {
+    return new Observable<ResponseDTO>((obs) => {
+      this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).GetSALReceiptVehicles, param)
+        .subscribe((res: ResponseDTO) => {
+          obs.next(res);
+          obs.complete();
+        }, (errors) => {
+          obs.error(errors);
+          obs.complete();
+        });
+    });
+  }
+
+  public GetListPartnerFinance(): Observable<ResponseDTO> {
+    return new Observable<ResponseDTO>((obs) => {
+      this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).GetListPartnerFinance, {})
+        .subscribe((res: ResponseDTO) => {
+          obs.next(res);
+          obs.complete();
+        }, (errors) => {
+          obs.error(errors);
+          obs.complete();
+        });
+    });
+  }
+
+  public UpdateSALReceiptVehicle(param: any): Observable<ResponseDTO> {
+    return new Observable<ResponseDTO>((obs) => {
+      this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).UpdateSALReceiptVehicle, param)
+        .subscribe((res: ResponseDTO) => {
+          obs.next(res);
+          obs.complete();
+        }, (errors) => {
+          obs.error(errors);
+          obs.complete();
+        });
+    });
+  }
 }
