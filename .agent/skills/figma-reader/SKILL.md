@@ -122,11 +122,11 @@ figma_read → operation: "get_node_detail" → nodeId: <node_id>
 
 ---
 
-## 🗺️ Hoai Minh Color Mapping (MANDATORY)
+## 🗺️ Capstone Color Mapping (MANDATORY)
 
 > 🔴 NEVER use raw hex values in SCSS. Always map to $variable.
 
-| Figma HEX | Hoai Minh SCSS Variable |
+| Figma HEX | Capstone SCSS Variable |
 |---|---|
 | `#126433` or equivalent | `$primary` |
 | `#e5322b` or equivalent | `$error` |
@@ -140,7 +140,7 @@ figma_read → operation: "get_node_detail" → nodeId: <node_id>
 
 ---
 
-## 🔧 Hoai Minh Component Mapping (MANDATORY)
+## 🔧 Capstone Component Mapping (MANDATORY)
 
 | Figma element | Angular/Kendo component |
 |---|---|

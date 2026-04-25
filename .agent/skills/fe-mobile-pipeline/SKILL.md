@@ -1,18 +1,18 @@
 ---
 name: fe-mobile-pipeline
 description: >-
-  Angular mobile FE implementation guide for Hoai Minh ERP. Covers DLL namespace chain
+  Angular mobile FE implementation guide for Capstone ERP. Covers DLL namespace chain
   (Product=3), API integration, color system, mobile-specific bugs, and registration checklist.
-  Use when implementing any mobile web component for Hoai Minh ERP (Angular 16 + Kendo UI 13).
+  Use when implementing any mobile web component for Capstone ERP (Angular 16 + Kendo UI 13).
   Do NOT use for desktop web (use fe-web-pipeline in FE workspace instead).
 version: 1.0.0
 ---
 
-# FE Pipeline Skill — Hoai Minh ERP Angular Mobile v1.0
+# FE Pipeline Skill — Capstone ERP Angular Mobile v1.0
 
 > **Stack:** Angular 16 + Kendo UI 13 + TypeScript (mobile-optimized)
 > **Mobile Workspace:** `{MOBILE_ROOT}\`
-> **Standards reference:** `{BA_ROOT}\.agent\projects\hoaiminh\standards\fe-standards.md`
+> **Standards reference:** `{BA_ROOT}\.agent\projects\Capstone\standards\fe-standards.md`
 > **Master coding guide:** `src/app/instructions.md` (READ THIS FIRST)
 > **Guide input:** `{PROJECT_PIPELINE}\guides\FE_MOBWEB_{SEQ}_{Feature}.md`
 > **Platform:** MOBILE ONLY — Web guides use FE_WEB_* → read Desktop FE workspace
@@ -22,7 +22,7 @@ version: 1.0.0
 ## 1. 🔴 MANDATORY: Read Before ANY Code
 
 ```
-STEP 0: {BA_ROOT}\.agent\projects\hoaiminh\standards\fe-standards.md
+STEP 0: {BA_ROOT}\.agent\projects\Capstone\standards\fe-standards.md
 STEP 1: src/app/instructions.md         ← Master coding guide (18 sections)
 STEP 2: .agent/skills/mobile-design/SKILL.md ← Angular mobile patterns
 STEP 3: Read reference component from src/app/views/mtbike/views/mtb00X-{existing}/
