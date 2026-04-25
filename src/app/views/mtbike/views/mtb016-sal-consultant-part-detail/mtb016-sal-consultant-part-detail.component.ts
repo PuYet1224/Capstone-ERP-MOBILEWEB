@@ -568,7 +568,7 @@ const data = Array.isArray(raw) ? raw : ((raw as any) && (raw as any).Data) ? (r
       this.typeofpart = selectedType;
       this.typeofpartspecs = new LSTypeOfPartSpecsDTO();
       this.listTypeOfPartSpecs = [];
-      this.GetListTypeOfPartSpecs(selectedType);
+      // this.GetListTypeOfPartSpecs(selectedType);
     }
   }
 

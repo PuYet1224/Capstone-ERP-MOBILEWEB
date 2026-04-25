@@ -256,8 +256,15 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
     this.listTypeOfPart = [];
     this.listTypeOfPartSpecs = [];
     this.partFilterApplied = true;
-    this.applicableVehicleCodes = [];
-    if (this.partcategory && this.partcategory.Code) this.GetListSALTypeOfPart();
+
+    if (this.partcategory && this.partcategory.Code) {
+      this.applicableVehicleCodes = this.categoryVehicleMap.get(this.partcategory.Code) || [];
+      this.selectedDetailCodes = new Set(this.applicableVehicleCodes);
+      this.GetListSALTypeOfPart();
+    } else {
+      this.applicableVehicleCodes = [];
+      this.selectedDetailCodes = new Set();
+    }
   }
 
   onTypeOfPartChange(code: number): void {
@@ -266,14 +273,14 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
       this.typeofpart = sel;
       this.listTypeOfPartSpecs = [];
       (this.typeofpartspecs as any).Code = null;
-      if (this.typeofpart && this.typeofpart.Code) this.GetListSALTypeOfPartSpecs(this.typeofpart);
-      this.loadApplicableVehicles();
+      // if (this.typeofpart && this.typeofpart.Code) this.GetListSALTypeOfPartSpecs(this.typeofpart);
+      // this.loadApplicableVehicles();
     }
   }
 
-  onTypeOfPartSpecsChange(): void {
-    this.loadApplicableVehicles();
-  }
+  // onTypeOfPartSpecsChange(): void {
+  //   this.loadApplicableVehicles();
+  // }
 
   onUnitChange(code: number): void {
     const sel = this.listUnit.find((u) => u.Code === code);
@@ -495,7 +502,13 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
   private loadApplicableVehicles(): void {
     if (!this.typeofpart || !this.typeofpart.Code) {
       this.partFilterApplied = true;
-      this.applicableVehicleCodes = [];
+      if (this.partcategory && this.partcategory.Code) {
+        this.applicableVehicleCodes = this.categoryVehicleMap.get(this.partcategory.Code) || [];
+        this.selectedDetailCodes = new Set(this.applicableVehicleCodes);
+      } else {
+        this.applicableVehicleCodes = [];
+        this.selectedDetailCodes = new Set();
+      }
       return;
     }
     
