@@ -156,3 +156,87 @@ this.masterData = this.cache.parseValue(temp) as {Entity}CusDTO;
 ```
 
 > 🔴 NEVER use `@Input/@Output` for page-to-page data. Use PsCache only.
+
+---
+
+## 8. 🔴 MANDATORY: DTO & Enum File Convention (VIOLATION = REJECT)
+
+> **DTOs and Enums have FIXED locations. NEVER create them inside component folders.**
+
+### DTO Files
+```
+src/app/models/dtos/e-dtos/{prefix}-{entity}.dto.ts
+```
+
+**Naming pattern:**
+```typescript
+// File: src/app/models/dtos/e-dtos/cs-work-order-master.dto.ts
+export class CSWorkOrderMasterDTO {
+  Code: number = 0;
+  WorkOrderNo: string = '';
+  LoyalCustomer?: number;
+  Head: number = 0;
+  // ... fields matching BE response exactly
+}
+
+export class CSWorkOrderMasterCusDTO extends CSWorkOrderMasterDTO {
+  CustomerName: string = '';         // joined field
+  VehiclePlateNo: string = '';       // joined field
+  ListTasks: CSWorkOrderTaskCusDTO[] = [];  // child list
+}
+```
+
+### Enum Files
+```
+src/app/models/enums/e-status/{prefix}-{entity}-status.enum.ts    ← status enums
+src/app/models/enums/e-type/{prefix}-{entity}-type.enum.ts        ← type enums
+```
+
+### 🔴 BANNED
+```
+❌ Creating .dto.ts files inside component folder (e.g., mtb028-sal-payment/)
+❌ Creating inline interfaces in component .ts file
+❌ Creating enum files inside component folder
+❌ Using magic numbers instead of enum values in templates
+```
+
+---
+
+## 9. 🔴 Status Filter Data Loading — MANDATORY for `ps-filter-status1`
+
+> `<ps-filter-status1>` will show **EMPTY checkboxes with no labels** if data is not loaded.
+> ALWAYS call `GetListStatus()` with the correct `LSStatusTypeDataEnum` entry in `ngOnInit()`.
+
+```typescript
+import { LSStatusTypeDataEnum } from 'src/app/models/enums/e-type/ls-status-type-data.enum';
+import { LSStatusCusDTO } from 'src/app/models/dtos/e-dtos/ls-status.dto';
+
+public liststatus: LSStatusCusDTO[] = [];
+
+ngOnInit() {
+  this.getliststatus();  // ← MUST be called
+  this.getlist(this.filter);
+}
+
+private getliststatus() {
+  const sub = this.coreapi.GetListStatus(LSStatusTypeDataEnum.YourEntity).subscribe((res) => {
+    if (res.StatusCode == 0) {
+      this.liststatus = res.ObjectReturn;
+      this.liststatus.forEach(item => {
+        item.IsActive = [YourStatusEnum.STATUS_A, YourStatusEnum.STATUS_B]
+          .includes(item.TypeOfStatus);
+      });
+    }
+  });
+  this.arrUnsubscribe.push(sub);
+}
+```
+
+**BEFORE coding, verify your entity exists in `LSStatusTypeDataEnum`:**
+```
+Open: src/app/models/enums/e-type/ls-status-type-data.enum.ts
+Look for: YourEntity = XX
+If NOT found → the BE must add it to tbl_LSStatus first.
+```
+
+> 🔴 NEVER use hardcoded number. ALWAYS use the enum.
