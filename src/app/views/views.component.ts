@@ -25,6 +25,7 @@ export class ViewsComponent implements OnInit, OnDestroy {
   private isLoadingApi = false;
   private arrUnsubscribe: Subscription[] = [];
 
+
   ngOnInit(): void {
     // Listen to router events to reload API if module changed
     const routerSub = this.route.events.pipe(

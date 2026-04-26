@@ -118,6 +118,7 @@ export const fpayment = {
 
 const namespaceMap: Record<string, any> = {
   dashboard: fdashboard,
+  'dashboard-mobile': fdashboard,
   repair: frepair,
   consultant: fconsultant,
   policy: fpolicy,

@@ -284,6 +284,22 @@
                 .chart {
                     margin-bottom: 8px;
 
+                    .chart-timeseries {
+                        background: $white;
+                        padding: 10px;
+                        border-radius: 10px;
+                        margin-bottom: 10px;
+
+                        h1 {
+                            color: $primary;
+                            font-size: 13px;
+                            font-weight: bold;
+                            text-transform: uppercase;
+                            margin: 0;
+                            text-align: center;
+                        }
+                    }
+
                     .chart-1 {
                         background: $white;
                         padding: 10px;

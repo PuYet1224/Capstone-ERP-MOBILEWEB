@@ -116,6 +116,83 @@
         </div>
         <!-- END - OVERVIEW -->
 
+        <!-- START - TIME SERIES CHARTS -->
+        <div class="chart">
+            <!-- CHART: Revenue by Period -->
+            <div class="chart-timeseries">
+                <h1>{{titleChart1}}</h1>
+                <kendo-chart>
+                    <kendo-chart-legend [visible]="false"></kendo-chart-legend>
+                    <kendo-chart-area background="transparent" height="220"></kendo-chart-area>
+                    <kendo-chart-category-axis>
+                        <kendo-chart-category-axis-item [majorTicks]="{ visible: false }"
+                            [majorGridLines]="{ visible: false }">
+                            <kendo-chart-category-axis-item-labels font="bold 10px Mulish, sans-serif" rotation="-45"
+                                padding="5">
+                            </kendo-chart-category-axis-item-labels>
+                        </kendo-chart-category-axis-item>
+                    </kendo-chart-category-axis>
+                    <kendo-chart-value-axis>
+                        <kendo-chart-value-axis-item [majorGridLines]="{ visible: false }"
+                            [labels]="{ visible: true }">
+                            <kendo-chart-value-axis-item-labels [content]="labelFormatter"
+                                font="bold 10px Mulish, sans-serif">
+                            </kendo-chart-value-axis-item-labels>
+                        </kendo-chart-value-axis-item>
+                    </kendo-chart-value-axis>
+                    <kendo-chart-series>
+                        <kendo-chart-series-item type="line" [data]="chart1" field="Value" categoryField="Title"
+                            color="#126633" [markers]="{ visible: true }">
+                            <kendo-chart-series-item-labels [content]="labelFormatter" [visible]="true"
+                                background="transparent" [margin]="0"></kendo-chart-series-item-labels>
+                        </kendo-chart-series-item>
+                    </kendo-chart-series>
+                    <kendo-chart-tooltip>
+                        <ng-template kendoChartSeriesTooltipTemplate let-category="category" let-value="value">
+                            {{ category }}: bán hàng {{ value | number}}₫
+                        </ng-template>
+                    </kendo-chart-tooltip>
+                </kendo-chart>
+            </div>
+
+            <!-- CHART: Inbound by Period -->
+            <div class="chart-timeseries">
+                <h1>{{titleChart2}}</h1>
+                <kendo-chart>
+                    <kendo-chart-legend [visible]="false"></kendo-chart-legend>
+                    <kendo-chart-area background="transparent" height="220"></kendo-chart-area>
+                    <kendo-chart-category-axis>
+                        <kendo-chart-category-axis-item [majorTicks]="{ visible: false }"
+                            [majorGridLines]="{ visible: false }">
+                            <kendo-chart-category-axis-item-labels font="bold 10px Mulish, sans-serif" rotation="-45"
+                                padding="5">
+                            </kendo-chart-category-axis-item-labels>
+                        </kendo-chart-category-axis-item>
+                    </kendo-chart-category-axis>
+                    <kendo-chart-value-axis>
+                        <kendo-chart-value-axis-item [majorGridLines]="{ visible: false }"
+                            [labels]="{ visible: true }">
+                            <kendo-chart-value-axis-item-labels font="bold 10px Mulish, sans-serif">
+                            </kendo-chart-value-axis-item-labels>
+                        </kendo-chart-value-axis-item>
+                    </kendo-chart-value-axis>
+                    <kendo-chart-series>
+                        <kendo-chart-series-item type="column" [data]="chart2" field="Value" categoryField="Title"
+                            color="#0070C0">
+                            <kendo-chart-series-item-labels [visible]="true" background="transparent"
+                                format="n0"></kendo-chart-series-item-labels>
+                        </kendo-chart-series-item>
+                    </kendo-chart-series>
+                    <kendo-chart-tooltip>
+                        <ng-template kendoChartSeriesTooltipTemplate let-category="category" let-value="value">
+                            {{ category }}: nhập {{ value }} xe
+                        </ng-template>
+                    </kendo-chart-tooltip>
+                </kendo-chart>
+            </div>
+        </div>
+        <!-- END - TIME SERIES CHARTS -->
+
         <!-- START - CHART -->
         <div class="chart">
             <!-- CHART 1 -->
