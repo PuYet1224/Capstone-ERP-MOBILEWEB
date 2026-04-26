@@ -71,12 +71,7 @@ export class Sys003FunctionComponent implements OnInit {
     }
 
     const isloaded = ns.loader;
-    this.api.GetPermissionDLL(func.DLLPackage).subscribe(() => {
-      if (isloaded)
-        this.router.navigateByUrl(func.FunctionURL);
-      else
-        this.getapi(func.DLLPackage, func.FunctionURL);
-    });
+    this.router.navigateByUrl(func.FunctionURL);
   }
 
   private getapi(funcdll: string, funcurl: string) {

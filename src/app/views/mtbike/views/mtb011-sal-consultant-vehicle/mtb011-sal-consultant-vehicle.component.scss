@@ -1,4 +1,4 @@
-﻿@import '../../../../../assets/scss/colors';
+@import '../../../../../assets/scss/colors';
 
 ::ng-deep {
   mtb011-sal-consultant-vehicle {
@@ -1304,4 +1304,37 @@
       }
     }
   }
+}
+
+::ng-deep {
+    .cancel-dialog {
+        .ps-dialog-confirm {
+            .confirm-dialog {
+                width: 75% !important;
+                height: auto !important;
+
+                .k-popup {
+                    .body {
+                        height: 100% !important;
+                        padding: 24px !important;
+                        align-items: flex-start !important;
+                        justify-content: flex-start !important;
+                        gap: 16px !important;
+
+                        .title-out {
+                            font-size: 24px !important;
+                            font-weight: bold !important;
+                        }
+
+                        .group-buttom {
+                            width: 100% !important;
+                            display: flex !important;
+                            justify-content: flex-end !important;
+                            gap: 8px !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

@@ -31,6 +31,7 @@ export class LSHeadCusDTO extends LSHeadDTO {
   WardName: string = '';
   DistrictName: string = '';
   ProvinceName: string = '';
+  TaxCode: string = '';
   StatusName: string = 'Tạo mới';
   FullAddress: string = '';
   ReportToHeadName: string = '';

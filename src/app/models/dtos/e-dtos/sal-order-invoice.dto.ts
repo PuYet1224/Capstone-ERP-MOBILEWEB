@@ -38,4 +38,8 @@ export class SALOrderInvoiceCusDTO extends SALOrderInvoiceDTO {
   OrderInvoice: number = 0;
   NumOfReceipt: number = 0;
   StatusName: string = '';
+  TypeOfStatus: number = 0;
+  OrderNo: string = '';
+  CustomerName: string = '';
+  VehicleName: string = '';
 }

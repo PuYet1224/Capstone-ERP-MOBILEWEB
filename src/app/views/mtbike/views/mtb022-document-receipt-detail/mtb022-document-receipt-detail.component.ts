@@ -76,6 +76,12 @@ export class Mtb022DocumentReceiptDetailComponent {
   public showConfirmReceived: boolean = false;
 
   public onnavigate(field: string) {
+    if (field.includes('update')) {
+      this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
+    }
+    if (field.includes('vehicles')) {
+      this.cache.setItem(KeyLocalStorageEnum.SAL_RECEIPT, this.receipt);
+    }
     this.router.navigate([field]);
   }
 
@@ -309,6 +315,10 @@ export class Mtb022DocumentReceiptDetailComponent {
   }
 
   public openSignaturePopup() {
+    if (this.receipt.Status >= 4 && this.receipt.TrueRemainingDebt == 0) {
+      this.notification.onWarning("Phiếu thu đã được xác nhận không thể ký");
+      return;
+    }
     this.showSignaturePopup = true;
   }
 

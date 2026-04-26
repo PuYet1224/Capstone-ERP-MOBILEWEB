@@ -46,7 +46,7 @@
         </div>
         <div class="info-row">
           <span class="label">Phương thức thanh toán</span>
-          <span class="value">{{ receipt?.PaymentMethodName }}</span>
+          <span class="value">{{ receipt.PaymentMethod == 1 ? 'Tiền mặt' : 'Chuyển khoản' }}</span>
         </div>
         <div class="info-row full-width">
           <span class="label">Mô tả</span>
@@ -65,6 +65,7 @@
     <section class="receipt-section">
       <div class="section-header">
         <h3 class="section-title">Chi tiết phiếu thu</h3>
+        <span class="material-icons edit-icon" (click)="onnavigate('/mtbike/document/receipt/vehicles')">edit</span>
       </div>
       <div class="calculation-grid">
         <div class="calc-row">
@@ -107,8 +108,8 @@
           <span class="value">{{ receipt?.PriorCollections || 0 | number }}đ</span>
         </div>
         <div class="calc-row sub-item">
-          <span class="label">+ Còn nợ hiện tại:</span>
-          <span class="value highlight-debt">{{ receipt?.CurrentRemainingDebt || 0 | number }}đ</span>
+          <span class="label">+ Còn nợ trước thu:</span>
+          <span class="value highlight-debt">{{ orderInfo.TotalPrice - orderInfo.AmountPaidOthers || 0 | number }}đ</span>
         </div>
       </div>
     </section>

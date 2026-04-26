@@ -1,0 +1,217 @@
+@import '../../../../../assets/scss/colors';
+
+::ng-deep {
+  mtb027-receipt-vehicle-detail {
+    font-size: 13px;
+    height: 100%;
+    background-color: $gray-light;
+
+    .mtb027-receipt-vehicle {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+
+      ps-header-back {
+        .ps-header {
+          .header-right {
+            display: flex;
+            width: calc(100% - 44px);
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+
+            .left-side {
+              .func-title1 {
+                font-weight: bold;
+                text-transform: uppercase;
+                color: $primary;
+              }
+            }
+
+            .right-side {
+              .receipt-no {
+                font-weight: bold;
+                color: $error;
+                font-size: 13px;
+              }
+            }
+          }
+        }
+      }
+
+      .vehicle-list-body {
+        flex: 1;
+        overflow: auto;
+        padding: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        height: calc(100% - 104px);
+
+        .vehicle-card {
+          background: $white;
+          border-radius: 10px;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+
+          .card-header {
+            padding: 8px;
+            background: $white;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            border-bottom: 1px solid rgba($border, 0.3);
+
+            &.cancelled {
+              background: rgba($error, 0.04);
+            }
+
+            .vehicle-img {
+              width: 90px;
+              height: 80px;
+              flex-shrink: 0;
+              border-radius: 8px;
+              overflow: hidden;
+              background: $gray-light;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+              img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+              }
+            }
+
+            .vehicle-info {
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+
+              .vehicle-name {
+                font-weight: bold;
+                font-size: 15px;
+                color: $secondary;
+                line-height: 1.3;
+              }
+
+              .vehicle-price {
+                font-size: 13px;
+                color: $secondary;
+
+                strong {
+                  color: $error;
+                }
+              }
+            }
+          }
+
+          .card-body {
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+
+            .info-row-item {
+              width: 100%;
+
+              .dropdown-wrapper,
+              .input-wrapper {
+                width: 100%;
+
+                ::ng-deep {
+                  .k-dropdown,
+                  .k-numerictextbox,
+                  .k-textbox {
+                    width: 100%;
+                    // height: 44px; // Lon hon cho dA chAm
+                    font-size: 13px;
+                  }
+
+                  .ps-kendo-dropdown-list,
+                  .ps-kendo-textbox {
+                    .label {
+                      font-size: 11px;
+                      color: lighten($secondary, 15%);
+                      margin-bottom: 4px;
+                      display: block;
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          .cancelled-info {
+            padding: 8px 12px;
+            background: rgba($error, 0.04);
+
+            .cancel-row {
+              display: flex;
+              gap: 8px;
+              padding: 2px 0;
+              font-size: 12px;
+
+              .cancel-label {
+                color: $error;
+                font-weight: 500;
+                min-width: 48px;
+              }
+
+              .cancel-value {
+                color: $secondary;
+                flex: 1;
+              }
+            }
+          }
+        }
+
+        .empty-state {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 48px 16px;
+          gap: 8px;
+          color: $secondary;
+          opacity: 0.5;
+
+          .material-icons {
+            font-size: 48px;
+          }
+
+          p {
+            font-size: 14px;
+          }
+        }
+      }
+
+      ps-footer-action {
+        height: 52px;
+        .footer-action {
+          height: 100%;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          padding: 8px;
+          gap: 8px;
+          background: $white;
+
+          ps-kendo-button {
+            flex: 1;
+            button {
+              width: 100%;
+              height: 36px;
+              border: 1px solid $border;
+              border-radius: 8px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+          }
+        }
+      }
+    }
+  }
+}

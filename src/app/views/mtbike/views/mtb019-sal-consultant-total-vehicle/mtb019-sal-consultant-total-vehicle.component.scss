@@ -236,6 +236,31 @@
                 width: 100%;
                 display: block;
               }
+
+              .lock-status {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba($secondary, 0.8);
+                color: $white;
+                font-size: 9px;
+                padding: 4px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+                backdrop-filter: blur(2px);
+                transition: all 0.3s ease;
+
+                .material-icons {
+                  font-size: 12px;
+                }
+
+                &.locked {
+                  background: rgba($success, 0.9);
+                }
+              }
             }
 
             .vehicle-info {
@@ -488,6 +513,30 @@
       }
 
       .info-card.payment-block {
+        transition: all 0.3s ease;
+
+        &.is-locked {
+          background-color: #f9f9f9;
+          
+          .card-body {
+            opacity: 0.7;
+            pointer-events: none; // Tránh tương tác dù đã disable kendo
+          }
+        }
+
+        .card-title {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .lock-hint {
+            font-size: 10px;
+            font-weight: normal;
+            color: $error;
+            font-style: italic;
+          }
+        }
+
         .card-body {
           display: flex;
           flex-direction: column;

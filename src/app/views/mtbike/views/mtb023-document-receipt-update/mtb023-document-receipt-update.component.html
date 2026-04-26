@@ -1,4 +1,4 @@
-<div class="mtb035-document-receipt-update premium-receipt">
+<div class="mtb023-document-receipt-update premium-receipt">
   <!-- START: HEADER -->
   <ps-header-back (clickBack)="goBack()">
     <div class="header-content">
@@ -25,21 +25,22 @@
             label="Khách hàng (*)"
             placeholder="Nhập tên khách hàng"
             [(ngModel)]="receipt.CustomerName"
-            [disabled]="receipt.Code === 0 || receipt.Status == 4"
+            [disabled]="receipt.Code === 0 || receipt.Status >= 4"
             (blur)="onBlur()"
           >
           </ps-kendo-textbox>
         </div>
 
         <div class="form-group">
-          <ps-kendo-textbox
+          <ps-kendo-masked-textbox
+            [mask]="'0000 000 000'"
             label="Số điện thoại"
             placeholder="Nhập số điện thoại"
             [(ngModel)]="receipt.CellPhone"
-            [disabled]="receipt.Code === 0 || receipt.Status == 4"
+            [disabled]="receipt.Code === 0 || receipt.Status >= 4"
             (blur)="onBlur()"
           >
-          </ps-kendo-textbox>
+          </ps-kendo-masked-textbox>
         </div>
       </div>
     </div>
@@ -58,7 +59,7 @@
             valueField="TypeOfList"
             [valuePrimitive]="true"
             [(ngModel)]="receipt.PaymentMethod"
-            [disabled]="receipt.IsLockPayment"
+            [disabled]="receipt.IsLockPayment || (receipt.Status > 3 && receipt.IsFirstReceipt)"
             (valueChange)="onPaymentMethodChange($event)"
           >
           </ps-kendo-dropdown-list>
@@ -74,7 +75,7 @@
                 format="n0"
                 placeholder="0"
                 [(ngModel)]="receipt.CashAmount"
-                [disabled]="receipt.IsLockPayment"
+                [disabled]="(!receipt.IsFirstReceipt && receipt.IsLockPayment) || receipt.IsFirstReceipt"
                 (valueChange)="onCashAmountChange($event)"
                 (blur)="onAmountBlur()"
               >
@@ -93,7 +94,7 @@
                 [spinners]="false"
                 format="n0"
                 [(ngModel)]="receipt.TransferAmount"
-                [disabled]="receipt.IsLockPayment"
+                [disabled]="(!receipt.IsFirstReceipt && receipt.IsLockPayment) || receipt.IsFirstReceipt"
                 (valueChange)="onTransferAmountChange($event)"
                 (blur)="onAmountBlur()"
               >
@@ -108,7 +109,7 @@
             label="Mô tả"
             placeholder="Nhập mô tả"
             [(ngModel)]="receipt.Description"
-            [disabled]="receipt.Code === 0 || receipt.Status == 4"
+            [disabled]="receipt.Code === 0 || receipt.Status >= 4"
             (blur)="onBlur()"
           >
           </ps-kendo-textarea>

@@ -18,23 +18,12 @@ export class SALOrderMasterProcessRetailPipe implements PipeTransform {
     }
 
     const html = `
-      <span style="
-        background-color: #fff;
-        width: fit-content;
-        height: 21px;
-        padding: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 8px;
-        font-size: 11px;
-        text-align: center;
-        border: 1px solid ${color};
-        line-height: 1;
-        color: ${color};
-      ">
-        ${status.ProgressName}
-      </span>
+    <span class="pipe-class"
+          style="background-color:${background};
+                 border-color:${color};
+                 color:${color};">
+      ${status.ProgressName}
+    </span>
     `;
 
     return this.sanitizer.bypassSecurityTrustHtml(html);

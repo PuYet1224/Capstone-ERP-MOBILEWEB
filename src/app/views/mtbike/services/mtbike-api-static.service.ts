@@ -108,8 +108,12 @@ export const fpayment = {
   GetSALInvoice: '',
   UpdateSALInvoiceInfo: '',
   GetListVehicleReceipt: '',
+  GetSALReceiptVehicles: '',
+  GetListPartnerFinance: '',
+  UpdateSALReceiptVehicle: '',
   UpdateSALReceiptDetail: '',
   UpdateSALReceiptStatus: '',
+  ExportSALInvoicePdf: '',
 };
 
 const namespaceMap: Record<string, any> = {

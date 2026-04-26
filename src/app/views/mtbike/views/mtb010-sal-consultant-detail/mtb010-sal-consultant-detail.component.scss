@@ -1,4 +1,4 @@
-﻿@import "../../../../../assets/scss/colors";
+@import "../../../../../assets/scss/colors";
 
 ::ng-deep {
     mtb010-sal-consultant-detail {
@@ -180,6 +180,69 @@
                         }
                     }
 
+                }
+            }
+            ps-dialog-confirm {
+                .ps-dialog-confirm {
+                    .confirm-dialog {
+                        width: 75%;
+                        height: auto;
+
+                        .k-popup {
+                            .body {
+                                height: 100%;
+                                padding: 24px;
+                                align-items: flex-start;
+                                justify-content: flex-start;
+                                gap: 16px;
+
+                                .title-out {
+                                    font-size: 24px;
+                                    font-weight: bold;
+                                }
+
+                                .group-buttom {
+                                    width: 100%;
+                                    display: flex;
+                                    justify-content: flex-end;
+                                    gap: 8px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+::ng-deep {
+    .cancel-dialog {
+        .ps-dialog-confirm {
+            .confirm-dialog {
+                width: 75% !important;
+                height: auto !important;
+
+                .k-popup {
+                    .body {
+                        height: 100% !important;
+                        padding: 24px !important;
+                        align-items: flex-start !important;
+                        justify-content: flex-start !important;
+                        gap: 16px !important;
+
+                        .title-out {
+                            font-size: 24px !important;
+                            font-weight: bold !important;
+                        }
+
+                        .group-buttom {
+                            width: 100% !important;
+                            display: flex !important;
+                            justify-content: flex-end !important;
+                            gap: 8px !important;
+                        }
+                    }
                 }
             }
         }

@@ -1,0 +1,209 @@
+@import '../../../../../assets/scss/colors';
+
+::ng-deep {
+  mtb025-invoice-detail {
+    font-size: 13px;
+
+    .mtb025-invoice-detail {
+      height: 100%;
+
+      ps-header-back {
+        .ps-header {
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+          .header-right {
+            height: fit-content;
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+
+            .left-side {
+              .func-title1 {
+                font-size: 13px;
+                font-weight: bold;
+                text-transform: uppercase;
+                color: $primary;
+              }
+              .func-title2 {
+                font-size: 12px;
+                color: $secondary;
+              }
+            }
+          }
+        }
+      }
+
+      .customer-body {
+        background-color: transparent;
+        height: calc(100% - 124px);
+        margin: 8px 0;
+        border-radius: 8px;
+        overflow: auto;
+
+        .body-container {
+          height: fit-content;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          padding: 0 8px;
+
+          .container-body {
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background: $white;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: auto;
+
+            .title {
+              font-weight: bold;
+              padding: 9px 8px;
+              border-bottom: 1px solid $border;
+            }
+
+            .content {
+              padding: 8px;
+              display: flex;
+              flex-direction: column;
+              gap: 12px;
+
+              .ps-label {
+                font-size: 13px;
+                color: $secondary;
+                margin-bottom: 4px;
+                display: block;
+              }
+
+              .row-flex {
+                display: flex;
+                gap: 8px;
+                width: 100%;
+
+                &.align-center {
+                  align-items: center;
+                }
+
+                &.align-end {
+                  align-items: flex-end;
+                }
+
+                .flex-1 {
+                  flex: 1;
+                }
+                .flex-2 {
+                  flex: 2;
+                }
+                .flex-3 {
+                  flex: 3;
+                }
+
+                ps-kendo-dropdown-list {
+                  // Ensure dropdown alignment in row-flex
+                  margin-bottom: 0;
+                }
+              }
+
+              .input-fields {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+              }
+
+              .zalo-group {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                position: relative;
+                ps-kendo-checkbox {
+                  position: absolute;
+                  right: 0;
+                }
+              }
+
+              .dob-group {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+              }
+            }
+          }
+        }
+      }
+
+
+
+      ps-footer-action {
+        .footer-action {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 8px;
+          height: fit-content;
+
+          ps-kendo-button {
+            button {
+              height: 48px;
+              border-radius: 0;
+
+              .k-button-text {
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+                padding: 4px 0;
+                text-transform: none;
+
+                .material-icons {
+                  font-size: 20px;
+                }
+
+                .text {
+                  font-size: 13px;
+                }
+              }
+            }
+
+            &:nth-child(2) {
+              flex: 1;
+
+              button {
+                width: 100%;
+                height: 36px;
+                border-radius: 8px;
+              }
+
+              .text {
+                color: $white;
+              }
+            }
+
+            &:first-child {
+              button {
+                width: 36px;
+                height: 36px;
+                border: 1px solid $border;
+                border-radius: 8px;
+              }
+            }
+          }
+        }
+      }
+
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+    }
+  }
+}

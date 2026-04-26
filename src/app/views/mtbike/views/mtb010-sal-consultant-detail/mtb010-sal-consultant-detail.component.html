@@ -1,4 +1,4 @@
-﻿<div class="mtb010-retail-customer">
+<div class="mtb010-retail-customer">
     <!-- START: HEADER -->
     <ps-header-back>
         <div class="left-side">
@@ -89,4 +89,19 @@
 
     </ps-footer-action>
     <!-- END: FOOTER -->
+
+    <ps-dialog-confirm [open]="showCancelConfirm" class="cancel-dialog">
+        <div psDialogConfirmBody class="body">
+            <div class="title-out">
+                Hủy giao dịch
+            </div>
+            <div class="confirm">
+                Bạn có chắc chắn muốn hủy giao dịch này không? Hành động này không thể hoàn tác.
+            </div>
+            <div class="group-buttom">
+                <ps-kendo-button (onClick)="showCancelConfirm = false">Đóng</ps-kendo-button>
+                <ps-kendo-button [theme]="'error'" (onClick)="onConfirmCancelTransaction()">Hủy giao dịch</ps-kendo-button>
+            </div>
+        </div>
+    </ps-dialog-confirm>
 </div>

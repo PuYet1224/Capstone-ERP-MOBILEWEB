@@ -256,8 +256,15 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
     this.listTypeOfPart = [];
     this.listTypeOfPartSpecs = [];
     this.partFilterApplied = true;
-    this.applicableVehicleCodes = [];
-    if (this.partcategory && this.partcategory.Code) this.GetListSALTypeOfPart();
+
+    if (this.partcategory && this.partcategory.Code) {
+      this.applicableVehicleCodes = this.categoryVehicleMap.get(this.partcategory.Code) || [];
+      this.selectedDetailCodes = new Set(this.applicableVehicleCodes);
+      this.GetListSALTypeOfPart();
+    } else {
+      this.applicableVehicleCodes = [];
+      this.selectedDetailCodes = new Set();
+    }
   }
 
   onTypeOfPartChange(code: number): void {
@@ -266,14 +273,14 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
       this.typeofpart = sel;
       this.listTypeOfPartSpecs = [];
       (this.typeofpartspecs as any).Code = null;
-      if (this.typeofpart && this.typeofpart.Code) this.GetListSALTypeOfPartSpecs(this.typeofpart);
-      this.loadApplicableVehicles();
+      // if (this.typeofpart && this.typeofpart.Code) this.GetListSALTypeOfPartSpecs(this.typeofpart);
+      // this.loadApplicableVehicles();
     }
   }
 
-  onTypeOfPartSpecsChange(): void {
-    this.loadApplicableVehicles();
-  }
+  // onTypeOfPartSpecsChange(): void {
+  //   this.loadApplicableVehicles();
+  // }
 
   onUnitChange(code: number): void {
     const sel = this.listUnit.find((u) => u.Code === code);
@@ -495,7 +502,13 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
   private loadApplicableVehicles(): void {
     if (!this.typeofpart || !this.typeofpart.Code) {
       this.partFilterApplied = true;
-      this.applicableVehicleCodes = [];
+      if (this.partcategory && this.partcategory.Code) {
+        this.applicableVehicleCodes = this.categoryVehicleMap.get(this.partcategory.Code) || [];
+        this.selectedDetailCodes = new Set(this.applicableVehicleCodes);
+      } else {
+        this.applicableVehicleCodes = [];
+        this.selectedDetailCodes = new Set();
+      }
       return;
     }
     
@@ -528,7 +541,6 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
           this.listSalVehicleParts.forEach((d) => {
             this.statusByCode[d.Code] = this.getStatusContext(d);
           });
-          this.getunitandcategory();
         } else {
           this.listSalVehicleParts = [];
           this.statusByCode = {};
@@ -605,10 +617,6 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
         }
 
         this.listPartCategory = this.toPartCategoryList(uniqueCategories);
-        if (this.listPartCategory.length > 0) {
-          this.partcategory = { ...this.listPartCategory[0] } as LSPartCategoryCusDTO;
-          this.onPartCategoryChange();
-        }
 
         this.subLoader.loader(false);
         if (callback) callback();
@@ -629,10 +637,6 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
     if (cachedTypes && cachedTypes.length > 0) {
       this.listTypeOfPart = this.toTypeOfPartList(cachedTypes.map((item) => ({ ...item })));
       this.listTypeOfPartSpecs = [];
-      if (this.listTypeOfPart.length > 0) {
-        this.typeofpart = { ...this.listTypeOfPart[0] } as LSTypeOfPartCusDTO;
-        this.onTypeOfPartChange(this.typeofpart.Code);
-      }
       return;
     }
 
@@ -678,10 +682,6 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
         this.typeOfPartCache[cacheKey] = (this.listTypeOfPart || []).map((item) => ({ ...item }));
         this.listTypeOfPartSpecs = [];
 
-        if (this.listTypeOfPart.length > 0) {
-          this.typeofpart = { ...this.listTypeOfPart[0] } as LSTypeOfPartCusDTO;
-          this.onTypeOfPartChange(this.typeofpart.Code);
-        }
         this.subLoader.loader(false);
       },
       error: () => this.subLoader.loader(false)

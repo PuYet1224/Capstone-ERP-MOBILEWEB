@@ -58,7 +58,9 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   //#region  header
   public retailMaster: SALOrderMasterCusDTO;
   private arrUnsubscribe: Subscription[] = [];
+  public showCancelConfirm: boolean = false;
   public FunctionPermissionDTO = FunctionPermissionDTO;
+  public SALOrderMasterStatusRetailEnum = SALOrderMasterStatusRetailEnum;
 
   public listtab: { label: string; value: string }[] = [
     { label: 'Đã chọn', value: 'buy' },
@@ -231,6 +233,7 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   }
 
   public onAddVehicle(item: LSVehicleColorCusDTO) {
+    if (item.IsOrderLock) return;
     const currentHeadStock = item.ListStock[0].Quantity || 0;
     const otherHeadStock = item.ListStock[1].Quantity || 0;
 
@@ -267,6 +270,7 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   public pendingStockParam: LSVehicleColorCusDTO | null = null;
 
   public onAddMultiVehicle(item: LSVehicleColorCusDTO) {
+    if (item.IsOrderLock) return;
     if (this.oldOrderQuantity === item.OrderQuantity) return;
 
     const diff = item.OrderQuantity - this.oldOrderQuantity;
@@ -481,17 +485,20 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
 
   public onCancelTransaction() {
     if (this.retailMaster && this.retailMaster.Code > 0) {
-      if (!confirm('Bạn có chắc chắn muốn hủy giao dịch này không?')) {
-        return;
-      }
+      this.showCancelConfirm = true;
+    }
+  }
 
+  public onConfirmCancelTransaction() {
+    this.showCancelConfirm = false;
+    if (this.retailMaster && this.retailMaster.Code > 0) {
       const param: UpdateStatusInterface<SALOrderMasterCusDTO> = {
         ListDTO: [this.retailMaster],
         Status: 6 // CANCEL
       };
 
       this.subLoader.loader(true);
-      const sub = this.api.UpdateSALStatus(param).subscribe(res => {
+      const sub = this.api.UpdateSALMasterStatus(param).subscribe(res => {
         this.subLoader.loader(false);
         if (res.StatusCode == 0) {
           this.notification.onSuccess('Hủy giao dịch thành công');
@@ -527,19 +534,21 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
 
   public onupdatestatusmaster() {
     if (this.isapplystt)
-      this.updatesalstatus();
+      this.onComplete();
   }
 
-  public updatesalstatus() {
+  public onComplete() {
     var param: UpdateStatusInterface<SALOrderMasterCusDTO> = {
       ListDTO: [this.retailMaster],
       Status: SALOrderMasterStatusRetailEnum.COMPLETE,
     };
 
     this.subLoader.loader(true);
-    var temp = this.api.UpdateSALStatus(param).subscribe((res) => {
+    var temp = this.api.UpdateSALMasterStatus(param).subscribe((res) => {
       if (res.StatusCode == 0) {
         this.notification.onSuccess(`Thành công`);
+        this.retailMaster = { ...this.retailMaster, Status: SALOrderMasterStatusRetailEnum.COMPLETE, StatusName: 'Hoàn tất' } as any;
+        this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_MASTER, this.retailMaster);
         this.subLoader.loader(false);
       } else
         this.notification.onError(`Lỗi cập nhật phiếu: ${res.ErrorString}`);

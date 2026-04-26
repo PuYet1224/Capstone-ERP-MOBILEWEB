@@ -1,9 +1,9 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { State } from '@progress/kendo-data-query';
 import { Subscription } from 'rxjs';
+import { SALOrderInvoiceCusDTO } from 'src/app/models/dtos/e-dtos/sal-order-invoice.dto';
 import { SALOrderMasterCusDTO } from 'src/app/models/dtos/e-dtos/sal-order-master.dto';
-import { SALOrderReceiptCusDTO } from 'src/app/models/dtos/e-dtos/sal-order-receipt.dto';
 import { SALOrderMasterStatusRetailEnum } from 'src/app/models/enums/e-status/sal-order-master-status-retail.enum';
 import { ConfigDTO } from 'src/app/models/dtos/config.dto';
 import { KeyLocalStorageEnum } from 'src/app/models/enums/key-local-storage.enum';
@@ -14,43 +14,39 @@ import { MtbikeApiService } from '../../services/mtbike-api.service';
 
 export interface DisplayGroup {
   name: string;
-  items: Mtb021DocumentReceiptComponent[];
+  items: Mtb024InvoiceListComponent[];
 }
 
-export interface Mtb021DocumentReceiptComponent extends SALOrderMasterCusDTO {
-  receipts?: SALOrderReceiptCusDTO[];
+export interface Mtb024InvoiceListComponent extends SALOrderMasterCusDTO {
+  invoices?: SALOrderInvoiceCusDTO[];
   isExpanded?: boolean;
-  isLoadingReceipts?: boolean;
-  receiptCount?: number;
+  invoiceCount?: number;
 }
 
 @Component({
-  selector: 'mtb021-document-receipt',
-  templateUrl: './mtb021-document-receipt.component.html',
-  styleUrls: ['./mtb021-document-receipt.component.scss'],
+  selector: 'mtb024-invoice-list',
+  templateUrl: './mtb024-invoice-list.component.html',
+  styleUrls: ['./mtb024-invoice-list.component.scss'],
 })
-export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
+export class Mtb024InvoiceListComponent implements OnInit, OnDestroy {
   constructor(
     private api: MtbikeApiService,
     private notification: PsKendoNotificationService,
     private loader: SystemLoaderService,
     private cache: PsCache,
     private router: Router,
+    private route: ActivatedRoute,
   ) { }
 
   private arrUnsubscribe: Subscription[] = [];
 
-  @ViewChild('bodyList', { static: true }) bodyList!: ElementRef;
-
   public displayGroups: DisplayGroup[] = [];
   public openGroupSet = new Set<number>();
-  public allReceipts: SALOrderReceiptCusDTO[] = [];
+  public allInvoices: SALOrderInvoiceCusDTO[] = [];
 
   public isOpenedFilter = false;
   public searchKeyword = '';
   public includeFinished = false;
-  public selectedConsultant: any = null;
-  public listConsultants: any[] = [];
 
   public filter: State = {
     sort: [{ field: 'Code', dir: 'desc' }],
@@ -59,7 +55,6 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     ConfigDTO.dllpackage = 'document';
     this.cache.setItem(KeyLocalStorageEnum.DLLPACKAGE, 'document');
-    this.loadConsultants();
     this.loadData();
   }
 
@@ -70,19 +65,10 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
   }
 
   //#region data loading
-  private loadData(): void {
+  public loadData(): void {
     this.loader.loader(true);
-    // Use forkJoin or ensure receipts are loaded before list if we want to search by receipt number
-    this.loadAllReceipts();
+    this.loadAllInvoices();
     this.loadList();
-  }
-
-  private loadConsultants(): void {
-    this.api.GetListWOMConsultant({}).subscribe(res => {
-      if (res.StatusCode === 0) {
-        this.listConsultants = res.ObjectReturn?.Data || res.ObjectReturn || [];
-      }
-    });
   }
 
   private loadList(): void {
@@ -90,22 +76,21 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
       res => {
         if (res.StatusCode === 0) {
           const rawGroups = res.ObjectReturn as any[];
-          const allItems: Mtb021DocumentReceiptComponent[] = [];
+          const allItems: Mtb024InvoiceListComponent[] = [];
           rawGroups.forEach(g => {
             (g.ListData || []).forEach((item: any) => {
               allItems.push({ ...item, isExpanded: false });
             });
           });
 
-          // Fallback: Local filtering for grouped results (since server-side may ignore filter on groups)
           let filteredItems = allItems;
           if (this.searchKeyword?.trim()) {
             const kw = this.searchKeyword.trim().toLowerCase();
 
-            // Find IDs of orders that have matching receipts
-            const matchingOrderCodes = this.allReceipts
-              .filter(r => (r.ReceiptNo && r.ReceiptNo.toLowerCase().includes(kw)))
-              .map(r => r.OrderMaster);
+            // Find IDs of orders that have matching invoices
+            const matchingOrderCodes = this.allInvoices
+              .filter(inv => (inv.InvoiceNo && inv.InvoiceNo.toLowerCase().includes(kw)))
+              .map(inv => inv.OrderMaster);
 
             filteredItems = filteredItems.filter(i => {
               const matchesDirect = (i.ID && i.ID.toLowerCase().includes(kw)) ||
@@ -113,22 +98,14 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
                 (i.CustomerPhone && i.CustomerPhone.includes(kw)) ||
                 (i.SaleStaffName && i.SaleStaffName.toLowerCase().includes(kw));
 
-              const matchesReceipt = matchingOrderCodes.includes(i.Code);
+              const matchesInvoice = matchingOrderCodes.includes(i.Code);
 
-              // If matches via receipt, auto-expand to show it
-              if (matchesReceipt && !matchesDirect) {
+              if (matchesInvoice && !matchesDirect) {
                 i.isExpanded = true;
               }
 
-              return matchesDirect || matchesReceipt;
+              return matchesDirect || matchesInvoice;
             });
-          }
-
-          if (this.selectedConsultant) {
-            const consultantName = (this.selectedConsultant.StaffName || this.selectedConsultant).toLowerCase();
-            filteredItems = filteredItems.filter(i =>
-              i.SaleStaffName && i.SaleStaffName.toLowerCase().includes(consultantName)
-            );
           }
 
           this.buildDisplayGroups(filteredItems);
@@ -145,10 +122,21 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
     this.arrUnsubscribe.push(sub);
   }
 
+  private loadAllInvoices(): void {
+    const sub = this.api.GetListSALInvoice(this.buildInvoiceFilter()).subscribe(
+      res => {
+        if (res.StatusCode === 0) {
+          this.allInvoices = res.ObjectReturn?.Data ?? res.ObjectReturn ?? [];
+          this.assignInvoicesToItems();
+        }
+      }
+    );
+    this.arrUnsubscribe.push(sub);
+  }
+
   private buildFilter(): any {
     const filters: any[] = [];
 
-    // Group statuses: 1(New), 3(Pending), 4(Processing) are "Active"
     const statusFilters: any[] = [
       { field: 'Status', operator: 'eq', value: SALOrderMasterStatusRetailEnum.PENDING },
       { field: 'Status', operator: 'eq', value: SALOrderMasterStatusRetailEnum.PROCESSING },
@@ -174,18 +162,14 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
       filters.push({ logic: 'or', filters: searchFilters });
     }
 
-    if (this.selectedConsultant) {
-      const consultantName = this.selectedConsultant.StaffName || this.selectedConsultant;
-      filters.push({ field: 'SaleStaffName', operator: 'contains', value: consultantName });
-    }
-
     return {
       ...this.filter,
-      filter: filters.length > 0 ? { logic: 'and', filters } : undefined
+      filter: filters.length > 0 ? { logic: 'and', filters } : undefined,
+      isExcludeInstallment: true
     };
   }
 
-  private buildReceiptFilter(): any {
+  private buildInvoiceFilter(): any {
     const filters: any[] = [];
 
     if (this.searchKeyword?.trim()) {
@@ -193,39 +177,35 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
       filters.push({
         logic: 'or',
         filters: [
-          { field: 'ReceiptNo', operator: 'contains', value: keyword },
+          { field: 'InvoiceNo', operator: 'contains', value: keyword },
           { field: 'OrderNo', operator: 'contains', value: keyword },
-          { field: 'CustomerName', operator: 'contains', value: keyword },
-          { field: 'CellPhone', operator: 'contains', value: keyword },
+          { field: 'VATCustomerName', operator: 'contains', value: keyword },
         ]
       });
     }
 
     return {
-      filter: filters.length > 0 ? { logic: 'and', filters } : undefined
+      filter: filters.length > 0 ? { logic: 'and', filters } : undefined,
     };
   }
 
-  private buildDisplayGroups(allItems: Mtb021DocumentReceiptComponent[]): void {
-    // Group 1: "Đang xử lý" = status NEW(1) + PENDING(3) + PROCESSING(4)
+  private buildDisplayGroups(allItems: Mtb024InvoiceListComponent[]): void {
     const processingItems = allItems.filter(i =>
       i.Status === SALOrderMasterStatusRetailEnum.NEW ||
       i.Status === SALOrderMasterStatusRetailEnum.PENDING ||
       i.Status === SALOrderMasterStatusRetailEnum.PROCESSING
     );
 
-    // Group 2: "Kết thúc" = status COMPLETE(5) + CANCEL(6)
     const finishedItems = allItems.filter(i =>
       i.Status === SALOrderMasterStatusRetailEnum.COMPLETE ||
       i.Status === SALOrderMasterStatusRetailEnum.CANCEL
     );
 
-    // Assign receipt counts
     processingItems.forEach(item => {
-      item.receiptCount = this.allReceipts.filter(r => r.OrderMaster === item.Code).length;
+      item.invoiceCount = this.allInvoices.filter(inv => inv.OrderMaster === item.Code).length;
     });
     finishedItems.forEach(item => {
-      item.receiptCount = this.allReceipts.filter(r => r.OrderMaster === item.Code).length;
+      item.invoiceCount = this.allInvoices.filter(inv => inv.OrderMaster === item.Code).length;
     });
 
     this.displayGroups = [];
@@ -238,28 +218,16 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
       this.displayGroups.push({ name: 'Kết thúc', items: finishedItems });
     }
 
-    // Open all groups by default
     this.openGroupSet.clear();
     this.displayGroups.forEach((_, i) => this.openGroupSet.add(i));
+    this.assignInvoicesToItems();
   }
 
-  private loadAllReceipts(): void {
-    const sub = this.api.GetListSALReceipt(this.buildReceiptFilter()).subscribe(
-      res => {
-        if (res.StatusCode === 0) {
-          this.allReceipts = res.ObjectReturn?.Data ?? res.ObjectReturn ?? [];
-          this.assignReceiptsToItems();
-        }
-      }
-    );
-    this.arrUnsubscribe.push(sub);
-  }
-
-  private assignReceiptsToItems(): void {
+  private assignInvoicesToItems(): void {
     this.displayGroups.forEach(g => {
       g.items.forEach(item => {
-        item.receipts = this.allReceipts.filter(r => r.OrderMaster === item.Code);
-        item.receiptCount = item.receipts.length;
+        item.invoices = this.allInvoices.filter(inv => inv.OrderMaster === item.Code);
+        item.invoiceCount = item.invoices.length;
       });
     });
   }
@@ -278,10 +246,10 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
     return this.openGroupSet.has(idx);
   }
 
-  toggleItem(item: Mtb021DocumentReceiptComponent): void {
+  toggleItem(item: Mtb024InvoiceListComponent): void {
     item.isExpanded = !item.isExpanded;
-    if (item.isExpanded && !item.receipts) {
-      item.receipts = this.allReceipts.filter(r => r.OrderMaster === item.Code);
+    if (item.isExpanded && !item.invoices) {
+      item.invoices = this.allInvoices.filter(inv => inv.OrderMaster === item.Code);
     }
   }
 
@@ -299,32 +267,11 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
     this.router.navigate(['/menu']);
   }
 
-  onNavigateReceipt(receipt: SALOrderReceiptCusDTO, master: Mtb021DocumentReceiptComponent): void {
-    this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, receipt);
-    this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_MASTER, master);
-
-    // If receipt is still "New", go to Update page, otherwise go to Detail page
-    if (receipt.Code === 0) {
-      this.router.navigate(['/mtbike/document/receipt/update']);
-    } else {
-      this.router.navigate(['/mtbike/document/receipt']);
-    }
+  onNavigateDetail(item: SALOrderInvoiceCusDTO): void {
+    this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_INVOICE, item);
+    this.router.navigate(['detail'], { relativeTo: this.route });
   }
 
-  onCreateReceipt(master: Mtb021DocumentReceiptComponent): void {
-    const newReceipt = new SALOrderReceiptCusDTO();
-    newReceipt.OrderMaster = master.Code; // Link to master Order
-    newReceipt.CustomerName = master.CustomerName;
-    newReceipt.CellPhone = master.CustomerPhone;
-    newReceipt.Address = master.Address;
-
-    this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_MASTER, master);
-    this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, newReceipt);
-    this.router.navigate(['/mtbike/document/receipt/update']);
-  }
-  //#endregion
-
-  //#region helpers
   getStatusClass(status: number): string {
     switch (status) {
       case SALOrderMasterStatusRetailEnum.PENDING: return 'status-pending';
@@ -332,16 +279,6 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
       case SALOrderMasterStatusRetailEnum.COMPLETE: return 'status-complete';
       case SALOrderMasterStatusRetailEnum.CANCEL: return 'status-cancel';
       default: return 'status-new';
-    }
-  }
-
-  getPaymentMethodClass(method: number): string {
-    switch (method) {
-      case 1: return 'pm-cash';
-      case 2: return 'pm-transfer';
-      case 3: return 'pm-card';
-      case 4: return 'pm-mixed';
-      default: return 'pm-cash';
     }
   }
   //#endregion

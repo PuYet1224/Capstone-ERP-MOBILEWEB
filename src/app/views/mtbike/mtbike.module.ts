@@ -42,10 +42,13 @@ import { Mtb017SalConsultantPromotionComponent } from './views/mtb017-sal-consul
 import { Mtb018SalConsultantPromotionDetailComponent } from './views/mtb018-sal-consultant-promotion-detail/mtb018-sal-consultant-promotion-detail.component';
 import { Mtb019SalConsultantTotalVehicleComponent } from './views/mtb019-sal-consultant-total-vehicle/mtb019-sal-consultant-total-vehicle.component';
 import { Mtb020SalConsultantTotalComponent } from './views/mtb020-sal-consultant-total/mtb020-sal-consultant-total.component';
-import { Mtb034SalPolicyComponent } from './views/mtb034-sal-policy/mtb034-sal-policy.component';
 import { Mtb021DocumentReceiptComponent } from './views/mtb021-document-receipt/mtb021-document-receipt.component';
 import { Mtb022DocumentReceiptDetailComponent } from './views/mtb022-document-receipt-detail/mtb022-document-receipt-detail.component';
-import { Mtb035DocumentReceiptUpdateComponent } from './views/mtb035-document-receipt-update/mtb035-document-receipt-update.component';
+import { Mtb023DocumentReceiptUpdateComponent } from './views/mtb023-document-receipt-update/mtb023-document-receipt-update.component';
+import { Mtb024InvoiceListComponent } from './views/mtb024-invoice-list/mtb024-invoice-list.component';
+import { Mtb025InvoiceDetailComponent } from './views/mtb025-invoice-detail/mtb025-invoice-detail.component';
+import { Mtb026InvoiceIssueComponent } from './views/mtb026-invoice-issue/mtb026-invoice-issue.component';
+import { Mtb027ReceiptVehicleDetailComponent } from './views/mtb027-receipt-vehicle-detail/mtb027-receipt-vehicle-detail.component';
 @NgModule({
   imports: [
     RouterModule.forChild(MtbikeRouting),
@@ -91,7 +94,11 @@ import { Mtb035DocumentReceiptUpdateComponent } from './views/mtb035-document-re
     Mtb020SalConsultantTotalComponent,
     Mtb021DocumentReceiptComponent,
     Mtb022DocumentReceiptDetailComponent,
-    Mtb034SalPolicyComponent,
+    Mtb023DocumentReceiptUpdateComponent,
+    Mtb024InvoiceListComponent,
+    Mtb025InvoiceDetailComponent,
+    Mtb026InvoiceIssueComponent,
+    Mtb027ReceiptVehicleDetailComponent,
     WOMProgressStatusPipe,
     SALOrderMasterStatusRetailPipe,
     SALOrderDetailStatusPipe,
@@ -99,7 +106,6 @@ import { Mtb035DocumentReceiptUpdateComponent } from './views/mtb035-document-re
     SALOrderInvoiceStatusPipe,
     SALOrderMasterProcessRetailPipe,
     SALOrderDetailTypeDataPipe,
-    Mtb035DocumentReceiptUpdateComponent
   ],
   exports: []
 })
