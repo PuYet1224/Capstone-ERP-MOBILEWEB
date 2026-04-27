@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { SALOrderInvoiceCusDTO } from 'src/app/models/dtos/e-dtos/sal-order-invoice.dto';
 import { SALOrderMasterCusDTO } from 'src/app/models/dtos/e-dtos/sal-order-master.dto';
 import { SALOrderMasterStatusRetailEnum } from 'src/app/models/enums/e-status/sal-order-master-status-retail.enum';
+import { SALOrderInvoiceStatusEnum } from 'src/app/models/enums/e-status/sal-order-invoice-status.enum';
 import { ConfigDTO } from 'src/app/models/dtos/config.dto';
 import { KeyLocalStorageEnum } from 'src/app/models/enums/key-local-storage.enum';
 import { PsKendoNotificationService } from 'src/app/services/core/ps-kendo-notification.service';
@@ -46,7 +47,15 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
 
   public isOpenedFilter = false;
   public searchKeyword = '';
-  public includeFinished = false;
+
+  public activeTab: 'pending' | 'issued' = 'pending';
+  public pendingCount = 0;
+  public issuedCount = 0;
+
+  public isOpenedIssueConfirm = false;
+  public selectedInvoice: SALOrderInvoiceCusDTO | null = null;
+
+  public readonly invoiceStatusSuccess = SALOrderInvoiceStatusEnum.Success;
 
   public filter: State = {
     sort: [{ field: 'Code', dir: 'desc' }],
@@ -94,8 +103,7 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
             filteredItems = filteredItems.filter(i => {
               const matchesDirect = (i.ID && i.ID.toLowerCase().includes(kw)) ||
                 (i.CustomerName && i.CustomerName.toLowerCase().includes(kw)) ||
-                (i.CustomerPhone && i.CustomerPhone.includes(kw)) ||
-                (i.SaleStaffName && i.SaleStaffName.toLowerCase().includes(kw));
+                (i.CustomerPhone && i.CustomerPhone.includes(kw));
 
               const matchesInvoice = matchingOrderCodes.includes(i.Code);
 
@@ -126,6 +134,7 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
       res => {
         if (res.StatusCode === 0) {
           this.allInvoices = res.ObjectReturn?.Data ?? res.ObjectReturn ?? [];
+          this.updateInvoiceCounts();
           this.assignInvoicesToItems();
         }
       }
@@ -139,14 +148,8 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
     const statusFilters: any[] = [
       { field: 'Status', operator: 'eq', value: SALOrderMasterStatusRetailEnum.PENDING },
       { field: 'Status', operator: 'eq', value: SALOrderMasterStatusRetailEnum.PROCESSING },
+      { field: 'Status', operator: 'eq', value: SALOrderMasterStatusRetailEnum.COMPLETE },
     ];
-
-    if (this.includeFinished) {
-      statusFilters.push(
-        { field: 'Status', operator: 'eq', value: SALOrderMasterStatusRetailEnum.COMPLETE },
-        { field: 'Status', operator: 'eq', value: SALOrderMasterStatusRetailEnum.CANCEL },
-      );
-    }
 
     filters.push({ logic: 'or', filters: statusFilters });
 
@@ -189,21 +192,25 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
   }
 
   private buildDisplayGroups(allItems: Mtb026InvoiceIssueItem[]): void {
-    const processingItems = allItems.filter(i =>
-      i.Status === SALOrderMasterStatusRetailEnum.NEW ||
+    // For issue screen, only show orders that have invoices
+    const itemsWithInvoices = allItems.filter(item => {
+      const invoices = this.allInvoices.filter(inv => inv.OrderMaster === item.Code);
+      return invoices.length > 0;
+    });
+
+    const processingItems = itemsWithInvoices.filter(i =>
       i.Status === SALOrderMasterStatusRetailEnum.PENDING ||
       i.Status === SALOrderMasterStatusRetailEnum.PROCESSING
     );
 
-    const finishedItems = allItems.filter(i =>
-      i.Status === SALOrderMasterStatusRetailEnum.COMPLETE ||
-      i.Status === SALOrderMasterStatusRetailEnum.CANCEL
+    const completedItems = itemsWithInvoices.filter(i =>
+      i.Status === SALOrderMasterStatusRetailEnum.COMPLETE
     );
 
     processingItems.forEach(item => {
       item.invoiceCount = this.allInvoices.filter(inv => inv.OrderMaster === item.Code).length;
     });
-    finishedItems.forEach(item => {
+    completedItems.forEach(item => {
       item.invoiceCount = this.allInvoices.filter(inv => inv.OrderMaster === item.Code).length;
     });
 
@@ -213,8 +220,8 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
       this.displayGroups.push({ name: 'Đang xử lý', items: processingItems });
     }
 
-    if (this.includeFinished && finishedItems.length > 0) {
-      this.displayGroups.push({ name: 'Kết thúc', items: finishedItems });
+    if (completedItems.length > 0) {
+      this.displayGroups.push({ name: 'Hoàn tất', items: completedItems });
     }
 
     this.openGroupSet.clear();
@@ -230,9 +237,30 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
       });
     });
   }
+
+  private updateInvoiceCounts(): void {
+    this.pendingCount = this.allInvoices.filter(
+      inv => inv.Status !== SALOrderInvoiceStatusEnum.Success
+    ).length;
+    this.issuedCount = this.allInvoices.filter(
+      inv => inv.Status === SALOrderInvoiceStatusEnum.Success
+    ).length;
+  }
   //#endregion
 
   //#region UI actions
+  onTabChange(tab: 'pending' | 'issued'): void {
+    this.activeTab = tab;
+  }
+
+  getFilteredInvoices(item: Mtb026InvoiceIssueItem): SALOrderInvoiceCusDTO[] {
+    if (!item.invoices) return [];
+    if (this.activeTab === 'pending') {
+      return item.invoices.filter(inv => inv.Status !== SALOrderInvoiceStatusEnum.Success);
+    }
+    return item.invoices.filter(inv => inv.Status === SALOrderInvoiceStatusEnum.Success);
+  }
+
   toggleGroup(idx: number): void {
     if (this.openGroupSet.has(idx)) {
       this.openGroupSet.delete(idx);
@@ -271,14 +299,85 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
     this.router.navigate(['detail'], { relativeTo: this.route });
   }
 
-  getStatusClass(status: number): string {
+  getInvoiceStatusClass(status: number): string {
     switch (status) {
-      case SALOrderMasterStatusRetailEnum.PENDING: return 'status-pending';
-      case SALOrderMasterStatusRetailEnum.PROCESSING: return 'status-processing';
-      case SALOrderMasterStatusRetailEnum.COMPLETE: return 'status-complete';
-      case SALOrderMasterStatusRetailEnum.CANCEL: return 'status-cancel';
-      default: return 'status-new';
+      case SALOrderInvoiceStatusEnum.Success: return 'inv-issued';
+      case SALOrderInvoiceStatusEnum.Cancled: return 'inv-cancelled';
+      default: return 'inv-pending';
     }
+  }
+
+  getInvoiceStatusLabel(status: number): string {
+    switch (status) {
+      case SALOrderInvoiceStatusEnum.Success: return 'Đã xuất';
+      case SALOrderInvoiceStatusEnum.Cancled: return 'Đã hủy';
+      default: return 'Chưa xuất';
+    }
+  }
+  //#endregion
+
+  //#region Issue invoice
+  openIssueConfirm(inv: SALOrderInvoiceCusDTO): void {
+    this.selectedInvoice = inv;
+    this.isOpenedIssueConfirm = true;
+  }
+
+  closeIssueConfirm(): void {
+    this.isOpenedIssueConfirm = false;
+    this.selectedInvoice = null;
+  }
+
+  confirmIssueInvoice(): void {
+    if (!this.selectedInvoice) return;
+
+    this.loader.loader(true);
+    const sub = this.api.IssueSALInvoice([this.selectedInvoice.Code]).subscribe(
+      res => {
+        if (res.StatusCode === 0) {
+          this.notification.onSuccess('Phát hành hóa đơn thành công!');
+          this.closeIssueConfirm();
+          this.loadData();
+        } else {
+          this.notification.onError(`Lỗi phát hành: ${res.ErrorString}`);
+        }
+        this.loader.loader(false);
+      },
+      err => {
+        this.loader.loader(false);
+        this.notification.onError(`Lỗi phát hành: ${err.message}`);
+      }
+    );
+    this.arrUnsubscribe.push(sub);
+  }
+
+  bulkIssueAll(): void {
+    const pendingCodes = this.allInvoices
+      .filter(inv => inv.Status !== SALOrderInvoiceStatusEnum.Success && inv.Status !== SALOrderInvoiceStatusEnum.Cancled)
+      .map(inv => inv.Code);
+
+    if (pendingCodes.length === 0) {
+      this.notification.onWarning('Không có hóa đơn chờ phát hành');
+      return;
+    }
+
+    this.loader.loader(true);
+    const sub = this.api.IssueSALInvoice(pendingCodes).subscribe(
+      res => {
+        if (res.StatusCode === 0) {
+          const result = res.ObjectReturn;
+          this.notification.onSuccess(`Đã phát hành ${result?.SuccessCount ?? pendingCodes.length} hóa đơn thành công!`);
+        } else {
+          this.notification.onError(`Lỗi phát hành: ${res.ErrorString}`);
+        }
+        this.loader.loader(false);
+        this.loadData();
+      },
+      err => {
+        this.loader.loader(false);
+        this.notification.onError(`Lỗi phát hành: ${err.message}`);
+      }
+    );
+    this.arrUnsubscribe.push(sub);
   }
   //#endregion
 }

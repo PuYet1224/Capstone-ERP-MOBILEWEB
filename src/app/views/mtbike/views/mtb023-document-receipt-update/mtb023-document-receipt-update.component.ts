@@ -166,14 +166,27 @@ export class Mtb023DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
 
   public receivedMoney(): void {
     if (this.orderInfo.Progress > 0) {
-      // Set status to 4 (Đang xử lý) as requested
       this.receipt.Status = 4;
       this.updateReceipt(() => {
         this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
         this.notification.onSuccess('Đã chuyển trạng thái Đang xử lý thành công');
+        this.autoAddInvoice();
         this.goBack();
       });
     }
+  }
+
+  private autoAddInvoice(): void {
+    if (!this.master?.Code) return;
+    const sub = this.api.AddSALInvoiceFromOrder(this.master.Code).subscribe({
+      next: (res) => {
+        if (res.StatusCode === 0 && res.ObjectReturn && !res.ObjectReturn.AlreadyExists) {
+          this.notification.onSuccess(`Đã tạo ${res.ObjectReturn.InvoiceCount} hóa đơn chứng từ`);
+        }
+      },
+      error: () => {}
+    });
+    this.arrUnsubscribe.push(sub);
   }
 
   public onBlur(): void {

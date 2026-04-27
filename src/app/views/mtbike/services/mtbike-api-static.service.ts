@@ -114,6 +114,8 @@ export const fpayment = {
   UpdateSALReceiptDetail: '',
   UpdateSALReceiptStatus: '',
   ExportSALInvoicePdf: '',
+  AddSALInvoiceFromOrder: '',
+  IssueSALInvoice: '',
 };
 
 const namespaceMap: Record<string, any> = {
@@ -127,6 +129,7 @@ const namespaceMap: Record<string, any> = {
   collection: fcollection,
   payment: fpayment,
   document: fpayment,
+  'invoice-issue': fpayment,
 };
 
 import { Injectable } from '@angular/core';

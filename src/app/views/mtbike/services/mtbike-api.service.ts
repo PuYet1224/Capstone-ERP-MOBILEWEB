@@ -1583,6 +1583,40 @@ export class MtbikeApiService {
     });
   }
 
+  public AddSALInvoiceFromOrder(orderMasterCode: number): Observable<ResponseDTO> {
+    return new Observable<ResponseDTO>((obs) => {
+      const ns = MtbikeApiStaticService.getNamespace(this.config.GetDLL());
+      this.api.post(ns.AddSALInvoiceFromOrder, orderMasterCode)
+        .subscribe(
+          (res: ResponseDTO) => {
+            obs.next(res);
+            obs.complete();
+          },
+          (errors) => {
+            obs.error(errors);
+            obs.complete();
+          }
+        );
+    });
+  }
+
+  public IssueSALInvoice(listCode: number[]): Observable<ResponseDTO> {
+    return new Observable<ResponseDTO>((obs) => {
+      const ns = MtbikeApiStaticService.getNamespace(this.config.GetDLL());
+      this.api.post(ns.IssueSALInvoice, { ListCode: listCode })
+        .subscribe(
+          (res: ResponseDTO) => {
+            obs.next(res);
+            obs.complete();
+          },
+          (errors) => {
+            obs.error(errors);
+            obs.complete();
+          }
+        );
+    });
+  }
+
   public UpdateSALStatus(param: UpdateStatusInterface<SALOrderMasterCusDTO>) {
     return new Observable<ResponseDTO>((obs) => {
       this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).UpdateSALStatus, param)
