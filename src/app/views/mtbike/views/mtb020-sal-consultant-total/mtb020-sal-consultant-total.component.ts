@@ -168,10 +168,17 @@ export class Mtb020SalConsultantTotalComponent implements OnInit, OnDestroy, Aft
   }
 
   onSendPayment(): void {
-    if (!this.retailMaster.Code) {
+    if (!this.retailMaster?.Code) {
       this.notification.onWarning('Không có phiếu để gửi thanh toán');
       return;
     }
+
+    const invalidVehicle = this.listDetails.find(v => v.PaymentType == null);
+    if (invalidVehicle) {
+      this.notification.onWarning(`Xe ${invalidVehicle.VehicleName || ''} ${invalidVehicle.VehicleColorName || ''} chưa chọn hình thức thanh toán`);
+      return;
+    }
+
     const param: UpdateStatusInterface<SALOrderMasterCusDTO> = {
       ListDTO: [{ Code: this.retailMaster.Code } as SALOrderMasterCusDTO],
       Status: SALOrderMasterStatusRetailEnum.PENDING,
