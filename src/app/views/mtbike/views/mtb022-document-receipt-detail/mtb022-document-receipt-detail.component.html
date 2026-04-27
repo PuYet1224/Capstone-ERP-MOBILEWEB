@@ -122,7 +122,7 @@
 
     <!-- SIGNATURE AREA -->
     <div class="signature-section">
-      <div class="signature-box" *ngIf="receipt?.Signature">
+      <div class="signature-box" *ngIf="receipt?.Signature" (click)="openSignaturePopup()">
         <p class="sig-title">Khách hàng <span class="sig-sub">(ký tên)</span></p>
         <div class="sig-wrapper">
           <img [src]="receipt?.Signature" alt="Chữ ký khách hàng" class="sig-image" />
@@ -176,7 +176,7 @@
       class="btn-received"
       [theme]="'primary'"
       (onClick)="toggleConfirmReceived(true)"
-      *ngIf="(receipt?.Status != 5 && receipt?.Status != 6) && orderInfo.Progress < 100"
+      *ngIf="(receipt?.Status != 5 && receipt?.Status != 6) && orderInfo.Progress < 100 && !(receipt?.IsFirstReceipt && receipt?.IsLockCustomer)"
     >
       Đã thu tiền
     </ps-kendo-button>

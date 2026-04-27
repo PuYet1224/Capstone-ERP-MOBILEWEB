@@ -163,7 +163,7 @@ export class Mtb027ReceiptVehicleDetailComponent implements OnInit, OnDestroy {
       res => {
         this.subLoader.loader(false);
         if (res.StatusCode === 0) {
-          this.notification.onSuccess('Cập nhật thông tin xe thành công');
+          this.notification.onSuccess('Thành công');
           this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.orderreceipt);
 
           this.onLoad(); // Refresh data

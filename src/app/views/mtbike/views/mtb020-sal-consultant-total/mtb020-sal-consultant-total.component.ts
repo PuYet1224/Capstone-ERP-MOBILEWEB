@@ -155,6 +155,7 @@ export class Mtb020SalConsultantTotalComponent implements OnInit, OnDestroy, Aft
           this.notification.onSuccess('Thành công');
           this.retailMaster = { ...this.retailMaster, Status: SALOrderMasterStatusRetailEnum.COMPLETE, StatusName: 'Hoàn tất' } as any;
           this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_MASTER, this.retailMaster);
+          this.router.navigate(['/mtbike/consultant']);
         } else {
           this.notification.onError(res.ErrorString || 'Thất bại');
         }
@@ -191,6 +192,7 @@ export class Mtb020SalConsultantTotalComponent implements OnInit, OnDestroy, Aft
           this.notification.onSuccess('Thành công');
           this.retailMaster = { ...this.retailMaster, Status: SALOrderMasterStatusRetailEnum.PENDING } as any;
           this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_MASTER, this.retailMaster);
+          this.router.navigate(['/mtbike/consultant']);
         } else {
           this.notification.onError(res.ErrorString || 'Thất bại');
         }

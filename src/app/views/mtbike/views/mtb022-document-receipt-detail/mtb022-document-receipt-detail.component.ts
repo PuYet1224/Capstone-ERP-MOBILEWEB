@@ -54,7 +54,6 @@ export class Mtb022DocumentReceiptDetailComponent {
     this.receiptcopy = { ...this.receipt };
 
     this.getsalreceipt(this.receipt, true);
-    this.getlistlslist();
   }
 
   ngOnDestroy(): void {
@@ -226,10 +225,16 @@ export class Mtb022DocumentReceiptDetailComponent {
   }
 
   public toggleConfirmReceived(isOpen: boolean): void {
+    if (isOpen && PsString.isNullOrWhitespace(this.receipt.CellPhone) && this.receipt.CollectedAmount != ((this.orderInfo.TotalPrice || 0) - (this.orderInfo.AmountPaidOthers || 0))) {
+      this.notification.onWarning("Phiếu thu thiếu sđt khách hàng");
+      return;
+    }
+
     if (isOpen && (!this.receipt.Signature || PsString.isNullOrWhitespace(this.receipt.Signature))) {
       this.notification.onWarning("Vui lòng ký tên");
       return;
     }
+
     this.showConfirmReceived = isOpen;
   }
 
@@ -303,7 +308,11 @@ export class Mtb022DocumentReceiptDetailComponent {
   //#endregion
 
   //#region tổng phiếu thu
-  public listpaymentmethod: ListDTO[] = [];
+  public listpaymentmethod: ListDTO[] = [
+    { TypeOfList: 1, ListName: 'Tiền mặt' } as any,
+    { TypeOfList: 2, ListName: 'Chuyển khoản' } as any,
+    { TypeOfList: 3, ListName: 'Tiền mặt và chuyển khoản' } as any,
+  ];
   //#endregion
 
   //#region footer
@@ -315,7 +324,7 @@ export class Mtb022DocumentReceiptDetailComponent {
   }
 
   public openSignaturePopup() {
-    if (this.receipt.Status >= 4 && this.receipt.TrueRemainingDebt == 0) {
+    if (this.receipt.Status > 4) {
       this.notification.onWarning("Phiếu thu đã được xác nhận không thể ký");
       return;
     }
@@ -338,19 +347,6 @@ export class Mtb022DocumentReceiptDetailComponent {
   //#endregion
 
   //#region api get
-
-  private getlistlslist() {
-    this.loader.loader(true);
-    var temp = this.configCache.GetListLSList(LSListTypeDataEnum.PaymentMethod).subscribe((data) => {
-      this.listpaymentmethod = data;
-      this.loader.loader(false);
-    }, (err) => {
-      this.loader.loader(false);
-      this.notification.onError(`Lỗi lấy danh sách phương thức thanh toán: ${err.message || err}`);
-    });
-    this.arrUnsubscribe.push(temp);
-  }
-
   private getsalreceipt(param: SALOrderReceiptCusDTO, loadpage = false) {
     this.loader.loader(true);
     var temp = this.api.GetSALReceipt(param).subscribe((res) => {
