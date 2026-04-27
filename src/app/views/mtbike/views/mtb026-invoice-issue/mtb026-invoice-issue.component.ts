@@ -77,7 +77,6 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
   public loadData(): void {
     this.loader.loader(true);
     this.loadAllInvoices();
-    this.loadList();
   }
 
   private loadList(): void {
@@ -135,8 +134,11 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
         if (res.StatusCode === 0) {
           this.allInvoices = res.ObjectReturn?.Data ?? res.ObjectReturn ?? [];
           this.updateInvoiceCounts();
-          this.assignInvoicesToItems();
         }
+        this.loadList();
+      },
+      err => {
+        this.loadList();
       }
     );
     this.arrUnsubscribe.push(sub);
