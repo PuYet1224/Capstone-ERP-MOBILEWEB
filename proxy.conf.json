@@ -8,7 +8,7 @@
     }
   },
   "/api/proxy-api": {
-    "target": "http://puyet1224-001-site1.jtempurl.com",
+    "target": "http://puyet01022004-001-site1.qtempurl.com/",
     "secure": false,
     "changeOrigin": true,
     "auth": "puyet1224-001:Puyet1224@",
@@ -17,7 +17,7 @@
     }
   },
   "/resource": {
-    "target": "http://puyet1224-001-site1.jtempurl.com",
+    "target": "http://puyet01022004-001-site1.qtempurl.com/",
     "secure": false,
     "changeOrigin": true,
     "auth": "puyet1224-001:Puyet1224@"
