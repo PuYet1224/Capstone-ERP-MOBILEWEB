@@ -11,10 +11,12 @@ import { SALOrderDetailCusDTO } from 'src/app/models/dtos/e-dtos/sal-order-detai
 import { SALOrderMasterCusDTO } from 'src/app/models/dtos/e-dtos/sal-order-master.dto';
 import { FunctionPermissionDTO } from 'src/app/models/dtos/function-permission.dto';
 import { LSListTypeDataEnum } from 'src/app/models/enums/e-type/ls-list-type-data.enum';
+import { LSPartCategoryTypeDataEnum } from 'src/app/models/enums/e-type/ls-part-category-type-data.enum';
 import { SALOrderDetailTypeDataEnum } from 'src/app/models/enums/e-type/sal-order-detail-type-data.enum';
 import { KeyLocalStorageEnum } from 'src/app/models/enums/key-local-storage.enum';
 import { ConfigCacheService } from 'src/app/services/core/config-cache.service';
 import { PSCoreApiService } from 'src/app/services/core/ps-core-api.service';
+import { CoreApiStaticService } from 'src/app/services/core/ps-core-api-static.service';
 import { PsKendoNotificationService } from 'src/app/services/core/ps-kendo-notification.service';
 import { PsCache } from 'src/app/services/utilities/ps-cache';
 import { SystemLoaderService } from 'src/app/views/system/services/system-loader.service';
@@ -52,6 +54,7 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
   public originalDetailCode: number | null = null;
   private editingOrderDetail: SALOrderDetailCusDTO | null = null;
   private isSaving = false;
+  private isLoadingPopupData = false;
   private typeOfPartCache: Record<number, LSTypeOfPartCusDTO[]> = {};
   private typeOfPartSpecsCache: Record<number, LSTypeOfPartSpecsDTO[]> = {};
   private applicableVehicleCodes: number[] = [];
@@ -60,7 +63,6 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
   private popupSliderWheelHandler: ((e: WheelEvent) => void) | null = null;
   private popupSliderPendingDelta = 0;
   private popupSliderRafId = 0;
-  private hasLoadedCategories = false;
   private typeVehicleMap = new Map<number, Set<number>>();
   private categoryVehicleMap = new Map<number, number[]>();
   //#endregion
@@ -258,7 +260,10 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
     this.partFilterApplied = true;
 
     if (this.partcategory && this.partcategory.Code) {
-      this.applicableVehicleCodes = this.categoryVehicleMap.get(this.partcategory.Code) || [];
+      const mapped = this.categoryVehicleMap.get(this.partcategory.Code) || [];
+      this.applicableVehicleCodes = mapped.length > 0
+        ? mapped
+        : this.listSalVehicleParts.filter(v => v && v.Code).map(v => v.Code);
       this.selectedDetailCodes = new Set(this.applicableVehicleCodes);
       this.GetListSALTypeOfPart();
     } else {
@@ -304,7 +309,7 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
     setTimeout(() => this.attachPopupSliderWheel(), 150);
 
     if (!this.listUnit.length || !this.listPartCategory.length) {
-      this.getpopupdata(() => this.seteditdata(item));
+      this.getpopupdata(detail, () => this.seteditdata(item));
     } else {
       this.seteditdata(item);
     }
@@ -332,18 +337,12 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
       this.notification.onError('Không có xe');
       return;
     }
-    
-    if (this.hasLoadedCategories) {
-        this.showPopup = true;
-        this.meta.updateTag({ name: 'viewport', content: this.viewportNoZoom });
-        setTimeout(() => this.attachPopupSliderWheel(), 150);
-        return;
-    }
-    
     this.showPopup = true;
     this.meta.updateTag({ name: 'viewport', content: this.viewportNoZoom });
     setTimeout(() => this.attachPopupSliderWheel(), 150);
-    this.getunitandcategory();
+    if (!this.listUnit.length || !this.listPartCategory.length) {
+      if (!this.isLoadingPopupData) this.getpopupdata(orderDetail);
+    }
   }
 
   onSavePart(): void {
@@ -503,7 +502,10 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
     if (!this.typeofpart || !this.typeofpart.Code) {
       this.partFilterApplied = true;
       if (this.partcategory && this.partcategory.Code) {
-        this.applicableVehicleCodes = this.categoryVehicleMap.get(this.partcategory.Code) || [];
+        const mapped = this.categoryVehicleMap.get(this.partcategory.Code) || [];
+        this.applicableVehicleCodes = mapped.length > 0
+          ? mapped
+          : this.listSalVehicleParts.filter(v => v && v.Code).map(v => v.Code);
         this.selectedDetailCodes = new Set(this.applicableVehicleCodes);
       } else {
         this.applicableVehicleCodes = [];
@@ -541,6 +543,7 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
           this.listSalVehicleParts.forEach((d) => {
             this.statusByCode[d.Code] = this.getStatusContext(d);
           });
+          this.getunitandcategory();
         } else {
           this.listSalVehicleParts = [];
           this.statusByCode = {};
@@ -558,70 +561,30 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
   }
 
   private getunitandcategory(): void {
-    if (this.hasLoadedCategories) {
-       this.showPopup = true;
-       return;
-    }
-    this.hasLoadedCategories = true;
-    this.getpopupdata(() => {
-       this.showPopup = true;
-    });
+    const detail = this.listSalVehicleParts[0];
+    if (!detail || !detail.Code || (this.listUnit.length && this.listPartCategory.length)) return;
+    this.getpopupdata(detail);
   }
 
-  private getpopupdata(callback?: () => void): void {
+  private getpopupdata(detail: SALOrderDetailCusDTO, callback?: () => void): void {
+    if (this.isLoadingPopupData) return;
+    this.isLoadingPopupData = true;
     this.subLoader.loader(true);
-    const unit$ = this.listUnit.length > 0 ? of(this.listUnit) : this.configCache.GetListLSList(LSListTypeDataEnum.Unit);
-    
-    const validVehicles = this.listSalVehicleParts.filter(v => v && v.Code);
-    if (validVehicles.length === 0) {
+    const unit$ = CoreApiStaticService.GetListLSList
+      ? this.coreApi.GetListLSList(LSListTypeDataEnum.Unit)
+      : of(null);
+
+    const categoryParam = { ...detail, TypeData: LSPartCategoryTypeDataEnum.VEHICLE } as SALOrderDetailCusDTO;
+    const sub = forkJoin({ unit: unit$, partCategory: this.mtbikeapi.GetListSALPartCategory(categoryParam) }).subscribe({
+      next: ({ unit: resLs, partCategory: resPart }) => {
+        this.isLoadingPopupData = false;
         this.subLoader.loader(false);
-        if (callback) callback();
-        return;
-    }
-
-    const groups = this.getVehicleGroups(validVehicles);
-    const categoryCalls = groups.map(g => this.mtbikeapi.GetListSALPartCategory(g.representative));
-
-    const sub = forkJoin({
-      unit: unit$,
-      categories: forkJoin(categoryCalls),
-    }).subscribe({
-      next: (res) => {
-        this.listUnit = this.toListUnit(res.unit);
-
-        let allCategories: any[] = [];
-        this.categoryVehicleMap.clear();
-
-        res.categories.forEach((catRes, index) => {
-          const group = groups[index];
-          if (catRes && catRes.StatusCode === 0 && catRes.ObjectReturn) {
-            const raw = catRes.ObjectReturn;
-            const cats = Array.isArray(raw) ? raw : (raw as any).Data ?? [];
-            cats.forEach((c: any) => {
-                if (c && c.Code) {
-                    if (!this.categoryVehicleMap.has(c.Code)) this.categoryVehicleMap.set(c.Code, []);
-                    this.categoryVehicleMap.get(c.Code)!.push(...group.codes);
-                }
-            });
-            allCategories = [...allCategories, ...cats];
-          }
-        });
-
-        const uniqueCategories = [];
-        const seenCodes = new Set();
-        for (const c of allCategories) {
-          if (c.Code && !seenCodes.has(c.Code)) {
-            seenCodes.add(c.Code);
-            uniqueCategories.push(c);
-          }
-        }
-
-        this.listPartCategory = this.toPartCategoryList(uniqueCategories);
-
-        this.subLoader.loader(false);
+        if (resLs && (resLs as any).StatusCode === 0) this.listUnit = this.toListUnit((resLs as any).ObjectReturn);
+        if (resPart && resPart.StatusCode === 0) this.listPartCategory = this.toPartCategoryList(resPart.ObjectReturn);
         if (callback) callback();
       },
       error: () => {
+        this.isLoadingPopupData = false;
         this.subLoader.loader(false);
         if (callback) callback();
       }
@@ -642,8 +605,15 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
 
     this.subLoader.loader(true);
     const validVehicleCodes = this.categoryVehicleMap.get(this.partcategory.Code) || [];
-    const validVehicles = this.listSalVehicleParts.filter(v => v && v.Code && validVehicleCodes.includes(v.Code));
+    const validVehicles = validVehicleCodes.length > 0
+      ? this.listSalVehicleParts.filter(v => v && v.Code && validVehicleCodes.includes(v.Code))
+      : this.listSalVehicleParts.filter(v => v && v.Code);
     const groups = this.getVehicleGroups(validVehicles);
+
+    if (groups.length === 0) {
+      this.subLoader.loader(false);
+      return;
+    }
 
     const typeCalls = groups.map(g => {
       return this.mtbikeapi.GetListSALTypeOfPart({ OrderDetail: g.representative, Category: this.partcategory });
@@ -853,7 +823,7 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
 
   private toPartCategoryList(raw: any): LSPartCategoryCusDTO[] {
     const arr = Array.isArray(raw) ? raw : (raw && raw.Data) || (raw && raw.List) || [];
-    return arr.map((x: any) => Object.assign(new LSPartCategoryCusDTO(), { ...x, Code: x.Code ?? x.code, Category: x.Category ?? x.category ?? '' }));
+    return arr.map((x: any) => Object.assign(new LSPartCategoryCusDTO(), { ...x, Code: x.Code ?? x.code, Category: x.Category ?? x.CategoryName ?? x.category ?? '', CategoryName: x.CategoryName ?? x.Category ?? x.category ?? '' }));
   }
 
   private toTypeOfPartList(list: LSTypeOfPartCusDTO[]): LSTypeOfPartCusDTO[] {

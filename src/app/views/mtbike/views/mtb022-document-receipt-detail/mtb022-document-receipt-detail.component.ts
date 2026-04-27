@@ -370,9 +370,9 @@ export class Mtb022DocumentReceiptDetailComponent {
           TransferAmount: this.receipt.TransferAmount,
           PaymentMethod: this.receipt.PaymentMethod,
           Description: this.receipt.Description,
-          CustomerName: this.receipt.CustomerName,
-          CellPhone: this.receipt.CellPhone,
-          Address: this.receipt.Address,
+          CustomerName: this.receipt.CustomerName || serverReceipt.CustomerName,
+          CellPhone: this.receipt.CellPhone || serverReceipt.CellPhone,
+          Address: this.receipt.Address || serverReceipt.Address,
           Signature: this.receipt.Signature || serverReceipt.Signature
         };
 

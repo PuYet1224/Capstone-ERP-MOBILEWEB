@@ -1,6 +1,6 @@
 ---
 name: mobile-design
-description: Angular mobile web patterns for Hoai Minh ERP. Angular 16 + Kendo UI 13 on mobile browser — NOT React Native, NOT Flutter. Covers mobile-specific patterns, ChangeDetection.OnPush, IntersectionObserver infinite scroll, HammerJS gestures, and touch interactions.
+description: Angular mobile web patterns for Capstone ERP. Angular 16 + Kendo UI 13 on mobile browser — NOT React Native, NOT Flutter. Covers mobile-specific patterns, ChangeDetection.OnPush, IntersectionObserver infinite scroll, HammerJS gestures, and touch interactions.
 version: 2.0.0
 ---
 

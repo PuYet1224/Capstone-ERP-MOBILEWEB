@@ -82,7 +82,7 @@ export class PsKendoDropdownListComponent implements ControlValueAccessor, OnCha
 
   public handleFilter(value) {
     this.data1 = this.data.filter(
-      (s) => s[this.textField].toLowerCase().indexOf(value.toLowerCase()) !== -1
+      (s) => (s[this.textField] || '').toLowerCase().indexOf(value.toLowerCase()) !== -1
     );
   }
 }
