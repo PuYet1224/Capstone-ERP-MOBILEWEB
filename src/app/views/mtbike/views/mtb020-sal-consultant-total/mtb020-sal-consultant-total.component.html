@@ -88,7 +88,7 @@
         <ps-kendo-button *ngIf="retailMaster?.Status == SALOrderMasterStatusRetailEnum.PENDING || retailMaster?.Status == SALOrderMasterStatusRetailEnum.PROCESSING" [theme]="'primary'" (onClick)="showCompleteConfirm = true">
             <span class="text">Hoàn tất</span>
         </ps-kendo-button>
-        <ps-kendo-button [disabled]="totals.totalPayment == 0" *ngIf="retailMaster?.Status == SALOrderMasterStatusRetailEnum.NEW" [theme]="'primary'" (onClick)="onSendPayment()">
+        <ps-kendo-button *ngIf="retailMaster?.Status == SALOrderMasterStatusRetailEnum.NEW" [theme]="'primary'" (onClick)="onSendPayment()">
             <span class="text">Gửi thanh toán</span>
         </ps-kendo-button>
     </ps-footer-action>
