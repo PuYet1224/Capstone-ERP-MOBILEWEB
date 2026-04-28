@@ -196,6 +196,13 @@
                 color: $secondary;
                 margin-left: 8px;
               }
+
+              .pbh-no-invoice {
+                font-size: 11px;
+                color: $warning;
+                margin-left: 8px;
+                font-style: italic;
+              }
             }
 
             .pbh-actions {
@@ -399,6 +406,65 @@
                 position: absolute;
                 bottom: 8px;
                 right: 12px;
+
+                .r-completion {
+                  display: flex;
+                  align-items: center;
+                  gap: 4px;
+                  font-size: 10px;
+                  font-weight: 600;
+                  padding: 2px 8px;
+                  border-radius: 12px;
+
+                  .r-completion-icon {
+                    font-size: 13px;
+                  }
+
+                  &.info-complete {
+                    color: $primary;
+                    background: $green-100;
+                  }
+
+                  &.info-incomplete {
+                    color: $warning;
+                    background: $yellow-100;
+                  }
+                }
+              }
+
+              .r-vehicle-header {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                padding-bottom: 4px;
+                border-bottom: 1px dashed $border;
+                margin-bottom: 4px;
+
+                .r-icon {
+                  font-size: 16px;
+                  color: $primary;
+                }
+
+                .r-vehicle {
+                  font-size: 12px;
+                  font-weight: 700;
+                  color: $secondary;
+                }
+              }
+            }
+
+            .no-invoice-msg {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              padding: 12px;
+              color: $secondary;
+              opacity: 0.7;
+              font-size: 11px;
+
+              .material-icons {
+                font-size: 16px;
+                color: $warning;
               }
             }
           }

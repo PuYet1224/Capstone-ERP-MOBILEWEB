@@ -22,7 +22,7 @@
       <div class="info-grid">
         <div class="info-row">
           <span class="label">Số phiếu thu</span>
-          <span class="value highlight-red">{{ receipt?.ReceiptNo }}</span>
+          <span class="value highlight-red">{{ receipt?.OrderNo }}/{{ receipt?.ReceiptNo }}</span>
         </div>
         <div class="info-row">
           <span class="label">Chứng từ tham chiếu</span>
@@ -87,7 +87,7 @@
         </div>
         <div class="calc-row">
           <span class="label green">Giảm giá (Khuyến mãi):</span>
-          <span class="value green">- {{ womMaster?.DiscountAmount || 0 | number }}đ</span>
+          <span class="value green">{{ (womMaster?.DiscountAmount || 0) > 0 ? '- ' : '' }}{{ womMaster?.DiscountAmount || 0 | number }}đ</span>
         </div>
 
         <div class="calc-row divider-top">

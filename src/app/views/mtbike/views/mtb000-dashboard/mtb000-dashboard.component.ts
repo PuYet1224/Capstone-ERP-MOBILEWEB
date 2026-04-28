@@ -63,6 +63,13 @@ export class Mtb000DashboardComponent implements OnInit {
   public isSelectedMonth: boolean = false;
   public isSelectedYear: boolean = false;
 
+  public chart1: DashboardDTO[] = [];
+  public chart2: DashboardDTO[] = [];
+  public titleChart1: string;
+  public titleChart2: string;
+  public formattedRevenueSold: string = '';
+  public formattedRevenueActual: string = '';
+
   public chart3_doanhthu: DashboardDTO[] = [];
   public chart3_thucthu: DashboardDTO[] = [];
   public chart4: DashboardDTO[] = [];
@@ -142,6 +149,16 @@ export class Mtb000DashboardComponent implements OnInit {
     this.selectedQuater = currentQuarter;
     this.selectedYear = this.currentYear;
     this.listMethodEnum = [];
+
+    if (number == TypePeriodDashboardEnum.DAY || number == TypePeriodDashboardEnum.TODAY) {
+      this.listMethodEnum.push(DashboardEnum.RevenueDay, DashboardEnum.InboundDay);
+    } else if (number == TypePeriodDashboardEnum.MONTH) {
+      this.listMethodEnum.push(DashboardEnum.RevenueMonth, DashboardEnum.InboundMonth);
+    } else if (number == TypePeriodDashboardEnum.QUARTER) {
+      this.listMethodEnum.push(DashboardEnum.RevenueQuarter, DashboardEnum.InboundQuarter);
+    } else if (number == TypePeriodDashboardEnum.YEAR) {
+      this.listMethodEnum.push(DashboardEnum.RevenueYear, DashboardEnum.InboundYear);
+    }
 
     if (this.duration.Head != null) {
       this.listMethodEnum.push(
@@ -345,16 +362,16 @@ export class Mtb000DashboardComponent implements OnInit {
   // Hàm để gọi API lấy dữ liệu dashboard cho từng phần
   private callDashboardGroup(parameter: DashboardInputDTO) {
     const parts = [
-      this.listMethodEnum.slice(0, 1),
-      this.listMethodEnum.slice(1, 2),
-      this.listMethodEnum.slice(2, 3),
-      this.listMethodEnum.slice(3, 4),
+      this.listMethodEnum.slice(0, 2),  // Revenue + Inbound time-series
+      this.listMethodEnum.slice(2, 4),  // RevenueStore/All + RevenuePercentageVehicle
+      this.listMethodEnum.slice(4, 6),  // IIAllStore/Percentage + IIVehicle
     ];
 
     this.getMotorbikeOverview({
       ...parameter.Parameter,
     });
     for (const part of parts) {
+      if (part.length === 0) continue;
       const input = {
         ...this.dashboardInput,
         Dashboard: part,
@@ -365,8 +382,6 @@ export class Mtb000DashboardComponent implements OnInit {
 
       this.GetListDashboard(input);
     }
-
-
   }
 
   // Hàm để disable ngày bắt đầu và kết thúc
@@ -411,6 +426,16 @@ export class Mtb000DashboardComponent implements OnInit {
   // Hàm xử lý các nhóm biểu đồ dựa trên ID
   // Hàm xử lý các nhóm biểu đồ dựa trên ID
   private dashboardHandlers: { [key: number]: (data: any[]) => void } = {
+    // Chart 1 + 2 (Revenue + Inbound time-series)
+    [DashboardEnum.RevenueDay]: this.handleChartTimeSeries.bind(this),
+    [DashboardEnum.RevenueMonth]: this.handleChartTimeSeries.bind(this),
+    [DashboardEnum.RevenueQuarter]: this.handleChartTimeSeries.bind(this),
+    [DashboardEnum.RevenueYear]: this.handleChartTimeSeries.bind(this),
+    [DashboardEnum.InboundDay]: this.handleChartTimeSeries.bind(this),
+    [DashboardEnum.InboundMonth]: this.handleChartTimeSeries.bind(this),
+    [DashboardEnum.InboundQuarter]: this.handleChartTimeSeries.bind(this),
+    [DashboardEnum.InboundYear]: this.handleChartTimeSeries.bind(this),
+
     // Chart 3
     [DashboardEnum.RevenueStore]: this.handleChart3.bind(this),
     [DashboardEnum.RevenueAllStore]: this.handleChart3.bind(this),
@@ -424,8 +449,37 @@ export class Mtb000DashboardComponent implements OnInit {
 
     // Chart 6
     [DashboardEnum.IIVehicle]: this.handleChart6.bind(this),
-
   };
+
+  // === Chart 1 + 2 (Revenue + Inbound time-series) ===
+  private handleChartTimeSeries(data: any[]) {
+    const chart1Source = data.find(d =>
+      [
+        DashboardEnum.RevenueDay,
+        DashboardEnum.RevenueMonth,
+        DashboardEnum.RevenueQuarter,
+        DashboardEnum.RevenueYear
+      ].includes(d.Type)
+    );
+
+    const chart2Source = data.find(d =>
+      [
+        DashboardEnum.InboundDay,
+        DashboardEnum.InboundMonth,
+        DashboardEnum.InboundQuarter,
+        DashboardEnum.InboundYear
+      ].includes(d.Type)
+    );
+
+    if (chart1Source) {
+      this.chart1 = [...chart1Source.ListData];
+      this.titleChart1 = chart1Source.Title;
+    }
+    if (chart2Source) {
+      this.chart2 = [...chart2Source.ListData];
+      this.titleChart2 = chart2Source.Title;
+    }
+  }
 
   // === Chart 3 ===
   private handleChart3(data: any[]) {
@@ -590,6 +644,8 @@ export class Mtb000DashboardComponent implements OnInit {
     var temp = this.mtbikeapi.GetMotorbikeOverview(param).subscribe((res) => {
       if (res.StatusCode == 0) {
         this.overview = res.ObjectReturn;
+        this.formattedRevenueSold = this.formatCurrencyVN(this.overview.RevenueSold);
+        this.formattedRevenueActual = this.formatCurrencyVN(this.overview.RevenueActual);
 
         this.subLoader.loader(false);
       } else {

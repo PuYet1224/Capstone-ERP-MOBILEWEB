@@ -1,7 +1,7 @@
 ---
 name: debug
 description: >-
-  Systematic debugging workflow for Hoai Minh ERP Mobile Web (Angular 16 + Kendo UI 13).
+  Systematic debugging workflow for Capstone ERP Mobile Web (Angular 16 + Kendo UI 13).
   Use when builds break, runtime errors occur, UI behaves unexpectedly, or API calls fail.
   Guides through Stop -> Reproduce -> Localize -> Fix Root Cause -> Guard -> Verify.
   Do NOT use for feature implementation (use fe-mobile-implement workflow instead).

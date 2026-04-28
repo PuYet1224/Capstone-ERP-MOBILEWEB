@@ -2,8 +2,8 @@
   <!-- START: HEADER -->
   <ps-header-back>
     <div class="left-side">
-      <div class="func-title1">Thanh toán bán hàng</div>
-      <div class="func-title2">Thông tin chứng từ</div>
+      <div class="func-title1">Chứng từ hóa đơn</div>
+      <div class="func-title2">Thu thập thông tin khách hàng</div>
     </div>
   </ps-header-back>
   <!-- END: HEADER -->
@@ -190,14 +190,57 @@
     <ps-kendo-button (onClick)="onBack()">
       <span class="material-icons">arrow_back</span>
     </ps-kendo-button>
+    <ps-kendo-button (onClick)="onApplyToOtherVehicles()">
+      <span class="text">Áp dụng cho xe khác</span>
+    </ps-kendo-button>
     <ps-kendo-button [theme]="'primary'" (onClick)="onUpdate()">
-      <span class="text">Xuất hóa đơn</span>
+      <span class="text">Lưu thông tin</span>
     </ps-kendo-button>
   </ps-footer-action>
   <!-- END: FOOTER -->
 
+  <!-- START: APPLY POPUP -->
+  <div class="apply-popup-overlay" *ngIf="showApplyPopup" (click)="closeApplyPopup()">
+    <div class="apply-popup" (click)="$event.stopPropagation()">
+      <div class="popup-header">
+        <span class="material-icons">content_copy</span>
+        <span>Áp dụng thông tin KH cho xe khác</span>
+      </div>
+      <div class="popup-info">
+        Thông tin từ HĐ hiện tại sẽ được copy sang các xe bạn chọn:
+      </div>
+      <div class="popup-source">
+        <div class="source-label">Nguồn:</div>
+        <div class="source-value">{{ invoice.VATCustomerName || 'Chưa nhập' }} — {{ invoice.VehicleName || 'N/A' }}</div>
+      </div>
+      <div class="popup-list">
+        <div class="sibling-item" *ngFor="let inv of siblingInvoices"
+             [class.selected]="selectedSiblings.has(inv.Code)"
+             (click)="toggleSibling(inv.Code)">
+          <span class="material-icons check-icon">
+            {{ selectedSiblings.has(inv.Code) ? 'check_box' : 'check_box_outline_blank' }}
+          </span>
+          <div class="sibling-info">
+            <div class="sibling-vehicle">🏍️ {{ inv.VehicleName || 'Xe #' + inv.Code }}</div>
+            <div class="sibling-customer">{{ inv.VATCustomerName || 'Chưa có thông tin KH' }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="popup-actions">
+        <ps-kendo-button (onClick)="closeApplyPopup()">
+          <span class="text">Hủy</span>
+        </ps-kendo-button>
+        <ps-kendo-button [theme]="'primary'" (onClick)="confirmApply()" [disabled]="isApplying">
+          <span class="text">{{ isApplying ? 'Đang xử lý...' : 'Xác nhận (' + selectedSiblings.size + ' xe)' }}</span>
+        </ps-kendo-button>
+      </div>
+    </div>
+  </div>
+  <!-- END: APPLY POPUP -->
+
   <!-- Loading Overlay -->
-  <div class="loading-overlay" *ngIf="isLoading">
+  <div class="loading-overlay" *ngIf="isLoading || isApplying">
     <kendo-loader type="converging-dots" themeColor="primary" size="large"></kendo-loader>
   </div>
 </div>
+

@@ -25,9 +25,15 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   public isLoading = false;
   private arrUnsubscribe: Subscription[] = [];
 
+  // Apply to other vehicles
+  public showApplyPopup = false;
+  public siblingInvoices: SALOrderInvoiceCusDTO[] = [];
+  public selectedSiblings = new Set<number>();
+  public isApplying = false;
+
   // Options for Dropdown
   public invoiceTypes: ListDTO[] = [];
-  
+
   // Lists for Personal case
   public listGender = [
     { Code: 1, ListName: 'Nam' },
@@ -38,8 +44,6 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   public listMonth: number[] = Array.from({ length: 12 }, (_, i) => i + 1);
   public listDay: number[] = Array.from({ length: 31 }, (_, i) => i + 1);
   public currentheader: LSHeadCusDTO = this.configService.GetHead();
-
-
 
   constructor(
     private route: ActivatedRoute,
@@ -77,16 +81,20 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     this.arrUnsubscribe.forEach(sub => sub.unsubscribe());
   }
 
-  private getlistlslist() {
-    const sub = this.configCache.GetListLSList(LSListTypeDataEnum.InvoiceType).subscribe({
-      next: (data) => {
-        this.invoiceTypes = data || [];
-      },
-      error: (err) => {
-        this.notification.onError(`Lỗi tải danh sách loại hóa đơn: ${err}`);
-      }
-    });
-    this.arrUnsubscribe.push(sub);
+  private getlistlslist(): void {
+    try {
+      const sub = this.configCache.GetListLSList(LSListTypeDataEnum.InvoiceType).subscribe({
+        next: (data) => {
+          this.invoiceTypes = data || [];
+        },
+        error: () => {
+          this.invoiceTypes = [];
+        }
+      });
+      this.arrUnsubscribe.push(sub);
+    } catch {
+      this.invoiceTypes = [];
+    }
   }
 
   loadInvoice(code: number): void {
@@ -262,7 +270,6 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   onSamePhoneChange(e: any): void {
     if (e === true) {
       this.invoice['VATZalo'] = '';
-      // Update both properties
       const param: UpdatePropertiesInterface<SALOrderInvoiceCusDTO> = {
         DTO: this.invoice,
         Properties: ['VATIsSamePhone', 'VATZalo']
@@ -283,4 +290,98 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     }
   }
 
+  //#region Apply to other vehicles
+  onApplyToOtherVehicles(): void {
+    if (!this.invoice.OrderMaster) return;
+    this.isApplying = true;
+    const sub = this.apiService.GetListSALInvoice({}).subscribe({
+      next: (res: ResponseDTO) => {
+        this.isApplying = false;
+        if (res.StatusCode === 0) {
+          const all = res.ObjectReturn?.Data ?? res.ObjectReturn ?? [];
+          this.siblingInvoices = (all as SALOrderInvoiceCusDTO[])
+            .filter(inv => inv.OrderMaster === this.invoice.OrderMaster && inv.Code !== this.invoice.Code);
+          if (this.siblingInvoices.length === 0) {
+            this.notification.onWarning('Không có xe khác trong cùng phiếu bán hàng');
+            return;
+          }
+          this.selectedSiblings.clear();
+          this.siblingInvoices.forEach(inv => this.selectedSiblings.add(inv.Code));
+          this.showApplyPopup = true;
+        }
+      },
+      error: () => {
+        this.isApplying = false;
+        this.notification.onError('Lỗi tải danh sách hóa đơn');
+      }
+    });
+    this.arrUnsubscribe.push(sub);
+  }
+
+  toggleSibling(code: number): void {
+    if (this.selectedSiblings.has(code)) {
+      this.selectedSiblings.delete(code);
+    } else {
+      this.selectedSiblings.add(code);
+    }
+  }
+
+  confirmApply(): void {
+    if (this.selectedSiblings.size === 0) {
+      this.notification.onWarning('Vui lòng chọn ít nhất 1 xe');
+      return;
+    }
+
+    const customerProps = [
+      'VATType', 'VATCustomerName', 'VATCCCD', 'VATCMND',
+      'VATGender', 'VATProvince', 'VATWard', 'VATAddress',
+      'VATCellPhone', 'VATZalo', 'VATIsSamePhone', 'VATContactEmail', 'VATEmail',
+      'VATCompanyName', 'VATCompanyTax', 'VATBRUName', 'VATBRUCode', 'VATNote'
+    ];
+
+    this.isApplying = true;
+    let completed = 0;
+    let failed = 0;
+    const total = this.selectedSiblings.size;
+
+    this.selectedSiblings.forEach(code => {
+      const dto = new SALOrderInvoiceCusDTO();
+      dto.Code = code;
+      customerProps.forEach(p => (dto as any)[p] = (this.invoice as any)[p]);
+
+      const param: UpdatePropertiesInterface<SALOrderInvoiceCusDTO> = {
+        DTO: dto,
+        Properties: customerProps
+      };
+
+      const sub = this.apiService.UpdateSALInvoice(param).subscribe({
+        next: (res: ResponseDTO) => {
+          if (res.StatusCode !== 0) failed++;
+          completed++;
+          if (completed === total) this.onApplyComplete(failed);
+        },
+        error: () => {
+          failed++;
+          completed++;
+          if (completed === total) this.onApplyComplete(failed);
+        }
+      });
+      this.arrUnsubscribe.push(sub);
+    });
+  }
+
+  private onApplyComplete(failed: number): void {
+    this.isApplying = false;
+    this.showApplyPopup = false;
+    if (failed === 0) {
+      this.notification.onSuccess(`Đã áp dụng thông tin cho ${this.selectedSiblings.size} xe`);
+    } else {
+      this.notification.onWarning(`Hoàn tất: ${this.selectedSiblings.size - failed} thành công, ${failed} lỗi`);
+    }
+  }
+
+  closeApplyPopup(): void {
+    this.showApplyPopup = false;
+  }
+  //#endregion
 }

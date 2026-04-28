@@ -14,10 +14,10 @@ import { MtbikeApiService } from '../../services/mtbike-api.service';
 
 export interface DisplayGroup {
   name: string;
-  items: Mtb024InvoiceListComponent[];
+  items: Mtb024InvoiceItem[];
 }
 
-export interface Mtb024InvoiceListComponent extends SALOrderMasterCusDTO {
+export interface Mtb024InvoiceItem extends SALOrderMasterCusDTO {
   invoices?: SALOrderInvoiceCusDTO[];
   isExpanded?: boolean;
   invoiceCount?: number;
@@ -76,7 +76,7 @@ export class Mtb024InvoiceListComponent implements OnInit, OnDestroy {
       res => {
         if (res.StatusCode === 0) {
           const rawGroups = res.ObjectReturn as any[];
-          const allItems: Mtb024InvoiceListComponent[] = [];
+          const allItems: Mtb024InvoiceItem[] = [];
           rawGroups.forEach(g => {
             (g.ListData || []).forEach((item: any) => {
               allItems.push({ ...item, isExpanded: false });
@@ -189,7 +189,7 @@ export class Mtb024InvoiceListComponent implements OnInit, OnDestroy {
     };
   }
 
-  private buildDisplayGroups(allItems: Mtb024InvoiceListComponent[]): void {
+  private buildDisplayGroups(allItems: Mtb024InvoiceItem[]): void {
     const processingItems = allItems.filter(i =>
       i.Status === SALOrderMasterStatusRetailEnum.NEW ||
       i.Status === SALOrderMasterStatusRetailEnum.PENDING ||
@@ -246,7 +246,7 @@ export class Mtb024InvoiceListComponent implements OnInit, OnDestroy {
     return this.openGroupSet.has(idx);
   }
 
-  toggleItem(item: Mtb024InvoiceListComponent): void {
+  toggleItem(item: Mtb024InvoiceItem): void {
     item.isExpanded = !item.isExpanded;
     if (item.isExpanded && !item.invoices) {
       item.invoices = this.allInvoices.filter(inv => inv.OrderMaster === item.Code);
@@ -280,6 +280,40 @@ export class Mtb024InvoiceListComponent implements OnInit, OnDestroy {
       case SALOrderMasterStatusRetailEnum.CANCEL: return 'status-cancel';
       default: return 'status-new';
     }
+  }
+
+  getVATTypeBadgeClass(vatType: number): string {
+    switch (vatType) {
+      case 1: return 'personal';
+      case 2: return 'business';
+      case 3: return 'public';
+      default: return 'personal';
+    }
+  }
+
+  getVATTypeLabel(vatType: number): string {
+    switch (vatType) {
+      case 1: return 'Cá nhân';
+      case 2: return 'Doanh nghiệp';
+      case 3: return 'Đơn vị công';
+      default: return 'Cá nhân';
+    }
+  }
+
+  isInfoComplete(inv: SALOrderInvoiceCusDTO): boolean {
+    if (!inv.VATCustomerName) return false;
+    if (!inv.VATCellPhone) return false;
+    if (inv.VATType === 1) {
+      return !!(inv['VATCCCD']);
+    }
+    if (inv.VATType === 2 || inv.VATType === 3) {
+      return !!(inv.VATCompanyName && inv.VATCompanyTax && inv.VATAddress);
+    }
+    return false;
+  }
+
+  getInfoCompletionClass(inv: SALOrderInvoiceCusDTO): string {
+    return this.isInfoComplete(inv) ? 'info-complete' : 'info-incomplete';
   }
   //#endregion
 }

@@ -3,7 +3,7 @@ description: FE reads FEMobile_Guide.md, reads Figma mobile frames via MCP, and 
 skills:
   - fe-mobile-pipeline
   - mobile-design
-  - hoaiminh-domain
+  - Capstone-domain
 ---
 
 # /fe-mobile-implement — Frontend Mobile Web Implementation

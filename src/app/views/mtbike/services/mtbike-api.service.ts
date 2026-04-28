@@ -33,6 +33,7 @@ import { LSTypeOfVehicleCusDTO } from "../../../models/dtos/e-dtos/ls-type-of-ve
 import { LSVehicleCusDTO } from "../../../models/dtos/e-dtos/ls-vehicle.dto";
 import { POLSalesPolicyCusDTO } from "src/app/models/dtos/e-dtos/pol-sales-policy.dto";
 import { MtbikeApiStaticService } from "./mtbike-api-static.service";
+import { fdashboard } from "./mtbike-api-static.service";
 
 @Injectable({
   providedIn: 'root',
@@ -989,7 +990,7 @@ export class MtbikeApiService {
   public GetMotorbikeOverview(param: ParameterDTO): Observable<ResponseDTO> {
     return new Observable<ResponseDTO>((obs) => {
       this.api.post(
-        MtbikeApiStaticService.getNamespace(this.config.GetDLL()).GetMotorbikeOverview,
+        fdashboard.GetMotorbikeOverview,
         param
       )
         .subscribe(
@@ -1008,7 +1009,7 @@ export class MtbikeApiService {
   public GetListDashboard(param: DashboardInputDTO): Observable<ResponseDTO> {
     return new Observable<ResponseDTO>((obs) => {
       this.api.post(
-        MtbikeApiStaticService.getNamespace(this.config.GetDLL()).GetListDashboard,
+        fdashboard.GetListDashboard,
         param
       ).subscribe(
         (res: ResponseDTO) => {
@@ -1569,6 +1570,40 @@ export class MtbikeApiService {
     return new Observable<ResponseDTO>((obs) => {
       const ns = MtbikeApiStaticService.getNamespace(this.config.GetDLL());
       this.api.post(ns.UpdateSALInvoiceInfo, DTO)
+        .subscribe(
+          (res: ResponseDTO) => {
+            obs.next(res);
+            obs.complete();
+          },
+          (errors) => {
+            obs.error(errors);
+            obs.complete();
+          }
+        );
+    });
+  }
+
+  public AddSALInvoiceFromOrder(orderMasterCode: number): Observable<ResponseDTO> {
+    return new Observable<ResponseDTO>((obs) => {
+      const ns = MtbikeApiStaticService.getNamespace(this.config.GetDLL());
+      this.api.post(ns.AddSALInvoiceFromOrder, orderMasterCode)
+        .subscribe(
+          (res: ResponseDTO) => {
+            obs.next(res);
+            obs.complete();
+          },
+          (errors) => {
+            obs.error(errors);
+            obs.complete();
+          }
+        );
+    });
+  }
+
+  public IssueSALInvoice(listCode: number[]): Observable<ResponseDTO> {
+    return new Observable<ResponseDTO>((obs) => {
+      const ns = MtbikeApiStaticService.getNamespace(this.config.GetDLL());
+      this.api.post(ns.IssueSALInvoice, { ListCode: listCode })
         .subscribe(
           (res: ResponseDTO) => {
             obs.next(res);

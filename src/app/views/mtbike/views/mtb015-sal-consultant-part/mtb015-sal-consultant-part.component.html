@@ -110,7 +110,7 @@
                 <div class="form-fields">
                     <div class="form-row form-row-2">
                     <ps-kendo-dropdown-list [label]="'Phân nhóm phụ tùng'" [data]="listPartCategory"
-                        [textField]="'CategoryName'" [valueField]="'Code'" [(ngModel)]="partcategory"
+                        [textField]="'Category'" [valueField]="'Code'" [(ngModel)]="partcategory"
                         [valuePrimitive]="false"
                         [disabled]="(!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator) || retailMaster?.Status != 1"
                         (valueChange)="onPartCategoryChange()">

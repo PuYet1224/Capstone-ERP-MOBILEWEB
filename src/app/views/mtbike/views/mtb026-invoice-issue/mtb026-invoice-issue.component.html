@@ -3,32 +3,78 @@
     <ps-header-back>
         <div class="header-content">
             <div class="func-title1">PHÁT HÀNH HÓA ĐƠN</div>
-            <div class="func-title2">Danh sách phiếu bán hàng</div>
+            <div class="func-title2">Xuất hóa đơn thanh toán</div>
         </div>
     </ps-header-back>
     <!-- END: HEADER -->
+
+    <!-- START: STATUS TABS -->
+    <div class="status-tabs">
+        <div class="tab-item" [class.active]="activeTab === 'pending'" (click)="onTabChange('pending')">
+            <span class="material-icons tab-icon">pending_actions</span>
+            <span>Chưa xuất</span>
+            <span class="tab-count" *ngIf="pendingCount > 0">{{ pendingCount }}</span>
+        </div>
+        <div class="tab-item" [class.active]="activeTab === 'issued'" (click)="onTabChange('issued')">
+            <span class="material-icons tab-icon">check_circle</span>
+            <span>Đã xuất</span>
+            <span class="tab-count issued" *ngIf="issuedCount > 0">{{ issuedCount }}</span>
+        </div>
+    </div>
+    <!-- END: STATUS TABS -->
 
     <!-- START: SEARCH DIALOG -->
     <ps-dialog-confirm-bottom [open]="isOpenedFilter" [title]="'Tìm kiếm hóa đơn'" (close)="openFilter($event)">
         <div psDialogConfirmBottomBody>
             <div class="filter-row">
-                <ps-kendo-textbox [label]="'Tra cứu hóa đơn'" [placeholder]="'Số HĐ, Số PBH, Tên KH...'"
+                <ps-kendo-textbox [label]="'Tra cứu hóa đơn'" [placeholder]="'Số HĐ, Tên KH, SĐT...'"
                     [(ngModel)]="searchKeyword" (keyup.enter)="onSearch()">
                 </ps-kendo-textbox>
-            </div>
-            <div class="filter-row">
-                <label class="checkbox-label">
-                    <input type="checkbox" [(ngModel)]="includeFinished">
-                    Hiển thị đơn đã kết thúc
-                </label>
             </div>
         </div>
         <div psDialogConfirmBottomFooter>
             <ps-kendo-button [theme]="''" (onClick)="openFilter(false)">Đóng</ps-kendo-button>
-            <ps-kendo-button [theme]="'primary'" (onClick)="onSearch()">Tìm kiếm</ps-kendo-button>
+            <ps-kendo-button [theme]="'primary'" (onClick)="onSearch()">Tìm</ps-kendo-button>
         </div>
     </ps-dialog-confirm-bottom>
     <!-- END: SEARCH DIALOG -->
+
+    <!-- START: ISSUE CONFIRM DIALOG -->
+    <ps-dialog-confirm-bottom [open]="isOpenedIssueConfirm" [title]="'Xác nhận phát hành'" (close)="closeIssueConfirm()">
+        <div psDialogConfirmBottomBody>
+            <div class="confirm-content" *ngIf="selectedInvoice">
+                <div class="confirm-icon-wrap">
+                    <span class="material-icons confirm-icon">receipt_long</span>
+                </div>
+                <div class="confirm-msg">
+                    Bạn có chắc muốn <strong>phát hành hóa đơn</strong> cho khách hàng?
+                </div>
+                <div class="confirm-detail">
+                    <div class="confirm-row">
+                        <span class="confirm-label">Hóa đơn:</span>
+                        <span class="confirm-value">{{ selectedInvoice.InvoiceNo || '---' }}</span>
+                    </div>
+                    <div class="confirm-row" *ngIf="selectedInvoice.VehicleName">
+                        <span class="confirm-label">Xe:</span>
+                        <span class="confirm-value">{{ selectedInvoice.VehicleName }}</span>
+                    </div>
+                    <div class="confirm-row">
+                        <span class="confirm-label">Khách hàng:</span>
+                        <span class="confirm-value">{{ selectedInvoice.VATCustomerName || selectedInvoice.CustomerName }}</span>
+                    </div>
+                </div>
+                <div class="confirm-warning">
+                    <span class="material-icons">warning_amber</span>
+                    <span>Sau khi phát hành, hóa đơn sẽ không thể chỉnh sửa.</span>
+                </div>
+            </div>
+        </div>
+        <div psDialogConfirmBottomFooter>
+            <ps-kendo-button [theme]="''" (onClick)="closeIssueConfirm()">Hủy</ps-kendo-button>
+            <ps-kendo-button [theme]="'primary'" (onClick)="confirmIssueInvoice()">Xác nhận phát hành</ps-kendo-button>
+        </div>
+    </ps-dialog-confirm-bottom>
+    <!-- END: ISSUE CONFIRM DIALOG -->
 
     <!-- START: BODY -->
     <div class="body-list" #bodyList>
@@ -44,12 +90,12 @@
 
             <div class="group-content" *ngIf="isGroupOpen(gIdx)">
                 <div class="pbh-card" *ngFor="let item of group.items">
-                    <!-- PBH Header -->
+                    <!-- START: PBH Header -->
                     <div class="pbh-header" (click)="toggleItem(item)">
                         <div class="pbh-title">
                             <span class="pbh-prefix">PBH:</span>
                             <span class="pbh-code">{{ item.ID }}</span>
-                            <span class="pbh-receipt-count" *ngIf="item.invoiceCount > 0">
+                            <span class="pbh-invoice-count" *ngIf="item.invoiceCount > 0">
                                 ({{ item.invoiceCount }} hóa đơn)
                             </span>
                         </div>
@@ -59,8 +105,9 @@
                             </span>
                         </div>
                     </div>
+                    <!-- END: PBH Header -->
 
-                    <!-- PBH Body -->
+                    <!-- START: PBH Body -->
                     <div class="pbh-body" (click)="toggleItem(item)">
                         <div class="info-line">
                             <div class="info-half">
@@ -68,65 +115,70 @@
                                 <span>{{ item.CustomerName }}</span>
                             </div>
                             <div class="info-half">
-                                <span class="info-label">Số điện thoại: </span>
+                                <span class="info-label">SĐT: </span>
                                 <span>{{ item.CustomerPhone }}</span>
                             </div>
                         </div>
-                        <div class="info-line">
-                            <div class="info-half">
-                                <span class="info-label">Tư vấn viên: </span>
-                                <span>{{ item.SaleStaffName }}</span>
-                            </div>
-                            <div class="info-half">
-                                <span class="info-label">Ngày tư vấn: </span>
-                                <span>{{ item.SaleDate | date: 'dd/MM/yyyy HH:mm' }}</span>
-                            </div>
-                        </div>
                     </div>
+                    <!-- END: PBH Body -->
 
-                    <!-- INVOICE List Section -->
-                    <div class="receipt-section" *ngIf="item.isExpanded">
-                        <div class="receipt-card" *ngFor="let inv of item.invoices" (click)="onNavigateDetail(inv)">
-                            <div class="r-header">
-                                <div class="r-title">
-                                    <span class="r-prefix">HĐ:</span>
-                                    <span class="r-code">{{ inv.InvoiceNo || '---' }}</span>
+                    <!-- START: INVOICE List Section -->
+                    <div class="invoice-section" *ngIf="item.isExpanded">
+                        <div class="invoice-card" *ngFor="let inv of getFilteredInvoices(item)"
+                             [class.issued]="inv.Status === invoiceStatusSuccess">
+                            <!-- Vehicle row -->
+                            <div class="inv-vehicle" *ngIf="inv.VehicleName">
+                                <span class="material-icons inv-icon">two_wheeler</span>
+                                <span class="inv-vehicle-name">{{ inv.VehicleName }}</span>
+                            </div>
+                            <!-- Invoice info -->
+                            <div class="inv-header">
+                                <div class="inv-title">
+                                    <span class="inv-prefix">HĐ:</span>
+                                    <span class="inv-code">{{ inv.InvoiceNo || '---' }}</span>
                                 </div>
-                                <div class="r-badges">
-                                    <div class="r-pm-badge" [ngClass]="inv.VATType == 1 ? 'personal' : inv.VATType == 2 ? 'business' : 'public'" *ngIf="inv.VATCompanyName">
-                                        {{inv.VATType == 1 ? 'Cá nhân' : inv.VATType == 2 ? 'Doanh nghiệp' : 'Đơn vị công'}}
-                                    </div>
-                                    <div class="r-pm-badge pm-transfer" *ngIf="inv.VAT > 0">
-                                        Thuế: {{inv.VAT}}%
-                                    </div>
+                                <div class="inv-status-badge" [ngClass]="getInvoiceStatusClass(inv.Status)">
+                                    {{ getInvoiceStatusLabel(inv.Status) }}
                                 </div>
                             </div>
-                            <div class="r-info">
-                                <div class="r-info-item" *ngIf="inv.VehicleName">
-                                    <span class="material-icons r-icon">two_wheeler</span>
-                                    <span class="r-vehicle">{{ inv.VehicleName }}</span>
-                                </div>
-                                <div class="r-info-row">
-                                    <div class="r-info-item">
-                                        <span class="material-icons r-icon">person</span>
-                                        {{ inv.VATCustomerName || inv.CustomerName }}
-                                    </div>
-                                    <div class="r-info-item" *ngIf="inv.VATCellPhone">
-                                        <span class="material-icons r-icon">phone</span>
-                                        {{ inv.VATCellPhone }}
-                                    </div>
-                                </div>
-                                <div class="r-info-item" *ngIf="inv.VATCompanyTax && inv.VATType != 1">
-                                    {{inv.VATType == 2 ? 'Mã số thuế: ' : 'Mã đơn vị: '}} : {{ inv.VATCompanyTax }}
-                                </div>
+                            <!-- Customer -->
+                            <div class="inv-customer">
+                                <span class="material-icons inv-icon">person</span>
+                                <span>{{ inv.VATCustomerName || inv.CustomerName }}</span>
                             </div>
-                            <div class="r-meta">
-                                <div class="r-meta-item">
-                                    <span [innerHTML]="inv | SALOrderInvoiceStatus"></span>
+                            <!-- Actions -->
+                            <div class="inv-actions" *ngIf="inv.Status !== invoiceStatusSuccess">
+                                <button class="btn-detail" (click)="onNavigateDetail(inv); $event.stopPropagation()">
+                                    <span class="material-icons">visibility</span>
+                                    Xem chi tiết
+                                </button>
+                                <button class="btn-issue" (click)="openIssueConfirm(inv); $event.stopPropagation()">
+                                    <span class="material-icons">publish</span>
+                                    Phát hành
+                                </button>
+                            </div>
+                            <div class="inv-actions" *ngIf="inv.Status === invoiceStatusSuccess">
+                                <button class="btn-detail" (click)="onNavigateDetail(inv); $event.stopPropagation()">
+                                    <span class="material-icons">visibility</span>
+                                    Xem chi tiết
+                                </button>
+                                <div class="issued-label">
+                                    <span class="material-icons">check_circle</span>
+                                    Đã phát hành
+                                    <span class="issued-date" *ngIf="inv.EffDate">
+                                        ({{ inv.EffDate | date:'dd/MM/yyyy' }})
+                                    </span>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Empty invoice state -->
+                        <div class="no-invoice-msg" *ngIf="getFilteredInvoices(item).length === 0">
+                            <span class="material-icons">info</span>
+                            <span>Không có hóa đơn {{ activeTab === 'pending' ? 'chưa xuất' : 'đã xuất' }} nào</span>
+                        </div>
                     </div>
+                    <!-- END: INVOICE List Section -->
                 </div>
             </div>
         </div>
@@ -146,6 +198,9 @@
         </ps-kendo-button>
         <ps-kendo-button (onClick)="openFilter(true)">
             <span class="material-icons">search</span>
+        </ps-kendo-button>
+        <ps-kendo-button [theme]="'primary'" (onClick)="bulkIssueAll()" *ngIf="activeTab === 'pending' && pendingCount > 0">
+            <span class="text">Phát hành tất cả ({{ pendingCount }})</span>
         </ps-kendo-button>
     </ps-footer-action>
     <!-- END: FOOTER ACTIONS -->

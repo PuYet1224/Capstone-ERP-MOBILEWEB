@@ -184,7 +184,13 @@ export class PSCoreApiService {
 
   public GetListLSList(param: LSListTypeDataEnum): Observable<ResponseDTO> {
     return new Observable<ResponseDTO>((obs) => {
-      this.api.post(CoreApiStaticService.GetListLSList, param).subscribe(
+      const url = CoreApiStaticService.GetListLSList;
+      if (!url) {
+        obs.error('API GetListLSList chưa được tải. Vui lòng đăng nhập lại.');
+        obs.complete();
+        return;
+      }
+      this.api.post(url, param).subscribe(
         (res: ResponseDTO) => {
           obs.next(res);
           obs.complete();
