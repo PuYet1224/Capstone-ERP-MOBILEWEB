@@ -174,7 +174,7 @@ export class Mtb020SalConsultantTotalComponent implements OnInit, OnDestroy, Aft
       return;
     }
 
-    const invalidVehicle = this.listDetails.find(v => v.PaymentType == null);
+    const invalidVehicle = this.listDetails.find(v => v.IsOrderLock === true && v.PaymentType == null);
     if (invalidVehicle) {
       this.notification.onWarning(`Xe ${invalidVehicle.VehicleName || ''} ${invalidVehicle.VehicleColorName || ''} chưa chọn hình thức thanh toán`);
       return;
