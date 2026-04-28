@@ -197,7 +197,7 @@ export class Mtb015SalConsultantPartComponent implements OnInit, OnDestroy, Afte
   }
 
   toggleVehicleSelect(v: SALOrderDetailCusDTO): void {
-    if (this.retailMaster?.Status != 1) return;
+    if (this.retailMaster?.Status >= 4) return;
     if (!v || v.Code == null) return;
     if (this.selectedDetailCodes.has(v.Code)) {
       if (this.selectedDetailCodes.size > 1) this.selectedDetailCodes.delete(v.Code);

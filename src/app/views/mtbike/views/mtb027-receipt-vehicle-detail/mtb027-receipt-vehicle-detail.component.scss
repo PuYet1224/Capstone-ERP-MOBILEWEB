@@ -60,9 +60,10 @@
             gap: 16px;
             align-items: center;
             border-bottom: 1px solid rgba($border, 0.3);
+            border-radius: 10px;
 
             &.cancelled {
-              background: rgba($error, 0.04);
+              border: 1px solid $error;
             }
 
             .vehicle-img {
@@ -94,11 +95,26 @@
                 font-size: 15px;
                 color: $secondary;
                 line-height: 1.3;
+
+                &.dashed {
+                  text-decoration: line-through;
+                  opacity: 0.6;
+                  color: $error;
+                }
               }
 
               .vehicle-price {
                 font-size: 13px;
                 color: $secondary;
+
+                &.dashed {
+                  text-decoration: line-through;
+                  opacity: 0.6;
+                  color: $error;
+                  strong {
+                    color: inherit;
+                  }
+                }
 
                 strong {
                   color: $error;
@@ -139,6 +155,20 @@
                     }
                   }
                 }
+              }
+            }
+          }
+
+          .card-footer {
+            margin-top: 8px;
+            display: flex;
+            justify-content: flex-end;
+
+            ps-kendo-button {
+              width: 100%;
+              button {
+                width: 100%;
+                height: 32px;
               }
             }
           }
@@ -208,6 +238,77 @@
               display: flex;
               align-items: center;
               justify-content: center;
+            }
+          }
+        }
+      }
+
+      ps-dialog-confirm {
+        .ps-dialog-confirm {
+          .confirm-dialog {
+            width: 75%;
+            height: auto;
+
+            .k-popup {
+              .body {
+                height: 100%;
+                padding: 24px;
+                align-items: flex-start;
+                justify-content: flex-start;
+                gap: 16px;
+
+                .title-out {
+                  font-size: 24px;
+                  font-weight: bold;
+                }
+
+                .group-buttom {
+                  width: 100%;
+                  display: flex;
+                  justify-content: flex-end;
+                  gap: 8px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+::ng-deep {
+  .cancel-dialog {
+    .ps-dialog-confirm {
+      .confirm-dialog {
+        width: 75% !important;
+        height: auto !important;
+
+        .k-popup {
+          .body {
+            height: 100% !important;
+            padding: 24px !important;
+            align-items: flex-start !important;
+            justify-content: flex-start !important;
+            gap: 16px !important;
+
+            .title-out {
+              font-size: 24px !important;
+              font-weight: bold !important;
+            }
+
+            .group-buttom {
+              width: 100% !important;
+              display: flex !important;
+              justify-content: flex-end !important;
+              gap: 8px !important;
+
+              ps-kendo-button {
+                button {
+                  width: fit-content !important;
+                  padding: 0 16px !important;
+                }
+              }
             }
           }
         }

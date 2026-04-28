@@ -75,7 +75,7 @@
                 format="n0"
                 placeholder="0"
                 [(ngModel)]="receipt.CashAmount"
-                [disabled]="(receipt.IsFirstReceipt ? receipt.Status >= 4 : receipt.Status > 4) || (receipt.IsFirstReceipt && receipt.IsLockPayment)"
+                [disabled]="(receipt.IsFirstReceipt ? (receipt.Status >= 3 && (receipt.IsLockPayment || receipt.PaymentMethod !== 3)) : receipt.Status > 4)"
                 (valueChange)="onCashAmountChange($event)"
                 (blur)="onAmountBlur('cash')"
               >
@@ -94,7 +94,7 @@
                 [spinners]="false"
                 format="n0"
                 [(ngModel)]="receipt.TransferAmount"
-                [disabled]="(receipt.IsFirstReceipt ? receipt.Status >= 4 : receipt.Status > 4) || (receipt.IsFirstReceipt && (receipt.IsLockPayment || receipt.PaymentMethod === 3))"
+                [disabled]="(receipt.IsFirstReceipt ? receipt.Status >= 3 : receipt.Status > 4)"
                 (valueChange)="onTransferAmountChange($event)"
                 (blur)="onAmountBlur('transfer')"
               >
