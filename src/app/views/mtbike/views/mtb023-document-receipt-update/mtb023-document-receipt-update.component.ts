@@ -366,6 +366,7 @@ export class Mtb023DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
       this.router.navigate(['/mtbike/document']);
     } else {
       this.router.navigate(['/mtbike/document/receipt']);
+      this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
     }
   }
 }

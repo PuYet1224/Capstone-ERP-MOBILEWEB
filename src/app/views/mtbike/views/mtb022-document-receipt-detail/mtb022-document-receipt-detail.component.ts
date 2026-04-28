@@ -93,6 +93,26 @@ export class Mtb022DocumentReceiptDetailComponent {
       default: return 'status-pending'; // PENDING (3) and others
     }
   }
+
+  public getPaymentMethodClass(method: number): string {
+    switch (method) {
+      case 1: return 'pm-cash';
+      case 2: return 'pm-transfer';
+      case 3: return 'pm-card';
+      case 4: return 'pm-mixed';
+      default: return 'pm-cash';
+    }
+  }
+
+  public getPaymentMethodIcon(method: number): string {
+    switch (method) {
+      case 1: return 'payments';
+      case 2: return 'sync_alt';
+      case 3: return 'credit_card';
+      case 4: return 'account_balance_wallet';
+      default: return 'payments';
+    }
+  }
   //#endregion
 
   //#region phiếu thu
