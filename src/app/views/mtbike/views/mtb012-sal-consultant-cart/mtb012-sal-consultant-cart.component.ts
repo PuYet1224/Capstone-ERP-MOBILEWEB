@@ -480,6 +480,13 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
 
   //#region footer
   public onNavigate(field: string) {
+    if (field === '/mtbike/consultant/total') {
+      const invalidVehicle = this.listVehicle.find(v => v.IsOrderLock === true && v.OrderTypeData === 2 && v.IsAssignedHead === false);
+      if (invalidVehicle) {
+        this.notification.onWarning(`xe ${invalidVehicle.VehicleName || ''} ${invalidVehicle.ColorName || ''} chưa chọn head điều chuyển`);
+        return;
+      }
+    }
     this.router.navigate([field]);
   }
 
@@ -530,34 +537,5 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
     this.router.navigate(['/mtbike/consultant/total-vehicle']);
   }
 
-  private isapplystt: boolean = true;
-
-  public onupdatestatusmaster() {
-    if (this.isapplystt)
-      this.onComplete();
-  }
-
-  public onComplete() {
-    var param: UpdateStatusInterface<SALOrderMasterCusDTO> = {
-      ListDTO: [this.retailMaster],
-      Status: SALOrderMasterStatusRetailEnum.COMPLETE,
-    };
-
-    this.subLoader.loader(true);
-    var temp = this.api.UpdateSALMasterStatus(param).subscribe((res) => {
-      if (res.StatusCode == 0) {
-        this.notification.onSuccess(`Thành công`);
-        this.retailMaster = { ...this.retailMaster, Status: SALOrderMasterStatusRetailEnum.COMPLETE, StatusName: 'Hoàn tất' } as any;
-        this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_MASTER, this.retailMaster);
-        this.subLoader.loader(false);
-      } else
-        this.notification.onError(`Lỗi cập nhật phiếu: ${res.ErrorString}`);
-      this.subLoader.loader(false);
-    }, (err) => {
-      this.subLoader.loader(false);
-      this.notification.onError(`Lỗi cập nhật phiếu: ${err.message}`);
-    });
-    this.arrUnsubscribe.push(temp);
-  }
   //#endregion
 }

@@ -25,9 +25,9 @@ export class Mtb023DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
   master: SALOrderMasterCusDTO = new SALOrderMasterCusDTO();
 
   public listPaymentMethods: ListDTO[] = [
-    { TypeOfList: 1, Name: 'Tiền mặt' } as any,
-    { TypeOfList: 2, Name: 'Chuyển khoản' } as any,
-    { TypeOfList: 3, Name: 'Tiền mặt và chuyển khoản' } as any,
+    { TypeOfList: 1, ListName: 'Tiền mặt' } as any,
+    { TypeOfList: 2, ListName: 'Chuyển khoản' } as any,
+    { TypeOfList: 3, ListName: 'Tiền mặt và chuyển khoản' } as any,
   ];
 
   public errors: any = {};
@@ -62,7 +62,6 @@ export class Mtb023DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
           if (!this.receipt.CellPhone) this.receipt.CellPhone = master.CustomerPhone;
         }
       }
-      this.getlistlslist();
       this.initPaymentAmounts();
     } else {
       this.notification.onWarning('Không tìm thấy thông tin phiếu thu.');
@@ -81,9 +80,19 @@ export class Mtb023DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
   private initPaymentAmounts(): void {
     // If it's a split payment and amounts are not set, try to default them
     if (this.receipt.PaymentMethod === 3) {
-      if (!this.receipt.CashAmount && !this.receipt.TransferAmount) {
-        this.receipt.CashAmount = this.receipt.CollectedAmount || 0;
-        this.receipt.TransferAmount = 0;
+      if (this.receipt.IsFirstReceipt) {
+        if ((this.receipt.CashAmount || 0) > (this.receipt.CollectedAmount || 0)) {
+          this.receipt.CashAmount = this.receipt.CollectedAmount || 0;
+        }
+        this.receipt.TransferAmount = (this.receipt.CollectedAmount || 0) - (this.receipt.CashAmount || 0);
+      } else {
+        // Subsequent receipts: Calculate total from parts if already set, or default to cash
+        if (this.receipt.CashAmount || this.receipt.TransferAmount) {
+          this.receipt.CollectedAmount = (this.receipt.CashAmount || 0) + (this.receipt.TransferAmount || 0);
+        } else {
+          this.receipt.CashAmount = this.receipt.CollectedAmount || 0;
+          this.receipt.TransferAmount = 0;
+        }
       }
     } else if (this.receipt.PaymentMethod === 1) {
       this.receipt.CashAmount = this.receipt.CollectedAmount || 0;
@@ -120,18 +129,23 @@ export class Mtb023DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
 
   public onCashAmountChange(val: number): void {
     this.receipt.CashAmount = val || 0;
-    this.receipt.CollectedAmount = (this.receipt.CashAmount || 0) + (this.receipt.TransferAmount || 0);
+    if (!this.receipt.IsFirstReceipt) {
+      this.receipt.CollectedAmount = (this.receipt.CashAmount || 0) + (this.receipt.TransferAmount || 0);
+    }
     this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
   }
 
   public onTransferAmountChange(val: number): void {
     this.receipt.TransferAmount = val || 0;
+    if (!this.receipt.IsFirstReceipt) {
+      this.receipt.CollectedAmount = (this.receipt.CashAmount || 0) + (this.receipt.TransferAmount || 0);
+    }
+
     if (this.receipt.PaymentMethod === 1) {
       this.receipt.TransferAmount = 0;
     } else if (this.receipt.PaymentMethod === 2) {
       this.receipt.CashAmount = 0;
     }
-    this.receipt.CollectedAmount = (this.receipt.CashAmount || 0) + (this.receipt.TransferAmount || 0);
     this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
   }
 
@@ -203,37 +217,63 @@ export class Mtb023DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
       this.receipt.PaymentMethod !== this.receiptcopy.PaymentMethod;
   }
 
-  public onAmountBlur(): void {
-    if ((this.receipt.PaymentMethod == 1 && this.receipt.CashAmount > this.orderInfo.DebtAmount) ||
-      (this.receipt.PaymentMethod == 2 && this.receipt.TransferAmount > this.orderInfo.DebtAmount)) {
-      this.notification.onWarning('Số tiền không được vượt quá số tiền còn nợ.');
-      if (this.receipt.PaymentMethod == 1) {
-        this.receipt.CashAmount = this.orderInfo.DebtAmount;
-        this.receipt.CollectedAmount = this.orderInfo.DebtAmount;
-    this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
+  public onAmountBlur(type?: 'cash' | 'transfer'): void {
+    const targetAmount = this.receipt.IsFirstReceipt ? (this.receipt.CollectedAmount || 0) : (this.orderInfo.DebtAmount || 0);
+
+    if (this.receipt.PaymentMethod === 3) {
+      if (this.receipt.IsFirstReceipt) {
+        // First receipt: Always bi-directional auto-fill to reach the fixed CollectedAmount
+        if (type === 'transfer') {
+          if ((this.receipt.TransferAmount || 0) > targetAmount) {
+            this.receipt.TransferAmount = targetAmount;
+            this.notification.onWarning('Số tiền vượt quá tổng số tiền cần thu.');
+          }
+          this.receipt.CashAmount = (targetAmount || 0) - (this.receipt.TransferAmount || 0);
+        } else {
+          if ((this.receipt.CashAmount || 0) > targetAmount) {
+            this.receipt.CashAmount = targetAmount;
+            this.notification.onWarning('Số tiền vượt quá tổng số tiền cần thu.');
+          }
+          this.receipt.TransferAmount = (targetAmount || 0) - (this.receipt.CashAmount || 0);
+        }
+      } else {
+        // Subsequent receipts: Allow flexible entry, only adjust if total sum EXCEEDS targetAmount
+        const currentSum = (this.receipt.CashAmount || 0) + (this.receipt.TransferAmount || 0);
+        if (currentSum > targetAmount) {
+          this.notification.onWarning('Tổng số tiền thu không được vượt quá số nợ thực tế.');
+          if (type === 'transfer') {
+            // Capping transfer to targetAmount, then calculating cash remainder
+            if (this.receipt.TransferAmount > targetAmount) this.receipt.TransferAmount = targetAmount;
+            this.receipt.CashAmount = targetAmount - (this.receipt.TransferAmount || 0);
+          } else {
+            // Capping cash to targetAmount, then calculating transfer remainder
+            if (this.receipt.CashAmount > targetAmount) this.receipt.CashAmount = targetAmount;
+            this.receipt.TransferAmount = targetAmount - (this.receipt.CashAmount || 0);
+          }
+        }
       }
-      else if (this.receipt.PaymentMethod == 2) {
-        this.receipt.TransferAmount = this.orderInfo.DebtAmount;
-        this.receipt.CollectedAmount = this.orderInfo.DebtAmount;
-        this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
+    } else {
+      // Single payment methods: Cap by targetAmount
+      const total = (this.receipt.CashAmount || 0) + (this.receipt.TransferAmount || 0);
+      if (total > targetAmount) {
+        this.notification.onWarning('Tổng số tiền thu không được vượt quá số nợ thực tế.');
+
+        if (this.receipt.PaymentMethod === 1) {
+          this.receipt.CashAmount = targetAmount;
+          this.receipt.TransferAmount = 0;
+        } else if (this.receipt.PaymentMethod === 2) {
+          this.receipt.TransferAmount = targetAmount;
+          this.receipt.CashAmount = 0;
+        }
       }
-      return;
     }
+
+    this.receipt.CollectedAmount = (this.receipt.CashAmount || 0) + (this.receipt.TransferAmount || 0);
+    this.receipt = { ...this.receipt };
+    this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
   }
 
   //#region api get
-  private getlistlslist() {
-    this.loader.loader(true);
-    var temp = this.configCache.GetListLSList(LSListTypeDataEnum.PaymentMethod).subscribe((data) => {
-      this.listPaymentMethods = data;
-      this.loader.loader(false);
-    }, (err) => {
-      this.loader.loader(false);
-      this.notification.onError(`Lỗi lấy danh sách phương thức thanh toán: ${err.message || err}`);
-    });
-    this.arrUnsubscribe.push(temp);
-  }
-
   private getsalreceipt(param: SALOrderReceiptCusDTO) {
     this.loader.loader(true);
     var temp = this.api.GetSALReceipt(param).subscribe((res) => {
@@ -246,7 +286,7 @@ export class Mtb023DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
         const serverReceipt = Object.assign(new SALOrderReceiptCusDTO(), receiptData);
         this.receipt = {
           ...serverReceipt,
-          CollectedAmount: this.receipt.CollectedAmount,
+          CollectedAmount: serverReceipt.CollectedAmount,
           CashAmount: this.receipt.CashAmount,
           TransferAmount: this.receipt.TransferAmount,
           PaymentMethod: this.receipt.PaymentMethod,
@@ -326,6 +366,8 @@ export class Mtb023DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
       this.router.navigate(['/mtbike/document']);
     } else {
       this.router.navigate(['/mtbike/document/receipt']);
+      this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.receipt);
+
     }
   }
 }

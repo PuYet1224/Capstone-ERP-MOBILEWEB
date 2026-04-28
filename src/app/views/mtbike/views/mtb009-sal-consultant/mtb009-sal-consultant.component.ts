@@ -163,7 +163,7 @@ export class Mtb009SalConsultantComponent implements OnDestroy, OnInit {
 
   onSetItem(item: SALOrderMasterCusDTO) {
     this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_MASTER, item);
-    if (item.Status == SALOrderMasterStatusRetailEnum.PROCESSING) {
+    if (item.Status >= SALOrderMasterStatusRetailEnum.PENDING) {
       this.router.navigate(['/mtbike/consultant/total']);
     } else {
       this.router.navigate(['/mtbike/consultant/detail']);

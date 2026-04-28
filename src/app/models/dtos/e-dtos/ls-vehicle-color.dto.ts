@@ -38,4 +38,5 @@ export class LSVehicleColorCusDTO extends LSVehicleColorDTO {
   OrderQuantity: number = 0;
   IsOrderLock: boolean = false;
   ListOrderDetailCode: number[] = [];
+  IsAssignedHead: boolean = false;
 }

@@ -80,7 +80,7 @@
                         <div class="service-item" *ngFor="let service of servicesList; let i = index"
                              [class.checked]="service.IsChecked">
                             <ps-kendo-checkbox [(ngModel)]="service.IsChecked" [id]="service.Code + '_' + i" label="{{ i + 1 }}. {{ service.ServiceName }}"
-                                               [disabled]="detail?.MasterStatus != enummasterstt.NEW" (onchecked)="onservicechecked(service)">
+                                               [disabled]="detail?.MasterStatus >= enummasterstt.PROCESSING" (onchecked)="onservicechecked(service)">
                             </ps-kendo-checkbox>
                             <label [for]="service.Code + '_' + i" class="service-cost">{{ formatprice(service.Price) }}₫</label>
                         </div>

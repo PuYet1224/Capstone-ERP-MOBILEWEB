@@ -34,7 +34,6 @@ export class Mtb020SalConsultantTotalComponent implements OnInit, OnDestroy, Aft
 
   //#region fields
   SALOrderMasterStatusRetailEnum = SALOrderMasterStatusRetailEnum;
-  showCompleteConfirm = false;
   retailMaster: SALOrderMasterCusDTO | null = null;
   listDetails: SALOrderDetailCusDTO[] = [];
   private arrUnsubscribe: Subscription[] = [];
@@ -137,43 +136,13 @@ export class Mtb020SalConsultantTotalComponent implements OnInit, OnDestroy, Aft
   //#endregion
 
   //#region API
-  onComplete(): void {
-    this.showCompleteConfirm = false;
-    if (!this.retailMaster?.Code) {
-      this.notification.onWarning('Không có phiếu để hoàn tất');
-      return;
-    }
-    const param: UpdateStatusInterface<SALOrderMasterCusDTO> = {
-      ListDTO: [{ Code: this.retailMaster.Code } as SALOrderMasterCusDTO],
-      Status: SALOrderMasterStatusRetailEnum.COMPLETE,
-    };
-    this.subLoader.loader(true);
-    const sub = this.mtbikeapi.UpdateSALMasterStatus(param).subscribe(
-      res => {
-        this.subLoader.loader(false);
-        if (res.StatusCode === 0) {
-          this.notification.onSuccess('Thành công');
-          this.retailMaster = { ...this.retailMaster, Status: SALOrderMasterStatusRetailEnum.COMPLETE, StatusName: 'Hoàn tất' } as any;
-          this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_MASTER, this.retailMaster);
-        } else {
-          this.notification.onError(res.ErrorString || 'Thất bại');
-        }
-      },
-      err => {
-        this.subLoader.loader(false);
-        this.notification.onError(err && err.message ? err.message : 'Thất bại');
-      }
-    );
-    this.arrUnsubscribe.push(sub);
-  }
-
   onSendPayment(): void {
     if (!this.retailMaster?.Code) {
       this.notification.onWarning('Không có phiếu để gửi thanh toán');
       return;
     }
 
-    const invalidVehicle = this.listDetails.find(v => v.PaymentType == null);
+    const invalidVehicle = this.listDetails.find(v => v.IsOrderLock === true && v.PaymentType == null);
     if (invalidVehicle) {
       this.notification.onWarning(`Xe ${invalidVehicle.VehicleName || ''} ${invalidVehicle.VehicleColorName || ''} chưa chọn hình thức thanh toán`);
       return;
@@ -191,6 +160,7 @@ export class Mtb020SalConsultantTotalComponent implements OnInit, OnDestroy, Aft
           this.notification.onSuccess('Thành công');
           this.retailMaster = { ...this.retailMaster, Status: SALOrderMasterStatusRetailEnum.PENDING } as any;
           this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_MASTER, this.retailMaster);
+          this.router.navigate(['/mtbike/consultant']);
         } else {
           this.notification.onError(res.ErrorString || 'Thất bại');
         }

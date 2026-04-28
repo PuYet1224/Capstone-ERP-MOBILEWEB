@@ -130,6 +130,15 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
         if (field === 'CustomerGender' && this.retailDetailDTOcopy.CustomerName) props.push('CustomerName');
     }
 
+    // Fix DB timezone: Send local time for new orders
+    if (!this.retailDetailDTOcopy.Code) {
+      const now = new Date();
+      const offset = now.getTimezoneOffset() * 60000;
+      const localISOTime = (new Date(now.getTime() - offset)).toISOString().slice(0, -1);
+      (this.retailDetailDTOcopy as any).SaleDate = localISOTime;
+      if (!props.includes('SaleDate')) props.push('SaleDate');
+    }
+
     let param: UpdatePropertiesInterface<SALOrderMasterCusDTO> = {
       DTO: this.retailDetailDTOcopy,
       Properties: props

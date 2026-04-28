@@ -26,20 +26,20 @@
             <section *ngFor="let item of servicesList; let i = index">
                 <div class="group-services">
                     <ps-kendo-checkbox [(ngModel)]="item.IsChecked" [id]="item.Code + '_' + i" class="service-checkbox"
-                                       label="{{i + 1}}. {{item.ServiceName}}" [disabled]="master?.Status != enummasterstt.NEW" (onchecked)="onuncheck(item, false)">
+                                       label="{{i + 1}}. {{item.ServiceName}}" [disabled]="master?.Status >= enummasterstt.PROCESSING" (onchecked)="onuncheck(item, false)">
                     </ps-kendo-checkbox>
                     <span>{{countchecked(item)}}</span>
                 </div>
 
                 <div class="section-group" *ngIf="item.IsChecked == true">
-                    <ps-kendo-checkbox label="Áp dụng cho tất cả" [(ngModel)]="item.IsAll" [id]="item.Code + '_' + i + '_' + item.IsAll" [disabled]="master?.Status != enummasterstt.NEW"
+                    <ps-kendo-checkbox label="Áp dụng cho tất cả" [(ngModel)]="item.IsAll" [id]="item.Code + '_' + i + '_' + item.IsAll" [disabled]="master?.Status >= enummasterstt.PROCESSING"
                                        (onchecked)="oncheckall(item)"></ps-kendo-checkbox>
                     <span class="price">{{formatprice(item.Price)}}đ</span>
                 </div>
 
                 <ng-container *ngIf="item.IsChecked == true && !item.IsAll">
                     <div class="section-group" *ngFor="let chill of item.ListOrderDetail">
-                        <ps-kendo-checkbox [(ngModel)]="chill.IsChecked" [id]="item.Code + '_' + i + '_' + chill.Code" [disabled]="master?.Status != enummasterstt.NEW"
+                        <ps-kendo-checkbox [(ngModel)]="chill.IsChecked" [id]="item.Code + '_' + i + '_' + chill.Code" [disabled]="master?.Status >= enummasterstt.PROCESSING"
                                            (onchecked)="onservicechecked(item, chill)">
                         </ps-kendo-checkbox>
                         <label class="group-vehicle" [for]="item.Code + '_' + i + '_' + chill.Code">

@@ -38,6 +38,8 @@ export class Mtb027ReceiptVehicleDetailComponent implements OnInit, OnDestroy {
   orderMaster: number = 0;
   total: number = 0;
   listVehicles: any[] = [];
+  showCancelConfirm = false;
+  itemToCancel: any = null;
   private arrUnsubscribe: Subscription[] = [];
   //#endregion
 
@@ -134,14 +136,17 @@ export class Mtb027ReceiptVehicleDetailComponent implements OnInit, OnDestroy {
   calculateTotalCollected(): void {
     let total = 0;
     this.listVehicles.forEach(v => {
-      if (v.PaymentType === 1) {
-        total += (v.Price || 0);
-      } else if (v.PaymentType === 3) {
+      if (v.IsCancelled) return;
+      if (v.PaymentType === this.paymentTypeEnum.LUMPSUM) {
+        total += (v.TotalAmount || 0);
+      } else if (v.PaymentType === this.paymentTypeEnum.DEPOSIT) {
         total += (v.DepositAmount || 0);
       }
-      // PaymentType === 2 skip
     });
-      this.orderreceipt.CollectedAmount = total;
+    this.orderreceipt.CollectedAmount = total;
+    if (this.receipt.Status < 4) {
+      this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.orderreceipt);
+    }
   }
 
   onUpdate(item: any): void {
@@ -163,12 +168,45 @@ export class Mtb027ReceiptVehicleDetailComponent implements OnInit, OnDestroy {
       res => {
         this.subLoader.loader(false);
         if (res.StatusCode === 0) {
-          this.notification.onSuccess('Cập nhật thông tin xe thành công');
+          this.notification.onSuccess('Thành công');
           this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_RECEIPT, this.orderreceipt);
 
           this.onLoad(); // Refresh data
         } else {
           this.notification.onError(res.ErrorString || 'Lỗi khi cập nhật thông tin xe');
+        }
+      },
+      err => {
+        this.subLoader.loader(false);
+        this.notification.onError(err?.message || 'Lỗi kết nối');
+      }
+    );
+    this.arrUnsubscribe.push(sub);
+  }
+
+  onCancelVehicle(item: any): void {
+    this.itemToCancel = item;
+    this.showCancelConfirm = true;
+  }
+
+  onConfirmCancelVehicle(): void {
+    if (!this.itemToCancel) return;
+    const payload: any = {
+      Code: this.itemToCancel.Code,
+      IsChecked: false
+    };
+
+    this.showCancelConfirm = false;
+    this.subLoader.loader(true);
+    const sub = this.api.UpdateSALReceiptVehicle(payload).subscribe(
+      res => {
+        this.subLoader.loader(false);
+        if (res.StatusCode === 0) {
+          this.notification.onSuccess('Hủy xe thành công');
+          this.itemToCancel = null;
+          this.onLoad(); // Refresh list to reflect cancellation
+        } else {
+          this.notification.onError(res.ErrorString || 'Lỗi khi hủy xe');
         }
       },
       err => {

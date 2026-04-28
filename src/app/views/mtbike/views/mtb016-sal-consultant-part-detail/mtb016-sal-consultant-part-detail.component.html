@@ -110,7 +110,7 @@
         </ps-kendo-button>
 
         <ps-kendo-button [theme]="'primary'" (onClick)="onAddNewPart()"
-            *ngIf="(FunctionPermissionDTO.master || FunctionPermissionDTO.creator) && retailMaster?.Status == 1">
+            *ngIf="(FunctionPermissionDTO.master || FunctionPermissionDTO.creator) && retailMaster?.Status < 4">
             <span class="text">Thêm mới</span>
         </ps-kendo-button>
     </ps-footer-action>
@@ -126,12 +126,12 @@
                     <ps-kendo-dropdown-list [label]="'Phân nhóm phụ tùng'" [data]="listPartCategory"
                         [textField]="'CategoryName'" [valueField]="'Code'" [(ngModel)]="partcategory"
                         [valuePrimitive]="false" (valueChange)="onPartCategoryChange()"
-                        [disabled]="(!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator) || retailMaster?.Status != 1">
+                        [disabled]="(!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator) || retailMaster?.Status >= 4">
                     </ps-kendo-dropdown-list>
                         <ps-kendo-dropdown-list [label]="'Loại phụ tùng'" [data]="listTypeOfPart"
                             [textField]="'TypeOfPart'" [valueField]="'Code'" [(ngModel)]="typeofpart.Code"
                             [valuePrimitive]="true" (valueChange)="onTypeOfPartChange($event)"
-                            [disabled]="(!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator) || !partcategory || !partcategory.Code || retailMaster?.Status != 1">
+                            [disabled]="(!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator) || !partcategory || !partcategory.Code || retailMaster?.Status >= 4">
                         </ps-kendo-dropdown-list>
                         <!-- <ps-kendo-dropdown-list [label]="'Phân nhóm chi tiết'" [data]="listTypeOfPartSpecs"
                             [textField]="'TypeOfPartSpecs'" [valueField]="'Code'" [(ngModel)]="typeofpartspecs.Code"
@@ -143,14 +143,14 @@
                         <ps-kendo-dropdown-list [label]="'Đơn vị tính'" [data]="listUnit" [textField]="'ListName'"
                             [valueField]="'Code'" [(ngModel)]="unit.Code" [valuePrimitive]="true"
                             (valueChange)="onUnitChange($event)"
-                            [disabled]="(!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator) || retailMaster?.Status != 1">
+                            [disabled]="(!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator) || retailMaster?.Status >= 4">
                         </ps-kendo-dropdown-list>
                         <ps-kendo-numeric-textbox [label]="'Số lượng'" [(ngModel)]="quantity" [format]="'n0'"
-                            [disabled]="(!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator) || retailMaster?.Status != 1">
+                            [disabled]="(!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator) || retailMaster?.Status >= 4">
                         </ps-kendo-numeric-textbox>
                     </div>
                     <ps-kendo-numeric-textbox [label]="'Đơn giá'" [(ngModel)]="unitPrice" [format]="'n0'"
-                        [disabled]="(!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator) || retailMaster?.Status != 1">
+                        [disabled]="(!FunctionPermissionDTO.master && !FunctionPermissionDTO.creator) || retailMaster?.Status >= 4">
                     </ps-kendo-numeric-textbox>
                 </div>
             </div>
@@ -158,9 +158,9 @@
         <div psDialogConfirmBottomFooter class="popup-footer-btns">
             <ps-kendo-button [theme]="''" (onClick)="onClosePopup()">Đóng</ps-kendo-button>
             <ps-kendo-button [theme]="'error'" (onClick)="onDeletePart()"
-                *ngIf="(FunctionPermissionDTO.master || FunctionPermissionDTO.creator) && isEditMode && retailMaster?.Status == 1">Xoá</ps-kendo-button>
+                *ngIf="(FunctionPermissionDTO.master || FunctionPermissionDTO.creator) && isEditMode && retailMaster?.Status < 4">Xoá</ps-kendo-button>
             <ps-kendo-button [theme]="'primary'" (onClick)="onSavePart()"
-                *ngIf="(FunctionPermissionDTO.master || FunctionPermissionDTO.creator) && retailMaster?.Status == 1">
+                *ngIf="(FunctionPermissionDTO.master || FunctionPermissionDTO.creator) && retailMaster?.Status < 4">
                 <span class="text">{{ isEditMode ? 'Cập nhật' : 'Thêm mới' }}</span>
             </ps-kendo-button>
         </div>
