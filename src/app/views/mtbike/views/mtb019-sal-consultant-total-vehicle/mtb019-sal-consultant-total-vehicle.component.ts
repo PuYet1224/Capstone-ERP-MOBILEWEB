@@ -280,13 +280,14 @@ export class Mtb019SalConsultantTotalVehicleComponent implements OnInit, OnDestr
 
   //#region payment
   onPaymentTypeChange(): void {
-    this.listFinanceCompany = [];
     (this.orderDetail as any).FinanceCompany = null;
     (this.orderDetail as any).FinanceCompanyName = '';
-    if (this.orderDetail.PaymentType === SALOrderDetailPaymentTypeEnum.INSTALLMENT)
-      this.loadListPartnerFinance();
-    this.syncCurrentDetailToList();
-    this.UpdateSALDetail();
+    if (this.orderDetail.PaymentType === SALOrderDetailPaymentTypeEnum.INSTALLMENT) {
+      this.loadListPartnerFinance(true);
+    } else {
+      this.syncCurrentDetailToList();
+      this.UpdateSALDetail();
+    }
   }
 
   onFinanceCompanyChangeByCode(code: number | null): void {
@@ -336,7 +337,7 @@ export class Mtb019SalConsultantTotalVehicleComponent implements OnInit, OnDestr
     this.arrUnsubscribe.push(sub);
   }
 
-  private loadListPartnerFinance(): void {
+  private loadListPartnerFinance(autoSelectFirst: boolean = false): void {
     const bindFinanceName = (): void => {
       const cur = (this.orderDetail as any).FinanceCompany;
       if (cur != null && this.listFinanceCompany.length > 0) {
@@ -344,19 +345,36 @@ export class Mtb019SalConsultantTotalVehicleComponent implements OnInit, OnDestr
         if (f && f.ListName) (this.orderDetail as any).FinanceCompanyName = f.ListName;
       }
     };
+
+    const selectFirstAndSync = () => {
+      if (autoSelectFirst && this.listFinanceCompany.length > 0 && !(this.orderDetail as any).FinanceCompany) {
+        const first = this.listFinanceCompany[0];
+        (this.orderDetail as any).FinanceCompany = first.Code || first.ID;
+        (this.orderDetail as any).FinanceCompanyName = first.ListName;
+        this.syncCurrentDetailToList();
+      }
+      if (autoSelectFirst) this.UpdateSALDetail();
+    }
+
     if (this.hasLoadedPartnerFinance) {
+      selectFirstAndSync();
       bindFinanceName();
       return;
     }
+
+    this.subLoader.loader(true);
     const sub = this.coreApi.GetListPartnerFinance().subscribe(
       res => {
+        this.subLoader.loader(false);
         if (res.StatusCode === 0 && Array.isArray(res.ObjectReturn)) {
           this.listFinanceCompany = (res.ObjectReturn as any[]).map((x: any) => ({ ...x, ListName: x.ListName || x.Name || '', Code: x.Code || x.ID }));
           this.hasLoadedPartnerFinance = true;
+          selectFirstAndSync();
           bindFinanceName();
         }
       },
       err => {
+        this.subLoader.loader(false);
         let msg = 'Không tải được danh sách công ty tài chính';
         if (err && err.message) msg = err.message;
         this.notification.onError(msg);

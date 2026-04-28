@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Component } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ListDTO } from 'src/app/models/dtos/e-dtos/list.dto';
 import { LSHeadCusDTO } from 'src/app/models/dtos/e-dtos/ls-head.dto';
@@ -245,6 +245,11 @@ export class Mtb022DocumentReceiptDetailComponent {
   }
 
   public toggleConfirmReceived(isOpen: boolean): void {
+    if (isOpen && (this.receipt as any).HasMissingDepositValue) {
+      this.notification.onWarning("Có xe trong phiếu chưa nhập số tiền đặt cọc");
+      return;
+    }
+
     if (isOpen && PsString.isNullOrWhitespace(this.receipt.CellPhone) && this.receipt.CollectedAmount != ((this.orderInfo.TotalPrice || 0) - (this.orderInfo.AmountPaidOthers || 0))) {
       this.notification.onWarning("Phiếu thu thiếu sđt khách hàng");
       return;
