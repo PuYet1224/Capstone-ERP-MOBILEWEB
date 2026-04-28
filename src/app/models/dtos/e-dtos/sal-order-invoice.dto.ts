@@ -32,6 +32,8 @@ class SALOrderInvoiceDTO {
   LastModifiedTime: Date;
   LastModifiedBy: string = '';
   VATType: SALOrderInvoiceVATTypeEnum = SALOrderInvoiceVATTypeEnum.Personal;
+  FrameSeri: string = '';
+  EngineSeri: string = '';
 }
 
 export class SALOrderInvoiceCusDTO extends SALOrderInvoiceDTO {

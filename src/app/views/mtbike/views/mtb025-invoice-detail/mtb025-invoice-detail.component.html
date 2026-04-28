@@ -8,6 +8,26 @@
   </ps-header-back>
   <!-- END: HEADER -->
 
+  <!-- START: ORDER CONTEXT -->
+  <div class="order-context" *ngIf="orderInfo.id">
+    <div class="order-context__row">
+      <span class="order-context__label">Phiếu bán hàng:</span>
+      <span class="order-context__value">{{ orderInfo.id }}</span>
+    </div>
+    <div class="order-context__row">
+      <span class="order-context__label">Khách hàng:</span>
+      <span class="order-context__value">{{ orderInfo.customerName }}</span>
+    </div>
+    <div class="order-context__row" *ngIf="orderInfo.vehicleName">
+      <span class="order-context__label">Xe:</span>
+      <span class="order-context__value">{{ orderInfo.vehicleName }}</span>
+    </div>
+    <div class="order-context__row">
+      <span class="order-context__label">Trạng thái:</span>
+      <span class="order-context__badge">{{ invoice.StatusName || 'Tạo mới' }}</span>
+    </div>
+  </div>
+  <!-- END: ORDER CONTEXT -->
   <!-- START: BODY -->
   <div class="customer-body">
     <div class="body-container">
@@ -33,6 +53,24 @@
         </div>
       </div>
       <!-- END: THÔNG TIN ĐƠN VỊ BÁN -->
+
+      <!-- START: THÔNG TIN XE (SỐ KHUNG / SỐ MÁY) -->
+      <div class="container-body">
+        <div class="title">Thông tin xe</div>
+        <div class="content">
+          <ps-kendo-textbox
+            [label]="'Số khung (*)'"
+            [(ngModel)]="invoice.FrameSeri"
+            (blur)="onFrameSeriBlur()"
+          ></ps-kendo-textbox>
+          <ps-kendo-textbox
+            [label]="'Số máy (*)'"
+            [(ngModel)]="invoice.EngineSeri"
+            (blur)="onEngineSeriBlur()"
+          ></ps-kendo-textbox>
+        </div>
+      </div>
+      <!-- END: THÔNG TIN XE -->
 
       <div class="container-body">
         <div class="title">Thông tin xuất hóa đơn</div>

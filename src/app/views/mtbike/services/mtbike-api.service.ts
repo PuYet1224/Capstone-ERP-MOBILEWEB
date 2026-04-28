@@ -1600,10 +1600,10 @@ export class MtbikeApiService {
     });
   }
 
-  public IssueSALInvoice(listCode: number[]): Observable<ResponseDTO> {
+  public UpdateSALInvoiceIssue(listCode: number[]): Observable<ResponseDTO> {
     return new Observable<ResponseDTO>((obs) => {
       const ns = MtbikeApiStaticService.getNamespace(this.config.GetDLL());
-      this.api.post(ns.IssueSALInvoice, { ListCode: listCode })
+      this.api.post(ns.UpdateSALInvoiceIssue, { ListCode: listCode })
         .subscribe(
           (res: ResponseDTO) => {
             obs.next(res);

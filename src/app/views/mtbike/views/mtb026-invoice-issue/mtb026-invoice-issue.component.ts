@@ -332,8 +332,14 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
   confirmIssueInvoice(): void {
     if (!this.selectedInvoice) return;
 
+    // Validate SK/SM before issuing
+    if (!this.selectedInvoice['FrameSeri'] || !this.selectedInvoice['EngineSeri']) {
+      this.notification.onWarning('Hóa đơn chưa gán Số Khung / Số Máy. Vui lòng vào Chứng từ HĐ để gán xe trước khi phát hành.');
+      return;
+    }
+
     this.loader.loader(true);
-    const sub = this.api.IssueSALInvoice([this.selectedInvoice.Code]).subscribe(
+    const sub = this.api.UpdateSALInvoiceIssue([this.selectedInvoice.Code]).subscribe(
       res => {
         if (res.StatusCode === 0) {
           this.notification.onSuccess('Phát hành hóa đơn thành công!');
@@ -362,8 +368,16 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Validate SK/SM for all pending invoices
+    const missingVehicle = this.allInvoices
+      .filter(inv => pendingCodes.includes(inv.Code) && (!inv['FrameSeri'] || !inv['EngineSeri']));
+    if (missingVehicle.length > 0) {
+      this.notification.onWarning(`${missingVehicle.length} hóa đơn chưa gán Số Khung / Số Máy. Vui lòng gán xe trước khi phát hành.`);
+      return;
+    }
+
     this.loader.loader(true);
-    const sub = this.api.IssueSALInvoice(pendingCodes).subscribe(
+    const sub = this.api.UpdateSALInvoiceIssue(pendingCodes).subscribe(
       res => {
         if (res.StatusCode === 0) {
           const result = res.ObjectReturn;
