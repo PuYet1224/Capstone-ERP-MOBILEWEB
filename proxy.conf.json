@@ -1,8 +1,9 @@
 {
   "/api/proxy-identity": {
-    "target": "http://identity.hoaiminh.vn",
+    "target": "http://puyet01022004-001-site1.qtempurl.com/",
     "secure": false,
     "changeOrigin": true,
+    "auth": "puyet1224-001:Puyet1224@",
     "pathRewrite": {
       "^/api/proxy-identity": ""
     }
@@ -11,7 +12,6 @@
     "target": "http://puyet01022004-001-site1.qtempurl.com/",
     "secure": false,
     "changeOrigin": true,
-    "auth": "puyet1224-001:Puyet1224@",
     "pathRewrite": {
       "^/api/proxy-api": ""
     }
@@ -19,7 +19,7 @@
   "/resource": {
     "target": "http://puyet01022004-001-site1.qtempurl.com/",
     "secure": false,
-    "changeOrigin": true,
-    "auth": "puyet1224-001:Puyet1224@"
+    "auth": "puyet1224-001:Puyet1224@",
+    "changeOrigin": true
   }
 }
