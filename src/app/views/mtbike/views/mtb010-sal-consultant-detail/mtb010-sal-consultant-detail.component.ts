@@ -180,13 +180,13 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
   private static genderCache: ListDTO[] = [];
 
   private GetSALMaster(param: SALOrderMasterCusDTO) {
-    if (param.Code && Mtb010SalConsultantDetailComponent.detailCache.has(param.Code)) {
-        this.retailDetailDTO = { ...Mtb010SalConsultantDetailComponent.detailCache.get(param.Code)! };
-        this.retailDetailDTOcopy.ID = this.retailDetailDTO.ID;
-        this.retailDetailDTOcopy.Code = this.retailDetailDTO.Code;
-        this.masterStatus = this.retailDetailDTO.Status;
-        return;
-    }
+    // if (param.Code && Mtb010SalConsultantDetailComponent.detailCache.has(param.Code)) {
+    //     this.retailDetailDTO = { ...Mtb010SalConsultantDetailComponent.detailCache.get(param.Code)! };
+    //     this.retailDetailDTOcopy.ID = this.retailDetailDTO.ID;
+    //     this.retailDetailDTOcopy.Code = this.retailDetailDTO.Code;
+    //     this.masterStatus = this.retailDetailDTO.Status;
+    //     return;
+    // }
 
     this.subLoader.loader(true);
     const sub = this.mtbikeapi.GetSALMaster(param).subscribe(res => {
