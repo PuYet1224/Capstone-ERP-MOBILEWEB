@@ -75,9 +75,9 @@
                 format="n0"
                 placeholder="0"
                 [(ngModel)]="receipt.CashAmount"
-                [disabled]="(!receipt.IsFirstReceipt && receipt.IsLockPayment) || receipt.IsFirstReceipt"
+                [disabled]="receipt.IsFirstReceipt ? (receipt.Status >= 3 && (receipt.IsLockPayment || receipt.PaymentMethod !== 3)) : receipt.IsLockPayment"
                 (valueChange)="onCashAmountChange($event)"
-                (blur)="onAmountBlur()"
+                (blur)="onAmountBlur('cash')"
               >
               </ps-kendo-numeric-textbox>
               <span class="amount-postfix">{{ receipt.CollectedAmount | number: '1.0-0' }}đ</span>
@@ -94,9 +94,9 @@
                 [spinners]="false"
                 format="n0"
                 [(ngModel)]="receipt.TransferAmount"
-                [disabled]="(!receipt.IsFirstReceipt && receipt.IsLockPayment) || receipt.IsFirstReceipt"
+                [disabled]="receipt.IsFirstReceipt ? receipt.Status >= 3 : (receipt.IsLockPayment || receipt.PaymentMethod === 3)"
                 (valueChange)="onTransferAmountChange($event)"
-                (blur)="onAmountBlur()"
+                (blur)="onAmountBlur('transfer')"
               >
               </ps-kendo-numeric-textbox>
               <span class="amount-postfix">{{ receipt.CollectedAmount | number: '1.0-0' }}đ</span>
@@ -125,10 +125,10 @@
       <div class="card-body">
         <!-- ... (Các dòng Tiền xe, dịch vụ, phụ tùng giữ nguyên) ... -->
 
-        <div class="separator"></div>
+        <!-- <div class="separator"></div> -->
 
         <!-- Bổ sung 3 dòng theo màn hình Tư vấn -->
-        <div class="summary-row">
+        <!-- <div class="summary-row">
           <span>Trả thẳng:</span>
           <span class="value">{{ orderInfo.LumpSumAmount | number: '1.0-0' }}đ</span>
         </div>
@@ -139,9 +139,9 @@
         <div class="summary-row">
           <span>Dư nợ (Ngân hàng/Trả góp):</span>
           <span class="value text-primary">{{ orderInfo.InstallmentAmount | number: '1.0-0' }}đ</span>
-        </div>
+        </div> -->
 
-        <div class="separator"></div>
+        <!-- <div class="separator"></div> -->
 
         <div class="summary-row highlight">
           <span>Đã thu trước đó:</span>

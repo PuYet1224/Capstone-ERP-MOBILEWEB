@@ -351,7 +351,7 @@ const data = Array.isArray(raw) ? raw : ((raw as any) && (raw as any).Data) ? (r
   public FunctionPermissionDTO = FunctionPermissionDTO;
 
   public onAddNewPart() {
-    if ((!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator) || this.retailMaster?.Status != 1) return;
+    if ((!this.FunctionPermissionDTO.master && !this.FunctionPermissionDTO.creator) || this.retailMaster?.Status >= 4) return;
     this.isEditMode = false;
     this.resetForm();
 

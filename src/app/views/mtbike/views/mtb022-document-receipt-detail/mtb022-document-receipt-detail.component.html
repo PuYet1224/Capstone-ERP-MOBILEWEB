@@ -46,7 +46,12 @@
         </div>
         <div class="info-row">
           <span class="label">Phương thức thanh toán</span>
-          <span class="value">{{ receipt.PaymentMethod == 1 ? 'Tiền mặt' : 'Chuyển khoản' }}</span>
+          <span class="value">
+            <span class="pm-badge" [ngClass]="getPaymentMethodClass(receipt.PaymentMethod)">
+              <span class="material-icons pm-icon">{{ getPaymentMethodIcon(receipt.PaymentMethod) }}</span>
+              {{ receipt.PaymentMethod == 1 ? 'Tiền mặt' : receipt.PaymentMethod == 2 ? 'Chuyển khoản' : 'Tiền mặt + Chuyển khoản' }}
+            </span>
+          </span>
         </div>
         <div class="info-row full-width">
           <span class="label">Mô tả</span>
@@ -122,7 +127,7 @@
 
     <!-- SIGNATURE AREA -->
     <div class="signature-section">
-      <div class="signature-box" *ngIf="receipt?.Signature">
+      <div class="signature-box" *ngIf="receipt?.Signature" (click)="openSignaturePopup()">
         <p class="sig-title">Khách hàng <span class="sig-sub">(ký tên)</span></p>
         <div class="sig-wrapper">
           <img [src]="receipt?.Signature" alt="Chữ ký khách hàng" class="sig-image" />
@@ -176,7 +181,7 @@
       class="btn-received"
       [theme]="'primary'"
       (onClick)="toggleConfirmReceived(true)"
-      *ngIf="(receipt?.Status != 5 && receipt?.Status != 6) && orderInfo.Progress < 100"
+      *ngIf="(receipt?.Status != 5 && receipt?.Status != 6) && orderInfo.Progress < 100 && !(receipt?.IsFirstReceipt && receipt?.IsLockCustomer)"
     >
       Đã thu tiền
     </ps-kendo-button>

@@ -10,7 +10,8 @@
     "e2e": "npx playwright test",
     "e2e:headed": "npx playwright test --headed",
     "e2e:report": "npx playwright show-report e2e/report",
-    "e2e:update-snapshots": "npx playwright test --update-snapshots"
+    "e2e:update-snapshots": "npx playwright test --update-snapshots",
+    "e2e:excel": "npm run e2e & node scripts/generate-excel.js"
   },
   "private": true,
   "dependencies": {
@@ -75,6 +76,7 @@
     "@types/jquery": "^3.5.32",
     "@types/node": "^18.19.123",
     "eslint": "^9.22.0",
+    "exceljs": "^4.4.0",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",

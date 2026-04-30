@@ -344,5 +344,15 @@ export class Mtb021DocumentReceiptComponent implements OnInit, OnDestroy {
       default: return 'pm-cash';
     }
   }
+
+  getPaymentMethodIcon(method: number): string {
+    switch (method) {
+      case 1: return 'payments';
+      case 2: return 'sync_alt';
+      case 3: return 'credit_card';
+      case 4: return 'account_balance_wallet';
+      default: return 'payments';
+    }
+  }
   //#endregion
 }

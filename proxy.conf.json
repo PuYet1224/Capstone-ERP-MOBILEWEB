@@ -1,25 +1,25 @@
 {
   "/api/proxy-identity": {
-    "target": "http://identity.hoaiminh.vn",
+    "target": "http://puyet01022004-001-site1.qtempurl.com/",
     "secure": false,
     "changeOrigin": true,
+    "auth": "puyet1224-001:Puyet1224@",
     "pathRewrite": {
       "^/api/proxy-identity": ""
     }
   },
   "/api/proxy-api": {
-    "target": "http://puyet01022004-001-site1.qtempurl.com",
+    "target": "http://puyet01022004-001-site1.qtempurl.com/",
     "secure": false,
     "changeOrigin": true,
-    "auth": "11307125:60-dayfreetrial",
     "pathRewrite": {
       "^/api/proxy-api": ""
     }
   },
   "/resource": {
-    "target": "http://puyet01022004-001-site1.qtempurl.com",
+    "target": "http://puyet01022004-001-site1.qtempurl.com/",
     "secure": false,
-    "changeOrigin": true,
-    "auth": "11307125:60-dayfreetrial"
+    "auth": "puyet1224-001:Puyet1224@",
+    "changeOrigin": true
   }
 }

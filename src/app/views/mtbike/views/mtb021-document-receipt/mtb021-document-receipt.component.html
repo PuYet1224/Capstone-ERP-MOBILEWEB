@@ -108,7 +108,7 @@
                                     <div class="r-badges">
                                         <span class="r-pm-badge" [ngClass]="getPaymentMethodClass(r.PaymentMethod)">
                                             <span class="material-icons r-badge-icon">
-                                                {{ r.PaymentMethod === 2 ? 'swap_horiz' : 'payments' }}
+                                                {{ getPaymentMethodIcon(r.PaymentMethod) }}
                                             </span>
                                             {{ r.PaymentMethodName }}
                                         </span>

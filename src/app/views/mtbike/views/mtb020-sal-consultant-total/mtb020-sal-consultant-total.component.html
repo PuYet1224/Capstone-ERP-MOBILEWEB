@@ -85,27 +85,8 @@
         <ps-kendo-button (onClick)="onNavigate('to-list')">
             <span class="material-icons">list_alt</span>
         </ps-kendo-button>
-        <ps-kendo-button *ngIf="retailMaster?.Status == SALOrderMasterStatusRetailEnum.PENDING || retailMaster?.Status == SALOrderMasterStatusRetailEnum.PROCESSING" [theme]="'primary'" (onClick)="showCompleteConfirm = true">
-            <span class="text">Hoàn tất</span>
-        </ps-kendo-button>
-        <ps-kendo-button [disabled]="totals.totalPayment == 0" *ngIf="retailMaster?.Status == SALOrderMasterStatusRetailEnum.NEW" [theme]="'primary'" (onClick)="onSendPayment()">
+        <ps-kendo-button *ngIf="retailMaster?.Status < SALOrderMasterStatusRetailEnum.PROCESSING" [theme]="'primary'" (onClick)="onSendPayment()">
             <span class="text">Gửi thanh toán</span>
         </ps-kendo-button>
     </ps-footer-action>
-    <!-- START: POPUP CONFIRM COMPLETE -->
-    <ps-dialog-confirm [open]="showCompleteConfirm" class="complete-dialog">
-        <div psDialogConfirmBody class="body">
-            <div class="title-out">
-                Hoàn tất giao dịch
-            </div>
-            <div class="confirm">
-                Bạn có chắc chắn muốn hoàn tất giao dịch này không? Hành động này không thể hoàn tác.
-            </div>
-            <div class="group-buttom">
-                <ps-kendo-button (onClick)="showCompleteConfirm = false">Đóng</ps-kendo-button>
-                <ps-kendo-button [theme]="'primary'" (onClick)="onComplete()">Hoàn tất</ps-kendo-button>
-            </div>
-        </div>
-    </ps-dialog-confirm>
-    <!-- END: POPUP CONFIRM COMPLETE -->
 </div>

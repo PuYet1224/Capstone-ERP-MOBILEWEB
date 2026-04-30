@@ -548,11 +548,11 @@ export class Mtb000DashboardComponent implements OnInit {
 
     this.chart5_pieChart = listData.map((item: any): DashboardDTO => {
       const nhapHang = item.ListData.find((d: any) => d.Type === 1);
-      const tonKho = item.ListData.find((d: any) => d.Type === 2);
+      const tonKho = item.ListData.find((d: any) => d.Type === 3); // Type 3 is Stock (Chưa bán)
       return {
         ...item,
-        Value: tonKho?.Percentage ?? 0,
-        Percentage: nhapHang?.Percentage ?? 0,
+        Value: tonKho?.Percentage ?? 0, // Stock percentage
+        Percentage: nhapHang?.Percentage ?? 0, // Inbound percentage
       };
     });
 
@@ -666,14 +666,13 @@ export class Mtb000DashboardComponent implements OnInit {
         if (res.StatusCode === 0) {
           this.dashboard = res.ObjectReturn;
 
-          // Xác định handler từ ID đầu tiên (giả sử mảng luôn có ít nhất 1 ID)
-          const firstId = param.Dashboard[0];
-          // console.log(firstId);
-          const handler = this.dashboardHandlers[firstId];
-
-          if (handler) {
-            handler(this.dashboard);
-          }
+          // Duyệt qua tất cả các phần tử trả về để gọi đúng handler cho từng loại chart
+          this.dashboard.forEach(item => {
+            const handler = this.dashboardHandlers[item.Type];
+            if (handler) {
+              handler(this.dashboard);
+            }
+          });
 
           this.subLoader.loader(false);
         } else {

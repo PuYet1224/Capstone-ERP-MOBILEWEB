@@ -163,7 +163,7 @@ export class Mtb009SalConsultantComponent implements OnDestroy, OnInit {
 
   onSetItem(item: SALOrderMasterCusDTO) {
     this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_MASTER, item);
-    if (item.Status == SALOrderMasterStatusRetailEnum.PROCESSING) {
+    if (item.Status >= SALOrderMasterStatusRetailEnum.PENDING) {
       this.router.navigate(['/mtbike/consultant/total']);
     } else {
       this.router.navigate(['/mtbike/consultant/detail']);
@@ -254,16 +254,6 @@ export class Mtb009SalConsultantComponent implements OnDestroy, OnInit {
     this.isLoading = true;
     this.loader.loader(true);
 
-    const cacheKey = JSON.stringify(filter);
-    if (!isRefresh && Mtb009SalConsultantComponent.listCache.has(cacheKey)) {
-        this.listRetailMaster = Mtb009SalConsultantComponent.listCache.get(cacheKey)!;
-        this.openSet.clear();
-        this.listRetailMaster.forEach((_, index) => this.openSet.add(index));
-        this.isLoading = false;
-        this.loader.loader(false);
-        return;
-    }
-
     const apiFilter = JSON.parse(JSON.stringify(filter));
     if (!apiFilter.filter) apiFilter.filter = { logic: 'and', filters: [] };
     apiFilter.filter.filters.push({ field: 'BypassCache', operator: 'eq', value: new Date().getTime() });
@@ -271,7 +261,6 @@ export class Mtb009SalConsultantComponent implements OnDestroy, OnInit {
     const temp = this.api.GetListSALMaster(apiFilter).subscribe((res) => {
       if (res.StatusCode === 0) {
         this.listRetailMaster = res.ObjectReturn as SALOrderMasterGroup[];
-        Mtb009SalConsultantComponent.listCache.set(cacheKey, this.listRetailMaster);
         this.openSet.clear();
         this.listRetailMaster.forEach((_, index) => {
           this.openSet.add(index);

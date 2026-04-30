@@ -14,20 +14,20 @@
   <div class="vehicle-list-body">
     <div class="vehicle-card" *ngFor="let item of listVehicles; let i = index">
       <!-- Card Header -->
-      <div class="card-header" [class.cancelled]="item._cancelled">
+      <div class="card-header" [class.cancelled]="item.IsCancelled">
         <div class="vehicle-img">
           <img [src]="item.ImageSetting1" [alt]="item.VehicleName" />
         </div>
         <div class="vehicle-info">
-          <div class="vehicle-name">{{ item.VehicleName }} | {{ item.ColorName }}</div>
-          <div class="vehicle-price">
+          <div class="vehicle-name" [class.dashed]="item.IsCancelled">{{ item.VehicleName }} | {{ item.ColorName }}</div>
+          <div class="vehicle-price" [class.dashed]="item.IsCancelled">
             Đơn giá: <strong>{{ item.Price | number: '1.0-0' }}đ</strong>
           </div>
         </div>
       </div>
 
       <!-- Card Body: Interactive Fields -->
-      <div class="card-body" *ngIf="!item._cancelled">
+      <div class="card-body" *ngIf="!item.IsCancelled">
         <div class="info-row-item">
           <div class="dropdown-wrapper">
             <ps-kendo-dropdown-list
@@ -69,11 +69,16 @@
             ></ps-kendo-numeric-textbox>
           </div>
         </div>
+        <div class="card-footer" *ngIf="!item.IsCancelled && receipt.Status < 4">
+          <ps-kendo-button [theme]="'error-outline'" (onClick)="onCancelVehicle(item)">
+            Hủy xe
+          </ps-kendo-button>
+        </div>
       </div>
 
       <!-- Cancelled state -->
-      <div class="cancelled-info" *ngIf="item._cancelled">
-        <div class="cancel-row">
+      <div class="cancelled-info" *ngIf="item.IsCancelled && (item._cancelReason || item._cancelNote)">
+        <div class="cancel-row" *ngIf="item._cancelReason">
           <span class="cancel-label">Lý do:</span>
           <span class="cancel-value">{{ item._cancelReason }}</span>
         </div>
@@ -97,4 +102,18 @@
       <span class="material-icons">arrow_back</span>
     </ps-kendo-button>
   </ps-footer-action>
+
+  <!-- CONFIRM CANCEL DIALOG -->
+  <ps-dialog-confirm [open]="showCancelConfirm" class="cancel-dialog">
+    <div psDialogConfirmBody class="body">
+      <div class="title-out">Xác nhận hủy xe</div>
+      <div class="confirm">
+        Bạn có chắc chắn muốn hủy xe <strong>{{ itemToCancel?.VehicleName }}</strong> khỏi phiếu thu này không?
+      </div>
+      <div class="group-buttom">
+        <ps-kendo-button (onClick)="showCancelConfirm = false">Đóng</ps-kendo-button>
+        <ps-kendo-button [theme]="'error'" (onClick)="onConfirmCancelVehicle()">Xác nhận hủy</ps-kendo-button>
+      </div>
+    </div>
+  </ps-dialog-confirm>
 </div>

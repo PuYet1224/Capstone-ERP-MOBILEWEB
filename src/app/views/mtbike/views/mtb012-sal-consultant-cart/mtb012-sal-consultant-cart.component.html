@@ -1,4 +1,4 @@
-<div class="mtb011-retail-vehicle" [class.readonly]="retailMaster?.Status != 1">
+<div class="mtb011-retail-vehicle" [class.readonly]="retailMaster?.Status >= 4">
     <!-- START: HEADER -->
     <ps-header-back>
         <div class="left-side">
@@ -30,7 +30,7 @@
 
     <div class="retail-body">
         <ng-container *ngFor="let item of (typeactive == 'buy' ? listVehicle : listVehicle2) || []; let i = index">
-            <div class="product-list" *ngIf="retailMaster?.Status == 1 || (typeactive == 'buy' ? true : hasCheckedItems(item))">
+            <div class="product-list" *ngIf="retailMaster?.Status < 4 || (typeactive == 'buy' ? true : hasCheckedItems(item))">
             <div class="swipe-wrapper" *ngIf="typeactive == 'buy'" (swipeleft)="onSwipeLeft(item, i)"
                 (swiperight)="onSwipeRight(item)" [class.swiped]="item.swiped">
                 <div class="product" (click)="onshowAction(item)">
@@ -53,12 +53,12 @@
                                     {{item.Price| number:'1.0-0' }}
                                 </div>
                                 <div class="counter" (click)="$event.stopPropagation()">
-                                    <span *ngIf="retailMaster?.Status == 1" class="material-icons" [class.disabled]="item.IsOrderLock" (click)="!item.IsOrderLock && onConfirmDelete(item, 'delete-one')">
+                                    <span *ngIf="retailMaster?.Status < 4" class="material-icons" [class.disabled]="item.IsOrderLock" (click)="!item.IsOrderLock && onConfirmDelete(item, 'delete-one')">
                                         remove
                                     </span>
-                                    <ps-kendo-textbox [disabled]="retailMaster?.Status != 1 || item.IsOrderLock" [(ngModel)]="item.OrderQuantity" (focus)="onFocusVehicle(item)"
+                                    <ps-kendo-textbox [disabled]="retailMaster?.Status >= 4 || item.IsOrderLock" [(ngModel)]="item.OrderQuantity" (focus)="onFocusVehicle(item)"
                                         (blur)="onAddMultiVehicle(item)"></ps-kendo-textbox>
-                                    <span *ngIf="retailMaster?.Status == 1" class="material-icons" [class.disabled]="item.IsOrderLock" (click)="!item.IsOrderLock && onAddVehicle(item)">
+                                    <span *ngIf="retailMaster?.Status < 4" class="material-icons" [class.disabled]="item.IsOrderLock" (click)="!item.IsOrderLock && onAddVehicle(item)">
                                         add
                                     </span>
                                 </div>
@@ -79,11 +79,11 @@
                             </div>
                         </div>
                     </div>
-                    <ps-kendo-button *ngIf="retailMaster?.Status == 1 && !item.IsOrderLock" (onClick)="onClickLock(item)"><span
+                    <ps-kendo-button *ngIf="retailMaster?.Status < 4 && !item.IsOrderLock" (onClick)="onClickLock(item)"><span
                             class="material-icons">
                             lock
                         </span> Chốt mua</ps-kendo-button>
-                    <ps-kendo-button class="unlock" *ngIf="retailMaster?.Status == 1 && item.IsOrderLock" (onClick)="onClickUnlock(item)"><span
+                    <ps-kendo-button class="unlock" *ngIf="retailMaster?.Status < 4 && item.IsOrderLock" (onClick)="onClickUnlock(item)"><span
                             class="material-icons">
                             lock_open_right
                         </span> Bỏ chốt</ps-kendo-button>
@@ -91,7 +91,7 @@
                         [innerHTML]="{ Status: item.OrderTypeData, StatusName: item.OrderTypeData == 1 ? 'Có sẵn' : item.OrderTypeData == 2 ? 'Điều xe' : 'Đặt xe'} | SALOrderDetailTypeData">
                     </div>
                 </div>
-                <button *ngIf="retailMaster?.Status == 1" class="btn-delete" (click)="onDelete(item)">Xóa</button>
+                <button *ngIf="retailMaster?.Status < 4" class="btn-delete" (click)="onDelete(item)">Xóa</button>
                 <button class="btn-delete btn-services" (click)="onSetItem(item, 'services-detail')">Dịch vụ</button>
                 <button class="btn-delete btn-part" (click)="onSetItem(item, 'parts-detail')">Phụ kiện</button>
                 <button class="btn-delete btn-discount" (click)="onSetItem(item, 'promotion-detail')">CTKM</button>
@@ -115,8 +115,8 @@
                     </div>
                     <div class="bot-content" *ngIf="!isCollapsed(i)">
                         <ng-container *ngFor="let v of item.ListGroupOrderDetail">
-                            <div class="product" *ngIf="retailMaster?.Status == 1 || v.IsChecked">
-                                <ps-kendo-checkbox [disabled]="retailMaster?.Status != 1" [(ngModel)]="v.IsChecked"
+                            <div class="product" *ngIf="retailMaster?.Status < 4 || v.IsChecked">
+                                <ps-kendo-checkbox [disabled]="retailMaster?.Status >= 4" [(ngModel)]="v.IsChecked"
                                     (onchecked)="onchecked(item, v)"></ps-kendo-checkbox>
                             <div class="vehicle">
                                 <img [src]="v.ImageSetting1" alt="">
@@ -162,7 +162,7 @@
         <ps-kendo-button (onClick)="onNavigate('/mtbike/consultant')">
             <span class="material-icons">list_alt</span>
         </ps-kendo-button>
-        <ps-kendo-button *ngIf="retailMaster?.Status == 1 && retailMaster?.Code > 0" [theme]="'error'" [disabled]="FunctionPermissionDTO.approver && !FunctionPermissionDTO.master" (onClick)="onCancelTransaction()">
+        <ps-kendo-button *ngIf="retailMaster?.Status < 4 && retailMaster?.Code > 0" [theme]="'error'" [disabled]="FunctionPermissionDTO.approver && !FunctionPermissionDTO.master" (onClick)="onCancelTransaction()">
             <span class="text">Hủy giao dịch</span>
         </ps-kendo-button>
         <ps-kendo-button (onClick)="onNavigate('/mtbike/consultant/total')" [theme]="'primary'"

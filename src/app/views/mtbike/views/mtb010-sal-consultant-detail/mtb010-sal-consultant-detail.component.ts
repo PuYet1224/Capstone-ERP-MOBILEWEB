@@ -130,6 +130,15 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
         if (field === 'CustomerGender' && this.retailDetailDTOcopy.CustomerName) props.push('CustomerName');
     }
 
+    // Fix DB timezone: Send local time for new orders
+    if (!this.retailDetailDTOcopy.Code) {
+      const now = new Date();
+      const offset = now.getTimezoneOffset() * 60000;
+      const localISOTime = (new Date(now.getTime() - offset)).toISOString().slice(0, -1);
+      (this.retailDetailDTOcopy as any).SaleDate = localISOTime;
+      if (!props.includes('SaleDate')) props.push('SaleDate');
+    }
+
     let param: UpdatePropertiesInterface<SALOrderMasterCusDTO> = {
       DTO: this.retailDetailDTOcopy,
       Properties: props
@@ -171,13 +180,13 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
   private static genderCache: ListDTO[] = [];
 
   private GetSALMaster(param: SALOrderMasterCusDTO) {
-    if (param.Code && Mtb010SalConsultantDetailComponent.detailCache.has(param.Code)) {
-        this.retailDetailDTO = { ...Mtb010SalConsultantDetailComponent.detailCache.get(param.Code)! };
-        this.retailDetailDTOcopy.ID = this.retailDetailDTO.ID;
-        this.retailDetailDTOcopy.Code = this.retailDetailDTO.Code;
-        this.masterStatus = this.retailDetailDTO.Status;
-        return;
-    }
+    // if (param.Code && Mtb010SalConsultantDetailComponent.detailCache.has(param.Code)) {
+    //     this.retailDetailDTO = { ...Mtb010SalConsultantDetailComponent.detailCache.get(param.Code)! };
+    //     this.retailDetailDTOcopy.ID = this.retailDetailDTO.ID;
+    //     this.retailDetailDTOcopy.Code = this.retailDetailDTO.Code;
+    //     this.masterStatus = this.retailDetailDTO.Status;
+    //     return;
+    // }
 
     this.subLoader.loader(true);
     const sub = this.mtbikeapi.GetSALMaster(param).subscribe(res => {
