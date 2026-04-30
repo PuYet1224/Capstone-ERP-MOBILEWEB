@@ -48,7 +48,7 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
   public isOpenedFilter = false;
   public searchKeyword = '';
 
-  public activeTab: 'pending' | 'issued' = 'pending';
+  public activeTab: 'pending' | 'issued' = 'pending'; // kept for compatibility
   public pendingCount = 0;
   public issuedCount = 0;
 
@@ -194,41 +194,38 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
   }
 
   private buildDisplayGroups(allItems: Mtb026InvoiceIssueItem[]): void {
-    // For issue screen, only show orders that have invoices
-    const itemsWithInvoices = allItems.filter(item => {
+    const pendingItems: Mtb026InvoiceIssueItem[] = [];
+    const issuedItems: Mtb026InvoiceIssueItem[] = [];
+
+    allItems.forEach(item => {
       const invoices = this.allInvoices.filter(inv => inv.OrderMaster === item.Code);
-      return invoices.length > 0;
-    });
+      // Only show ready-to-issue invoices (complete info) + already issued
+      const readyInvoices = invoices.filter(inv =>
+        inv.Status === SALOrderInvoiceStatusEnum.Success || this.isInfoComplete(inv)
+      );
+      if (readyInvoices.length === 0) return;
 
-    const processingItems = itemsWithInvoices.filter(i =>
-      i.Status === SALOrderMasterStatusRetailEnum.PENDING ||
-      i.Status === SALOrderMasterStatusRetailEnum.PROCESSING
-    );
+      item.invoices = readyInvoices;
+      item.invoiceCount = readyInvoices.length;
 
-    const completedItems = itemsWithInvoices.filter(i =>
-      i.Status === SALOrderMasterStatusRetailEnum.COMPLETE
-    );
-
-    processingItems.forEach(item => {
-      item.invoiceCount = this.allInvoices.filter(inv => inv.OrderMaster === item.Code).length;
-    });
-    completedItems.forEach(item => {
-      item.invoiceCount = this.allInvoices.filter(inv => inv.OrderMaster === item.Code).length;
+      const allIssued = readyInvoices.every(inv => inv.Status === SALOrderInvoiceStatusEnum.Success);
+      if (allIssued) {
+        issuedItems.push(item);
+      } else {
+        pendingItems.push(item);
+      }
     });
 
     this.displayGroups = [];
-
-    if (processingItems.length > 0) {
-      this.displayGroups.push({ name: 'Đang xử lý', items: processingItems });
+    if (pendingItems.length > 0) {
+      this.displayGroups.push({ name: 'Chưa phát hành', items: pendingItems });
     }
-
-    if (completedItems.length > 0) {
-      this.displayGroups.push({ name: 'Hoàn tất', items: completedItems });
+    if (issuedItems.length > 0) {
+      this.displayGroups.push({ name: 'Đã phát hành', items: issuedItems });
     }
 
     this.openGroupSet.clear();
     this.displayGroups.forEach((_, i) => this.openGroupSet.add(i));
-    this.assignInvoicesToItems();
   }
 
   private assignInvoicesToItems(): void {
@@ -242,7 +239,7 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
 
   private updateInvoiceCounts(): void {
     this.pendingCount = this.allInvoices.filter(
-      inv => inv.Status !== SALOrderInvoiceStatusEnum.Success
+      inv => inv.Status !== SALOrderInvoiceStatusEnum.Success && this.isInfoComplete(inv)
     ).length;
     this.issuedCount = this.allInvoices.filter(
       inv => inv.Status === SALOrderInvoiceStatusEnum.Success
@@ -255,12 +252,20 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
     this.activeTab = tab;
   }
 
-  getFilteredInvoices(item: Mtb026InvoiceIssueItem): SALOrderInvoiceCusDTO[] {
-    if (!item.invoices) return [];
-    if (this.activeTab === 'pending') {
-      return item.invoices.filter(inv => inv.Status !== SALOrderInvoiceStatusEnum.Success);
+  getVisibleInvoices(item: Mtb026InvoiceIssueItem): SALOrderInvoiceCusDTO[] {
+    return item.invoices || [];
+  }
+
+  isInfoComplete(inv: SALOrderInvoiceCusDTO): boolean {
+    if (!inv.VATCustomerName) return false;
+    if (!inv.VATAddress) return false;
+    if (inv.VATType === 1) {
+      return !!(inv.VATCCCD && inv.VATCellPhone);
     }
-    return item.invoices.filter(inv => inv.Status === SALOrderInvoiceStatusEnum.Success);
+    if (inv.VATType === 2 || inv.VATType === 3) {
+      return !!(inv.VATCompanyName && inv.VATCompanyTax);
+    }
+    return false;
   }
 
   toggleGroup(idx: number): void {
@@ -320,6 +325,10 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
 
   //#region Issue invoice
   openIssueConfirm(inv: SALOrderInvoiceCusDTO): void {
+    if (inv.Status === SALOrderInvoiceStatusEnum.Success) {
+      this.notification.onWarning('Hóa đơn đã phát hành, không thể phát hành lại.');
+      return;
+    }
     this.selectedInvoice = inv;
     this.isOpenedIssueConfirm = true;
   }
@@ -339,11 +348,15 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
     }
 
     this.loader.loader(true);
-    const sub = this.api.UpdateSALInvoiceIssue([this.selectedInvoice.Code]).subscribe(
+    const invoiceCode = this.selectedInvoice.Code;
+    const orderMasterCode = this.selectedInvoice.OrderMaster;
+    const sub = this.api.UpdateSALInvoiceIssue([invoiceCode]).subscribe(
       res => {
         if (res.StatusCode === 0) {
           this.notification.onSuccess('Phát hành hóa đơn thành công!');
           this.closeIssueConfirm();
+          // Check if all invoices in this order are now issued
+          this.checkAndUpdateOrderStatus(orderMasterCode);
           this.loadData();
         } else {
           this.notification.onError(`Lỗi phát hành: ${res.ErrorString}`);
@@ -356,6 +369,29 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
       }
     );
     this.arrUnsubscribe.push(sub);
+  }
+
+  private checkAndUpdateOrderStatus(orderMasterCode: number): void {
+    if (!orderMasterCode) return;
+    const orderInvoices = this.allInvoices.filter(inv => inv.OrderMaster === orderMasterCode);
+    // After issuing, the current invoice is now Success — check if all others are too
+    const allIssued = orderInvoices.every(inv =>
+      inv.Code === this.selectedInvoice?.Code || inv.Status === SALOrderInvoiceStatusEnum.Success
+    );
+    if (allIssued) {
+      // Update order status to COMPLETE
+      const masterDTO = new SALOrderMasterCusDTO();
+      masterDTO.Code = orderMasterCode;
+      masterDTO.Status = SALOrderMasterStatusRetailEnum.COMPLETE;
+      const param = { DTO: masterDTO, Properties: ['Status'] };
+      this.api.UpdateSALMaster(param).subscribe({
+        next: (res) => {
+          if (res.StatusCode === 0) {
+            this.notification.onSuccess('Phiếu bán hàng đã hoàn tất!');
+          }
+        }
+      });
+    }
   }
 
   bulkIssueAll(): void {

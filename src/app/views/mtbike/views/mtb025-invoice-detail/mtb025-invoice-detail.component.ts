@@ -16,6 +16,10 @@ import { GetConfigService } from 'src/app/services/core/ps-get-config.service';
 import { LSHeadCusDTO } from 'src/app/models/dtos/e-dtos/ls-head.dto';
 import { WHIODetailVehicleCusDTO } from 'src/app/models/dtos/e-dtos/wh-io-detail-vehicle.dto';
 import { SALOrderMasterCusDTO } from 'src/app/models/dtos/e-dtos/sal-order-master.dto';
+import { PSCoreApiService } from 'src/app/services/ps-core-api.service';
+import { CSLoyalCustomerCusDTO } from 'src/app/models/dtos/e-dtos/cs-loyal-customer.dto';
+import { LSProvinceDTO } from 'src/app/models/dtos/e-dtos/ls-province.dto';
+import { LSWardDTO } from 'src/app/models/dtos/e-dtos/ls-ward.dto';
 
 @Component({
   selector: 'mtb025-invoice-detail',
@@ -26,6 +30,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   public invoice: SALOrderInvoiceCusDTO = new SALOrderInvoiceCusDTO();
   public invoiceCopy: SALOrderInvoiceCusDTO = new SALOrderInvoiceCusDTO();
   public isLoading = false;
+  public isReadOnly = false;
   private arrUnsubscribe: Subscription[] = [];
 
   // Apply to other vehicles
@@ -37,11 +42,18 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   // Options for Dropdown
   public invoiceTypes: ListDTO[] = [];
 
+  // Customer data from CSLoyalCustomer
+  public customer: CSLoyalCustomerCusDTO = new CSLoyalCustomerCusDTO();
+  private customerCopy: CSLoyalCustomerCusDTO = new CSLoyalCustomerCusDTO();
+
+  // Province / Ward cascade (no District)
+  public provinceList: LSProvinceDTO[] = [];
+  public wardList: LSWardDTO[] = [];
+
   // Lists for Personal case
   public listGender = [
-    { Code: 1, ListName: 'Nam' },
-    { Code: 2, ListName: 'Nữ' },
-    { Code: 3, ListName: 'Khác' }
+    { Code: 7, ListName: 'Nam' },
+    { Code: 8, ListName: 'Nữ' }
   ];
   public listYear: number[] = [];
   public listMonth: number[] = Array.from({ length: 12 }, (_, i) => i + 1);
@@ -52,6 +64,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   public orderInfo: { id: string; customerName: string; vehicleName: string; totalAmount: number } = {
     id: '', customerName: '', vehicleName: '', totalAmount: 0
   };
+  private _lastAutoAddress = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -62,8 +75,8 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     private cache: PsCache,
     private configService: GetConfigService,
     private http: HttpClient,
+    private coreApi: PSCoreApiService,
   ) { 
-    // Init years
     const currentYear = new Date().getFullYear();
     for (let i = currentYear; i >= currentYear - 100; i--) {
       this.listYear.push(i);
@@ -71,7 +84,6 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Read from cache instead of URL parameter
     const cached = this.cache.getItem(KeyLocalStorageEnum.SAL_ORDER_INVOICE);
     if (cached) {
       const invoiceData = this.cache.parseValue(cached) as SALOrderInvoiceCusDTO;
@@ -84,6 +96,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     }
     
     this.getlistlslist();
+    this.loadProvinces();
   }
 
   ngOnDestroy(): void {
@@ -93,12 +106,8 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   private getlistlslist(): void {
     try {
       const sub = this.configCache.GetListLSList(LSListTypeDataEnum.InvoiceType).subscribe({
-        next: (data) => {
-          this.invoiceTypes = data || [];
-        },
-        error: () => {
-          this.invoiceTypes = [];
-        }
+        next: (data) => { this.invoiceTypes = data || []; },
+        error: () => { this.invoiceTypes = []; }
       });
       this.arrUnsubscribe.push(sub);
     } catch {
@@ -106,8 +115,12 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     }
   }
 
+  //#region Load Invoice + Customer
+  private customerLoaded = false;
+
   loadInvoice(code: number): void {
     this.isLoading = true;
+    this.customerLoaded = false;
     const param = new SALOrderInvoiceCusDTO();
     param.Code = code;
 
@@ -115,16 +128,19 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
       next: (res: ResponseDTO) => {
         if (res.StatusCode === 0 && res.ObjectReturn) {
           this.invoice = res.ObjectReturn;
-          // Guard: BE may not return FrameSeri/EngineSeri yet
           this.invoice.FrameSeri = this.invoice.FrameSeri ?? '';
           this.invoice.EngineSeri = this.invoice.EngineSeri ?? '';
           this.invoiceCopy = { ...this.invoice };
-          // Ensure VATType has a default value if missing
+          this.isReadOnly = this.invoice.Status === 2;
           if (!this.invoice.VATType && this.invoiceTypes.length > 0) {
-            this.invoice.VATType = this.invoiceTypes[0].TypeOfList; 
+            this.invoice.VATType = this.invoiceTypes[0].TypeOfList;
             this.invoiceCopy.VATType = this.invoiceTypes[0].TypeOfList;
           }
-          // Load order context for header display
+          // Load customer from invoice response (GetSALInvoice joins OrderMaster.Customer)
+          const customerCode = this.invoice.VATCustomer || this.invoice['Customer'];
+          if (customerCode) {
+            this.loadCustomer(customerCode);
+          }
           this.loadOrderInfo();
         } else {
           this.notification.onError(`Lỗi tải thông tin hóa đơn: ${res.ErrorString}`);
@@ -139,6 +155,97 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     this.arrUnsubscribe.push(sub);
   }
 
+  private loadCustomer(customerCode: number): void {
+    if (this.customerLoaded) return;
+    this.customerLoaded = true;
+
+    const param = new CSLoyalCustomerCusDTO();
+    param.Code = customerCode;
+
+    const sub = this.apiService.GetCustomer(param).subscribe({
+      next: (res: ResponseDTO) => {
+        if (res.StatusCode === 0 && res.ObjectReturn && res.ObjectReturn.Code) {
+          this.applyCustomerData(res.ObjectReturn);
+        } else {
+          this.customerLoaded = false;
+          console.warn('GetCustomer: no valid customer data', res.ObjectReturn);
+        }
+      },
+      error: (err) => {
+        this.customerLoaded = false;
+        console.warn('GetCustomer failed:', err.message);
+      }
+    });
+    this.arrUnsubscribe.push(sub);
+  }
+
+  private applyCustomerData(data: any): void {
+    this.customer = data;
+    this.customer.Email = this.customer.Email || this.invoice.VATEmail || '';
+    this.customer.Zalo = this.customer.Zalo || this.invoice.VATZalo || '';
+    this.customer.CitizenCardNo = this.customer.CitizenCardNo || this.invoice.VATCCCD || '';
+    this.customer.CardNo = this.customer.CardNo || this.invoice.VATCMND || '';
+    this.customer.Cellphone1 = this.customer.Cellphone1 || this.invoice.VATCellPhone || '';
+    this.customer.FullName = this.customer.FullName || this.invoice.VATCustomerName || this.invoice['CustomerName'] || '';
+    this.customer.Address = this.customer.Address || this.invoice.VATAddress || '';
+    if (!this.customer.Province && this.invoice.VATProvince) {
+      this.customer.Province = parseInt(this.invoice.VATProvince, 10);
+    }
+    if (!this.customer.Ward && this.invoice.VATWard) {
+      this.customer.Ward = parseInt(this.invoice.VATWard, 10);
+    }
+    if (!this.customer.Gender && this.invoice.VATGender) {
+      this.customer.Gender = this.invoice.VATGender;
+    }
+    if (this.customer.IsCellPhone == null && this.invoice.VATIsSamePhone != null) {
+      this.customer.IsCellPhone = this.invoice.VATIsSamePhone;
+    }
+
+    this.customerCopy = { ...this.customer };
+    // Link customer to invoice (just set value — do NOT call update API during load)
+    if (this.customer.Code && !this.invoice.VATCustomer) {
+      this.invoice.VATCustomer = this.customer.Code;
+      this.invoiceCopy.VATCustomer = this.customer.Code;
+    }
+    this.syncCustomerToInvoice();
+    // Cascade: load ward if province exists
+    if (this.customer.Province) {
+      this.loadWards(this.customer.Province);
+    }
+  }
+
+  onCCCDBlur(): void {
+    const cccd = this.customer.CitizenCardNo?.trim();
+    if (!cccd) return;
+    // Same value, skip
+    if (cccd === this.customerCopy.CitizenCardNo) return;
+
+    // Customer already loaded from order → just update CitizenCardNo on existing customer
+    if (this.customer.Code) {
+      this.onCustomerChange('CitizenCardNo');
+      return;
+    }
+
+    // No customer loaded yet → search by CCCD to find existing customer
+    const param = new CSLoyalCustomerCusDTO();
+    param.CitizenCardNo = cccd;
+
+    const sub = this.apiService.GetCustomer(param).subscribe({
+      next: (res: ResponseDTO) => {
+        if (res.StatusCode === 0 && res.ObjectReturn && res.ObjectReturn.Code) {
+          this.applyCustomerData(res.ObjectReturn);
+          this.notification.onSuccess('Đã tìm thấy khách hàng');
+        } else {
+          this.notification.onWarning(res.ErrorString || 'Không tìm thấy khách hàng với CCCD này. Vui lòng nhập thủ công.');
+        }
+      },
+      error: () => {
+        this.notification.onWarning('Không thể tra cứu khách hàng. Vui lòng nhập thủ công.');
+      }
+    });
+    this.arrUnsubscribe.push(sub);
+  }
+
   private loadOrderInfo(): void {
     if (!this.invoice.OrderMaster) return;
     const sub = this.apiService.GetListSALMaster({
@@ -146,54 +253,361 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
       sort: [], skip: 0, take: 1
     }).subscribe({
       next: (res: ResponseDTO) => {
-        if (res.StatusCode === 0 && res.ObjectReturn?.Data?.length) {
-          const order = res.ObjectReturn.Data[0];
-          this.orderInfo = {
-            id: order.ID || '',
-            customerName: order.CustomerName || '',
-            vehicleName: order.VehicleName || '',
-            totalAmount: order.TotalPayment || 0
-          };
+        if (res.StatusCode === 0 && res.ObjectReturn) {
+          // GetListSALMaster returns grouped: [{ListData: [...]}] or {Data: [...]}
+          let order: any = null;
+          const raw = res.ObjectReturn;
+          if (Array.isArray(raw)) {
+            // Grouped format: [{ListData: [order1, order2]}]
+            for (const group of raw) {
+              if (group.ListData?.length) {
+                order = group.ListData.find((o: any) => o.Code === this.invoice.OrderMaster);
+                if (order) break;
+              }
+            }
+          } else if (raw.Data?.length) {
+            // Flat format: {Data: [order1]}
+            order = raw.Data[0];
+          }
+
+          if (order) {
+            this.orderInfo = {
+              id: order.ID || '',
+              customerName: order.CustomerName || '',
+              vehicleName: order.VehicleName || '',
+              totalAmount: order.TotalPayment || 0
+            };
+            // Fallback: if customer wasn't loaded from invoice, try from order
+            if (!this.customerLoaded && order.Customer) {
+              this.loadCustomer(order.Customer);
+            }
+          }
         }
       }
     });
     this.arrUnsubscribe.push(sub);
   }
+  //#endregion
+
+  //#region Province / Ward cascade (no District)
+  private loadProvinces(): void {
+    const url = '/api/proxy-api/api/core/GetListProvince';
+    const sub = this.http.post<any>(url, null).subscribe({
+      next: (res) => {
+        if (res?.StatusCode === 0) {
+          this.provinceList = res.ObjectReturn || [];
+        }
+      },
+      error: () => { this.provinceList = []; }
+    });
+    this.arrUnsubscribe.push(sub);
+  }
+
+  private loadWards(provinceCode: number): void {
+    const url = '/api/proxy-api/api/core/GetListWard';
+    const sub = this.http.post<any>(url, { Code: provinceCode }).subscribe({
+      next: (res) => {
+        if (res?.StatusCode === 0) {
+          this.wardList = res.ObjectReturn || [];
+        }
+      },
+      error: () => { this.wardList = []; }
+    });
+    this.arrUnsubscribe.push(sub);
+  }
+
+  onProvinceChange(provinceCode: number): void {
+    this.customer.Province = provinceCode;
+    this.customer.Ward = null;
+    this.wardList = [];
+    if (provinceCode) {
+      this.loadWards(provinceCode);
+    }
+    this.onCustomerChange('Province');
+  }
+
+  onWardChange(wardCode: number): void {
+    this.customer.Ward = wardCode;
+    this.onCustomerChange('Ward');
+  }
+  //#endregion
+
+  //#region Customer field updates (Personal case)
+  onCustomerChange(prop: string): void {
+    if (this.isLoading) return;
+    if (!this.customer.Code) return;
+    if (this.customer[prop] === this.customerCopy[prop]) return;
+
+    const param: UpdatePropertiesInterface<CSLoyalCustomerCusDTO> = {
+      DTO: this.customer,
+      Properties: [prop]
+    };
+
+    const sub = this.apiService.UpdateLoyalCustomer(param).subscribe({
+      next: (res: ResponseDTO) => {
+        if (res.StatusCode === 0) {
+          // Only update the changed property in copy, do NOT overwrite entire customer
+          this.customerCopy[prop] = this.customer[prop];
+          this.syncCustomerToInvoice();
+          this.notification.onSuccess('Thành công');
+        } else {
+          this.notification.onError(`Lỗi cập nhật: ${res.ErrorString}`);
+          this.customer[prop] = this.customerCopy[prop];
+        }
+      },
+      error: (err) => {
+        this.notification.onError(`Lỗi kết nối: ${err.message}`);
+        this.customer[prop] = this.customerCopy[prop];
+      }
+    });
+    this.arrUnsubscribe.push(sub);
+  }
+
+  private syncCustomerToInvoice(): void {
+    const changedProps: string[] = [];
+
+    // Sync customer name
+    const newName = this.customer.FullName || '';
+    if (this.invoice.VATCustomerName !== newName) {
+      this.invoice.VATCustomerName = newName;
+      changedProps.push('VATCustomerName');
+    }
+
+    // Sync phone
+    const newPhone = this.customer.Cellphone1 || '';
+    if (this.invoice.VATCellPhone !== newPhone) {
+      this.invoice.VATCellPhone = newPhone;
+      changedProps.push('VATCellPhone');
+    }
+
+    // Sync CCCD
+    const newCCCD = this.customer.CitizenCardNo || '';
+    if (this.invoice.VATCCCD !== newCCCD) {
+      this.invoice.VATCCCD = newCCCD;
+      changedProps.push('VATCCCD');
+    }
+
+    // Build full address from ward + province + street
+    const geoParts: string[] = [];
+    const ward = this.wardList.find(w => w.Code === this.customer.Ward);
+    if (ward) geoParts.push(ward.VNWard);
+    const province = this.provinceList.find(p => p.Code === this.customer.Province);
+    if (province) geoParts.push(province.VNProvince);
+    const geoAddress = geoParts.join(', ');
+
+    const street = this.customer.Address || '';
+    const fullParts: string[] = [];
+    if (street) fullParts.push(street);
+    if (geoAddress) fullParts.push(geoAddress);
+    const autoAddress = fullParts.join(', ');
+
+    // Always update address from geo data (unless user manually edited to something completely different)
+    if (autoAddress && this.invoice.VATAddress !== autoAddress) {
+      this.invoice.VATAddress = autoAddress;
+      changedProps.push('VATAddress');
+    }
+
+    // Sync other missing fields
+    if (this.invoice.VATZalo !== (this.customer.Zalo || '')) {
+      this.invoice.VATZalo = this.customer.Zalo || '';
+      changedProps.push('VATZalo');
+    }
+    const newEmail = this.customer.Email || '';
+    if (this.invoice.VATEmail !== newEmail) {
+      this.invoice.VATEmail = newEmail;
+      changedProps.push('VATEmail');
+    }
+    if (this.invoice.VATGender !== this.customer.Gender) {
+      this.invoice.VATGender = this.customer.Gender;
+      changedProps.push('VATGender');
+    }
+    const newProv = province ? province.Code.toString() : '';
+    if (this.invoice.VATProvince !== newProv) {
+      this.invoice.VATProvince = newProv;
+      changedProps.push('VATProvince');
+    }
+    const newWard = ward ? ward.Code.toString() : '';
+    if (this.invoice.VATWard !== newWard) {
+      this.invoice.VATWard = newWard;
+      changedProps.push('VATWard');
+    }
+    // Sync IsSamePhone flag
+    const newIsSame = !!this.customer.IsCellPhone;
+    if (this.invoice.VATIsSamePhone !== newIsSame) {
+      this.invoice.VATIsSamePhone = newIsSame;
+      changedProps.push('VATIsSamePhone');
+    }
+    // Sync contact email
+    const newContactEmail = this.customer.Email || '';
+    if (this.invoice.VATContactEmail !== newContactEmail) {
+      this.invoice.VATContactEmail = newContactEmail;
+      changedProps.push('VATContactEmail');
+    }
+
+    // Persist changed fields to DB
+    if (changedProps.length > 0 && this.invoice.Code) {
+      const param: UpdatePropertiesInterface<SALOrderInvoiceCusDTO> = {
+        DTO: this.invoice,
+        Properties: changedProps
+      };
+      this.apiService.UpdateSALInvoice(param).subscribe({
+        next: (res: ResponseDTO) => {
+          if (res.StatusCode === 0) {
+            this.invoiceCopy = { ...res.ObjectReturn };
+          }
+        }
+      });
+    }
+  }
+  //#endregion
 
   onBack(): void {
     this.router.navigate(['../'], { relativeTo: this.route });
   }
 
-  onUpdate(): void {
-    // Validation for VATType == 1 (Personal)
-    if (this.invoice.VATType == 1) {
-      if (!this.invoice.VATType) {
-        this.notification.onWarning('Vui lòng chọn Loại hóa đơn');
-        return;
+  //#region Invoice field updates (Business/Public case + shared fields)
+  onValueChange(prop: string): void {
+    if (this.isLoading) return;
+    if (this.invoice[prop] === this.invoiceCopy[prop]) return;
+
+    const param: UpdatePropertiesInterface<SALOrderInvoiceCusDTO> = {
+      DTO: this.invoice,
+      Properties: [prop]
+    };
+    
+    if (prop === 'VATType' && this.invoice.VATType) {
+      this.invoice.VATType = Number(this.invoice.VATType);
+    }
+
+    const sub = this.apiService.UpdateSALInvoice(param).subscribe({
+      next: (res: ResponseDTO) => {
+        if (res.StatusCode !== 0) {
+          this.notification.onError(`Lỗi cập nhật ${prop}: ${res.ErrorString}`);
+          this.invoice[prop] = this.invoiceCopy[prop];
+        } else {
+          // Only update the copy, do NOT overwrite entire invoice object
+          this.invoiceCopy[prop] = this.invoice[prop];
+          this.notification.onSuccess('Thành công');
+        }
+      },
+      error: (err) => {
+        this.notification.onError(`Lỗi kết nối khi cập nhật ${prop}: ${err.message}`);
+        this.invoice[prop] = this.invoiceCopy[prop];
       }
-      if (!this.invoice['VATCCCD']) {
+    });
+    this.arrUnsubscribe.push(sub);
+  }
+  //#endregion
+
+  //#region Số khung / Số máy lookup
+  private lookupSeri(field: 'FrameSeri' | 'EngineSeri'): void {
+    const value = this.invoice[field]?.trim();
+    if (!value || value === this.invoiceCopy[field]) return;
+
+    const otherField = field === 'FrameSeri' ? 'EngineSeri' : 'FrameSeri';
+    const url = '/api/proxy-api/api/warehouse/GetIOSeriInternal';
+
+    const sub = this.http.post<any>(url, { [field]: value }).subscribe({
+      next: (res) => {
+        if (res?.StatusCode === 0 && res?.ObjectReturn) {
+          const otherValue = res.ObjectReturn[otherField];
+          if (otherValue) {
+            this.invoice[otherField] = otherValue;
+            const param: UpdatePropertiesInterface<SALOrderInvoiceCusDTO> = {
+              DTO: this.invoice,
+              Properties: [field, otherField]
+            };
+            this.apiService.UpdateSALInvoice(param).subscribe({
+              next: (saveRes: ResponseDTO) => {
+                if (saveRes.StatusCode === 0) {
+                  this.invoice = saveRes.ObjectReturn;
+                  this.invoiceCopy = { ...saveRes.ObjectReturn };
+                  this.notification.onSuccess(`Đã tìm thấy xe - ${otherField === 'EngineSeri' ? 'Số máy' : 'Số khung'} tự động điền`);
+                }
+              }
+            });
+          } else {
+            this.notification.onWarning('Xe tồn tại nhưng thiếu dữ liệu. Vui lòng nhập thủ công.');
+            this.onValueChange(field);
+          }
+        } else {
+          // Not found → revert to previous value, do NOT save
+          const label = field === 'FrameSeri' ? 'Số khung' : 'Số máy';
+          this.notification.onError(`${label} "${value}" không tìm thấy xe trong kho. Giá trị đã được hoàn tác.`);
+          this.invoice[field] = this.invoiceCopy[field] || '';
+        }
+      },
+      error: () => {
+        // API error → revert to previous value, do NOT save
+        this.notification.onError('Không thể tra cứu số khung/máy. Giá trị đã được hoàn tác.');
+        this.invoice[field] = this.invoiceCopy[field] || '';
+      }
+    });
+    this.arrUnsubscribe.push(sub);
+  }
+
+  onFrameSeriBlur(): void {
+    this.lookupSeri('FrameSeri');
+    this.checkDuplicateSeri('FrameSeri', this.invoice.FrameSeri);
+  }
+
+  onEngineSeriBlur(): void {
+    this.lookupSeri('EngineSeri');
+    this.checkDuplicateSeri('EngineSeri', this.invoice.EngineSeri);
+  }
+
+  private checkDuplicateSeri(field: 'FrameSeri' | 'EngineSeri', value: string): void {
+    if (!value?.trim()) return;
+    // Check if another invoice in the same head already uses this SK/SM
+    const sub = this.apiService.GetListSALInvoice({ skip: 0, take: 100 }).subscribe({
+      next: (res: ResponseDTO) => {
+        if (res.StatusCode === 0) {
+          const all = res.ObjectReturn?.Data ?? res.ObjectReturn ?? [];
+          const duplicate = (all as SALOrderInvoiceCusDTO[]).find(
+            inv => inv.Code !== this.invoice.Code && inv[field] === value.trim()
+          );
+          if (duplicate) {
+            const label = field === 'FrameSeri' ? 'Số khung' : 'Số máy';
+            this.notification.onError(
+              `${label} "${value}" đã được sử dụng bởi HĐ #${duplicate.InvoiceNo || duplicate.Code}. Vui lòng kiểm tra lại!`
+            );
+          }
+        }
+      }
+    });
+    this.arrUnsubscribe.push(sub);
+  }
+  //#endregion
+
+  //#region Save / Export
+  onUpdate(): void {
+    // Personal case: validate customer fields
+    if (this.invoice.VATType == 1) {
+      if (!this.customer.CitizenCardNo) {
         this.notification.onWarning('Vui lòng nhập Số căn cước công dân');
         return;
       }
-      if (!this.invoice.VATCustomerName) {
+      if (!this.customer.FullName) {
         this.notification.onWarning('Vui lòng nhập tên Khách hàng');
         return;
       }
-      if (!this.invoice['VATProvince']) {
-        this.notification.onWarning('Vui lòng nhập Tỉnh thành');
+      if (!this.customer.Province) {
+        this.notification.onWarning('Vui lòng chọn Tỉnh thành');
         return;
       }
-      if (!this.invoice['VATWard']) {
-        this.notification.onWarning('Vui lòng nhập Phường xã');
+      if (!this.customer.Ward) {
+        this.notification.onWarning('Vui lòng chọn Phường xã');
         return;
       }
-      if (!this.invoice.VATCellPhone) {
+      if (!this.customer.Cellphone1) {
         this.notification.onWarning('Vui lòng nhập Số di động');
         return;
       }
+      // Sync customer → invoice snapshot before export
+      this.syncCustomerToInvoice();
     }
 
-    // Validation for VATType == 2 (Business) or VATType == 3 (Public Service)
+    // Business / Public case: validate invoice fields
     if (this.invoice.VATType == 2 || this.invoice.VATType == 3) {
       const isPublic = this.invoice.VATType == 3;
       if (!this.invoice.VATCustomerName) {
@@ -218,165 +632,54 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.isLoading = true;
-
-    // Gọi API Export PDF từ Backend
-    const param = { Code: this.invoice.Code, Type: this.invoice.VATType, HeadName: this.currentheader.HeadName, TaxCode: this.currentheader.TaxCode, Address: this.currentheader.Address };
-
-    this.apiService.ExportSALInvoicePdf(param).subscribe({
-      next: (res: any) => {
-        this.isLoading = false;
-
-        if (res.StatusCode === 0 && res.ObjectReturn?.Base64) {
-          // 1. Lấy chuỗi Base64 và tên file từ BE trả về
-          const base64Data = res.ObjectReturn.Base64;
-          const fileName = res.ObjectReturn.FileName || `HoaDon_${this.invoice.InvoiceNo}.pdf`;
-
-          // 2. Convert Base64 sang Blob (File thực)
-          const byteCharacters = atob(base64Data);
-          const byteNumbers = new Array(byteCharacters.length);
-          for (let i = 0; i < byteCharacters.length; i++) {
-            byteNumbers[i] = byteCharacters.charCodeAt(i);
-          }
-          const byteArray = new Uint8Array(byteNumbers);
-          const blob = new Blob([byteArray], { type: 'application/pdf' });
-
-          // 3. Tự động tải file xuống trình duyệt
-          const link = document.createElement('a');
-          link.href = window.URL.createObjectURL(blob);
-          link.download = fileName;
-          link.click();
-
-          this.notification.onSuccess('Xuất hóa đơn thành công!');
-        } else {
-          this.notification.onError(`Lỗi xuất hóa đơn: ${res.ErrorString}`);
-        }
-      },
-      error: (err) => {
-        this.isLoading = false;
-        this.notification.onError('Lỗi kết nối khi xuất hóa đơn');
-      }
-    });
+    // Sync final data and notify success — NO PDF export here.
+    // PDF export only happens at invoice issuance (mtb026).
+    this.syncCustomerToInvoice();
+    this.notification.onSuccess('Đã lưu thông tin chứng từ hóa đơn');
   }
+  //#endregion
 
-
-  private lookupSeri(field: 'FrameSeri' | 'EngineSeri'): void {
-    const value = this.invoice[field]?.trim();
-    if (!value || value === this.invoiceCopy[field]) return;
-
-    const otherField = field === 'FrameSeri' ? 'EngineSeri' : 'FrameSeri';
-    const url = '/api/proxy-api/api/warehouse/GetIOSeriInternal';
-
-    const sub = this.http.post<any>(url, { [field]: value }).subscribe({
-      next: (res) => {
-        if (res?.StatusCode === 0 && res?.ObjectReturn) {
-          const otherValue = res.ObjectReturn[otherField];
-          if (otherValue) {
-            this.invoice[otherField] = otherValue;
-            // Save both fields in a single API call
-            const param: UpdatePropertiesInterface<SALOrderInvoiceCusDTO> = {
-              DTO: this.invoice,
-              Properties: [field, otherField]
-            };
-            this.apiService.UpdateSALInvoice(param).subscribe({
-              next: (saveRes: ResponseDTO) => {
-                if (saveRes.StatusCode === 0) {
-                  this.invoice = saveRes.ObjectReturn;
-                  this.invoiceCopy = { ...saveRes.ObjectReturn };
-                  this.notification.onSuccess(`Đã tìm thấy xe - ${otherField === 'EngineSeri' ? 'Số máy' : 'Số khung'} tự động điền`);
-                }
-              }
-            });
-          } else {
-            this.notification.onWarning('Xe tồn tại nhưng thiếu dữ liệu. Vui lòng nhập thủ công.');
-            this.onValueChange(field);
-          }
-        } else {
-          this.notification.onWarning(res?.ErrorString || 'Không tìm thấy xe trong kho. Vui lòng nhập thủ công.');
-          this.onValueChange(field);
-        }
-      },
-      error: (err) => {
-        console.warn('GetIOSeriInternal failed:', err);
-        this.notification.onWarning('Không thể tra cứu. Vui lòng nhập thủ công.');
-        this.onValueChange(field);
-      }
-    });
-    this.arrUnsubscribe.push(sub);
-  }
-
-  onFrameSeriBlur(): void {
-    this.lookupSeri('FrameSeri');
-  }
-
-  onEngineSeriBlur(): void {
-    this.lookupSeri('EngineSeri');
-  }
-
-  onValueChange(prop: string): void {
-    // Check if value actually changed
-    if (this.invoice[prop] === this.invoiceCopy[prop]) {
-      return;
-    }
-
-    const param: UpdatePropertiesInterface<SALOrderInvoiceCusDTO> = {
-      DTO: this.invoice,
-      Properties: [prop]
-    };
-    
-    // Ensure VATType is a number if it's the property being changed
-    if (prop === 'VATType' && this.invoice.VATType) {
-      this.invoice.VATType = Number(this.invoice.VATType);
-    }
-
-    console.log('Updating prop:', prop, 'Value:', this.invoice[prop]);
-
-    const sub = this.apiService.UpdateSALInvoice(param).subscribe({
-      next: (res: ResponseDTO) => {
-        if (res.StatusCode !== 0) {
-          this.notification.onError(`Lỗi cập nhật ${prop}: ${res.ErrorString}`);
-          // Revert on error
-          this.invoice[prop] = this.invoiceCopy[prop];
-        }
-        else {
-          console.log(this.invoice.VATType);
-          this.invoice = res.ObjectReturn;
-          this.invoiceCopy = { ...res.ObjectReturn };
-          this.notification.onSuccess(`Thành công`);
-        }
-      },
-      error: (err) => {
-        this.notification.onError(`Lỗi kết nối khi cập nhật ${prop}: ${err.message}`);
-        // Revert on error
-        this.invoice[prop] = this.invoiceCopy[prop];
-      }
-    });
-
-    this.arrUnsubscribe.push(sub);
-  }
-
+  //#region Same phone toggle
   onSamePhoneChange(e: any): void {
     if (e === true) {
-      this.invoice['VATZalo'] = '';
-      const param: UpdatePropertiesInterface<SALOrderInvoiceCusDTO> = {
+      // Copy phone number to Zalo when checked
+      this.customer.Zalo = this.customer.Cellphone1 || '';
+      this.customer.IsCellPhone = true;
+      if (this.customer.Code) {
+        const param: UpdatePropertiesInterface<CSLoyalCustomerCusDTO> = {
+          DTO: this.customer,
+          Properties: ['IsCellPhone', 'Zalo']
+        };
+        const sub = this.apiService.UpdateLoyalCustomer(param).subscribe({
+          next: (res: ResponseDTO) => {
+            if (res.StatusCode === 0) {
+              this.customerCopy.IsCellPhone = this.customer.IsCellPhone;
+              this.customerCopy.Zalo = this.customer.Zalo;
+              this.notification.onSuccess('Thành công');
+            }
+          }
+        });
+        this.arrUnsubscribe.push(sub);
+      }
+    } else {
+      this.customer.Zalo = '';
+      this.customer.IsCellPhone = false;
+      if (this.customer.Code) {
+        this.onCustomerChange('IsCellPhone');
+      }
+    }
+    // Sync to invoice
+    this.invoice.VATIsSamePhone = !!e;
+    this.invoice.VATZalo = this.customer.Zalo || '';
+    if (this.invoice.Code) {
+      const invoiceParam: UpdatePropertiesInterface<SALOrderInvoiceCusDTO> = {
         DTO: this.invoice,
         Properties: ['VATIsSamePhone', 'VATZalo']
       };
-
-      const sub = this.apiService.UpdateSALInvoice(param).subscribe({
-        next: (res: ResponseDTO) => {
-          if (res.StatusCode === 0) {
-            this.invoice = res.ObjectReturn;
-            this.invoiceCopy = { ...res.ObjectReturn };
-            this.notification.onSuccess(`Thành công`);
-          }
-        }
-      });
-      this.arrUnsubscribe.push(sub);
-    } else {
-      this.onValueChange('VATIsSamePhone');
+      this.apiService.UpdateSALInvoice(invoiceParam).subscribe();
     }
   }
+  //#endregion
 
   //#region Apply to other vehicles
   onApplyToOtherVehicles(): void {
@@ -420,10 +723,12 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Sync customer snapshot to invoice props for copying
+    this.syncCustomerToInvoice();
+
     const customerProps = [
-      'VATType', 'VATCustomerName', 'VATCCCD', 'VATCMND',
-      'VATGender', 'VATProvince', 'VATWard', 'VATAddress',
-      'VATCellPhone', 'VATZalo', 'VATIsSamePhone', 'VATContactEmail', 'VATEmail',
+      'VATType', 'VATCustomerName', 'VATCCCD', 'VATAddress',
+      'VATCellPhone', 'VATEmail', 'VATPassport',
       'VATCompanyName', 'VATCompanyTax', 'VATBRUName', 'VATBRUCode', 'VATNote'
     ];
 

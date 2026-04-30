@@ -194,7 +194,8 @@ export class MtbikeApiService {
 
   public GetCustomer(param: CSLoyalCustomerCusDTO) {
     return new Observable<ResponseDTO>((obs) => {
-      this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).GetCustomer, param)
+      const url = MtbikeApiStaticService.getUrl(this.config.GetDLL(), 'GetCustomer');
+      this.api.post(url, param)
         .subscribe((res: ResponseDTO) => {
           obs.next(res);
           obs.complete();
@@ -259,7 +260,8 @@ export class MtbikeApiService {
 
   public UpdateLoyalCustomer(param: UpdatePropertiesInterface<CSLoyalCustomerCusDTO>) {
     return new Observable<ResponseDTO>((obs) => {
-      this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).UpdateLoyalCustomer, param)
+      const url = MtbikeApiStaticService.getUrl(this.config.GetDLL(), 'UpdateLoyalCustomer');
+      this.api.post(url, param)
         .subscribe((res: ResponseDTO) => {
           obs.next(res);
           obs.complete();
@@ -1300,7 +1302,8 @@ export class MtbikeApiService {
   public GetListSALMaster(param: any): Observable<ResponseDTO> {
     return new Observable<ResponseDTO>((obs) => {
       const payload = { ...toDataSourceRequest(param), isExcludeInstallment: param.isExcludeInstallment };
-      this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).GetListSALMaster, payload)
+      const url = MtbikeApiStaticService.getUrl(this.config.GetDLL(), 'GetListSALMaster');
+      this.api.post(url, payload)
         .subscribe((res: ResponseDTO) => {
           obs.next(res);
           obs.complete();
@@ -1339,7 +1342,8 @@ export class MtbikeApiService {
 
   public GetListSALInvoice(param: State): Observable<ResponseDTO> {
     return new Observable<ResponseDTO>((obs) => {
-      this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).GetListSALInvoice, toDataSourceRequest(param))
+      const url = MtbikeApiStaticService.getUrl(this.config.GetDLL(), 'GetListSALInvoice');
+      this.api.post(url, toDataSourceRequest(param))
         .subscribe((res: ResponseDTO) => {
           obs.next(res);
           obs.complete();
@@ -1431,7 +1435,8 @@ export class MtbikeApiService {
 
   public GetSALInvoice(param: SALOrderInvoiceCusDTO): Observable<ResponseDTO> {
     return new Observable<ResponseDTO>((obs) => {
-      this.api.post(MtbikeApiStaticService.getNamespace(this.config.GetDLL()).GetSALInvoice, param)
+      const url = MtbikeApiStaticService.getUrl(this.config.GetDLL(), 'GetSALInvoice');
+      this.api.post(url, param)
         .subscribe((res: ResponseDTO) => {
           obs.next(res);
           obs.complete();
@@ -1483,8 +1488,8 @@ export class MtbikeApiService {
 
   public UpdateSALMaster(param: UpdatePropertiesInterface<SALOrderMasterCusDTO>) {
     return new Observable<ResponseDTO>((obs) => {
-      const ns = MtbikeApiStaticService.getNamespace(this.config.GetDLL());
-      this.api.post(ns.UpdateSALMaster, param)
+      const url = MtbikeApiStaticService.getUrl(this.config.GetDLL(), 'UpdateSALMaster');
+      this.api.post(url, param)
         .subscribe(
           (res: ResponseDTO) => {
             obs.next(res);
@@ -1500,8 +1505,8 @@ export class MtbikeApiService {
 
   public UpdateSALInvoice(param: UpdatePropertiesInterface<SALOrderInvoiceCusDTO>) {
     return new Observable<ResponseDTO>((obs) => {
-      const ns = MtbikeApiStaticService.getNamespace(this.config.GetDLL());
-      this.api.post(ns.UpdateSALInvoice, param)
+      const url = MtbikeApiStaticService.getUrl(this.config.GetDLL(), 'UpdateSALInvoice');
+      this.api.post(url, param)
         .subscribe(
           (res: ResponseDTO) => {
             obs.next(res);
@@ -1517,8 +1522,8 @@ export class MtbikeApiService {
 
   public ExportSALInvoicePdf(param: any) {
     return new Observable<ResponseDTO>((obs) => {
-      const ns = MtbikeApiStaticService.getNamespace(this.config.GetDLL());
-      this.api.post(ns.ExportSALInvoicePdf, param)
+      const url = MtbikeApiStaticService.getUrl(this.config.GetDLL(), 'ExportSALInvoicePdf');
+      this.api.post(url, param)
         .subscribe(
           (res: ResponseDTO) => {
             obs.next(res);
@@ -1568,8 +1573,8 @@ export class MtbikeApiService {
 
   public UpdateSALInvoiceInfo(DTO: UpdatePropertiesInterface<SALOrderInvoiceCusDTO>) {
     return new Observable<ResponseDTO>((obs) => {
-      const ns = MtbikeApiStaticService.getNamespace(this.config.GetDLL());
-      this.api.post(ns.UpdateSALInvoiceInfo, DTO)
+      const url = MtbikeApiStaticService.getUrl(this.config.GetDLL(), 'UpdateSALInvoiceInfo');
+      this.api.post(url, DTO)
         .subscribe(
           (res: ResponseDTO) => {
             obs.next(res);
@@ -1585,8 +1590,8 @@ export class MtbikeApiService {
 
   public AddSALInvoiceFromOrder(orderMasterCode: number): Observable<ResponseDTO> {
     return new Observable<ResponseDTO>((obs) => {
-      const ns = MtbikeApiStaticService.getNamespace(this.config.GetDLL());
-      this.api.post(ns.AddSALInvoiceFromOrder, orderMasterCode)
+      const url = MtbikeApiStaticService.getUrl(this.config.GetDLL(), 'AddSALInvoiceFromOrder');
+      this.api.post(url, orderMasterCode)
         .subscribe(
           (res: ResponseDTO) => {
             obs.next(res);
@@ -1603,7 +1608,8 @@ export class MtbikeApiService {
   public UpdateSALInvoiceIssue(listCode: number[]): Observable<ResponseDTO> {
     return new Observable<ResponseDTO>((obs) => {
       const ns = MtbikeApiStaticService.getNamespace(this.config.GetDLL());
-      this.api.post(ns.UpdateSALInvoiceIssue, { ListCode: listCode })
+      const url = ns.UpdateSALInvoiceIssue || '/api/proxy-api/api/sale/UpdateSALInvoiceIssue';
+      this.api.post(url, { ListCode: listCode })
         .subscribe(
           (res: ResponseDTO) => {
             obs.next(res);

@@ -10,11 +10,11 @@ export class CSLoyalCustomerDTO {
   CardNo: string = '';
   CitizenCardNo: string = '';
   DateOfIssue: Date;
-  Zalo: string;
+  Zalo: string = '';
   FreeStartTime: Date;
   FreeEndTime: Date;
   FreeTimeType: number;
-  Email: string;
+  Email: string = '';
   Occupation: number;
   MyHonda: number;
   MyHondaReason: number;

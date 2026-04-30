@@ -26,7 +26,7 @@
 
               .func-title2 {
                 font-size: 11px;
-                color: $white;
+                color: $secondary;
               }
             }
           }
@@ -171,6 +171,19 @@
                       overflow: hidden;
                       text-overflow: ellipsis;
                       white-space: nowrap;
+                    }
+
+                    &.auto-note {
+                      justify-content: flex-start;
+                      gap: 6px;
+                      align-items: center;
+                      color: $info;
+                      font-size: 11px;
+                      padding: 6px 0 2px;
+
+                      .auto-icon {
+                        font-size: 14px;
+                      }
                     }
                   }
                 }
@@ -369,53 +382,22 @@
                 border-left: 3px solid $primary;
               }
 
-              .inv-vehicle {
-                display: flex;
-                align-items: center;
-                gap: 4px;
-                padding-bottom: 4px;
-                border-bottom: 1px dashed $border;
-
-                .inv-icon {
-                  font-size: 16px;
-                  color: $primary;
-                }
-
-                .inv-vehicle-name {
-                  font-size: 12px;
-                  font-weight: 700;
-                  color: $secondary;
-                }
-              }
-
               .inv-header {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
 
-                .inv-title {
-                  display: flex;
-                  align-items: baseline;
-
-                  .inv-prefix {
-                    font-size: 11px;
-                    font-weight: 600;
-                    color: $secondary;
-                    margin-right: 4px;
-                  }
-
-                  .inv-code {
-                    font-size: 11px;
-                    font-weight: 700;
-                    color: $error;
-                  }
+                .inv-vehicle-name {
+                  font-size: 13px;
+                  font-weight: 700;
+                  color: $secondary;
                 }
 
                 .inv-status-badge {
                   font-size: 10px;
                   font-weight: 700;
-                  padding: 3px 10px;
-                  border-radius: 12px;
+                  padding: 2px 8px;
+                  border-radius: 4px;
                   white-space: nowrap;
 
                   &.inv-pending {
@@ -435,16 +417,13 @@
                 }
               }
 
-              .inv-customer {
-                display: flex;
-                align-items: center;
-                gap: 4px;
+              .inv-invoice-no {
                 font-size: 11px;
                 color: $secondary;
 
-                .inv-icon {
-                  font-size: 14px;
-                  color: $primary;
+                strong {
+                  color: $error;
+                  font-weight: 700;
                 }
               }
 
@@ -458,7 +437,6 @@
                 .btn-issue {
                   display: flex;
                   align-items: center;
-                  gap: 4px;
                   padding: 6px 12px;
                   border-radius: 6px;
                   border: none;
@@ -466,10 +444,6 @@
                   font-weight: 600;
                   cursor: pointer;
                   transition: all 0.15s ease;
-
-                  .material-icons {
-                    font-size: 14px;
-                  }
                 }
 
                 .btn-detail {
@@ -494,16 +468,10 @@
                 }
 
                 .issued-label {
-                  display: flex;
-                  align-items: center;
-                  gap: 4px;
                   font-size: 11px;
                   font-weight: 600;
                   color: $primary;
-
-                  .material-icons {
-                    font-size: 14px;
-                  }
+                  margin-left: auto;
 
                   .issued-date {
                     font-size: 10px;
@@ -516,18 +484,12 @@
             }
 
             .no-invoice-msg {
-              display: flex;
-              align-items: center;
-              gap: 8px;
               padding: 12px;
               color: $secondary;
-              opacity: 0.7;
+              opacity: 0.5;
               font-size: 11px;
-
-              .material-icons {
-                font-size: 16px;
-                color: $warning;
-              }
+              font-style: italic;
+              text-align: center;
             }
           }
         }
@@ -569,6 +531,14 @@
               height: 36px;
               border: 1px solid $border !important;
               border-radius: 8px;
+            }
+
+            &:last-child button {
+              background: $primary !important;
+              border-color: $primary !important;
+              font-weight: 600;
+              color: $white !important;
+              * { color: $white !important; }
             }
           }
         }
