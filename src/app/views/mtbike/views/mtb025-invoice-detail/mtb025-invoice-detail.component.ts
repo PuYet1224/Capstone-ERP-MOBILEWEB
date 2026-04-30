@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { MtbikeApiService } from '../../services/mtbike-api.service';
 import { PsKendoNotificationService } from 'src/app/services/core/ps-kendo-notification.service';
@@ -13,6 +14,8 @@ import { KeyLocalStorageEnum } from 'src/app/models/enums/key-local-storage.enum
 import { UpdatePropertiesInterface } from 'src/app/models/dtos/update-properties.interface';
 import { GetConfigService } from 'src/app/services/core/ps-get-config.service';
 import { LSHeadCusDTO } from 'src/app/models/dtos/e-dtos/ls-head.dto';
+import { WHIODetailVehicleCusDTO } from 'src/app/models/dtos/e-dtos/wh-io-detail-vehicle.dto';
+import { SALOrderMasterCusDTO } from 'src/app/models/dtos/e-dtos/sal-order-master.dto';
 
 @Component({
   selector: 'mtb025-invoice-detail',
@@ -45,6 +48,11 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   public listDay: number[] = Array.from({ length: 31 }, (_, i) => i + 1);
   public currentheader: LSHeadCusDTO = this.configService.GetHead();
 
+  // Order context for header display
+  public orderInfo: { id: string; customerName: string; vehicleName: string; totalAmount: number } = {
+    id: '', customerName: '', vehicleName: '', totalAmount: 0
+  };
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -53,6 +61,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     private configCache: ConfigCacheService,
     private cache: PsCache,
     private configService: GetConfigService,
+    private http: HttpClient,
   ) { 
     // Init years
     const currentYear = new Date().getFullYear();
@@ -106,12 +115,17 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
       next: (res: ResponseDTO) => {
         if (res.StatusCode === 0 && res.ObjectReturn) {
           this.invoice = res.ObjectReturn;
-          this.invoiceCopy = { ...res.ObjectReturn };
+          // Guard: BE may not return FrameSeri/EngineSeri yet
+          this.invoice.FrameSeri = this.invoice.FrameSeri ?? '';
+          this.invoice.EngineSeri = this.invoice.EngineSeri ?? '';
+          this.invoiceCopy = { ...this.invoice };
           // Ensure VATType has a default value if missing
           if (!this.invoice.VATType && this.invoiceTypes.length > 0) {
             this.invoice.VATType = this.invoiceTypes[0].TypeOfList; 
             this.invoiceCopy.VATType = this.invoiceTypes[0].TypeOfList;
           }
+          // Load order context for header display
+          this.loadOrderInfo();
         } else {
           this.notification.onError(`Lỗi tải thông tin hóa đơn: ${res.ErrorString}`);
         }
@@ -120,6 +134,27 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
       error: (err) => {
         this.notification.onError(`Lỗi kết nối: ${err.message}`);
         this.isLoading = false;
+      }
+    });
+    this.arrUnsubscribe.push(sub);
+  }
+
+  private loadOrderInfo(): void {
+    if (!this.invoice.OrderMaster) return;
+    const sub = this.apiService.GetListSALMaster({
+      filter: { logic: 'and', filters: [{ field: 'Code', operator: 'eq', value: this.invoice.OrderMaster }] },
+      sort: [], skip: 0, take: 1
+    }).subscribe({
+      next: (res: ResponseDTO) => {
+        if (res.StatusCode === 0 && res.ObjectReturn?.Data?.length) {
+          const order = res.ObjectReturn.Data[0];
+          this.orderInfo = {
+            id: order.ID || '',
+            customerName: order.CustomerName || '',
+            vehicleName: order.VehicleName || '',
+            totalAmount: order.TotalPayment || 0
+          };
+        }
       }
     });
     this.arrUnsubscribe.push(sub);
@@ -224,6 +259,59 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+
+  private lookupSeri(field: 'FrameSeri' | 'EngineSeri'): void {
+    const value = this.invoice[field]?.trim();
+    if (!value || value === this.invoiceCopy[field]) return;
+
+    const otherField = field === 'FrameSeri' ? 'EngineSeri' : 'FrameSeri';
+    const url = '/api/proxy-api/api/warehouse/GetIOSeriInternal';
+
+    const sub = this.http.post<any>(url, { [field]: value }).subscribe({
+      next: (res) => {
+        if (res?.StatusCode === 0 && res?.ObjectReturn) {
+          const otherValue = res.ObjectReturn[otherField];
+          if (otherValue) {
+            this.invoice[otherField] = otherValue;
+            // Save both fields in a single API call
+            const param: UpdatePropertiesInterface<SALOrderInvoiceCusDTO> = {
+              DTO: this.invoice,
+              Properties: [field, otherField]
+            };
+            this.apiService.UpdateSALInvoice(param).subscribe({
+              next: (saveRes: ResponseDTO) => {
+                if (saveRes.StatusCode === 0) {
+                  this.invoice = saveRes.ObjectReturn;
+                  this.invoiceCopy = { ...saveRes.ObjectReturn };
+                  this.notification.onSuccess(`Đã tìm thấy xe - ${otherField === 'EngineSeri' ? 'Số máy' : 'Số khung'} tự động điền`);
+                }
+              }
+            });
+          } else {
+            this.notification.onWarning('Xe tồn tại nhưng thiếu dữ liệu. Vui lòng nhập thủ công.');
+            this.onValueChange(field);
+          }
+        } else {
+          this.notification.onWarning(res?.ErrorString || 'Không tìm thấy xe trong kho. Vui lòng nhập thủ công.');
+          this.onValueChange(field);
+        }
+      },
+      error: (err) => {
+        console.warn('GetIOSeriInternal failed:', err);
+        this.notification.onWarning('Không thể tra cứu. Vui lòng nhập thủ công.');
+        this.onValueChange(field);
+      }
+    });
+    this.arrUnsubscribe.push(sub);
+  }
+
+  onFrameSeriBlur(): void {
+    this.lookupSeri('FrameSeri');
+  }
+
+  onEngineSeriBlur(): void {
+    this.lookupSeri('EngineSeri');
+  }
 
   onValueChange(prop: string): void {
     // Check if value actually changed

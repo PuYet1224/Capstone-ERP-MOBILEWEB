@@ -1,0 +1,49 @@
+// ============================================================
+// DESIGN TOKENS — Single source of truth for ALL sizes
+// File: src/assets/scss/_design-tokens.scss
+// AI: Read THIS file only. Do NOT hardcode any value.
+// ============================================================
+
+// === LAYOUT ===
+$header-height: 56px;
+$footer-height: 40px;
+$content-height: calc(100dvh - #{$header-height} - #{$footer-height});
+
+// === SPACING ===
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 10px;
+$spacing-lg: 16px;
+$spacing-xl: 32px;
+
+// === TYPOGRAPHY ===
+$font-family-body: "Mulish", serif;
+$font-family-heading: "Playfair Display", serif;
+$font-size-xs: 10px;
+$font-size-sm: 11px;
+$font-size-base: 13px;
+$font-size-lg: 16px;
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+
+// === COMPONENT SIZES ===
+$button-height: 32px;
+$button-height-footer: 36px;
+$button-height-icon: 48px;
+$input-height: 35px;
+$icon-size: 20px;
+$icon-size-lg: 24px;
+
+// === RADIUS ===
+$radius-card: 8px;
+$radius-button: 8px;
+$radius-input: 5px;
+$radius-popup: 5px;
+
+// === SHADOWS ===
+$shadow-card: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+$shadow-footer: 0 -2px 4px rgba(0, 0, 0, 0.1);
+$shadow-popup: 0px 1px 4px rgba(0, 0, 0, 0.5);
+
+// === SCROLLBAR ===
+$scrollbar-width: 2px;
