@@ -302,12 +302,12 @@ export class Mtb024InvoiceListComponent implements OnInit, OnDestroy {
 
   isInfoComplete(inv: SALOrderInvoiceCusDTO): boolean {
     if (!inv.VATCustomerName) return false;
-    if (!inv.VATCellPhone) return false;
+    if (!inv.VATAddress) return false;
     if (inv.VATType === 1) {
-      return !!(inv['VATCCCD']);
+      return !!(inv.VATCCCD && inv.VATCellPhone);
     }
     if (inv.VATType === 2 || inv.VATType === 3) {
-      return !!(inv.VATCompanyName && inv.VATCompanyTax && inv.VATAddress);
+      return !!(inv.VATCompanyName && inv.VATCompanyTax);
     }
     return false;
   }

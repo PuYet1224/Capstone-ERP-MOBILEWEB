@@ -115,7 +115,11 @@ export const fpayment = {
   UpdateSALReceiptStatus: '',
   ExportSALInvoicePdf: '',
   AddSALInvoiceFromOrder: '',
-  IssueSALInvoice: '',
+  UpdateSALInvoiceIssue: '',
+  GetIOSeri: '',
+  GetIOSeriInternal: '',
+  GetCustomer: '',
+  UpdateLoyalCustomer: '',
 };
 
 const namespaceMap: Record<string, any> = {
@@ -151,5 +155,12 @@ export class MtbikeApiStaticService {
 
   static getNamespace(name: string) {
     return namespaceMap[name];
+  }
+
+  /** Get a resolved URL from namespace, with fallback to /api/proxy-api/api/sale/{apiId} */
+  static getUrl(namespaceName: string, apiId: string): string {
+    const ns = namespaceMap[namespaceName];
+    if (ns && ns[apiId]) return ns[apiId];
+    return `${environment.apiServer}/api/sale/${apiId}`;
   }
 }

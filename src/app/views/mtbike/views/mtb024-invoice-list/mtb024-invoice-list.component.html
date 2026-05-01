@@ -91,58 +91,29 @@
 
                     <!-- START: INVOICE List Section -->
                     <div class="receipt-section" *ngIf="item.isExpanded">
-                        <div class="receipt-card" *ngFor="let inv of item.invoices" (click)="onNavigateDetail(inv)">
-                            <!-- Invoice vehicle info -->
-                            <div class="r-vehicle-header" *ngIf="inv.VehicleName">
-                                <span class="material-icons r-icon">two_wheeler</span>
-                                <span class="r-vehicle">{{ inv.VehicleName }}</span>
+                        <div class="receipt-card" *ngFor="let inv of item.invoices; let i = index"
+                             [class.complete]="isInfoComplete(inv)"
+                             (click)="onNavigateDetail(inv)">
+                            <!-- Vehicle title -->
+                            <div class="r-vehicle-row">
+                                {{ inv.VehicleName || ('Hóa đơn #' + inv.Code) }}
                             </div>
-                            <!-- Invoice header -->
-                            <div class="r-header">
-                                <div class="r-title">
-                                    <span class="r-prefix">HĐ:</span>
-                                    <span class="r-code">{{ inv.InvoiceNo || '---' }}</span>
-                                </div>
-                                <div class="r-badges">
-                                    <div class="r-pm-badge" [ngClass]="getVATTypeBadgeClass(inv.VATType)">
-                                        {{ getVATTypeLabel(inv.VATType) }}
-                                    </div>
-                                    <div class="r-pm-badge pm-transfer" *ngIf="inv.VAT > 0">
-                                        Thuế: {{inv.VAT}}%
-                                    </div>
-                                </div>
+                            <!-- Company info (business/public only) -->
+                            <div class="r-company-row" *ngIf="inv.VATCompanyName && inv.VATType != 1">
+                                {{ inv.VATCompanyName }}
+                                <span class="r-tax-code" *ngIf="inv.VATCompanyTax">MST: {{ inv.VATCompanyTax }}</span>
                             </div>
-                            <!-- Customer info -->
-                            <div class="r-info">
-                                <div class="r-info-row">
-                                    <div class="r-info-item">
-                                        <span class="material-icons r-icon">person</span>
-                                        {{ inv.VATCustomerName || inv.CustomerName || 'Chưa có thông tin' }}
-                                    </div>
-                                    <div class="r-info-item" *ngIf="inv.VATCellPhone">
-                                        <span class="material-icons r-icon">phone</span>
-                                        {{ inv.VATCellPhone }}
-                                    </div>
-                                </div>
-                                <div class="r-info-item" *ngIf="inv.VATCompanyName && inv.VATType != 1">
-                                    <span class="material-icons r-icon">business</span>
-                                    {{ inv.VATCompanyName }}
-                                    <span class="r-tax" *ngIf="inv.VATCompanyTax">({{ inv.VATCompanyTax }})</span>
-                                </div>
-                            </div>
-                            <!-- Info completion status -->
-                            <div class="r-meta">
-                                <div class="r-completion" [ngClass]="getInfoCompletionClass(inv)">
-                                    <span class="material-icons r-completion-icon">{{ isInfoComplete(inv) ? 'check_circle' : 'pending' }}</span>
-                                    <span>{{ isInfoComplete(inv) ? 'Đã hoàn tất thông tin' : 'Chưa hoàn tất thông tin' }}</span>
-                                </div>
+                            <!-- Badges -->
+                            <div class="r-badges-row">
+                                <span class="r-badge" [ngClass]="getVATTypeBadgeClass(inv.VATType)">{{ getVATTypeLabel(inv.VATType) }}</span>
+                                <span class="r-badge inv-no" *ngIf="inv.InvoiceNo">{{ inv.InvoiceNo }}</span>
+                                <span class="r-status" [class.done]="isInfoComplete(inv)">{{ isInfoComplete(inv) ? 'Hoàn tất' : 'Chưa hoàn tất' }}</span>
                             </div>
                         </div>
 
                         <!-- Empty invoice state -->
                         <div class="no-invoice-msg" *ngIf="!item.invoices || item.invoices.length === 0">
-                            <span class="material-icons">info</span>
-                            <span>Chưa có hóa đơn chứng từ. Phiếu thu cần hoàn tất trước.</span>
+                            Chưa có hóa đơn chứng từ. Phiếu thu cần hoàn tất trước.
                         </div>
                     </div>
                     <!-- END: INVOICE List Section -->

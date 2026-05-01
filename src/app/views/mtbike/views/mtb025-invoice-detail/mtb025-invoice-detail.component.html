@@ -8,6 +8,26 @@
   </ps-header-back>
   <!-- END: HEADER -->
 
+  <!-- START: ORDER CONTEXT -->
+  <div class="order-context" *ngIf="orderInfo.id">
+    <div class="order-context__row">
+      <span class="order-context__label">Phiếu bán hàng:</span>
+      <span class="order-context__value">{{ orderInfo.id }}</span>
+    </div>
+    <div class="order-context__row">
+      <span class="order-context__label">Khách hàng:</span>
+      <span class="order-context__value">{{ orderInfo.customerName }}</span>
+    </div>
+    <div class="order-context__row" *ngIf="orderInfo.vehicleName">
+      <span class="order-context__label">Xe:</span>
+      <span class="order-context__value">{{ orderInfo.vehicleName }}</span>
+    </div>
+    <div class="order-context__row">
+      <span class="order-context__label">Trạng thái:</span>
+      <span class="order-context__badge">{{ invoice.StatusName || 'Tạo mới' }}</span>
+    </div>
+  </div>
+  <!-- END: ORDER CONTEXT -->
   <!-- START: BODY -->
   <div class="customer-body">
     <div class="body-container">
@@ -34,6 +54,24 @@
       </div>
       <!-- END: THÔNG TIN ĐƠN VỊ BÁN -->
 
+      <!-- START: THÔNG TIN XE (SỐ KHUNG / SỐ MÁY) -->
+      <div class="container-body">
+        <div class="title">Thông tin xe</div>
+        <div class="content">
+          <ps-kendo-textbox
+            [label]="'Số khung (*)'"
+            [(ngModel)]="invoice.FrameSeri"
+            (blur)="onFrameSeriBlur()"
+           [disabled]="isReadOnly"></ps-kendo-textbox>
+          <ps-kendo-textbox
+            [label]="'Số máy (*)'"
+            [(ngModel)]="invoice.EngineSeri"
+            (blur)="onEngineSeriBlur()"
+           [disabled]="isReadOnly"></ps-kendo-textbox>
+        </div>
+      </div>
+      <!-- END: THÔNG TIN XE -->
+
       <div class="container-body">
         <div class="title">Thông tin xuất hóa đơn</div>
         <div class="content">
@@ -46,7 +84,7 @@
             [(ngModel)]="invoice.VATType"
             [valuePrimitive]="true"
             (valueChange)="onValueChange('VATType')"
-          >
+           [disabled]="isReadOnly">
           </ps-kendo-dropdown-list>
 
           <!-- CASE: Cá nhân (VATType == 1) -->
@@ -54,15 +92,15 @@
             <ps-kendo-masked-textbox
               [mask]="'000000000000'"
               [label]="'Số căn cước công dân (*)'"
-              [(ngModel)]="invoice['VATCCCD']"
+              [(ngModel)]="invoice.VATCCCD"
               (blur)="onValueChange('VATCCCD')"
-            ></ps-kendo-masked-textbox>
+             [disabled]="isReadOnly"></ps-kendo-masked-textbox>
             <ps-kendo-masked-textbox
               [mask]="'000000000'"
               [label]="'Số chứng minh nhân dân'"
-              [(ngModel)]="invoice['VATCMND']"
+              [(ngModel)]="invoice.VATCMND"
               (blur)="onValueChange('VATCMND')"
-            ></ps-kendo-masked-textbox>
+             [disabled]="isReadOnly"></ps-kendo-masked-textbox>
 
             <div class="row-flex align-end">
               <ps-kendo-textbox
@@ -70,28 +108,36 @@
                 [(ngModel)]="invoice.VATCustomerName"
                 (blur)="onValueChange('VATCustomerName')"
                 class="flex-3"
-              ></ps-kendo-textbox>
+               [disabled]="isReadOnly"></ps-kendo-textbox>
               <ps-kendo-dropdown-list
                 [label]="''"
                 [data]="listGender"
-                [(ngModel)]="invoice['VATGender']"
+                [(ngModel)]="customer.Gender"
                 [textField]="'ListName'"
                 [valueField]="'Code'"
                 [valuePrimitive]="true"
-                (valueChange)="onValueChange('VATGender')"
+                (valueChange)="onCustomerChange('Gender')"
                 class="flex-1"
-              ></ps-kendo-dropdown-list>
+               [disabled]="isReadOnly"></ps-kendo-dropdown-list>
             </div>
-            <ps-kendo-textbox
+            <ps-kendo-dropdown-list
               [label]="'Tỉnh thành (*)'"
-              [(ngModel)]="invoice['VATProvince']"
-              (blur)="onValueChange('VATProvince')"
-            ></ps-kendo-textbox>
-            <ps-kendo-textbox
+              [data]="provinceList"
+              [(ngModel)]="customer.Province"
+              [textField]="'VNProvince'"
+              [valueField]="'Code'"
+              [valuePrimitive]="true"
+              (valueChange)="onProvinceChange($event)"
+             [disabled]="isReadOnly"></ps-kendo-dropdown-list>
+            <ps-kendo-dropdown-list
               [label]="'Phường xã (*)'"
-              [(ngModel)]="invoice['VATWard']"
-              (blur)="onValueChange('VATWard')"
-            ></ps-kendo-textbox>
+              [data]="wardList"
+              [(ngModel)]="customer.Ward"
+              [textField]="'VNWard'"
+              [valueField]="'Code'"
+              [valuePrimitive]="true"
+              (valueChange)="onWardChange($event)"
+             [disabled]="isReadOnly"></ps-kendo-dropdown-list>
           </div>
 
           <!-- CASE: Doanh nghiệp (VATType == 2) hoặc Đơn vị công (VATType == 3) -->
@@ -101,7 +147,7 @@
               [placeholder]="'Nhập tên người mua hàng'"
               [(ngModel)]="invoice.VATCustomerName"
               (blur)="onValueChange('VATCustomerName')"
-            >
+             [disabled]="isReadOnly">
             </ps-kendo-textbox>
 
             <ps-kendo-textbox
@@ -109,7 +155,7 @@
               [placeholder]="invoice.VATType === 3 ? 'Nhập mã đơn vị' : 'Nhập mã số thuế'"
               [(ngModel)]="invoice.VATCompanyTax"
               (blur)="onValueChange('VATCompanyTax')"
-            >
+             [disabled]="isReadOnly">
             </ps-kendo-textbox>
 
             <ps-kendo-textbox
@@ -117,7 +163,7 @@
               [placeholder]="invoice.VATType === 3 ? 'Nhập tên đơn vị' : 'Nhập tên công ty'"
               [(ngModel)]="invoice.VATCompanyName"
               (blur)="onValueChange('VATCompanyName')"
-            >
+             [disabled]="isReadOnly">
             </ps-kendo-textbox>
 
             <ps-kendo-textbox
@@ -125,7 +171,55 @@
               placeholder="abc@gmail.com"
               [(ngModel)]="invoice.VATEmail"
               (blur)="onValueChange('VATEmail')"
-            ></ps-kendo-textbox>
+             [disabled]="isReadOnly"></ps-kendo-textbox>
+
+            <!-- Thông tin người đại diện -->
+            <div class="title" style="margin-top: 12px;">Thông tin người đại diện</div>
+
+            <ps-kendo-masked-textbox
+              [mask]="'000000000000'"
+              [label]="'Số căn cước công dân (*)'"
+              [(ngModel)]="invoice.VATCCCD"
+              (blur)="onValueChange('VATCCCD')"
+             [disabled]="isReadOnly"></ps-kendo-masked-textbox>
+
+            <div class="row-flex align-end">
+              <ps-kendo-textbox
+                [label]="'Người đại diện (*)'"
+                [(ngModel)]="invoice.VATBRUName"
+                (blur)="onValueChange('VATBRUName')"
+                class="flex-3"
+               [disabled]="isReadOnly"></ps-kendo-textbox>
+              <ps-kendo-dropdown-list
+                [label]="''"
+                [data]="listGender"
+                [(ngModel)]="customer.Gender"
+                [textField]="'ListName'"
+                [valueField]="'Code'"
+                [valuePrimitive]="true"
+                (valueChange)="onCustomerChange('Gender')"
+                class="flex-1"
+               [disabled]="isReadOnly"></ps-kendo-dropdown-list>
+            </div>
+
+            <ps-kendo-dropdown-list
+              [label]="'Tỉnh thành (*)'"
+              [data]="provinceList"
+              [(ngModel)]="customer.Province"
+              [textField]="'VNProvince'"
+              [valueField]="'Code'"
+              [valuePrimitive]="true"
+              (valueChange)="onProvinceChange($event)"
+             [disabled]="isReadOnly"></ps-kendo-dropdown-list>
+            <ps-kendo-dropdown-list
+              [label]="'Phường xã (*)'"
+              [data]="wardList"
+              [(ngModel)]="customer.Ward"
+              [textField]="'VNWard'"
+              [valueField]="'Code'"
+              [valuePrimitive]="true"
+              (valueChange)="onWardChange($event)"
+             [disabled]="isReadOnly"></ps-kendo-dropdown-list>
           </div>
 
           <ps-kendo-textarea
@@ -133,7 +227,7 @@
             placeholder="Nhập địa chỉ"
             [(ngModel)]="invoice.VATAddress"
             (blur)="onValueChange('VATAddress')"
-          >
+           [disabled]="isReadOnly">
           </ps-kendo-textarea>
 
           <ps-kendo-textarea
@@ -141,13 +235,13 @@
             placeholder="Ghi chú thêm"
             [(ngModel)]="invoice.VATNote"
             (blur)="onValueChange('VATNote')"
-          >
+           [disabled]="isReadOnly">
           </ps-kendo-textarea>
         </div>
       </div>
 
       <!-- START: THÔNG TIN LIÊN HỆ -->
-      <div class="container-body" *ngIf="invoice.VATType == 1">
+      <div class="container-body">
         <div class="title">Thông tin liên hệ</div>
         <div class="content">
           <ps-kendo-masked-textbox
@@ -155,28 +249,28 @@
             [label]="'Số di động (*)'"
             [(ngModel)]="invoice.VATCellPhone"
             (blur)="onValueChange('VATCellPhone')"
-          ></ps-kendo-masked-textbox>
+           [disabled]="isReadOnly"></ps-kendo-masked-textbox>
 
           <div class="zalo-group">
             <ps-kendo-checkbox
               [label]="'Là số di động'"
-              [(ngModel)]="invoice['VATIsSamePhone']"
+              [(ngModel)]="invoice.VATIsSamePhone"
               (onchecked)="onSamePhoneChange($event)"
-            ></ps-kendo-checkbox>
+             [disabled]="isReadOnly"></ps-kendo-checkbox>
             <ps-kendo-masked-textbox
               [mask]="'0000000000'"
               [label]="'Zalo'"
-              [(ngModel)]="invoice['VATZalo']"
+              [(ngModel)]="invoice.VATZalo"
               (blur)="onValueChange('VATZalo')"
-              [disabled]="invoice['VATIsSamePhone']"
+              [disabled]="invoice.VATIsSamePhone || isReadOnly"
             ></ps-kendo-masked-textbox>
           </div>
 
           <ps-kendo-textbox
             [label]="'Email liên hệ'"
-            [(ngModel)]="invoice['VATContactEmail']"
+            [(ngModel)]="invoice.VATContactEmail"
             (blur)="onValueChange('VATContactEmail')"
-          ></ps-kendo-textbox>
+           [disabled]="isReadOnly"></ps-kendo-textbox>
         </div>
       </div>
       <!-- END: THÔNG TIN LIÊN HỆ -->
@@ -190,10 +284,10 @@
     <ps-kendo-button (onClick)="onBack()">
       <span class="material-icons">arrow_back</span>
     </ps-kendo-button>
-    <ps-kendo-button (onClick)="onApplyToOtherVehicles()">
+    <ps-kendo-button *ngIf="!isReadOnly" (onClick)="onApplyToOtherVehicles()">
       <span class="text">Áp dụng cho xe khác</span>
     </ps-kendo-button>
-    <ps-kendo-button [theme]="'primary'" (onClick)="onUpdate()">
+    <ps-kendo-button *ngIf="!isReadOnly" [theme]="'primary'" (onClick)="onUpdate()">
       <span class="text">Lưu thông tin</span>
     </ps-kendo-button>
   </ps-footer-action>
