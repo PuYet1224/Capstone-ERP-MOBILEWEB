@@ -32,7 +32,7 @@
 
     <!-- START: BODY -->
     <div class="body-list" #bodyList>
-        <div class="group-section" *ngFor="let group of displayGroups; let gIdx = index">
+        <div class="group-section" *ngFor="let group of displayGroups; let gIdx = index; trackBy: trackByGroup">
             <div class="group-header" (click)="toggleGroup(gIdx)">
                 <div class="group-name">
                     {{ group.name }} <span class="group-count">({{ group.items.length }})</span>
@@ -43,7 +43,7 @@
             </div>
 
             <div class="group-content" *ngIf="isGroupOpen(gIdx)">
-                <div class="pbh-card" *ngFor="let item of group.items">
+                <div class="pbh-card" *ngFor="let item of group.items; trackBy: trackByItem">
                     <!-- START: PBH Header -->
                     <div class="pbh-header" (click)="toggleItem(item)">
                         <div class="pbh-title">
@@ -91,7 +91,7 @@
 
                     <!-- START: INVOICE List Section -->
                     <div class="receipt-section" *ngIf="item.isExpanded">
-                        <div class="receipt-card" *ngFor="let inv of item.invoices; let i = index"
+                        <div class="receipt-card" *ngFor="let inv of item.invoices; let i = index; trackBy: trackByInvoice"
                              [class.complete]="isInfoComplete(inv)"
                              (click)="onNavigateDetail(inv)">
                             <!-- Vehicle title -->

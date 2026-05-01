@@ -257,6 +257,7 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
   }
 
   isInfoComplete(inv: SALOrderInvoiceCusDTO): boolean {
+    if (!inv.FrameSeri || !inv.EngineSeri) return false;
     if (!inv.VATCustomerName) return false;
     if (!inv.VATAddress) return false;
     if (inv.VATType === 1) {
@@ -310,16 +311,30 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
     switch (status) {
       case SALOrderInvoiceStatusEnum.Success: return 'inv-issued';
       case SALOrderInvoiceStatusEnum.Cancled: return 'inv-cancelled';
+      case SALOrderInvoiceStatusEnum.New: return 'inv-pending';
       default: return 'inv-pending';
     }
   }
 
   getInvoiceStatusLabel(status: number): string {
     switch (status) {
-      case SALOrderInvoiceStatusEnum.Success: return 'Đã xuất';
+      case SALOrderInvoiceStatusEnum.Success: return 'Đã phát hành';
       case SALOrderInvoiceStatusEnum.Cancled: return 'Đã hủy';
-      default: return 'Chưa xuất';
+      case SALOrderInvoiceStatusEnum.New: return 'Chờ xử lý';
+      default: return 'Chờ xử lý';
     }
+  }
+
+  trackByGroup(_: number, group: Mtb026DisplayGroup): string {
+    return group.name;
+  }
+
+  trackByItem(_: number, item: Mtb026InvoiceIssueItem): number {
+    return item.Code;
+  }
+
+  trackByInvoice(_: number, inv: SALOrderInvoiceCusDTO): number {
+    return inv.Code;
   }
   //#endregion
 
