@@ -308,26 +308,36 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
   }
 
   printInvoice(item: SALOrderInvoiceCusDTO): void {
-    this.loader.Show('Đang tải hóa đơn ĐT...');
+    this.loader.Show('Đang tạo hóa đơn điện tử...');
+    
+    // Get company details for the invoice header
+    const headInfo = this.cache.getItem(KeyLocalStorageEnum.HEAD_OBJECT);
+    
     const payload = {
       Code: item.Code,
-      Type: 1
+      Type: item.VATType || 1, // 1: Personal, 2: Business, 3: Public
+      HeadName: headInfo?.CompanyName || 'Công ty TNHH Hoài Minh',
+      TaxCode: headInfo?.TaxCode || '0312345678',
+      Address: headInfo?.Address || 'Hồ Chí Minh'
     };
+
     this.api.ExportSALInvoicePdf(payload).subscribe((res) => {
       this.loader.Hide();
       if (res && res.StatusCode === 0 && res.ObjectReturn && res.ObjectReturn.Base64) {
         const linkSource = `data:application/pdf;base64,${res.ObjectReturn.Base64}`;
         const downloadLink = document.createElement('a');
-        const fileName = res.ObjectReturn.FileName || `HoaDon_${item.InvoiceNo}.pdf`;
+        const fileName = res.ObjectReturn.FileName || `HoaDon_GTGT_${item.InvoiceNo}.pdf`;
         downloadLink.href = linkSource;
         downloadLink.download = fileName;
         downloadLink.click();
+        this.notification.Show('Tải hóa đơn điện tử thành công', 'success');
       } else {
-        this.notification.Show('Có lỗi xảy ra khi in hóa đơn', 'error');
+        const errorMsg = res?.ErrorString || 'Không thể tạo bản thể hiện hóa đơn. Vui lòng thử lại.';
+        this.notification.Show(errorMsg, 'error');
       }
     }, () => {
       this.loader.Hide();
-      this.notification.Show('Lỗi kết nối máy chủ', 'error');
+      this.notification.Show('Lỗi kết nối máy chủ khi tạo hóa đơn', 'error');
     });
   }
 

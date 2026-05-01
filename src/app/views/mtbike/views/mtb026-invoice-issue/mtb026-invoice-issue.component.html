@@ -140,8 +140,9 @@
                                 <button class="btn-detail" (click)="onNavigateDetail(inv); $event.stopPropagation()">
                                     Xem chi tiết
                                 </button>
-                                <button class="btn-print" (click)="printInvoice(inv); $event.stopPropagation()" style="background-color: var(--kendo-color-success, #28a745); color: white; border: none; border-radius: 4px; padding: 6px 12px; margin-left: 8px; font-weight: 500;">
-                                    In HĐĐT
+                                <button class="btn-print" (click)="printInvoice(inv); $event.stopPropagation()">
+                                    <span class="material-icons" style="font-size: 14px;">receipt</span>
+                                    <span>In HĐĐT</span>
                                 </button>
                                 <span class="issued-label">
                                     Đã phát hành
