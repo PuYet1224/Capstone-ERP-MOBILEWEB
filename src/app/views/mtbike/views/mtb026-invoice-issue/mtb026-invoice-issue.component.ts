@@ -307,6 +307,30 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
     this.router.navigate(['detail'], { relativeTo: this.route });
   }
 
+  printInvoice(item: SALOrderInvoiceCusDTO): void {
+    this.loader.Show('Đang tải hóa đơn ĐT...');
+    const payload = {
+      Code: item.Code,
+      Type: 1
+    };
+    this.api.ExportSALInvoicePdf(payload).subscribe((res) => {
+      this.loader.Hide();
+      if (res && res.StatusCode === 0 && res.ObjectReturn && res.ObjectReturn.Base64) {
+        const linkSource = `data:application/pdf;base64,${res.ObjectReturn.Base64}`;
+        const downloadLink = document.createElement('a');
+        const fileName = res.ObjectReturn.FileName || `HoaDon_${item.InvoiceNo}.pdf`;
+        downloadLink.href = linkSource;
+        downloadLink.download = fileName;
+        downloadLink.click();
+      } else {
+        this.notification.Show('Có lỗi xảy ra khi in hóa đơn', 'error');
+      }
+    }, () => {
+      this.loader.Hide();
+      this.notification.Show('Lỗi kết nối máy chủ', 'error');
+    });
+  }
+
   getInvoiceStatusClass(status: number): string {
     switch (status) {
       case SALOrderInvoiceStatusEnum.Success: return 'inv-issued';
