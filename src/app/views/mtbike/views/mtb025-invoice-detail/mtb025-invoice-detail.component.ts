@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
+import { SALOrderInvoiceStatusEnum } from 'src/app/models/enums/e-status/sal-order-invoice-status.enum';
 import { MtbikeApiService } from '../../services/mtbike-api.service';
 import { PsKendoNotificationService } from 'src/app/services/core/ps-kendo-notification.service';
 import { SALOrderInvoiceCusDTO } from 'src/app/models/dtos/e-dtos/sal-order-invoice.dto';
@@ -14,9 +15,6 @@ import { KeyLocalStorageEnum } from 'src/app/models/enums/key-local-storage.enum
 import { UpdatePropertiesInterface } from 'src/app/models/dtos/update-properties.interface';
 import { GetConfigService } from 'src/app/services/core/ps-get-config.service';
 import { LSHeadCusDTO } from 'src/app/models/dtos/e-dtos/ls-head.dto';
-import { WHIODetailVehicleCusDTO } from 'src/app/models/dtos/e-dtos/wh-io-detail-vehicle.dto';
-import { SALOrderMasterCusDTO } from 'src/app/models/dtos/e-dtos/sal-order-master.dto';
-import { PSCoreApiService } from 'src/app/services/ps-core-api.service';
 import { CSLoyalCustomerCusDTO } from 'src/app/models/dtos/e-dtos/cs-loyal-customer.dto';
 import { LSProvinceDTO } from 'src/app/models/dtos/e-dtos/ls-province.dto';
 import { LSWardDTO } from 'src/app/models/dtos/e-dtos/ls-ward.dto';
@@ -50,21 +48,13 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   public provinceList: LSProvinceDTO[] = [];
   public wardList: LSWardDTO[] = [];
 
-  // Lists for Personal case
-  public listGender = [
+  public readonly listGender = [
     { Code: 7, ListName: 'Nam' },
     { Code: 8, ListName: 'Nữ' }
-  ];
-  public listYear: number[] = [];
-  public listMonth: number[] = Array.from({ length: 12 }, (_, i) => i + 1);
-  public listDay: number[] = Array.from({ length: 31 }, (_, i) => i + 1);
+  ] as const;
   public currentheader: LSHeadCusDTO = this.configService.GetHead();
 
-  // Order context for header display
-  public orderInfo: { id: string; customerName: string; vehicleName: string; totalAmount: number } = {
-    id: '', customerName: '', vehicleName: '', totalAmount: 0
-  };
-  private _lastAutoAddress = '';
+  public orderInfo = { id: '', customerName: '', vehicleName: '', totalAmount: 0 };
 
   constructor(
     private route: ActivatedRoute,
@@ -75,13 +65,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     private cache: PsCache,
     private configService: GetConfigService,
     private http: HttpClient,
-    private coreApi: PSCoreApiService,
-  ) { 
-    const currentYear = new Date().getFullYear();
-    for (let i = currentYear; i >= currentYear - 100; i--) {
-      this.listYear.push(i);
-    }
-  }
+  ) { }
 
   ngOnInit(): void {
     const cached = this.cache.getItem(KeyLocalStorageEnum.SAL_ORDER_INVOICE);
@@ -131,7 +115,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
           this.invoice.FrameSeri = this.invoice.FrameSeri ?? '';
           this.invoice.EngineSeri = this.invoice.EngineSeri ?? '';
           this.invoiceCopy = { ...this.invoice };
-          this.isReadOnly = this.invoice.Status === 2;
+          this.isReadOnly = this.invoice.Status === SALOrderInvoiceStatusEnum.Success;
           if (!this.invoice.VATType && this.invoiceTypes.length > 0) {
             this.invoice.VATType = this.invoiceTypes[0].TypeOfList;
             this.invoiceCopy.VATType = this.invoiceTypes[0].TypeOfList;
@@ -461,6 +445,26 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   }
   //#endregion
 
+  //#region Status display
+  getStatusLabel(): string {
+    switch (this.invoice.Status) {
+      case SALOrderInvoiceStatusEnum.New: return 'Chờ xử lý';
+      case SALOrderInvoiceStatusEnum.Success: return 'Đã phát hành';
+      case SALOrderInvoiceStatusEnum.Cancled: return 'Đã hủy';
+      default: return 'Chờ xử lý';
+    }
+  }
+
+  getStatusClass(): string {
+    switch (this.invoice.Status) {
+      case SALOrderInvoiceStatusEnum.New: return 'status-pending';
+      case SALOrderInvoiceStatusEnum.Success: return 'status-success';
+      case SALOrderInvoiceStatusEnum.Cancled: return 'status-cancel';
+      default: return 'status-pending';
+    }
+  }
+  //#endregion
+
   onBack(): void {
     this.router.navigate(['../'], { relativeTo: this.route });
   }
@@ -522,25 +526,19 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
                 if (saveRes.StatusCode === 0) {
                   this.invoice = saveRes.ObjectReturn;
                   this.invoiceCopy = { ...saveRes.ObjectReturn };
-                  this.notification.onSuccess(`Đã tìm thấy xe - ${otherField === 'EngineSeri' ? 'Số máy' : 'Số khung'} tự động điền`);
+                  this.notification.onSuccess('Đã tìm thấy xe');
                 }
               }
             });
           } else {
-            this.notification.onWarning('Xe tồn tại nhưng thiếu dữ liệu. Vui lòng nhập thủ công.');
             this.onValueChange(field);
           }
         } else {
-          // Not found → revert to previous value, do NOT save
-          const label = field === 'FrameSeri' ? 'Số khung' : 'Số máy';
-          this.notification.onError(`${label} "${value}" không tìm thấy xe trong kho. Giá trị đã được hoàn tác.`);
-          this.invoice[field] = this.invoiceCopy[field] || '';
+          this.onValueChange(field);
         }
       },
       error: () => {
-        // API error → revert to previous value, do NOT save
-        this.notification.onError('Không thể tra cứu số khung/máy. Giá trị đã được hoàn tác.');
-        this.invoice[field] = this.invoiceCopy[field] || '';
+        this.onValueChange(field);
       }
     });
     this.arrUnsubscribe.push(sub);
@@ -548,34 +546,10 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
 
   onFrameSeriBlur(): void {
     this.lookupSeri('FrameSeri');
-    this.checkDuplicateSeri('FrameSeri', this.invoice.FrameSeri);
   }
 
   onEngineSeriBlur(): void {
     this.lookupSeri('EngineSeri');
-    this.checkDuplicateSeri('EngineSeri', this.invoice.EngineSeri);
-  }
-
-  private checkDuplicateSeri(field: 'FrameSeri' | 'EngineSeri', value: string): void {
-    if (!value?.trim()) return;
-    // Check if another invoice in the same head already uses this SK/SM
-    const sub = this.apiService.GetListSALInvoice({ skip: 0, take: 100 }).subscribe({
-      next: (res: ResponseDTO) => {
-        if (res.StatusCode === 0) {
-          const all = res.ObjectReturn?.Data ?? res.ObjectReturn ?? [];
-          const duplicate = (all as SALOrderInvoiceCusDTO[]).find(
-            inv => inv.Code !== this.invoice.Code && inv[field] === value.trim()
-          );
-          if (duplicate) {
-            const label = field === 'FrameSeri' ? 'Số khung' : 'Số máy';
-            this.notification.onError(
-              `${label} "${value}" đã được sử dụng bởi HĐ #${duplicate.InvoiceNo || duplicate.Code}. Vui lòng kiểm tra lại!`
-            );
-          }
-        }
-      }
-    });
-    this.arrUnsubscribe.push(sub);
   }
   //#endregion
 

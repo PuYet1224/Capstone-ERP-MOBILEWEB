@@ -257,6 +257,7 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
   }
 
   isInfoComplete(inv: SALOrderInvoiceCusDTO): boolean {
+    if (!inv.FrameSeri || !inv.EngineSeri) return false;
     if (!inv.VATCustomerName) return false;
     if (!inv.VATAddress) return false;
     if (inv.VATType === 1) {
@@ -306,20 +307,68 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
     this.router.navigate(['detail'], { relativeTo: this.route });
   }
 
+  printInvoice(item: SALOrderInvoiceCusDTO): void {
+    this.loader.Show('Đang tạo hóa đơn điện tử...');
+    
+    // Get company details for the invoice header
+    const headInfo = this.cache.getItem(KeyLocalStorageEnum.HEAD_OBJECT);
+    
+    const payload = {
+      Code: item.Code,
+      Type: item.VATType || 1, // 1: Personal, 2: Business, 3: Public
+      HeadName: headInfo?.CompanyName || 'Công ty TNHH Hoài Minh',
+      TaxCode: headInfo?.TaxCode || '0312345678',
+      Address: headInfo?.Address || 'Hồ Chí Minh'
+    };
+
+    this.api.ExportSALInvoicePdf(payload).subscribe((res) => {
+      this.loader.Hide();
+      if (res && res.StatusCode === 0 && res.ObjectReturn && res.ObjectReturn.Base64) {
+        const linkSource = `data:application/pdf;base64,${res.ObjectReturn.Base64}`;
+        const downloadLink = document.createElement('a');
+        const fileName = res.ObjectReturn.FileName || `HoaDon_GTGT_${item.InvoiceNo}.pdf`;
+        downloadLink.href = linkSource;
+        downloadLink.download = fileName;
+        downloadLink.click();
+        this.notification.Show('Tải hóa đơn điện tử thành công', 'success');
+      } else {
+        const errorMsg = res?.ErrorString || 'Không thể tạo bản thể hiện hóa đơn. Vui lòng thử lại.';
+        this.notification.Show(errorMsg, 'error');
+      }
+    }, () => {
+      this.loader.Hide();
+      this.notification.Show('Lỗi kết nối máy chủ khi tạo hóa đơn', 'error');
+    });
+  }
+
   getInvoiceStatusClass(status: number): string {
     switch (status) {
       case SALOrderInvoiceStatusEnum.Success: return 'inv-issued';
       case SALOrderInvoiceStatusEnum.Cancled: return 'inv-cancelled';
+      case SALOrderInvoiceStatusEnum.New: return 'inv-pending';
       default: return 'inv-pending';
     }
   }
 
   getInvoiceStatusLabel(status: number): string {
     switch (status) {
-      case SALOrderInvoiceStatusEnum.Success: return 'Đã xuất';
+      case SALOrderInvoiceStatusEnum.Success: return 'Đã phát hành';
       case SALOrderInvoiceStatusEnum.Cancled: return 'Đã hủy';
-      default: return 'Chưa xuất';
+      case SALOrderInvoiceStatusEnum.New: return 'Chờ xử lý';
+      default: return 'Chờ xử lý';
     }
+  }
+
+  trackByGroup(_: number, group: Mtb026DisplayGroup): string {
+    return group.name;
+  }
+
+  trackByItem(_: number, item: Mtb026InvoiceIssueItem): number {
+    return item.Code;
+  }
+
+  trackByInvoice(_: number, inv: SALOrderInvoiceCusDTO): number {
+    return inv.Code;
   }
   //#endregion
 

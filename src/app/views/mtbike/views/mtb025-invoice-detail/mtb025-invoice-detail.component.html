@@ -24,7 +24,7 @@
     </div>
     <div class="order-context__row">
       <span class="order-context__label">Trạng thái:</span>
-      <span class="order-context__badge">{{ invoice.StatusName || 'Tạo mới' }}</span>
+      <span class="order-context__badge" [ngClass]="getStatusClass()">{{ getStatusLabel() }}</span>
     </div>
   </div>
   <!-- END: ORDER CONTEXT -->
