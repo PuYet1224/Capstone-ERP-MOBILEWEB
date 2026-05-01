@@ -65,7 +65,7 @@
               [label]="'Số tiền cọc (*)'"
               [disabled]="receipt.Status > 3"
               [(ngModel)]="item.DepositAmount"
-              (blur)="onValueChange(item, 'DepositAmount', item.DepositAmount)"
+              (blur)="onDepositAmountBlur(item)"
             ></ps-kendo-numeric-textbox>
           </div>
         </div>
