@@ -32,6 +32,18 @@ class SALOrderInvoiceDTO {
   LastModifiedTime: Date;
   LastModifiedBy: string = '';
   VATType: SALOrderInvoiceVATTypeEnum = SALOrderInvoiceVATTypeEnum.Personal;
+  VATCCCD: string = '';
+  VATCMND: string = '';
+  VATEffDate: Date;
+  VATGender: number;
+  VATYear: number;
+  VATMonth: number;
+  VATDay: number;
+  VATProvince: string = '';
+  VATWard: string = '';
+  VATZalo: string = '';
+  VATIsSamePhone: boolean = false;
+  VATContactEmail: string = '';
   FrameSeri: string = '';
   EngineSeri: string = '';
 }

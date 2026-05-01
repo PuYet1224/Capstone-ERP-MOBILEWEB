@@ -150,8 +150,8 @@
                 </kendo-chart-category-axis>
                 <kendo-chart-value-axis>
                     <kendo-chart-value-axis-item [majorGridLines]="{ visible: false, dashType: 'dash' }"
-                        [labels]="{ visible: true }">
-                        <kendo-chart-value-axis-item-labels [content]="labelFormatter"
+                        [labels]="{ visible: false }" [line]="{ visible: false }">
+                        <kendo-chart-value-axis-item-labels [visible]="false" [content]="labelFormatter"
                             font="600 9px 'Mulish', sans-serif" color="#9ca3af">
                         </kendo-chart-value-axis-item-labels>
                     </kendo-chart-value-axis-item>
@@ -190,8 +190,8 @@
                     </kendo-chart-category-axis-item>
                 </kendo-chart-category-axis>
                 <kendo-chart-value-axis>
-                    <kendo-chart-value-axis-item [majorGridLines]="{ visible: false }" [labels]="{ visible: true }">
-                        <kendo-chart-value-axis-item-labels font="600 9px 'Mulish', sans-serif" color="#9ca3af">
+                    <kendo-chart-value-axis-item [majorGridLines]="{ visible: false }" [labels]="{ visible: false }" [line]="{ visible: false }">
+                        <kendo-chart-value-axis-item-labels [visible]="false" font="600 9px 'Mulish', sans-serif" color="#9ca3af">
                         </kendo-chart-value-axis-item-labels>
                     </kendo-chart-value-axis-item>
                 </kendo-chart-value-axis>
@@ -235,21 +235,21 @@
                 </kendo-chart-category-axis>
                 <kendo-chart-value-axis>
                     <kendo-chart-value-axis-item [type]="'numeric'" [majorGridLines]="{ visible: false }"
-                        [labels]="{ visible: true, color: '#9ca3af' }">
-                        <kendo-chart-value-axis-item-labels [content]="labelFormatter"
+                        [labels]="{ visible: false }" [line]="{ visible: false }">
+                        <kendo-chart-value-axis-item-labels [visible]="false" [content]="labelFormatter"
                             font="600 9px Mulish, sans-serif">
                         </kendo-chart-value-axis-item-labels>
                     </kendo-chart-value-axis-item>
                 </kendo-chart-value-axis>
                 <kendo-chart-series>
                     <kendo-chart-series-item type="line" [markers]="{ visible: false }" categoryField="Title"
-                        [data]="chart3_doanhthu" field="Value" color="#126633" name="Bán hàng">
-                        <kendo-chart-series-item-labels [content]="labelFormatter" [visible]="true"
-                            background="transparent" format="n0" color="#3c4858" font="600 9px Mulish, sans-serif" [margin]="-4" [padding]="0"></kendo-chart-series-item-labels>
+                        [data]="chart3_doanhthu" field="Value" color="#126633" name="Doanh thu">
+                        <kendo-chart-series-item-labels [content]="labelFormatter" [visible]="true" position="above"
+                            background="transparent" format="n0" color="#3c4858" font="600 9px Mulish, sans-serif" [margin]="0" [padding]="0"></kendo-chart-series-item-labels>
                     </kendo-chart-series-item>
                     <kendo-chart-series-item type="column" [data]="chart3_thucthu" field="Value" color="#952FC9"
                         name='Thực thu' [border]="{ width: 0 }">
-                        <kendo-chart-series-item-labels [content]="labelFormatter" [visible]="true"
+                        <kendo-chart-series-item-labels [content]="labelFormatter" [visible]="true" position="outsideEnd"
                             background="transparent" format="n0" color="#3c4858" font="600 9px Mulish, sans-serif" [margin]="0" [padding]="0"></kendo-chart-series-item-labels>
                     </kendo-chart-series-item>
                 </kendo-chart-series>
@@ -265,7 +265,7 @@
                 <kendo-chart-series>
                     <kendo-chart-series-item type="donut" [data]="chart4" categoryField="Title" field="Percentage">
                         <kendo-chart-series-item-labels position="outsideEnd" color="#3c4858"
-                            [content]="labelContentdonut" [margin]="0"
+                            [content]="labelContentdonut" [margin]="0" [autoFit]="true"
                             font="600 9px Mulish, sans-serif"></kendo-chart-series-item-labels>
                     </kendo-chart-series-item>
                 </kendo-chart-series>
@@ -289,7 +289,7 @@
                     <span class="badge badge--orange">{{totalInStockChart5}} xe tồn</span>
                 </div>
             </div>
-            <kendo-chart class="chart" [seriesColors]="['#ED7D31', '#E60A0A', '#0070C0']">
+            <kendo-chart class="chart" [seriesColors]="['#ED7D31', '#0070C0']">
                 <kendo-chart-legend position="bottom" [labels]="{ font: '600 10px Mulish, sans-serif' }"
                     orientation="horizontal" [visible]="true">
                 </kendo-chart-legend>
@@ -304,26 +304,26 @@
                 </kendo-chart-category-axis>
                 <kendo-chart-value-axis>
                     <kendo-chart-value-axis-item [type]="'numeric'" [majorGridLines]="{ visible: false }"
-                        [labels]="{ visible: true}">
-                        <kendo-chart-value-axis-item-labels font="600 9px Mulish, sans-serif" color="#9ca3af">
+                        [labels]="{ visible: false }" [line]="{ visible: false }">
+                        <kendo-chart-value-axis-item-labels [visible]="false" font="600 9px Mulish, sans-serif" color="#9ca3af">
                         </kendo-chart-value-axis-item-labels>
                     </kendo-chart-value-axis-item>
                 </kendo-chart-value-axis>
                 <kendo-chart-series>
                     <kendo-chart-series-item type="column" [stack]="{ group: 'g1' }" [data]="chart5_tondaban"
-                        field="Value" categoryField="Title" name="Tồn đã bán" [border]="{ width: 0 }">
+                        field="Value" categoryField="Title" name="Tồn kho" [border]="{ width: 0 }">
                         <kendo-chart-series-item-labels [visible]="true" background="transparent" color="#3c4858"
-                            font="600 9px Mulish, sans-serif" format="n0"></kendo-chart-series-item-labels>
+                            font="600 9px Mulish, sans-serif" format="n0" [margin]="0" [padding]="0"></kendo-chart-series-item-labels>
                     </kendo-chart-series-item>
-                    <kendo-chart-series-item type="column" [stack]="{ group: 'g1' }" [data]="chart5_tonchuaban"
+                    <!-- <kendo-chart-series-item type="column" [stack]="{ group: 'g1' }" [data]="chart5_tonchuaban"
                         field="Value" categoryField="Title" name="Tồn chưa bán" [border]="{ width: 0 }">
                         <kendo-chart-series-item-labels [visible]="true" background="transparent"
-                            color="#3c4858" font="600 9px Mulish, sans-serif" format="n0"></kendo-chart-series-item-labels>
-                    </kendo-chart-series-item>
+                            color="#3c4858" font="600 9px Mulish, sans-serif" format="n0" [margin]="0" [padding]="0"></kendo-chart-series-item-labels>
+                    </kendo-chart-series-item> -->
                     <kendo-chart-series-item type="line" [data]="chart5_nhaphang" field="Value" categoryField="Title"
                         [stack]="{ group: 'g2' }" name="Nhập hàng" [markers]="{ visible: false }">
                         <kendo-chart-series-item-labels [visible]="true" background="transparent"
-                            color="#3c4858" font="600 9px Mulish, sans-serif" format="n0"></kendo-chart-series-item-labels>
+                            color="#3c4858" font="600 9px Mulish, sans-serif" format="n0" [margin]="0" [padding]="0"></kendo-chart-series-item-labels>
                     </kendo-chart-series-item>
                 </kendo-chart-series>
             </kendo-chart>
@@ -337,14 +337,14 @@
             <div class="donut-pair">
                 <kendo-chart class="chart">
                     <ng-template kendoChartDonutCenterTemplate>
-                        <h3>Nhập</h3>
+                        <h3 style="text-align: center; font-size: 15px; font-family: 'Mulish', sans-serif; font-weight: 700; margin: 0;">Nhập</h3>
                     </ng-template>
                     <kendo-chart-legend position="bottom" [labels]="{ font: '600 10px Mulish, sans-serif' }"
                         orientation="horizontal" [visible]="true" style="opacity: 0;">
                     </kendo-chart-legend>
                     <kendo-chart-area background="transparent"></kendo-chart-area>
                     <kendo-chart-series>
-                        <kendo-chart-series-item type="donut" colorField="Color" [data]="chart5_pieChart"
+                        <kendo-chart-series-item type="donut" colorField="Color" [data]="chart5_pieChart" [autoFit]="true"
                             categoryField="Title" field="Percentage" color="#e2e2e2">
                             <kendo-chart-series-item-labels position="outsideEnd" [content]="labelContentdonut"
                                 [margin]="0" color="#3c4858" font="600 9px Mulish, sans-serif"></kendo-chart-series-item-labels>
@@ -353,12 +353,12 @@
                 </kendo-chart>
                 <kendo-chart class="chart">
                     <ng-template kendoChartDonutCenterTemplate>
-                        <h3>Tồn</h3>
+                        <h3 style="text-align: center; font-size: 15px; font-family: 'Mulish', sans-serif; font-weight: 700; margin: 0;">Tồn</h3>
                     </ng-template>
                     <kendo-chart-area background="transparent"></kendo-chart-area>
                     <kendo-chart-series>
-                        <kendo-chart-series-item type="donut" colorField="Color" [data]="chart5_pieChart"
-                            categoryField="Title" field="Percentage" color="#0000">
+                        <kendo-chart-series-item type="donut" colorField="Color" [data]="chart5_pieChart" [autoFit]="true"
+                            categoryField="Title" field="Value" color="#0000">
                             <kendo-chart-series-item-labels position="outsideEnd" [content]="labelContentdonut"
                                 [margin]="0" color="#3c4858" font="600 9px Mulish, sans-serif"></kendo-chart-series-item-labels>
                         </kendo-chart-series-item>
@@ -375,7 +375,7 @@
             <div class="chart-card__header">
                 <h2 class="chart-card__title">{{titleChart6}}</h2>
             </div>
-            <kendo-chart class="chart" [seriesColors]="['#ED7D31', '#E60A0A', '#0070C0']">
+            <kendo-chart class="chart" [seriesColors]="['#ED7D31', '#0070C0']">
                 <kendo-chart-legend position="bottom" [labels]="{ font: '600 10px Mulish, sans-serif' }"
                     orientation="horizontal" [visible]="true">
                 </kendo-chart-legend>
@@ -389,23 +389,23 @@
                     </kendo-chart-category-axis-item>
                 </kendo-chart-category-axis>
                 <kendo-chart-value-axis>
-                    <kendo-chart-value-axis-item [type]="'numeric'" [line]="{visible: true, color: '#f3f4f6'}"
-                        [majorGridLines]="{ visible: false }" [labels]="{ visible: true }">
-                        <kendo-chart-value-axis-item-labels font="600 9px Mulish, sans-serif" color="#9ca3af">
+                    <kendo-chart-value-axis-item [type]="'numeric'" [line]="{visible: false}"
+                        [majorGridLines]="{ visible: false }" [labels]="{ visible: false }">
+                        <kendo-chart-value-axis-item-labels [visible]="false" font="600 9px Mulish, sans-serif" color="#9ca3af">
                         </kendo-chart-value-axis-item-labels>
                     </kendo-chart-value-axis-item>
                 </kendo-chart-value-axis>
                 <kendo-chart-series>
                     <kendo-chart-series-item type="column" [stack]="{ group: 'g1' }" [data]="chart6_tondaban"
-                        field="Value" categoryField="Title" name="Tồn đã bán" [border]="{ width: 0 }">
+                        field="Value" categoryField="Title" name="Tồn kho" [border]="{ width: 0 }">
                         <kendo-chart-series-item-labels [visible]="true" background="transparent" color="#3c4858"
                             font="600 9px Mulish, sans-serif" format="n0"></kendo-chart-series-item-labels>
                     </kendo-chart-series-item>
-                    <kendo-chart-series-item type="column" [stack]="{ group: 'g1' }" [data]="chart6_tonchuaban"
+                    <!-- <kendo-chart-series-item type="column" [stack]="{ group: 'g1' }" [data]="chart6_tonchuaban"
                         field="Value" categoryField="Title" name="Tồn chưa bán" [border]="{ width: 0 }">
                         <kendo-chart-series-item-labels [visible]="true" background="transparent"
                             color="#3c4858" font="600 9px Mulish, sans-serif" format="n0"></kendo-chart-series-item-labels>
-                    </kendo-chart-series-item>
+                    </kendo-chart-series-item> -->
                     <kendo-chart-series-item type="column" [stack]="{ group: 'g2' }" [data]="chart6_nhaphang"
                         [markers]="{ visible: false }" field="Value" [spacing]="0" [gap]="0" categoryField="Title"
                         name="Nhập hàng" [border]="{ width: 0 }">

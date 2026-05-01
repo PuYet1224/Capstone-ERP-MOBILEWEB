@@ -1,502 +1,506 @@
 // Dashboard Mobile — Premium SCSS (hex only, no SCSS variable imports)
 
 ::ng-deep {
-    mtb000-dashboard {
-        .mtb000-dashboard {
-            background: #f5f6fa;
-            font-size: 13px;
-            height: 100%;
-            font-family: 'Mulish', sans-serif;
+  mtb000-dashboard {
+    .mtb000-dashboard {
+      background: #f5f6fa;
+      font-size: 13px;
+      height: 100%;
+      font-family: 'Mulish', sans-serif;
 
-            .k-overlay {
-                z-index: 100001;
-                position: fixed;
-                width: 100vw;
-                height: 100%;
+      .k-overlay {
+        z-index: 100001;
+        position: fixed;
+        width: 100vw;
+        height: 100%;
+      }
+
+      // ═══════════ FILTER POPUP ═══════════
+      .filter-popup {
+        z-index: 100002;
+        position: fixed;
+        bottom: -60%;
+        width: 100%;
+        height: fit-content;
+        min-height: 337px;
+        padding: 16px;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        background: #ffffff;
+        box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.12);
+        transition: bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+
+        &.open {
+          bottom: 0;
+        }
+
+        .popup-header {
+          display: flex;
+          justify-content: center;
+          margin-bottom: 12px;
+
+          .header-filter {
+            width: fit-content;
+            border-bottom: 2px solid #126433;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding-bottom: 6px;
+
+            .material-icons {
+              color: #126433;
+              font-size: 20px;
             }
 
-            // ═══════════ FILTER POPUP ═══════════
-            .filter-popup {
-                z-index: 100002;
-                position: fixed;
-                bottom: -60%;
-                width: 100%;
-                height: fit-content;
-                min-height: 337px;
-                padding: 16px;
-                border-top-left-radius: 20px;
-                border-top-right-radius: 20px;
-                background: #ffffff;
-                box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.12);
-                transition: bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-
-                &.open {
-                    bottom: 0;
-                }
-
-                .popup-header {
-                    display: flex;
-                    justify-content: center;
-                    margin-bottom: 12px;
-
-                    .header-filter {
-                        width: fit-content;
-                        border-bottom: 2px solid #126433;
-                        display: flex;
-                        align-items: center;
-                        gap: 6px;
-                        padding-bottom: 6px;
-
-                        .material-icons {
-                            color: #126433;
-                            font-size: 20px;
-                        }
-
-                        span {
-                            font-weight: 700;
-                            font-size: 13px;
-                            line-height: 1;
-                            color: #126433;
-                        }
-                    }
-                }
-
-                .popup-body {
-                    margin-top: 10px;
-
-                    .body-top {
-                        width: 80%;
-                        min-height: 230px;
-                        margin: 0 auto;
-                        display: flex;
-                        flex-direction: column;
-                        gap: 10px;
-
-                        .date-picker {
-                            display: flex;
-                            flex-direction: column;
-                            gap: 10px;
-
-                            .datepicker {
-                                display: flex;
-                                flex-direction: column;
-
-                                label {
-                                    font-size: 13px;
-                                    font-weight: 600;
-                                    color: #3c4858;
-                                }
-
-                                kendo-datepicker {
-                                    height: 38px;
-                                    border-color: #e5e7eb;
-                                    border-radius: 8px;
-                                    padding-left: 15px;
-
-                                    input {
-                                        font-size: 13px;
-                                        color: #3c4858;
-                                        font-weight: 400;
-                                    }
-
-                                    button {
-                                        background: #ffffff;
-                                    }
-
-                                    &.disable-block {
-                                        background: #F2F2F2;
-                                        pointer-events: none;
-
-                                        button {
-                                            background: #F2F2F2;
-                                        }
-                                    }
-
-                                    &.readonly-mode {
-                                        border: none;
-                                        pointer-events: none;
-
-                                        button {
-                                            display: none;
-                                        }
-                                    }
-                                }
-
-                                .k-disabled {
-                                    border-color: #e5e7eb;
-                                    background-color: #F2F2F2;
-                                    opacity: 1;
-
-                                    .k-input-button {
-                                        border-left: none;
-                                        background-color: transparent;
-                                    }
-                                }
-
-                                .status {
-                                    margin-top: 5px;
-                                }
-                            }
-                        }
-
-                        .monthpicker {
-                            display: flex;
-                            gap: 10px;
-
-                            ps-kendo-dropdown-list {
-                                .kendo-dropdown-list {
-                                    .k-dropdownlist {
-                                        .k-animation-container {
-                                            .k-popup {
-                                                .k-list {
-                                                    .k-list-content {
-                                                        overflow: auto;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    .body-bottom {
-                        margin-top: 20px;
-                        display: flex;
-                        gap: 10px;
-                        width: 100%;
-
-                        ps-kendo-button:last-child {
-                            flex: 1;
-
-                            button {
-                                width: 100%;
-                            }
-                        }
-                    }
-                }
+            span {
+              font-weight: 700;
+              font-size: 13px;
+              line-height: 1;
+              color: #126433;
             }
+          }
+        }
 
-            // ═══════════ HEADER ═══════════
-            ps-header-back {
-                .ps-header {
-                    .left-content {
-                        display: flex;
-                        flex-direction: column;
-                        align-items: flex-start;
-                        font-weight: bold;
+        .popup-body {
+          margin-top: 10px;
 
-                        .top-content {
-                            font-weight: 700;
-                            font-size: 14px;
-                            color: #1f2937;
+          .body-top {
+            width: 80%;
+            min-height: 230px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
 
-                            span {
-                                font-weight: 700;
-                                color: #0074FF;
-                            }
-                        }
+            .date-picker {
+              display: flex;
+              flex-direction: column;
+              gap: 10px;
 
-                        .bot-content {
-                            font-size: 11px;
-                            color: #6b7280;
-                            font-weight: 500;
-                        }
-                    }
-
-                    .header-right {
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
-
-                        span {
-                            color: #126433;
-                        }
-                    }
-                }
-            }
-
-            // ═══════════ DASHBOARD CONTAINER ═══════════
-            .dashboard-container {
-                height: calc(100% - 72px);
-                overflow-y: auto;
-                padding: 12px;
+              .datepicker {
                 display: flex;
                 flex-direction: column;
-                gap: 12px;
 
-                // ═══════════ OVERVIEW CARDS ═══════════
-                .overview-cards {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                    gap: 10px;
-
-                    .card {
-                        background: #ffffff;
-                        border-radius: 14px;
-                        padding: 12px;
-                        display: flex;
-                        align-items: center;
-                        gap: 10px;
-                        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
-                        transition: transform 0.2s ease, box-shadow 0.2s ease;
-                        min-height: 64px;
-
-                        &:active {
-                            transform: scale(0.97);
-                        }
-
-                        .card__icon {
-                            width: 38px;
-                            height: 38px;
-                            border-radius: 10px;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            flex-shrink: 0;
-
-                            .material-icons {
-                                font-size: 20px;
-                                color: #ffffff;
-                            }
-                        }
-
-                        .card__body {
-                            display: flex;
-                            flex-direction: column;
-                            overflow: hidden;
-                            min-width: 0;
-align-items: center;
-
-                            .card__value {
-                                font-size: 14px;
-                                font-weight: 800;
-                                color: #1f2937;
-                                white-space: nowrap;
-                                overflow: hidden;
-                                text-overflow: ellipsis;
-                                line-height: 1.3;
-                            }
-
-                            .card__label {
-                                font-size: 10px;
-                                font-weight: 600;
-                                color: #9ca3af;
-                                text-transform: uppercase;
-                                letter-spacing: 0.3px;
-                                margin-top: 1px;
-                            }
-                        }
-
-                        // Card color variants
-                        &--revenue .card__icon {
-                            background: linear-gradient(135deg, #126633, #1a8c47);
-                        }
-
-                        &--sold .card__icon {
-                            background: linear-gradient(135deg, #952FC9, #b44ddf);
-                        }
-
-                        &--customer .card__icon {
-                            background: linear-gradient(135deg, #0070C0, #2b94e0);
-                        }
-
-                        &--stock .card__icon {
-                            background: linear-gradient(135deg, #ED7D31, #f59d5e);
-                        }
-                    }
+                label {
+                  font-size: 13px;
+                  font-weight: 600;
+                  color: #3c4858;
                 }
 
-                // ═══════════ CHART CARDS ═══════════
-                .chart-card {
+                kendo-datepicker {
+                  height: 38px;
+                  border-color: #e5e7eb;
+                  border-radius: 8px;
+                  padding-left: 15px;
+
+                  input {
+                    font-size: 13px;
+                    color: #3c4858;
+                    font-weight: 400;
+                  }
+
+                  button {
                     background: #ffffff;
-                    border-radius: 14px;
-                    padding: 14px;
-                    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+                  }
 
-                    .chart-card__header {
-                        margin-bottom: 6px;
+                  &.disable-block {
+                    background: #f2f2f2;
+                    pointer-events: none;
 
-                        .chart-card__title {
-                            color: #126433;
-                            font-size: 12px;
-                            font-weight: 700;
-                            text-transform: uppercase;
-                            margin: 0;
-                            letter-spacing: 0.3px;
-                        }
-
-                        .chart-card__badges {
-                            display: flex;
-                            gap: 6px;
-                            margin-top: 6px;
-                            flex-wrap: wrap;
-
-                            .badge {
-                                padding: 3px 10px;
-                                border-radius: 20px;
-                                font-size: 10px;
-                                font-weight: 700;
-                                color: #ffffff;
-                                letter-spacing: 0.2px;
-
-                                &--green {
-                                    background: #126633;
-                                }
-
-                                &--purple {
-                                    background: #952FC9;
-                                }
-
-                                &--blue {
-                                    background: #0070C0;
-                                }
-
-                                &--orange {
-                                    background: #ED7D31;
-                                }
-                            }
-                        }
+                    button {
+                      background: #f2f2f2;
                     }
+                  }
 
-                    // Kendo chart global overrides
-                    kendo-chart {
-                        display: block;
-                        width: 100%;
+                  &.readonly-mode {
+                    border: none;
+                    pointer-events: none;
+
+                    button {
+                      display: none;
                     }
-
-                    // Donut pair layout
-                    .donut-pair {
-                        display: flex;
-                        gap: 0;
-
-                        kendo-chart {
-                            flex: 1;
-                            min-width: 0;
-                        }
-                    }
+                  }
                 }
 
-                // ═══════════ OLD CHART SECTION (compatibility) ═══════════
-                .overview {
-                    background: #ffffff;
-                    border-radius: 14px;
-                    padding: 14px;
-                    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+                .k-disabled {
+                  border-color: #e5e7eb;
+                  background-color: #f2f2f2;
+                  opacity: 1;
 
-                    .overview-title {
-                        color: #126433;
-                        font-size: 12px;
-                        font-weight: 700;
-                        text-transform: uppercase;
-                        margin-bottom: 8px;
-                    }
-
-                    .overview-content {
-                        display: flex;
-                        gap: 8px;
-
-                        .content-left {
-                            flex: 1;
-
-                            div {
-                                display: flex;
-                                align-items: center;
-                                gap: 6px;
-                                font-size: 12px;
-                                color: #3c4858;
-                                padding: 4px 0;
-                                font-weight: 600;
-
-                                .material-icons {
-                                    font-size: 18px;
-                                    color: #126433;
-                                }
-                            }
-                        }
-
-                        .content-right {
-                            flex: 1;
-
-                            div {
-                                font-size: 12px;
-                                color: #1f2937;
-                                padding: 4px 0;
-                                font-weight: 700;
-                            }
-                        }
-                    }
+                  .k-input-button {
+                    border-left: none;
+                    background-color: transparent;
+                  }
                 }
 
-                .chart {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 12px;
-
-                    .chart-timeseries,
-                    .chart-1,
-                    .chart-2,
-                    .chart-3,
-                    .chart-4 {
-                        background: #ffffff;
-                        border-radius: 14px;
-                        padding: 14px;
-                        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
-
-                        h1 {
-                            color: #126433;
-                            font-size: 12px;
-                            font-weight: 700;
-                            text-transform: uppercase;
-                            margin: 0 0 6px 0;
-                            letter-spacing: 0.3px;
-                        }
-
-                        .chart-title {
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: center;
-                            margin-bottom: 4px;
-
-                            div {
-                                font-size: 10px;
-                                font-weight: 600;
-                                color: #6b7280;
-                            }
-                        }
-
-                        .col-1-title {
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: center;
-                            margin-bottom: 4px;
-
-                            .title1 {
-                                font-size: 10px;
-                                font-weight: 700;
-                                color: #0070C0;
-                            }
-
-                            .title2 {
-                                font-size: 10px;
-                                font-weight: 700;
-                                color: #ED7D31;
-                            }
-                        }
-
-                        .donut-chart {
-                            display: flex;
-                            gap: 0;
-
-                            kendo-chart {
-                                flex: 1;
-                                min-width: 0;
-                            }
-                        }
-                    }
+                .status {
+                  margin-top: 5px;
                 }
+              }
             }
+
+            .monthpicker {
+              display: flex;
+              gap: 10px;
+
+              ps-kendo-dropdown-list {
+                .kendo-dropdown-list {
+                  .k-dropdownlist {
+                    .k-animation-container {
+                      .k-popup {
+                        .k-list {
+                          .k-list-content {
+                            overflow: auto;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          .body-bottom {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            width: 100%;
+
+            ps-kendo-button:last-child {
+              flex: 1;
+
+              button {
+                width: 100%;
+              }
+            }
+          }
         }
+      }
+
+      // ═══════════ HEADER ═══════════
+      ps-header-back {
+        .ps-header {
+          .left-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            font-weight: bold;
+
+            .top-content {
+              font-weight: 700;
+              font-size: 14px;
+              color: #1f2937;
+
+              span {
+                font-weight: 700;
+                color: #0074ff;
+              }
+            }
+
+            .bot-content {
+              font-size: 11px;
+              color: #6b7280;
+              font-weight: 500;
+            }
+          }
+
+          .header-right {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            span {
+              color: #126433;
+            }
+          }
+        }
+      }
+
+      // ═══════════ DASHBOARD CONTAINER ═══════════
+      .dashboard-container {
+        overflow-y: auto;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        // ═══════════ OVERVIEW CARDS ═══════════
+        .overview-cards {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+
+          .card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+            transition:
+              transform 0.2s ease,
+              box-shadow 0.2s ease;
+            min-height: 64px;
+
+            &:active {
+              transform: scale(0.97);
+            }
+
+            .card__icon {
+              width: 38px;
+              height: 38px;
+              border-radius: 10px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-shrink: 0;
+
+              .material-icons {
+                font-size: 20px;
+                color: #ffffff;
+              }
+            }
+
+            .card__body {
+              display: flex;
+              flex-direction: column;
+              overflow: hidden;
+              min-width: 0;
+              align-items: center;
+
+              .card__value {
+                font-size: 14px;
+                font-weight: 800;
+                color: #1f2937;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                line-height: 1.3;
+              }
+
+              .card__label {
+                font-size: 10px;
+                font-weight: 600;
+                color: #9ca3af;
+                text-transform: uppercase;
+                letter-spacing: 0.3px;
+                margin-top: 1px;
+              }
+            }
+
+            // Card color variants
+            &--revenue .card__icon {
+              background: linear-gradient(135deg, #126633, #1a8c47);
+            }
+
+            &--sold .card__icon {
+              background: linear-gradient(135deg, #952fc9, #b44ddf);
+            }
+
+            &--customer .card__icon {
+              background: linear-gradient(135deg, #0070c0, #2b94e0);
+            }
+
+            &--stock .card__icon {
+              background: linear-gradient(135deg, #ed7d31, #f59d5e);
+            }
+          }
+        }
+
+        // ═══════════ CHART CARDS ═══════════
+        .chart-card {
+          background: #ffffff;
+          border-radius: 14px;
+          padding: 14px;
+          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+
+          .chart-card__header {
+            margin-bottom: 6px;
+
+            .chart-card__title {
+              color: #126433;
+              font-size: 12px;
+              font-weight: 700;
+              text-transform: uppercase;
+              margin: 0;
+              letter-spacing: 0.3px;
+            }
+
+            .chart-card__badges {
+              display: flex;
+              gap: 6px;
+              margin-top: 6px;
+              flex-wrap: wrap;
+
+              .badge {
+                padding: 3px 10px;
+                border-radius: 20px;
+                font-size: 10px;
+                font-weight: 700;
+                color: #ffffff;
+                letter-spacing: 0.2px;
+
+                &--green {
+                  background: #126633;
+                }
+
+                &--purple {
+                  background: #952fc9;
+                }
+
+                &--blue {
+                  background: #0070c0;
+                }
+
+                &--orange {
+                  background: #ed7d31;
+                }
+              }
+            }
+          }
+
+          // Kendo chart global overrides
+          kendo-chart {
+            display: block;
+            width: 100%;
+            height: 275px;
+          }
+
+          // Donut pair layout
+          .donut-pair {
+            display: flex;
+            flex-direction: column;
+            height: 550px;
+            gap: 0;
+
+            kendo-chart {
+              flex: 1;
+              min-width: 0;
+            }
+          }
+        }
+
+        // ═══════════ OLD CHART SECTION (compatibility) ═══════════
+        .overview {
+          background: #ffffff;
+          border-radius: 14px;
+          padding: 14px;
+          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+
+          .overview-title {
+            color: #126433;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+          }
+
+          .overview-content {
+            display: flex;
+            gap: 8px;
+
+            .content-left {
+              flex: 1;
+
+              div {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 12px;
+                color: #3c4858;
+                padding: 4px 0;
+                font-weight: 600;
+
+                .material-icons {
+                  font-size: 18px;
+                  color: #126433;
+                }
+              }
+            }
+
+            .content-right {
+              flex: 1;
+
+              div {
+                font-size: 12px;
+                color: #1f2937;
+                padding: 4px 0;
+                font-weight: 700;
+              }
+            }
+          }
+        }
+
+        .chart {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+
+          .chart-timeseries,
+          .chart-1,
+          .chart-2,
+          .chart-3,
+          .chart-4 {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 14px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+
+            h1 {
+              color: #126433;
+              font-size: 12px;
+              font-weight: 700;
+              text-transform: uppercase;
+              margin: 0 0 6px 0;
+              letter-spacing: 0.3px;
+            }
+
+            .chart-title {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 4px;
+
+              div {
+                font-size: 10px;
+                font-weight: 600;
+                color: #6b7280;
+              }
+            }
+
+            .col-1-title {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 4px;
+
+              .title1 {
+                font-size: 10px;
+                font-weight: 700;
+                color: #0070c0;
+              }
+
+              .title2 {
+                font-size: 10px;
+                font-weight: 700;
+                color: #ed7d31;
+              }
+            }
+
+            .donut-chart {
+              display: flex;
+              gap: 0;
+
+              kendo-chart {
+                flex: 1;
+                min-width: 0;
+              }
+            }
+          }
+        }
+      }
     }
+  }
 }

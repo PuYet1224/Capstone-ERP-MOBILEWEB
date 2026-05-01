@@ -103,7 +103,7 @@
         }
       }
 
-      // Body list
+      // ========== BODY LIST ==========
       .body-list {
         flex: 1;
         overflow-y: auto;
@@ -112,21 +112,23 @@
         flex-direction: column;
         gap: 0;
         font-size: 12px;
+        background: $background-primary;
 
         // ========== GROUP SECTION ==========
         .group-section {
-          margin-bottom: 12px;
+          margin-bottom: 16px;
 
           .group-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 8px 12px;
+            padding: 10px 14px;
             background: $white;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             user-select: none;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba($black, 0.06);
 
             .group-name {
               font-size: 13px;
@@ -141,7 +143,7 @@
 
             .toggle-icon {
               font-size: 20px;
-              color: $border;
+              color: $grey-400;
               transition: transform 0.2s ease;
 
               &.rotated {
@@ -153,21 +155,23 @@
           .group-content {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
           }
         }
 
         // ========== PBH CARD ==========
         .pbh-card {
           background: $white;
-          border-radius: 8px;
+          border-radius: 10px;
           overflow: hidden;
+          box-shadow: 0 1px 4px rgba($black, 0.08);
+          border-left: 3px solid $primary;
 
           .pbh-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 8px 12px 4px;
+            padding: 10px 14px 6px;
             cursor: pointer;
             user-select: none;
 
@@ -213,7 +217,7 @@
 
               .expand-arrow {
                 font-size: 18px;
-                color: $border;
+                color: $grey-400;
                 transition: transform 0.2s ease;
 
                 &.expanded {
@@ -224,12 +228,12 @@
           }
 
           .pbh-body {
-            padding: 4px 12px 8px;
+            padding: 2px 14px 10px;
 
             .info-line {
               display: flex;
               gap: 4px;
-              margin-bottom: 4px;
+              margin-bottom: 2px;
 
               .info-half {
                 flex: 1;
@@ -241,268 +245,113 @@
                 text-overflow: ellipsis;
 
                 .info-label {
-                  color: $secondary;
-                  opacity: 0.7;
+                  color: $grey-500;
+                  font-size: 10px;
                 }
-              }
-            }
-
-            .amount-line {
-              display: flex;
-              justify-content: flex-end;
-              align-items: center;
-              margin-top: 4px;
-              font-size: 13px;
-              font-weight: 700;
-
-              .amount-paid {
-                color: $error;
-                font-weight: bold;
-              }
-
-              .amount-sep {
-                color: $secondary;
-                font-weight: bold;
-                margin: 0 4px;
-              }
-
-              .amount-total {
-                color: $primary;
-                font-weight: bold;
               }
             }
           }
 
-          // ========== INVOICE SECTION (Matched to Receipt Section) ==========
+          // ========== INVOICE SECTION ==========
           .receipt-section {
-            border-top: 1px solid $border;
+            padding: 0 10px 10px;
 
             .receipt-card {
-              padding: 8px 12px;
-              background: $hover;
+              padding: 10px 12px;
+              background: $white;
               cursor: pointer;
               display: flex;
               flex-direction: column;
               gap: 4px;
-              border-top: 1px solid $border;
-              position: relative;
+              border-radius: 8px;
+              margin-top: 6px;
+              border-left: 3px solid $orange-400;
+              transition: background 0.15s ease;
 
               &:active {
-                background: $hover-green;
+                background: $hover;
               }
 
-              .r-header {
+              &.complete {
+                border-left-color: $primary;
+              }
+
+              .r-vehicle-row {
+                font-size: 13px;
+                font-weight: 700;
+                color: $secondary;
+                line-height: 1.4;
+              }
+
+              .r-company-row {
+                font-size: 11px;
+                color: $secondary;
+
+                .r-tax-code {
+                  color: $grey-500;
+                  margin-left: 6px;
+                }
+              }
+
+              .r-badges-row {
                 display: flex;
                 align-items: center;
-                justify-content: space-between;
+                gap: 6px;
                 flex-wrap: wrap;
-                gap: 4px;
+                margin-top: 2px;
 
-                .r-title {
-                  display: flex;
-                  align-items: baseline;
-
-                  .r-prefix {
-                    font-size: 11px;
-                    font-weight: 600;
-                    color: $secondary;
-                    margin-right: 4px;
-                  }
-
-                  .r-code {
-                    font-size: 11px;
-                    font-weight: 700;
-                    color: $error;
-                  }
-                }
-
-                .r-badges {
-                  display: flex;
-                  align-items: center;
-                  gap: 8px;
-
-                  .r-pm-badge {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 2px;
-                    font-size: 9px;
-                    font-weight: 600;
-                    padding: 4px 8px;
-                    border-radius: 12px;
-                    white-space: nowrap;
-
-                    .r-badge-icon {
-                      font-size: 11px;
-                    }
-
-                    &.business {
-                      background: $green-100;
-                      color: $green-700;
-                    }
-                    &.pm-transfer {
-                      background: $blue-100;
-                      color: $blue-700;
-                    }
-                    &.public {
-                      background: $pink-100;
-                      color: $pink-700;
-                    }
-                    &.personal {
-                      background: $purple-100;
-                      color: $purple-700;
-                    }
-                  }
-
-                  .r-amount-value {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 2px;
-                    font-size: 11px;
-                    font-weight: 700;
-                    color: $primary;
-
-                    .r-money-icon {
-                      font-size: 13px;
-                      color: $primary;
-                    }
-                  }
-                }
-              }
-
-              .r-info {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 4px;
-
-                .r-info-row {
-                  display: flex;
-                  align-items: center;
-                  gap: 12px;
-                  width: 100%;
-                }
-
-                .r-info-item {
-                  display: flex;
-                  align-items: center;
-                  gap: 4px;
-                  font-size: 11px;
-                  color: $secondary;
-
-                  .r-icon {
-                    font-size: 13px;
-                    color: $primary;
-                  }
-
-                  .r-vehicle {
-                    font-size: 11px;
-                    font-weight: 700;
-                    color: $secondary;
-                  }
-                }
-              }
-
-              .r-meta {
-                position: absolute;
-                bottom: 8px;
-                right: 12px;
-
-                .r-completion {
-                  display: flex;
-                  align-items: center;
-                  gap: 4px;
-                  font-size: 10px;
+                .r-badge {
+                  font-size: 9px;
                   font-weight: 600;
                   padding: 2px 8px;
-                  border-radius: 12px;
+                  border-radius: 4px;
+                  white-space: nowrap;
 
-                  .r-completion-icon {
-                    font-size: 13px;
-                  }
-
-                  &.info-complete {
-                    color: $primary;
+                  &.business {
                     background: $green-100;
+                    color: $green-800;
                   }
-
-                  &.info-incomplete {
-                    color: $warning;
-                    background: $yellow-100;
+                  &.pm-transfer {
+                    background: $blue-100;
+                    color: $blue-800;
+                  }
+                  &.public {
+                    background: $pink-100;
+                    color: $pink-800;
+                  }
+                  &.personal {
+                    background: $purple-50;
+                    color: $purple-700;
+                  }
+                  &.inv-no {
+                    background: $blue-50;
+                    color: $blue-800;
+                    font-weight: 700;
                   }
                 }
-              }
 
-              .r-vehicle-header {
-                display: flex;
-                align-items: center;
-                gap: 4px;
-                padding-bottom: 4px;
-                border-bottom: 1px dashed $border;
-                margin-bottom: 4px;
+                .r-status {
+                  margin-left: auto;
+                  font-size: 10px;
+                  font-weight: 600;
+                  color: $warning;
 
-                .r-icon {
-                  font-size: 16px;
-                  color: $primary;
-                }
-
-                .r-vehicle {
-                  font-size: 12px;
-                  font-weight: 700;
-                  color: $secondary;
+                  &.done {
+                    color: $primary;
+                  }
                 }
               }
             }
 
             .no-invoice-msg {
-              display: flex;
-              align-items: center;
-              gap: 8px;
               padding: 12px;
               color: $secondary;
-              opacity: 0.7;
+              opacity: 0.5;
               font-size: 11px;
-
-              .material-icons {
-                font-size: 16px;
-                color: $warning;
-              }
+              font-style: italic;
+              text-align: center;
+              margin-top: 6px;
             }
-          }
-        }
-
-        // ========== STATUS BADGES ==========
-        .status-badge {
-          font-size: 10px;
-          font-weight: 700;
-          padding: 4px 8px;
-          border-radius: 12px;
-          border: 1px solid;
-          white-space: nowrap;
-
-          &.status-new {
-            color: $secondary;
-            border-color: $border;
-            background: transparent;
-          }
-          &.status-pending {
-            color: $white;
-            border-color: $warning;
-            background: $warning;
-          }
-          &.status-processing {
-            color: $white;
-            border-color: $info;
-            background: $info;
-          }
-          &.status-complete {
-            color: $primary;
-            border-color: $primary;
-            background: transparent;
-          }
-          &.status-cancel {
-            color: $error;
-            border-color: $error;
-            background: transparent;
           }
         }
 
@@ -512,15 +361,15 @@
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          padding: 40px 16px;
+          padding: 48px 16px;
           gap: 12px;
           color: $secondary;
-          opacity: 0.6;
+          opacity: 0.5;
           font-size: 13px;
 
           .empty-icon {
-            font-size: 40px;
-            color: $border;
+            font-size: 48px;
+            color: $grey-300;
           }
         }
       }

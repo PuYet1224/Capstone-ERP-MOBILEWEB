@@ -8,21 +8,6 @@
     </ps-header-back>
     <!-- END: HEADER -->
 
-    <!-- START: STATUS TABS -->
-    <div class="status-tabs">
-        <div class="tab-item" [class.active]="activeTab === 'pending'" (click)="onTabChange('pending')">
-            <span class="material-icons tab-icon">pending_actions</span>
-            <span>Chưa xuất</span>
-            <span class="tab-count" *ngIf="pendingCount > 0">{{ pendingCount }}</span>
-        </div>
-        <div class="tab-item" [class.active]="activeTab === 'issued'" (click)="onTabChange('issued')">
-            <span class="material-icons tab-icon">check_circle</span>
-            <span>Đã xuất</span>
-            <span class="tab-count issued" *ngIf="issuedCount > 0">{{ issuedCount }}</span>
-        </div>
-    </div>
-    <!-- END: STATUS TABS -->
-
     <!-- START: SEARCH DIALOG -->
     <ps-dialog-confirm-bottom [open]="isOpenedFilter" [title]="'Tìm kiếm hóa đơn'" (close)="openFilter($event)">
         <div psDialogConfirmBottomBody>
@@ -50,10 +35,6 @@
                     Bạn có chắc muốn <strong>phát hành hóa đơn</strong> cho khách hàng?
                 </div>
                 <div class="confirm-detail">
-                    <div class="confirm-row">
-                        <span class="confirm-label">Hóa đơn:</span>
-                        <span class="confirm-value">{{ selectedInvoice.InvoiceNo || '---' }}</span>
-                    </div>
                     <div class="confirm-row" *ngIf="selectedInvoice.VehicleName">
                         <span class="confirm-label">Xe:</span>
                         <span class="confirm-value">{{ selectedInvoice.VehicleName }}</span>
@@ -61,6 +42,14 @@
                     <div class="confirm-row">
                         <span class="confirm-label">Khách hàng:</span>
                         <span class="confirm-value">{{ selectedInvoice.VATCustomerName || selectedInvoice.CustomerName }}</span>
+                    </div>
+                    <div class="confirm-row" *ngIf="selectedInvoice.InvoiceNo">
+                        <span class="confirm-label">Số HĐ:</span>
+                        <span class="confirm-value">{{ selectedInvoice.InvoiceNo }}</span>
+                    </div>
+                    <div class="confirm-row auto-note" *ngIf="!selectedInvoice.InvoiceNo">
+                        <span class="material-icons auto-icon">auto_awesome</span>
+                        <span>Số hóa đơn sẽ được cấp tự động khi phát hành</span>
                     </div>
                 </div>
                 <div class="confirm-warning">
@@ -78,7 +67,7 @@
 
     <!-- START: BODY -->
     <div class="body-list" #bodyList>
-        <div class="group-section" *ngFor="let group of displayGroups; let gIdx = index">
+        <div class="group-section" *ngFor="let group of displayGroups; let gIdx = index; trackBy: trackByGroup">
             <div class="group-header" (click)="toggleGroup(gIdx)">
                 <div class="group-name">
                     {{ group.name }} <span class="group-count">({{ group.items.length }})</span>
@@ -89,7 +78,7 @@
             </div>
 
             <div class="group-content" *ngIf="isGroupOpen(gIdx)">
-                <div class="pbh-card" *ngFor="let item of group.items">
+                <div class="pbh-card" *ngFor="let item of group.items; trackBy: trackByItem">
                     <!-- START: PBH Header -->
                     <div class="pbh-header" (click)="toggleItem(item)">
                         <div class="pbh-title">
@@ -124,58 +113,44 @@
 
                     <!-- START: INVOICE List Section -->
                     <div class="invoice-section" *ngIf="item.isExpanded">
-                        <div class="invoice-card" *ngFor="let inv of getFilteredInvoices(item)"
+                        <div class="invoice-card" *ngFor="let inv of item.invoices; let i = index; trackBy: trackByInvoice"
                              [class.issued]="inv.Status === invoiceStatusSuccess">
-                            <!-- Vehicle row -->
-                            <div class="inv-vehicle" *ngIf="inv.VehicleName">
-                                <span class="material-icons inv-icon">two_wheeler</span>
-                                <span class="inv-vehicle-name">{{ inv.VehicleName }}</span>
-                            </div>
-                            <!-- Invoice info -->
+                            <!-- Header: Vehicle + Status -->
                             <div class="inv-header">
-                                <div class="inv-title">
-                                    <span class="inv-prefix">HĐ:</span>
-                                    <span class="inv-code">{{ inv.InvoiceNo || '---' }}</span>
-                                </div>
-                                <div class="inv-status-badge" [ngClass]="getInvoiceStatusClass(inv.Status)">
+                                <span class="inv-vehicle-name">{{ inv.VehicleName || ('Hóa đơn #' + inv.Code) }}</span>
+                                <span class="inv-status-badge" [ngClass]="getInvoiceStatusClass(inv.Status)">
                                     {{ getInvoiceStatusLabel(inv.Status) }}
-                                </div>
+                                </span>
                             </div>
-                            <!-- Customer -->
-                            <div class="inv-customer">
-                                <span class="material-icons inv-icon">person</span>
-                                <span>{{ inv.VATCustomerName || inv.CustomerName }}</span>
+                            <!-- Invoice number (only when assigned) -->
+                            <div class="inv-invoice-no" *ngIf="inv.InvoiceNo">
+                                Số HĐ: <strong>{{ inv.InvoiceNo }}</strong>
                             </div>
-                            <!-- Actions -->
+                            <!-- Actions: pending -->
                             <div class="inv-actions" *ngIf="inv.Status !== invoiceStatusSuccess">
                                 <button class="btn-detail" (click)="onNavigateDetail(inv); $event.stopPropagation()">
-                                    <span class="material-icons">visibility</span>
                                     Xem chi tiết
                                 </button>
                                 <button class="btn-issue" (click)="openIssueConfirm(inv); $event.stopPropagation()">
-                                    <span class="material-icons">publish</span>
                                     Phát hành
                                 </button>
                             </div>
+                            <!-- Actions: issued -->
                             <div class="inv-actions" *ngIf="inv.Status === invoiceStatusSuccess">
                                 <button class="btn-detail" (click)="onNavigateDetail(inv); $event.stopPropagation()">
-                                    <span class="material-icons">visibility</span>
                                     Xem chi tiết
                                 </button>
-                                <div class="issued-label">
-                                    <span class="material-icons">check_circle</span>
+                                <button class="btn-print" (click)="printInvoice(inv); $event.stopPropagation()">
+                                    <span class="material-icons" style="font-size: 14px;">receipt</span>
+                                    <span>In HĐĐT</span>
+                                </button>
+                                <span class="issued-label">
                                     Đã phát hành
                                     <span class="issued-date" *ngIf="inv.EffDate">
                                         ({{ inv.EffDate | date:'dd/MM/yyyy' }})
                                     </span>
-                                </div>
+                                </span>
                             </div>
-                        </div>
-
-                        <!-- Empty invoice state -->
-                        <div class="no-invoice-msg" *ngIf="getFilteredInvoices(item).length === 0">
-                            <span class="material-icons">info</span>
-                            <span>Không có hóa đơn {{ activeTab === 'pending' ? 'chưa xuất' : 'đã xuất' }} nào</span>
                         </div>
                     </div>
                     <!-- END: INVOICE List Section -->
@@ -186,7 +161,7 @@
         <!-- Empty state -->
         <div class="empty-state" *ngIf="displayGroups.length === 0">
             <span class="material-icons empty-icon">description</span>
-            <span>Không tìm thấy hóa đơn nào</span>
+            <span>Không có phiếu bán hàng nào có hóa đơn</span>
         </div>
     </div>
     <!-- END: BODY -->
@@ -199,9 +174,10 @@
         <ps-kendo-button (onClick)="openFilter(true)">
             <span class="material-icons">search</span>
         </ps-kendo-button>
-        <ps-kendo-button [theme]="'primary'" (onClick)="bulkIssueAll()" *ngIf="activeTab === 'pending' && pendingCount > 0">
+        <ps-kendo-button [theme]="'primary'" (onClick)="bulkIssueAll()" *ngIf="pendingCount > 0">
             <span class="text">Phát hành tất cả ({{ pendingCount }})</span>
         </ps-kendo-button>
     </ps-footer-action>
     <!-- END: FOOTER ACTIONS -->
+
 </div>

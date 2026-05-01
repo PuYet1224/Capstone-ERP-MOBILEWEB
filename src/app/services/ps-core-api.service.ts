@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { ResponseDTO } from 'src/app/models/dtos/reponse.dto';
 import { LSListTypeDataEnum } from 'src/app/models/enums/e-type/ls-list-type-data.enum';
 import { LSStatusTypeDataEnum } from 'src/app/models/enums/e-type/ls-status-type-data.enum';
-import { LSDistrictDTO } from '../models/dtos/e-dtos/ls-district.dto';
 import { LSProvinceDTO } from '../models/dtos/e-dtos/ls-province.dto';
 import { ReportInputDTO } from '../models/dtos/report-input.dto';
 import { CSListTypeDataEnum } from '../models/enums/e-type/cs-list-type-data.enum';
@@ -126,7 +125,7 @@ export class PSCoreApiService {
     });
   }
 
-  GetListWard(param: LSDistrictDTO) {
+  GetListWard(param: LSProvinceDTO) {
     let that = this;
     return new Observable<ResponseDTO>((obs) => {
       that.api.post(CoreApiStaticService.GetListWard, param).subscribe(

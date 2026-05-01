@@ -301,19 +301,32 @@ export class Mtb024InvoiceListComponent implements OnInit, OnDestroy {
   }
 
   isInfoComplete(inv: SALOrderInvoiceCusDTO): boolean {
+    if (!inv.FrameSeri || !inv.EngineSeri) return false;
     if (!inv.VATCustomerName) return false;
-    if (!inv.VATCellPhone) return false;
+    if (!inv.VATAddress) return false;
     if (inv.VATType === 1) {
-      return !!(inv['VATCCCD']);
+      return !!(inv.VATCCCD && inv.VATCellPhone);
     }
     if (inv.VATType === 2 || inv.VATType === 3) {
-      return !!(inv.VATCompanyName && inv.VATCompanyTax && inv.VATAddress);
+      return !!(inv.VATCompanyName && inv.VATCompanyTax);
     }
     return false;
   }
 
   getInfoCompletionClass(inv: SALOrderInvoiceCusDTO): string {
     return this.isInfoComplete(inv) ? 'info-complete' : 'info-incomplete';
+  }
+
+  trackByGroup(_: number, group: DisplayGroup): string {
+    return group.name;
+  }
+
+  trackByItem(_: number, item: Mtb024InvoiceItem): number {
+    return item.Code;
+  }
+
+  trackByInvoice(_: number, inv: SALOrderInvoiceCusDTO): number {
+    return inv.Code;
   }
   //#endregion
 }

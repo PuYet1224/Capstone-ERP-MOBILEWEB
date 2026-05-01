@@ -6,6 +6,8 @@
 
     .mtb025-invoice-detail {
       height: 100%;
+      display: flex;
+      flex-direction: column;
 
       ps-header-back {
         .ps-header {
@@ -59,29 +61,72 @@
           font-size: 12px;
           font-weight: 600;
           color: #333;
+
+          &--highlight {
+            color: $primary;
+          }
         }
 
         &__badge {
           font-size: 11px;
           font-weight: 600;
-          color: $white;
-          background: $primary;
           padding: 2px 8px;
           border-radius: 10px;
+
+          &.status-pending {
+            color: #e67e22;
+            background: rgba(230, 126, 34, 0.12);
+          }
+
+          &.status-success {
+            color: $white;
+            background: $primary;
+          }
+
+          &.status-cancel {
+            color: #e74c3c;
+            background: rgba(231, 76, 60, 0.12);
+          }
+
+          &.badge--draft {
+            color: #e67e22;
+            background: rgba(230, 126, 34, 0.12);
+          }
+
+          &.badge--issued {
+            color: $white;
+            background: $primary;
+          }
         }
+      }
+
+      .readonly-banner {
+        background: #fff3e0;
+        color: #e65100;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 8px 16px;
+        text-align: center;
+        border-bottom: 1px solid #ffcc80;
       }
 
       .customer-body {
         background-color: transparent;
-        height: calc(100% - 124px);
+        flex: 1;
+        min-height: 0;
         margin: 8px 0;
         border-radius: 8px;
-        overflow: auto;
+        overflow-y: auto;
+        padding-bottom: 8px;
 
         .body-container {
           height: fit-content;
           display: flex;
           flex-direction: column;
+          border: none;
+          padding: 0;
+          margin: 0;
+          min-width: 0;
           gap: 8px;
           padding: 0 8px;
 
@@ -172,12 +217,17 @@
 
 
       ps-footer-action {
+        flex-shrink: 0;
+
         .footer-action {
           display: flex;
           align-items: center;
           gap: 8px;
           padding: 8px;
           height: fit-content;
+          background: $white;
+          border-top: 1px solid $border;
+          box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.06);
 
           ps-kendo-button {
             button {
@@ -399,3 +449,12 @@
   }
 }
 
+// Fix dropdown scroll on mobile — shared component uses overflow:hidden + hover:auto
+// which doesn't work on touch devices
+::ng-deep .k-animation-container {
+  .k-popup .k-list .k-list-content {
+    overflow: auto !important;
+    max-height: 250px;
+    -webkit-overflow-scrolling: touch;
+  }
+}
