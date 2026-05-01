@@ -1,7 +1,7 @@
 const http = require('http');
 
-const TARGET = 'puyet1224-001-site1.jtempurl.com';
-const BASIC = 'Basic ' + Buffer.from('puyet1224-001:Puyet1224@').toString('base64');
+const TARGET = 'puyet01022004-001-site1.qtempurl.com';
+const BASIC = 'Basic ' + Buffer.from('puyet01022004-001:Puyet1224@').toString('base64');
 
 module.exports = async (req, res) => {
   const path = req.url.replace(/^\/api\/proxy-api/, '') || '/';
@@ -29,7 +29,7 @@ module.exports = async (req, res) => {
     const opts = { hostname: TARGET, port: 80, path, method: req.method, headers: h };
 
     // SmarterASP needs Basic Auth at transport level
-    opts.auth = 'puyet1224-001:Puyet1224@';
+    opts.auth = 'puyet01022004-001:Puyet1224@';
 
     const proxy = http.request(opts, (pRes) => {
       res.statusCode = pRes.statusCode;

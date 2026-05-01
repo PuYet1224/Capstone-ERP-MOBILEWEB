@@ -115,7 +115,9 @@ export const fpayment = {
   UpdateSALReceiptStatus: '',
   ExportSALInvoicePdf: '',
   AddSALInvoiceFromOrder: '',
-  IssueSALInvoice: '',
+  UpdateSALInvoiceIssue: '',
+  GetIOSeri: '',
+  GetIOSeriInternal: '',
 };
 
 const namespaceMap: Record<string, any> = {
