@@ -99,8 +99,10 @@
                     <span class="material-icons">bar_chart</span>
                 </div>
                 <div class="card__body">
-                    <span class="card__value">{{overview.RevenueActual | number}}₫</span>
+                    <span class="card__value">{{overview.RevenueSold | number}}₫</span>
                     <span class="card__label">Doanh thu</span>
+                    <span class="card__value">{{overview.RevenueActual | number}}₫</span>
+                    <span class="card__label">Thực thu</span>
                 </div>
             </div>
             <div class="card card--sold">
@@ -112,15 +114,6 @@
                     <span class="card__label">Xe đã bán</span>
                 </div>
             </div>
-            <div class="card card--customer">
-                <div class="card__icon">
-                    <span class="material-icons">person_add_alt</span>
-                </div>
-                <div class="card__body">
-                    <span class="card__value">{{overview.TotalNewCustomer}}</span>
-                    <span class="card__label">Khách hàng mới</span>
-                </div>
-            </div>
             <div class="card card--stock">
                 <div class="card__icon">
                     <span class="material-icons">inventory_2</span>
@@ -128,6 +121,17 @@
                 <div class="card__body">
                     <span class="card__value">{{overview.TotalStockVehicle}}</span>
                     <span class="card__label">Tồn kho</span>
+                </div>
+            </div>
+            <div class="card card--stock">
+                <div class="card__icon">
+                    <span class="material-icons">route</span>
+                </div>
+                <div class="card__body">
+                    <span class="card__value">{{overview.TotalInternalVehicleIn}}</span>
+                    <span class="card__label">Nhập</span>
+                    <span class="card__value">{{overview.TotalInternalVehicleOut}}</span>
+                    <span class="card__label">Xuất</span>
                 </div>
             </div>
         </div>
@@ -149,9 +153,9 @@
                     </kendo-chart-category-axis-item>
                 </kendo-chart-category-axis>
                 <kendo-chart-value-axis>
-                    <kendo-chart-value-axis-item [majorGridLines]="{ visible: false, dashType: 'dash' }"
-                        [labels]="{ visible: false }" [line]="{ visible: false }">
-                        <kendo-chart-value-axis-item-labels [visible]="false" [content]="labelFormatter"
+                    <kendo-chart-value-axis-item [majorGridLines]="{ visible: false }"
+                        [labels]="{ visible: true }" [line]="{ visible: false }">
+                        <kendo-chart-value-axis-item-labels [visible]="true" [content]="labelFormatter"
                             font="600 9px 'Mulish', sans-serif" color="#9ca3af">
                         </kendo-chart-value-axis-item-labels>
                     </kendo-chart-value-axis-item>
@@ -190,8 +194,8 @@
                     </kendo-chart-category-axis-item>
                 </kendo-chart-category-axis>
                 <kendo-chart-value-axis>
-                    <kendo-chart-value-axis-item [majorGridLines]="{ visible: false }" [labels]="{ visible: false }" [line]="{ visible: false }">
-                        <kendo-chart-value-axis-item-labels [visible]="false" font="600 9px 'Mulish', sans-serif" color="#9ca3af">
+                    <kendo-chart-value-axis-item [majorGridLines]="{ visible: false }" [labels]="{ visible: true }" [line]="{ visible: false }">
+                        <kendo-chart-value-axis-item-labels [visible]="true" [content]="labelFormatter" font="600 9px 'Mulish', sans-serif" color="#9ca3af">
                         </kendo-chart-value-axis-item-labels>
                     </kendo-chart-value-axis-item>
                 </kendo-chart-value-axis>
@@ -235,9 +239,9 @@
                 </kendo-chart-category-axis>
                 <kendo-chart-value-axis>
                     <kendo-chart-value-axis-item [type]="'numeric'" [majorGridLines]="{ visible: false }"
-                        [labels]="{ visible: false }" [line]="{ visible: false }">
-                        <kendo-chart-value-axis-item-labels [visible]="false" [content]="labelFormatter"
-                            font="600 9px Mulish, sans-serif">
+                        [labels]="{ visible: true }" [line]="{ visible: false }">
+                        <kendo-chart-value-axis-item-labels [visible]="true" [content]="labelFormatter"
+                            font="600 9px Mulish, sans-serif" color="#9ca3af">
                         </kendo-chart-value-axis-item-labels>
                     </kendo-chart-value-axis-item>
                 </kendo-chart-value-axis>
@@ -304,8 +308,8 @@
                 </kendo-chart-category-axis>
                 <kendo-chart-value-axis>
                     <kendo-chart-value-axis-item [type]="'numeric'" [majorGridLines]="{ visible: false }"
-                        [labels]="{ visible: false }" [line]="{ visible: false }">
-                        <kendo-chart-value-axis-item-labels [visible]="false" font="600 9px Mulish, sans-serif" color="#9ca3af">
+                        [labels]="{ visible: true }" [line]="{ visible: false }">
+                        <kendo-chart-value-axis-item-labels [visible]="true" [content]="labelFormatter" font="600 9px Mulish, sans-serif" color="#9ca3af">
                         </kendo-chart-value-axis-item-labels>
                     </kendo-chart-value-axis-item>
                 </kendo-chart-value-axis>
@@ -390,8 +394,8 @@
                 </kendo-chart-category-axis>
                 <kendo-chart-value-axis>
                     <kendo-chart-value-axis-item [type]="'numeric'" [line]="{visible: false}"
-                        [majorGridLines]="{ visible: false }" [labels]="{ visible: false }">
-                        <kendo-chart-value-axis-item-labels [visible]="false" font="600 9px Mulish, sans-serif" color="#9ca3af">
+                        [majorGridLines]="{ visible: false }" [labels]="{ visible: true }">
+                        <kendo-chart-value-axis-item-labels [visible]="true" [content]="labelFormatter" font="600 9px Mulish, sans-serif" color="#9ca3af">
                         </kendo-chart-value-axis-item-labels>
                     </kendo-chart-value-axis-item>
                 </kendo-chart-value-axis>
