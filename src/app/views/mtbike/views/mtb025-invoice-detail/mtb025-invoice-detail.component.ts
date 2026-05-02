@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
@@ -18,6 +18,8 @@ import { LSHeadCusDTO } from 'src/app/models/dtos/e-dtos/ls-head.dto';
 import { CSLoyalCustomerCusDTO } from 'src/app/models/dtos/e-dtos/cs-loyal-customer.dto';
 import { LSProvinceDTO } from 'src/app/models/dtos/e-dtos/ls-province.dto';
 import { LSWardDTO } from 'src/app/models/dtos/e-dtos/ls-ward.dto';
+import { PSCoreApiService } from 'src/app/services/core/ps-core-api.service';
+import { LSDistrictDTO } from 'src/app/models/dtos/e-dtos/ls-district.dto';
 
 @Component({
   selector: 'mtb025-invoice-detail',
@@ -64,7 +66,9 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     private configCache: ConfigCacheService,
     private cache: PsCache,
     private configService: GetConfigService,
+    private coreApiService: PSCoreApiService,
     private http: HttpClient,
+    private cdr: ChangeDetectorRef,
   ) { }
 
   ngOnInit(): void {
@@ -120,10 +124,12 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
             this.invoice.VATType = this.invoiceTypes[0].TypeOfList;
             this.invoiceCopy.VATType = this.invoiceTypes[0].TypeOfList;
           }
-          // Load customer from invoice response (GetSALInvoice joins OrderMaster.Customer)
+          // Load customer: try VATCustomer, then Customer from JOIN, then fallback to OrderMaster lookup
           const customerCode = this.invoice.VATCustomer || this.invoice['Customer'];
           if (customerCode) {
             this.loadCustomer(customerCode);
+          } else if (this.invoice.OrderMaster || this.invoice['OrderMaster']) {
+            this.loadCustomerFromOrder(this.invoice.OrderMaster || this.invoice['OrderMaster']);
           }
           this.loadOrderInfo();
         } else {
@@ -163,6 +169,32 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     this.arrUnsubscribe.push(sub);
   }
 
+  private loadCustomerFromOrder(orderMasterCode: number): void {
+    const sub = this.apiService.GetListSALMaster({
+      filter: { logic: 'and', filters: [{ field: 'Code', operator: 'eq', value: orderMasterCode }] },
+      sort: [], skip: 0, take: 1
+    }).subscribe({
+      next: (res: ResponseDTO) => {
+        if (res.StatusCode === 0 && res.ObjectReturn) {
+          let order: any = null;
+          const raw = res.ObjectReturn;
+          if (Array.isArray(raw)) {
+            for (const group of raw) {
+              if (group.ListData?.length) {
+                order = group.ListData[0];
+                break;
+              }
+            }
+          }
+          if (order?.Customer) {
+            this.loadCustomer(order.Customer);
+          }
+        }
+      }
+    });
+    this.arrUnsubscribe.push(sub);
+  }
+
   private applyCustomerData(data: any): void {
     this.customer = data;
     this.customer.Email = this.customer.Email || this.invoice.VATEmail || '';
@@ -196,6 +228,8 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     if (this.customer.Province) {
       this.loadWards(this.customer.Province);
     }
+    // Force Angular to re-bind dropdowns (province/ward loaded async)
+    this.cdr.detectChanges();
   }
 
   onCCCDBlur(): void {
@@ -275,11 +309,14 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
 
   //#region Province / Ward cascade (no District)
   private loadProvinces(): void {
-    const url = '/api/proxy-api/api/core/GetListProvince';
-    const sub = this.http.post<any>(url, null).subscribe({
-      next: (res) => {
+    const sub = this.coreApiService.GetListProvince().subscribe({
+      next: (res: ResponseDTO) => {
         if (res?.StatusCode === 0) {
-          this.provinceList = res.ObjectReturn || [];
+          const raw = res.ObjectReturn;
+          this.provinceList = Array.isArray(raw) ? raw : (raw?.Data || []);
+          if (this.customer.Province && this.provinceList.length > 0) {
+            this.loadWards(this.customer.Province);
+          }
         }
       },
       error: () => { this.provinceList = []; }
@@ -288,11 +325,13 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   }
 
   private loadWards(provinceCode: number): void {
-    const url = '/api/proxy-api/api/core/GetListWard';
-    const sub = this.http.post<any>(url, { Code: provinceCode }).subscribe({
-      next: (res) => {
+    const param = new LSDistrictDTO();
+    param.Province = provinceCode;
+    const sub = this.coreApiService.GetListWard(param).subscribe({
+      next: (res: ResponseDTO) => {
         if (res?.StatusCode === 0) {
-          this.wardList = res.ObjectReturn || [];
+          const raw = res.ObjectReturn;
+          this.wardList = Array.isArray(raw) ? raw : (raw?.Data || []);
         }
       },
       error: () => { this.wardList = []; }
