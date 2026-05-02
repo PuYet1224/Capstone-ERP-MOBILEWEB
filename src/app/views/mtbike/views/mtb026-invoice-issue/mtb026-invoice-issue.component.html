@@ -114,12 +114,12 @@
                     <!-- START: INVOICE List Section -->
                     <div class="invoice-section" *ngIf="item.isExpanded">
                         <div class="invoice-card" *ngFor="let inv of item.invoices; let i = index; trackBy: trackByInvoice"
-                             [class.issued]="inv.Status === invoiceStatusSuccess">
+                             [class.issued]="isInvoiceSuccess(inv)">
                             <!-- Header: Vehicle + Status -->
                             <div class="inv-header">
                                 <span class="inv-vehicle-name">{{ inv.VehicleName || ('Hóa đơn #' + inv.Code) }}</span>
-                                <span class="inv-status-badge" [ngClass]="getInvoiceStatusClass(inv.Status)">
-                                    {{ getInvoiceStatusLabel(inv.Status) }}
+                                <span class="inv-status-badge" [ngClass]="getInvoiceStatusClass(inv)">
+                                    {{ getInvoiceStatusLabel(inv) }}
                                 </span>
                             </div>
                             <!-- Invoice number (only when assigned) -->
@@ -127,7 +127,7 @@
                                 Số HĐ: <strong>{{ inv.InvoiceNo }}</strong>
                             </div>
                             <!-- Actions: pending -->
-                            <div class="inv-actions" *ngIf="inv.Status !== invoiceStatusSuccess">
+                            <div class="inv-actions" *ngIf="!isInvoiceSuccess(inv)">
                                 <button class="btn-detail" (click)="onNavigateDetail(inv); $event.stopPropagation()">
                                     Xem chi tiết
                                 </button>
@@ -136,7 +136,7 @@
                                 </button>
                             </div>
                             <!-- Actions: issued -->
-                            <div class="inv-actions" *ngIf="inv.Status === invoiceStatusSuccess">
+                            <div class="inv-actions" *ngIf="isInvoiceSuccess(inv)">
                                 <button class="btn-detail" (click)="onNavigateDetail(inv); $event.stopPropagation()">
                                     Xem chi tiết
                                 </button>

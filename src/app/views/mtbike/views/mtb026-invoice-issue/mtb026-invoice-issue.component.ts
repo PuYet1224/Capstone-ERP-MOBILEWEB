@@ -201,14 +201,14 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
       const invoices = this.allInvoices.filter(inv => inv.OrderMaster === item.Code);
       // Only show ready-to-issue invoices (complete info) + already issued
       const readyInvoices = invoices.filter(inv =>
-        inv.Status === SALOrderInvoiceStatusEnum.Success || this.isInfoComplete(inv)
+        this.isInvoiceSuccess(inv) || this.isInfoComplete(inv)
       );
       if (readyInvoices.length === 0) return;
 
       item.invoices = readyInvoices;
       item.invoiceCount = readyInvoices.length;
 
-      const allIssued = readyInvoices.every(inv => inv.Status === SALOrderInvoiceStatusEnum.Success);
+      const allIssued = readyInvoices.every(inv => this.isInvoiceSuccess(inv));
       if (allIssued) {
         issuedItems.push(item);
       } else {
@@ -239,10 +239,10 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
 
   private updateInvoiceCounts(): void {
     this.pendingCount = this.allInvoices.filter(
-      inv => inv.Status !== SALOrderInvoiceStatusEnum.Success && this.isInfoComplete(inv)
+      inv => !this.isInvoiceSuccess(inv) && this.isInfoComplete(inv)
     ).length;
     this.issuedCount = this.allInvoices.filter(
-      inv => inv.Status === SALOrderInvoiceStatusEnum.Success
+      inv => this.isInvoiceSuccess(inv)
     ).length;
   }
   //#endregion
@@ -254,6 +254,15 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
 
   getVisibleInvoices(item: Mtb026InvoiceIssueItem): SALOrderInvoiceCusDTO[] {
     return item.invoices || [];
+  }
+
+  // Workaround for BE bug in GetListSALInvoice: it returns Status=135 instead of TypeOfStatus=2
+  isInvoiceSuccess(inv: SALOrderInvoiceCusDTO): boolean {
+    return inv.TypeOfStatus === SALOrderInvoiceStatusEnum.Success || inv.Status === 135;
+  }
+
+  isInvoiceCancelled(inv: SALOrderInvoiceCusDTO): boolean {
+    return inv.TypeOfStatus === SALOrderInvoiceStatusEnum.Cancled || inv.Status === 136; // Assuming 136 is cancelled
   }
 
   isInfoComplete(inv: SALOrderInvoiceCusDTO): boolean {
@@ -346,22 +355,16 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
     this.arrUnsubscribe.push(sub);
   }
 
-  getInvoiceStatusClass(status: number): string {
-    switch (status) {
-      case SALOrderInvoiceStatusEnum.Success: return 'inv-issued';
-      case SALOrderInvoiceStatusEnum.Cancled: return 'inv-cancelled';
-      case SALOrderInvoiceStatusEnum.New: return 'inv-pending';
-      default: return 'inv-pending';
-    }
+  getInvoiceStatusClass(inv: SALOrderInvoiceCusDTO): string {
+    if (this.isInvoiceSuccess(inv)) return 'inv-issued';
+    if (this.isInvoiceCancelled(inv)) return 'inv-cancelled';
+    return 'inv-pending';
   }
 
-  getInvoiceStatusLabel(status: number): string {
-    switch (status) {
-      case SALOrderInvoiceStatusEnum.Success: return 'Đã phát hành';
-      case SALOrderInvoiceStatusEnum.Cancled: return 'Đã hủy';
-      case SALOrderInvoiceStatusEnum.New: return 'Chờ xử lý';
-      default: return 'Chờ xử lý';
-    }
+  getInvoiceStatusLabel(inv: SALOrderInvoiceCusDTO): string {
+    if (this.isInvoiceSuccess(inv)) return 'Đã phát hành';
+    if (this.isInvoiceCancelled(inv)) return 'Đã hủy';
+    return 'Chờ xử lý';
   }
 
   trackByGroup(_: number, group: Mtb026DisplayGroup): string {
@@ -379,7 +382,7 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
 
   //#region Issue invoice
   openIssueConfirm(inv: SALOrderInvoiceCusDTO): void {
-    if (inv.Status === SALOrderInvoiceStatusEnum.Success) {
+    if (this.isInvoiceSuccess(inv)) {
       this.notification.onWarning('Hóa đơn đã phát hành, không thể phát hành lại.');
       return;
     }
@@ -444,8 +447,6 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
         if (res.StatusCode === 0) {
           this.notification.onSuccess('Phát hành hóa đơn thành công!');
           this.closeIssueConfirm();
-          // Check if all invoices in this order are now issued
-          this.checkAndUpdateOrderStatus(orderMasterCode);
           this.loadData();
         } else {
           this.notification.onError(`Lỗi phát hành: ${res.ErrorString}`);
@@ -463,41 +464,67 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
   private checkAndUpdateOrderStatus(orderMasterCode: number): void {
     if (!orderMasterCode) return;
     const orderInvoices = this.allInvoices.filter(inv => inv.OrderMaster === orderMasterCode);
-    // After issuing, the current invoice is now Success — check if all others are too
-    const allIssued = orderInvoices.every(inv =>
-      inv.Code === this.selectedInvoice?.Code || inv.Status === SALOrderInvoiceStatusEnum.Success
+
+    // Only consider invoices that are relevant (complete info OR already issued)
+    const relevantInvoices = orderInvoices.filter(inv =>
+      inv.TypeOfStatus === SALOrderInvoiceStatusEnum.Success || this.isInfoComplete(inv)
     );
+    if (relevantInvoices.length === 0) return;
+
+    const issuedCount = relevantInvoices.filter(inv =>
+      inv.Code === this.selectedInvoice?.Code || this.isInvoiceSuccess(inv)
+    ).length;
+
+    const allIssued = issuedCount >= relevantInvoices.length;
+
+    // Find current order to check its status
+    const currentGroup = this.displayGroups.flatMap(g => g.items).find(i => i.Code === orderMasterCode);
+    const currentStatus = currentGroup?.Status;
+
+    let newStatus: number;
+    let message: string;
+
     if (allIssued) {
-      // Update order status to COMPLETE
-      const masterDTO = new SALOrderMasterCusDTO();
-      masterDTO.Code = orderMasterCode;
-      masterDTO.Status = SALOrderMasterStatusRetailEnum.COMPLETE;
-      const param = { DTO: masterDTO, Properties: ['Status'] };
-      this.api.UpdateSALMaster(param).subscribe({
-        next: (res) => {
-          if (res.StatusCode === 0) {
-            this.notification.onSuccess('Phiếu bán hàng đã hoàn tất!');
-          }
-        }
-      });
+      // All relevant invoices issued → COMPLETE
+      newStatus = SALOrderMasterStatusRetailEnum.COMPLETE;
+      message = 'Phiếu bán hàng đã hoàn tất!';
+    } else {
+      // Some invoices issued but not all → at least PROCESSING
+      newStatus = SALOrderMasterStatusRetailEnum.PROCESSING;
+      message = `Đang xử lý (${issuedCount}/${relevantInvoices.length} hóa đơn đã phát hành)`;
     }
+
+    // Rule: only move status FORWARD, never backward
+    if (currentStatus && currentStatus >= newStatus) return;
+
+    const masterDTO = new SALOrderMasterCusDTO();
+    masterDTO.Code = orderMasterCode;
+    masterDTO.Status = newStatus;
+    const param = { DTO: masterDTO, Properties: ['Status'] };
+    this.api.UpdateSALMaster(param).subscribe({
+      next: (res) => {
+        if (res.StatusCode === 0) {
+          this.notification.onSuccess(message);
+        }
+      }
+    });
   }
 
   bulkIssueAll(): void {
-    const pendingCodes = this.allInvoices
-      .filter(inv => inv.Status !== SALOrderInvoiceStatusEnum.Success && inv.Status !== SALOrderInvoiceStatusEnum.Cancled)
-      .map(inv => inv.Code);
+    // Only collect invoices that are visible on screen (ready + not yet issued)
+    const pendingCodes: number[] = [];
+    this.displayGroups.forEach(group => {
+      group.items.forEach(item => {
+        (item.invoices || []).forEach(inv => {
+          if (!this.isInvoiceSuccess(inv) && !this.isInvoiceCancelled(inv)) {
+            pendingCodes.push(inv.Code);
+          }
+        });
+      });
+    });
 
     if (pendingCodes.length === 0) {
       this.notification.onWarning('Không có hóa đơn chờ phát hành');
-      return;
-    }
-
-    // Validate SK/SM for all pending invoices
-    const missingVehicle = this.allInvoices
-      .filter(inv => pendingCodes.includes(inv.Code) && (!inv['FrameSeri'] || !inv['EngineSeri']));
-    if (missingVehicle.length > 0) {
-      this.notification.onWarning(`${missingVehicle.length} hóa đơn chưa gán Số Khung / Số Máy. Vui lòng gán xe trước khi phát hành.`);
       return;
     }
 
