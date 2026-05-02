@@ -1034,6 +1034,7 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
     const sub = this.mtbikeapi.DeleteSALDetail(param).subscribe(res => {
       if (res.StatusCode === 0) {
         this.subLoader.loader(false);
+        this.notification.onSuccess(`Đã xóa 1 xe khỏi giỏ hàng`);
       } else {
         this.subLoader.loader(false);
         this.notification.onError(`Lỗi: ${res.ErrorString}`);
