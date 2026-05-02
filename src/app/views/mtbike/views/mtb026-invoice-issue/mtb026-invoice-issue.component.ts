@@ -257,14 +257,16 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
   }
 
   isInfoComplete(inv: SALOrderInvoiceCusDTO): boolean {
-    if (!inv.FrameSeri || !inv.EngineSeri) return false;
-    if (!inv.VATCustomerName) return false;
-    if (!inv.VATAddress) return false;
+    if (!inv.FrameSeri?.trim() || !inv.EngineSeri?.trim()) return false;
+    if (!inv.VATCustomerName?.trim()) return false;
+    if (!inv.VATAddress?.trim()) return false;
     if (inv.VATType === 1) {
-      return !!(inv.VATCCCD && inv.VATCellPhone);
+      const cccd = inv.VATCCCD?.replace(/\D/g, '') || '';
+      const phone = inv.VATCellPhone?.replace(/\D/g, '') || '';
+      return cccd.length >= 9 && phone.length >= 10;
     }
     if (inv.VATType === 2 || inv.VATType === 3) {
-      return !!(inv.VATCompanyName && inv.VATCompanyTax);
+      return !!(inv.VATCompanyName?.trim() && inv.VATCompanyTax?.trim());
     }
     return false;
   }
@@ -308,37 +310,40 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
   }
 
   printInvoice(item: SALOrderInvoiceCusDTO): void {
-    this.loader.Show('Đang tạo hóa đơn điện tử...');
+    this.loader.loader(true);
     
     // Get company details for the invoice header
-    const headInfo = this.cache.getItem(KeyLocalStorageEnum.HEAD_OBJECT);
+    const headInfo: any = this.cache.getItem(KeyLocalStorageEnum.HEAD_OBJECT);
     
     const payload = {
       Code: item.Code,
-      Type: item.VATType || 1, // 1: Personal, 2: Business, 3: Public
-      HeadName: headInfo?.CompanyName || 'Công ty TNHH Hoài Minh',
-      TaxCode: headInfo?.TaxCode || '0312345678',
-      Address: headInfo?.Address || 'Hồ Chí Minh'
+      Type: item.VATType || 1,
+      HeadName: headInfo?.CompanyName || headInfo?.HeadName || '',
+      TaxCode: headInfo?.TaxCode || '',
+      Address: headInfo?.Address || ''
     };
 
-    this.api.ExportSALInvoicePdf(payload).subscribe((res) => {
-      this.loader.Hide();
-      if (res && res.StatusCode === 0 && res.ObjectReturn && res.ObjectReturn.Base64) {
-        const linkSource = `data:application/pdf;base64,${res.ObjectReturn.Base64}`;
-        const downloadLink = document.createElement('a');
-        const fileName = res.ObjectReturn.FileName || `HoaDon_GTGT_${item.InvoiceNo}.pdf`;
-        downloadLink.href = linkSource;
-        downloadLink.download = fileName;
-        downloadLink.click();
-        this.notification.Show('Tải hóa đơn điện tử thành công', 'success');
-      } else {
-        const errorMsg = res?.ErrorString || 'Không thể tạo bản thể hiện hóa đơn. Vui lòng thử lại.';
-        this.notification.Show(errorMsg, 'error');
+    const sub = this.api.ExportSALInvoicePdf(payload).subscribe(
+      (res) => {
+        this.loader.loader(false);
+        if (res && res.StatusCode === 0 && res.ObjectReturn && res.ObjectReturn.Base64) {
+          const linkSource = `data:application/pdf;base64,${res.ObjectReturn.Base64}`;
+          const downloadLink = document.createElement('a');
+          const fileName = res.ObjectReturn.FileName || `HoaDon_GTGT_${item.InvoiceNo}.pdf`;
+          downloadLink.href = linkSource;
+          downloadLink.download = fileName;
+          downloadLink.click();
+          this.notification.onSuccess('Tải hóa đơn điện tử thành công');
+        } else {
+          this.notification.onError(res?.ErrorString || 'Không thể tạo bản thể hiện hóa đơn');
+        }
+      },
+      () => {
+        this.loader.loader(false);
+        this.notification.onError('Lỗi kết nối máy chủ khi tạo hóa đơn');
       }
-    }, () => {
-      this.loader.Hide();
-      this.notification.Show('Lỗi kết nối máy chủ khi tạo hóa đơn', 'error');
-    });
+    );
+    this.arrUnsubscribe.push(sub);
   }
 
   getInvoiceStatusClass(status: number): string {
@@ -389,11 +394,46 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
 
   confirmIssueInvoice(): void {
     if (!this.selectedInvoice) return;
+    const inv = this.selectedInvoice;
 
-    // Validate SK/SM before issuing
-    if (!this.selectedInvoice['FrameSeri'] || !this.selectedInvoice['EngineSeri']) {
-      this.notification.onWarning('Hóa đơn chưa gán Số Khung / Số Máy. Vui lòng vào Chứng từ HĐ để gán xe trước khi phát hành.');
+    // Validate SK/SM
+    if (!inv.FrameSeri?.trim() || !inv.EngineSeri?.trim()) {
+      this.notification.onWarning('Hóa đơn chưa gán Số Khung / Số Máy. Vui lòng vào Chứng từ HĐ để gán xe.');
       return;
+    }
+
+    // Validate customer info completeness
+    if (!inv.VATCustomerName?.trim()) {
+      this.notification.onWarning('Chưa nhập tên khách hàng. Vui lòng bổ sung trong Chứng từ HĐ.');
+      return;
+    }
+    if (!inv.VATAddress?.trim()) {
+      this.notification.onWarning('Chưa nhập địa chỉ khách hàng. Vui lòng bổ sung trong Chứng từ HĐ.');
+      return;
+    }
+
+    // Validate by VATType
+    if (inv.VATType === 1) {
+      const cccd = inv.VATCCCD?.replace(/\D/g, '') || '';
+      if (cccd.length < 9) {
+        this.notification.onWarning('Số CCCD/CMND không hợp lệ (tối thiểu 9 số). Vui lòng kiểm tra lại.');
+        return;
+      }
+      const phone = inv.VATCellPhone?.replace(/\D/g, '') || '';
+      if (phone.length < 10) {
+        this.notification.onWarning('Số điện thoại không hợp lệ (tối thiểu 10 số). Vui lòng kiểm tra lại.');
+        return;
+      }
+    }
+    if (inv.VATType === 2 || inv.VATType === 3) {
+      if (!inv.VATCompanyName?.trim()) {
+        this.notification.onWarning('Chưa nhập tên công ty / đơn vị. Vui lòng bổ sung trong Chứng từ HĐ.');
+        return;
+      }
+      if (!inv.VATCompanyTax?.trim()) {
+        this.notification.onWarning('Chưa nhập mã số thuế / mã đơn vị. Vui lòng bổ sung trong Chứng từ HĐ.');
+        return;
+      }
     }
 
     this.loader.loader(true);

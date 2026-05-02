@@ -129,6 +129,36 @@ export class Mtb027ReceiptVehicleDetailComponent implements OnInit, OnDestroy {
 
   onValueChange(item: any, field: string, value: any): void {
     item[field] = value;
+
+    // Auto-fill 10% deposit when switching to DEPOSIT payment type
+    if (field === 'PaymentType' && value === this.paymentTypeEnum.DEPOSIT) {
+      const defaultDeposit = Math.round((item.Price || 0) * 0.1);
+      item.DepositAmount = defaultDeposit;
+    }
+
+    // Auto-select first finance company when switching to INSTALLMENT
+    if (field === 'PaymentType' && value === this.paymentTypeEnum.INSTALLMENT) {
+      item.DurationMethod = this.listFinanceCompany[0]?.Code ?? null;
+    }
+
+    this.calculateTotalCollected();
+    this.onUpdate(item);
+  }
+
+  onDepositAmountBlur(item: any): void {
+    const price = item.Price || 0;
+    const defaultDeposit = Math.round(price * 0.1);
+
+    if (!item.DepositAmount || item.DepositAmount <= 0) {
+      this.notification.onWarning('Số tiền đặt cọc phải lớn hơn 0');
+      item.DepositAmount = defaultDeposit;
+      return;
+    }
+
+    if (item.DepositAmount > price) {
+      item.DepositAmount = price;
+    }
+
     this.calculateTotalCollected();
     this.onUpdate(item);
   }

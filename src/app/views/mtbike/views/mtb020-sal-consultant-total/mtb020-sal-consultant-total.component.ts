@@ -45,32 +45,51 @@ export class Mtb020SalConsultantTotalComponent implements OnInit, OnDestroy, Aft
   //#region getters
   get totals() {
     const L = SALOrderDetailPaymentTypeEnum.LUMPSUM;
+    const I = SALOrderDetailPaymentTypeEnum.INSTALLMENT;
+    const D = SALOrderDetailPaymentTypeEnum.DEPOSIT;
+
     const list = this.listDetails as any[];
-    const z = { v: 0, vat: 0, svc: 0, part: 0, discount: 0, lumpsum: 0, deposit: 0 };
+    const z = { v: 0, vat: 0, svc: 0, part: 0, discount: 0, lumpsum: 0, deposit: 0, installmentDeposit: 0 };
+    
     const o = list.reduce((acc, r) => {
       if (r.IsOrderLock !== true) return acc;
 
-      const v = r.BasePrice || r.Price || 0;
-      const vat = r.VATAmount || 0;
-      const svcArraySum = Array.isArray(r.ListService) ? r.ListService.reduce((s: number, x: any) => s + (x.Price || x.Amount || 0), 0) : 0;
-      const svc = svcArraySum || r.ServiceAmount || 0;
-      const partArraySum = Array.isArray(r.ListPart) ? r.ListPart.reduce((s: number, x: any) => s + (x.TotalPrice || ((x.UnitPrice || 0) * (x.Quantity || 0))), 0) : 0;
-      const part = partArraySum || r.PartAmount || 0;
-      const discount = r.DiscountAmount || r.PromotionAmount || r.TotalDiscount || 0;
-      const itemNet = v + vat + svc + part - discount;
-
+      const isInstallment = r.PaymentType === I;
+      const isDeposit = r.PaymentType === D;
       const isLumpsum = r.PaymentType === L;
+
+      const v_raw = r.BasePrice || r.Price || 0;
+      const vat_raw = r.VATAmount || 0;
+      const svcArraySum = Array.isArray(r.ListService) ? r.ListService.reduce((s: number, x: any) => s + (x.Price || x.Amount || 0), 0) : 0;
+      const svc_raw = svcArraySum || r.ServiceAmount || 0;
+      const partArraySum = Array.isArray(r.ListPart) ? r.ListPart.reduce((s: number, x: any) => s + (x.TotalPrice || ((x.UnitPrice || 0) * (x.Quantity || 0))), 0) : 0;
+      const part_raw = partArraySum || r.PartAmount || 0;
+      const discount_raw = r.DiscountAmount || r.PromotionAmount || r.TotalDiscount || 0;
+      const itemNet = v_raw + vat_raw + svc_raw + part_raw - discount_raw;
+
+      // "CHỈ CÓ TRẢ GÓP LÀ KHÔNG TÍNH THÔI NHÉ"
+      // Only Installment is excluded from the full price breakdown.
+      // LumpSum, Deposit, and Unselected (null) are all included.
+      const shouldCountFull = !isInstallment;
+
       return {
-        v: acc.v + v, vat: acc.vat + vat, svc: acc.svc + svc, part: acc.part + part,
-        discount: acc.discount + discount,
+        v: acc.v + (shouldCountFull ? v_raw : 0),
+        vat: acc.vat + (shouldCountFull ? vat_raw : 0),
+        svc: acc.svc + (shouldCountFull ? svc_raw : 0),
+        part: acc.part + (shouldCountFull ? part_raw : 0),
+        discount: acc.discount + (shouldCountFull ? discount_raw : 0),
         lumpsum: acc.lumpsum + (isLumpsum ? itemNet : 0),
-        deposit: acc.deposit + (!isLumpsum ? (r.DepositAmount ?? 0) : 0),
+        deposit: acc.deposit + (isDeposit || isInstallment ? (r.DepositAmount ?? 0) : 0),
+        installmentDeposit: acc.installmentDeposit + (isInstallment ? (r.DepositAmount ?? 0) : 0)
       };
     }, z);
+
     const before = o.v + o.vat + o.svc + o.part;
-    const bill = before - o.discount;
+    // Bill = (Full Price of Non-Installment items) + (Deposit of Installment items)
+    const bill = before - o.discount + o.installmentDeposit;
     const paid = o.lumpsum + o.deposit;
     const debt = Math.max(0, bill - paid);
+
     return { 
       totalVehicleBeforeVat: o.v, 
       totalVat: o.vat, 
@@ -142,7 +161,7 @@ export class Mtb020SalConsultantTotalComponent implements OnInit, OnDestroy, Aft
       return;
     }
 
-    const invalidVehicle = this.listDetails.find(v => v.IsOrderLock === true && v.PaymentType == null);
+    const invalidVehicle = null; // this.listDetails.find(v => v.IsOrderLock === true && v.PaymentType == null);
     if (invalidVehicle) {
       this.notification.onWarning(`Xe ${invalidVehicle.VehicleName || ''} ${invalidVehicle.VehicleColorName || ''} chưa chọn hình thức thanh toán`);
       return;

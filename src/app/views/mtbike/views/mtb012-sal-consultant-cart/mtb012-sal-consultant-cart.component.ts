@@ -463,6 +463,7 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
     const temp = this.api.UpdateSALDetail(param).subscribe((res) => {
       if (res.StatusCode === 0) {
         this.GetListSALSelectedWH(this.retailMaster);
+        this.GetListSALSelectedVehicle(this.retailMaster);
         this.loader.loader(false);
       } else {
         this.notification.onError(`Lỗi xóa xe : ${res.ErrorString}`);

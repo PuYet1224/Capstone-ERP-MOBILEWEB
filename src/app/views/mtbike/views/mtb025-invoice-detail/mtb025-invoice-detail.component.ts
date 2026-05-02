@@ -555,13 +555,30 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
 
   //#region Save / Export
   onUpdate(): void {
+    // Validate SK/SM (mandatory for all types)
+    if (!this.invoice.FrameSeri?.trim()) {
+      this.notification.onWarning('Vui lòng nhập Số khung');
+      return;
+    }
+    if (!this.invoice.EngineSeri?.trim()) {
+      this.notification.onWarning('Vui lòng nhập Số máy');
+      return;
+    }
+
+    // Validate VATType selected
+    if (!this.invoice.VATType) {
+      this.notification.onWarning('Vui lòng chọn Loại hóa đơn');
+      return;
+    }
+
     // Personal case: validate customer fields
     if (this.invoice.VATType == 1) {
-      if (!this.customer.CitizenCardNo) {
-        this.notification.onWarning('Vui lòng nhập Số căn cước công dân');
+      const cccd = (this.invoice.VATCCCD || '').replace(/\D/g, '');
+      if (cccd.length < 9) {
+        this.notification.onWarning('Số CCCD/CMND không hợp lệ (tối thiểu 9 số)');
         return;
       }
-      if (!this.customer.FullName) {
+      if (!this.invoice.VATCustomerName?.trim()) {
         this.notification.onWarning('Vui lòng nhập tên Khách hàng');
         return;
       }
@@ -573,40 +590,46 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
         this.notification.onWarning('Vui lòng chọn Phường xã');
         return;
       }
-      if (!this.customer.Cellphone1) {
-        this.notification.onWarning('Vui lòng nhập Số di động');
+      const phone = (this.invoice.VATCellPhone || '').replace(/\D/g, '');
+      if (phone.length < 10) {
+        this.notification.onWarning('Số di động không hợp lệ (tối thiểu 10 số)');
         return;
       }
-      // Sync customer → invoice snapshot before export
+      // Sync customer → invoice snapshot before save
       this.syncCustomerToInvoice();
     }
 
     // Business / Public case: validate invoice fields
     if (this.invoice.VATType == 2 || this.invoice.VATType == 3) {
       const isPublic = this.invoice.VATType == 3;
-      if (!this.invoice.VATCustomerName) {
+      if (!this.invoice.VATCustomerName?.trim()) {
         this.notification.onWarning('Vui lòng nhập tên Người mua hàng');
         return;
       }
-      if (!this.invoice.VATCompanyTax) {
+      if (!this.invoice.VATCompanyTax?.trim()) {
         this.notification.onWarning(`Vui lòng nhập ${isPublic ? 'Mã đơn vị' : 'Mã số thuế'}`);
         return;
       }
-      if (!this.invoice.VATCompanyName) {
+      if (!this.invoice.VATCompanyName?.trim()) {
         this.notification.onWarning(`Vui lòng nhập ${isPublic ? 'Tên đơn vị' : 'Tên công ty / doanh nghiệp'}`);
         return;
       }
-      if (!this.invoice.VATEmail) {
+      if (!this.invoice.VATEmail?.trim()) {
         this.notification.onWarning('Vui lòng nhập Email');
         return;
       }
-      if (!this.invoice.VATAddress) {
+      if (!this.invoice.VATAddress?.trim()) {
         this.notification.onWarning('Vui lòng nhập Địa chỉ');
+        return;
+      }
+      const cccd = (this.invoice.VATCCCD || '').replace(/\D/g, '');
+      if (cccd.length < 9) {
+        this.notification.onWarning('Số CCCD người đại diện không hợp lệ (tối thiểu 9 số)');
         return;
       }
     }
 
-    // Sync final data and notify success — NO PDF export here.
+    // Sync final data and save — NO PDF export here.
     // PDF export only happens at invoice issuance (mtb026).
     this.syncCustomerToInvoice();
     this.notification.onSuccess('Đã lưu thông tin chứng từ hóa đơn');
