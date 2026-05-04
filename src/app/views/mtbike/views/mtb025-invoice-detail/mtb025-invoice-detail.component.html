@@ -23,8 +23,8 @@
       <span class="order-context__value">{{ orderInfo.vehicleName }}</span>
     </div>
     <div class="order-context__row">
-      <span class="order-context__label">Trạng thái:</span>
-      <span class="order-context__badge" [ngClass]="getStatusClass()">{{ getStatusLabel() }}</span>
+      <span class="order-context__label">Tình trạng:</span>
+      <div [innerHTML]="{ Progress: orderInfo.status, ProgressName: orderInfo.statusName | uppercase } | SALOrderMasterStatusRetail"></div>
     </div>
   </div>
   <!-- END: ORDER CONTEXT -->
@@ -54,6 +54,30 @@
       </div>
       <!-- END: THÔNG TIN ĐƠN VỊ BÁN -->
 
+      <!-- START: TRANSFER BANNER (xe điều chuyển) -->
+      <div class="transfer-banner" *ngIf="isTransfer">
+        <div class="transfer-icon">
+          <span class="material-icons">local_shipping</span>
+        </div>
+        <div class="transfer-info">
+          <div class="transfer-title">Xe điều chuyển từ {{ transferHeadName }}</div>
+          <div class="transfer-status" *ngIf="transferReceiptCode">
+            Phiếu nhập: <span class="transfer-badge" [ngClass]="{
+              'status-new': transferReceiptStatus === 1,
+              'status-processing': transferReceiptStatus === 2 || transferReceiptStatus === 3,
+              'status-done': transferReceiptStatus === 4
+            }">{{ transferReceiptStatusLabel }}</span>
+          </div>
+          <div class="transfer-status" *ngIf="!transferReceiptCode">
+            <span class="transfer-badge status-new">Chờ tạo phiếu nhập kho</span>
+          </div>
+        </div>
+        <button class="transfer-refresh" (click)="refreshTransferStatus()" title="Cập nhật trạng thái">
+          <span class="material-icons">refresh</span>
+        </button>
+      </div>
+      <!-- END: TRANSFER BANNER -->
+
       <!-- START: THÔNG TIN XE (SỐ KHUNG / SỐ MÁY) -->
       <div class="container-body">
         <div class="title">Thông tin xe</div>
@@ -62,12 +86,16 @@
             [label]="'Số khung (*)'"
             [(ngModel)]="invoice.FrameSeri"
             (blur)="onFrameSeriBlur()"
-           [disabled]="isReadOnly"></ps-kendo-textbox>
+           [disabled]="isReadOnly || isTransferSKSMDisabled"></ps-kendo-textbox>
           <ps-kendo-textbox
             [label]="'Số máy (*)'"
             [(ngModel)]="invoice.EngineSeri"
             (blur)="onEngineSeriBlur()"
-           [disabled]="isReadOnly"></ps-kendo-textbox>
+           [disabled]="isReadOnly || isTransferSKSMDisabled"></ps-kendo-textbox>
+          <div class="transfer-sksm-hint" *ngIf="isTransferSKSMDisabled">
+            <span class="material-icons">info_outline</span>
+            SK/SM sẽ tự động cập nhật khi phiếu nhập kho hoàn tất
+          </div>
         </div>
       </div>
       <!-- END: THÔNG TIN XE -->
@@ -286,9 +314,6 @@
     </ps-kendo-button>
     <ps-kendo-button *ngIf="!isReadOnly" (onClick)="onApplyToOtherVehicles()">
       <span class="text">Áp dụng cho xe khác</span>
-    </ps-kendo-button>
-    <ps-kendo-button *ngIf="!isReadOnly" [theme]="'primary'" (onClick)="onUpdate()">
-      <span class="text">Lưu thông tin</span>
     </ps-kendo-button>
   </ps-footer-action>
   <!-- END: FOOTER -->
