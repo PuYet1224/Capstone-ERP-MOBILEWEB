@@ -308,10 +308,10 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
   }
 
   printInvoice(item: SALOrderInvoiceCusDTO): void {
-    this.loader.Show('Đang tạo hóa đơn điện tử...');
+    this.loader.loader(true);
     
     // Get company details for the invoice header
-    const headInfo = this.cache.getItem(KeyLocalStorageEnum.HEAD_OBJECT);
+    const headInfo = this.cache.getItem(KeyLocalStorageEnum.HEAD_OBJECT) as any;
     
     const payload = {
       Code: item.Code,
@@ -322,7 +322,7 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
     };
 
     this.api.ExportSALInvoicePdf(payload).subscribe((res) => {
-      this.loader.Hide();
+      this.loader.loader(false);
       if (res && res.StatusCode === 0 && res.ObjectReturn && res.ObjectReturn.Base64) {
         const linkSource = `data:application/pdf;base64,${res.ObjectReturn.Base64}`;
         const downloadLink = document.createElement('a');
@@ -330,14 +330,14 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
         downloadLink.href = linkSource;
         downloadLink.download = fileName;
         downloadLink.click();
-        this.notification.Show('Tải hóa đơn điện tử thành công', 'success');
+        this.notification.onSuccess('Tải hóa đơn điện tử thành công');
       } else {
         const errorMsg = res?.ErrorString || 'Không thể tạo bản thể hiện hóa đơn. Vui lòng thử lại.';
-        this.notification.Show(errorMsg, 'error');
+        this.notification.onError(errorMsg);
       }
     }, () => {
-      this.loader.Hide();
-      this.notification.Show('Lỗi kết nối máy chủ khi tạo hóa đơn', 'error');
+      this.loader.loader(false);
+      this.notification.onError('Lỗi kết nối máy chủ khi tạo hóa đơn');
     });
   }
 

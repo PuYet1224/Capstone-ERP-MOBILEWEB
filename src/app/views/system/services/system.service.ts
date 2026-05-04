@@ -62,7 +62,7 @@ export class SystemService {
                                 ConfigDTO.token = token;
                                 checktoken = true;
                             }
-                        } catch (e) {}
+                        } catch (e) { }
                     }
 
                     resolve(checktoken);
