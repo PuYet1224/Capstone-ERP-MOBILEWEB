@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { SALOrderInvoiceStatusEnum } from 'src/app/models/enums/e-status/sal-order-invoice-status.enum';
+import { SALOrderMasterStatusRetailEnum } from 'src/app/models/enums/e-status/sal-order-master-status-retail.enum';
 import { MtbikeApiService } from '../../services/mtbike-api.service';
 import { PsKendoNotificationService } from 'src/app/services/core/ps-kendo-notification.service';
 import { SALOrderInvoiceCusDTO } from 'src/app/models/dtos/e-dtos/sal-order-invoice.dto';
@@ -56,7 +57,15 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   ] as const;
   public currentheader: LSHeadCusDTO = this.configService.GetHead();
 
-  public orderInfo = { id: '', customerName: '', vehicleName: '', totalAmount: 0 };
+  public orderInfo: { id: string, customerName: string, vehicleName: string, totalAmount: number, status?: number, statusName?: string } = { id: '', customerName: '', vehicleName: '', totalAmount: 0 };
+
+  // Vehicle transfer (xe điều chuyển)
+  public isTransfer = false;
+  public transferHeadCode: number | null = null;
+  public transferHeadName = '';
+  public transferReceiptCode: number | null = null;
+  public transferReceiptStatus: number | null = null;
+  public orderDetailCode: number | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -119,7 +128,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
           this.invoice.FrameSeri = this.invoice.FrameSeri ?? '';
           this.invoice.EngineSeri = this.invoice.EngineSeri ?? '';
           this.invoiceCopy = { ...this.invoice };
-          this.isReadOnly = this.invoice.Status === SALOrderInvoiceStatusEnum.Success;
+          this.isReadOnly = this.invoice.Status === SALOrderInvoiceStatusEnum.Success || this.invoice.Status === 135;
           if (!this.invoice.VATType && this.invoiceTypes.length > 0) {
             this.invoice.VATType = this.invoiceTypes[0].TypeOfList;
             this.invoiceCopy.VATType = this.invoiceTypes[0].TypeOfList;
@@ -132,6 +141,9 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
             this.loadCustomerFromOrder(this.invoice.OrderMaster || this.invoice['OrderMaster']);
           }
           this.loadOrderInfo();
+
+          // Detect vehicle transfer (xe điều chuyển)
+          this.detectTransfer(res.ObjectReturn);
         } else {
           this.notification.onError(`Lỗi tải thông tin hóa đơn: ${res.ErrorString}`);
         }
@@ -420,7 +432,9 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
               id: order.ID || '',
               customerName: order.CustomerName || '',
               vehicleName: order.VehicleName || '',
-              totalAmount: order.TotalPayment || 0
+              totalAmount: order.TotalPayment || 0,
+              status: order.Status || SALOrderMasterStatusRetailEnum.PENDING,
+              statusName: order.StatusName || 'Chờ xử lý'
             };
             // Fallback: if customer wasn't loaded from invoice, try from order
             if (!this.customerLoaded && order.Customer) {
@@ -434,18 +448,83 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   }
   //#endregion
 
-  //#region Province / Ward cascade
+  //#region Vehicle transfer (xe điều chuyển)
+  private detectTransfer(data: any): void {
+    const headTransfer = data.HeadTransfer;
+    const currentHeadCode = this.currentheader?.Code;
+
+    if (headTransfer && currentHeadCode && headTransfer !== currentHeadCode) {
+      this.isTransfer = true;
+      this.transferHeadCode = headTransfer;
+      this.orderDetailCode = data.OrderDetailCode || null;
+      this.transferReceiptCode = data.TransferReceiptCode || null;
+      this.transferReceiptStatus = data.TransferReceiptStatus || null;
+
+      // If receipt is complete and CSVehicle has SK/SM, auto-bind
+      if (data.CSFrameSeri && !this.invoice.FrameSeri) {
+        this.invoice.FrameSeri = data.CSFrameSeri;
+        this.onValueChange('FrameSeri');
+      }
+      if (data.CSEngineSeri && !this.invoice.EngineSeri) {
+        this.invoice.EngineSeri = data.CSEngineSeri;
+        this.onValueChange('EngineSeri');
+      }
+
+      // Resolve head name
+      this.resolveHeadName(headTransfer);
+    } else {
+      this.isTransfer = false;
+    }
+  }
+
+  private resolveHeadName(headCode: number): void {
+    this.transferHeadName = `Head #${headCode}`;
+  }
+
+  get isTransferSKSMDisabled(): boolean {
+    return this.isTransfer && this.transferReceiptStatus !== 4;
+  }
+
+  get transferReceiptStatusLabel(): string {
+    if (!this.transferReceiptCode) return 'Chưa tạo phiếu';
+    switch (this.transferReceiptStatus) {
+      case 1: return 'Mới tạo';
+      case 2: return 'Đang xử lý';
+      case 3: return 'Chờ xuất kho';
+      case 4: return 'Hoàn tất';
+      default: return 'Không xác định';
+    }
+  }
+
+  refreshTransferStatus(): void {
+    if (!this.invoice.Code) return;
+    this.loadInvoice(this.invoice.Code);
+  }
+  //#endregion
   private loadProvinces(): void {
     const sub = this.coreApiService.GetListProvince().subscribe({
       next: (res: ResponseDTO) => {
         if (res?.StatusCode === 0) {
           const raw = res.ObjectReturn;
           this.provinceList = Array.isArray(raw) ? raw : (raw?.Data || []);
-          if (this.customer.Province && this.provinceList.length > 0) {
-            this.loadWards(this.customer.Province);
-          } else if (this.customer.Address && this.provinceList.length > 0) {
-            this.parseAddressToDropdowns(this.customer.Address);
+          
+          // If invoice already loaded, trigger the parsing/matching logic
+          if (this.provinceList.length > 0 && this.invoice.Code) {
+            if (this.customer.Province) {
+              this.loadWards(this.customer.Province, () => {
+                // Post-ward load logic for late-loading provinces
+                if (!this.customer.Ward && this.customer.Address) {
+                  this.customer.Ward = this.matchWardFromAddress(this.customer.Address);
+                }
+                this.customer.Address = this.stripGeoFromAddress(this.customer.Address);
+                this.customerCopy = { ...this.customer };
+                this.cdr.detectChanges();
+              });
+            } else if (this.customer.Address) {
+              this.parseAddressToDropdowns(this.customer.Address);
+            }
           }
+          this.cdr.detectChanges();
         }
       },
       error: () => { this.provinceList = []; }
@@ -465,10 +544,12 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
           this.wardList = Array.isArray(raw) ? raw : (raw?.Data || []);
         }
         if (callback) callback();
+        this.cdr.detectChanges();
       },
       error: () => {
         this.wardList = [];
         if (callback) callback();
+        this.cdr.detectChanges();
       }
     });
     this.arrUnsubscribe.push(sub);
@@ -587,15 +668,25 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
       this.invoice.VATGender = this.customer.Gender;
       changedProps.push('VATGender');
     }
-    const newProv = province ? province.Code.toString() : '';
-    if (this.invoice.VATProvince !== newProv) {
-      this.invoice.VATProvince = newProv;
-      changedProps.push('VATProvince');
+
+    // Sync Province - ONLY if list is loaded to prevent overwriting with empty
+    if (this.provinceList.length > 0) {
+      const province = this.provinceList.find(p => p.Code === this.customer.Province);
+      const newProv = province ? province.Code.toString() : '';
+      if (this.invoice.VATProvince !== newProv) {
+        this.invoice.VATProvince = newProv;
+        changedProps.push('VATProvince');
+      }
     }
-    const newWard = ward ? ward.Code.toString() : '';
-    if (this.invoice.VATWard !== newWard) {
-      this.invoice.VATWard = newWard;
-      changedProps.push('VATWard');
+
+    // Sync Ward - ONLY if list is loaded to prevent overwriting with empty
+    if (this.wardList.length > 0) {
+      const ward = this.wardList.find(w => w.Code === this.customer.Ward);
+      const newWard = ward ? ward.Code.toString() : '';
+      if (this.invoice.VATWard !== newWard) {
+        this.invoice.VATWard = newWard;
+        changedProps.push('VATWard');
+      }
     }
     // Sync IsSamePhone flag
     const newIsSame = !!this.customer.IsCellPhone;
@@ -630,22 +721,67 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region Status display
-  getStatusLabel(): string {
-    switch (this.invoice.Status) {
-      case SALOrderInvoiceStatusEnum.New: return 'Chờ xử lý';
-      case SALOrderInvoiceStatusEnum.Success: return 'Đã phát hành';
-      case SALOrderInvoiceStatusEnum.Cancled: return 'Đã hủy';
-      default: return 'Chờ xử lý';
+  isInfoComplete(): boolean {
+    const inv = this.invoice;
+    if (!inv.FrameSeri || !inv.EngineSeri) return false;
+    if (!inv.VATCustomerName) return false;
+    if (!inv.VATAddress) return false;
+    if (inv.VATType === 1) {
+      return !!(inv.VATCCCD && inv.VATCellPhone);
+    }
+    if (inv.VATType === 2 || inv.VATType === 3) {
+      return !!(inv.VATCompanyName && inv.VATCompanyTax);
+    }
+    return false;
+  }
+
+  getOrderStatusLabel(): string {
+    if (!this.orderInfo) return 'CHỜ XỬ LÝ';
+    switch (this.orderInfo.status) {
+      case SALOrderMasterStatusRetailEnum.PENDING: return 'CHỜ XỬ LÝ';
+      case SALOrderMasterStatusRetailEnum.PROCESSING: return 'ĐANG XỬ LÝ';
+      case SALOrderMasterStatusRetailEnum.COMPLETE: return 'HOÀN THÀNH';
+      case SALOrderMasterStatusRetailEnum.CANCEL: return 'ĐÃ HỦY';
+      default: return 'CHỜ XỬ LÝ';
     }
   }
 
-  getStatusClass(): string {
-    switch (this.invoice.Status) {
-      case SALOrderInvoiceStatusEnum.New: return 'status-pending';
-      case SALOrderInvoiceStatusEnum.Success: return 'status-success';
-      case SALOrderInvoiceStatusEnum.Cancled: return 'status-cancel';
-      default: return 'status-pending';
+  getOrderStatusClass(): string {
+    if (!this.orderInfo) return 'status-new';
+    switch (this.orderInfo.status) {
+      case SALOrderMasterStatusRetailEnum.NEW: return 'status-new';
+      case SALOrderMasterStatusRetailEnum.PENDING: return 'status-pending';
+      case SALOrderMasterStatusRetailEnum.PROCESSING: return 'status-processing';
+      case SALOrderMasterStatusRetailEnum.COMPLETE: return 'status-complete';
+      case SALOrderMasterStatusRetailEnum.CANCEL: return 'status-cancel';
+      default: return 'status-new';
     }
+  }
+
+  getStatusLabel(): string {
+    if (this.invoice.Status === 134 || this.invoice.Status === SALOrderInvoiceStatusEnum.New) {
+      return 'Chưa phát hành';
+    }
+    if (this.invoice.Status === 135 || this.invoice.Status === SALOrderInvoiceStatusEnum.Success) {
+      return 'Đã phát hành';
+    }
+    if (this.invoice.Status === 136 || this.invoice.Status === SALOrderInvoiceStatusEnum.Cancled) {
+      return 'Đã hủy';
+    }
+    return this.invoice.StatusName || 'Chưa phát hành';
+  }
+
+  getStatusClass(): string {
+    if (this.invoice.Status === 134 || this.invoice.Status === SALOrderInvoiceStatusEnum.New) {
+      return 'status-pending';
+    }
+    if (this.invoice.Status === 135 || this.invoice.Status === SALOrderInvoiceStatusEnum.Success) {
+      return 'status-success';
+    }
+    if (this.invoice.Status === 136 || this.invoice.Status === SALOrderInvoiceStatusEnum.Cancled) {
+      return 'status-cancel';
+    }
+    return 'status-pending';
   }
   //#endregion
 
@@ -654,33 +790,51 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   }
 
   //#region Invoice field updates (Business/Public case + shared fields)
+  private pendingSaves = new Set<string>();
+
   onValueChange(prop: string): void {
     if (this.isLoading) return;
-    if (this.invoice[prop] === this.invoiceCopy[prop]) return;
 
-    const param: UpdatePropertiesInterface<SALOrderInvoiceCusDTO> = {
-      DTO: this.invoice,
-      Properties: [prop]
-    };
-    
+    const currentVal = this.invoice[prop];
+    const previousVal = this.invoiceCopy[prop];
+
+    // Normalize: treat null, undefined, empty string as equivalent
+    const normalize = (v: any) => (v === null || v === undefined || v === '') ? '' : String(v);
+    if (normalize(currentVal) === normalize(previousVal)) return;
+
+    // Prevent duplicate saves for same property
+    if (this.pendingSaves.has(prop)) return;
+    this.pendingSaves.add(prop);
+
+    // Snapshot the value NOW before any async changes
+    const snapshotValue = currentVal;
+
     if (prop === 'VATType' && this.invoice.VATType) {
       this.invoice.VATType = Number(this.invoice.VATType);
     }
 
+    const param: UpdatePropertiesInterface<SALOrderInvoiceCusDTO> = {
+      DTO: { ...this.invoice, [prop]: snapshotValue } as SALOrderInvoiceCusDTO,
+      Properties: [prop]
+    };
+
     const sub = this.apiService.UpdateSALInvoice(param).subscribe({
       next: (res: ResponseDTO) => {
+        this.pendingSaves.delete(prop);
         if (res.StatusCode !== 0) {
           this.notification.onError(`Lỗi cập nhật ${prop}: ${res.ErrorString}`);
-          this.invoice[prop] = this.invoiceCopy[prop];
+          this.invoice[prop] = previousVal;
         } else {
-          // Only update the copy, do NOT overwrite entire invoice object
-          this.invoiceCopy[prop] = this.invoice[prop];
-          this.notification.onSuccess('Thành công');
+          // Update copy with snapshotted value
+          this.invoiceCopy[prop] = snapshotValue;
+          // Restore the value in case it was overwritten by re-render
+          this.invoice[prop] = snapshotValue;
         }
       },
       error: (err) => {
+        this.pendingSaves.delete(prop);
         this.notification.onError(`Lỗi kết nối khi cập nhật ${prop}: ${err.message}`);
-        this.invoice[prop] = this.invoiceCopy[prop];
+        this.invoice[prop] = previousVal;
       }
     });
     this.arrUnsubscribe.push(sub);

@@ -53,24 +53,32 @@
               .filter-row {
                 display: flex;
                 flex-direction: column;
-                gap: 8px;
+                gap: 6px;
                 width: 100%;
-                position: relative;
+
+                .filter-label-row {
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+
+                  .filter-label {
+                    font-size: 13px;
+                    color: $secondary;
+                    font-weight: 500;
+                  }
+                }
 
                 .checkbox-label {
                   display: flex;
                   align-items: center;
                   gap: 4px;
                   cursor: pointer;
-                  font-size: 13px;
+                  font-size: 12px;
                   color: $secondary;
-                  align-self: flex-end;
-                  position: absolute;
-                  top: 0;
 
                   input[type='checkbox'] {
-                    width: 16px;
-                    height: 16px;
+                    width: 15px;
+                    height: 15px;
                     accent-color: $primary;
                     cursor: pointer;
                   }
@@ -114,58 +122,13 @@
         font-size: 12px;
         background: $background-primary;
 
-        // ========== GROUP SECTION ==========
-        .group-section {
-          margin-bottom: 16px;
-
-          .group-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 14px;
-            background: $white;
-            border-radius: 10px;
-            cursor: pointer;
-            user-select: none;
-            margin-bottom: 10px;
-            box-shadow: 0 1px 3px rgba($black, 0.06);
-
-            .group-name {
-              font-size: 13px;
-              font-weight: 600;
-              color: $secondary;
-
-              .group-count {
-                color: $error;
-                font-weight: 700;
-              }
-            }
-
-            .toggle-icon {
-              font-size: 20px;
-              color: $grey-400;
-              transition: transform 0.2s ease;
-
-              &.rotated {
-                transform: rotate(180deg);
-              }
-            }
-          }
-
-          .group-content {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-          }
-        }
-
         // ========== PBH CARD ==========
         .pbh-card {
-          background: $white;
-          border-radius: 10px;
+          background: #e8eaed;
+          border-radius: 8px;
           overflow: hidden;
           box-shadow: 0 1px 4px rgba($black, 0.08);
-          border-left: 3px solid $primary;
+          margin-bottom: 12px;
 
           .pbh-header {
             display: flex;
@@ -247,6 +210,7 @@
                 .info-label {
                   color: $grey-500;
                   font-size: 10px;
+                  font-style: italic;
                 }
               }
             }
@@ -254,7 +218,8 @@
 
           // ========== INVOICE SECTION ==========
           .receipt-section {
-            padding: 0 10px 10px;
+            padding: 4px 10px 10px;
+            background: transparent;
 
             .receipt-card {
               padding: 10px 12px;
@@ -262,82 +227,160 @@
               cursor: pointer;
               display: flex;
               flex-direction: column;
-              gap: 4px;
-              border-radius: 8px;
+              gap: 6px;
+              border-radius: 6px;
               margin-top: 6px;
-              border-left: 3px solid $orange-400;
-              transition: background 0.15s ease;
+              border: 1px solid $border;
+              box-shadow: 0 1px 2px rgba($black, 0.04);
+              transition: background 0.15s ease, box-shadow 0.15s ease;
 
               &:active {
                 background: $hover;
               }
 
-              &.complete {
-                border-left-color: $primary;
-              }
-
               .r-vehicle-row {
-                font-size: 13px;
-                font-weight: 700;
-                color: $secondary;
-                line-height: 1.4;
+                .r-vehicle-name {
+                  font-size: 13px;
+                  font-weight: 700;
+                  color: $secondary;
+                  line-height: 1.4;
+                  text-transform: uppercase;
+                }
               }
 
-              .r-company-row {
-                font-size: 11px;
-                color: $secondary;
+              .r-owner-row {
+                display: flex;
+                flex-wrap: wrap;
+                column-gap: 12px;
+                row-gap: 4px;
 
-                .r-tax-code {
+                .r-owner-item {
+                  display: flex;
+                  align-items: center;
+                  gap: 4px;
+                  font-size: 11px;
                   color: $grey-500;
-                  margin-left: 6px;
+
+                  &.vat-seri-item {
+                    flex-basis: 100%;
+                    margin-top: 2px;
+                  }
+
+                  .material-icons {
+                    font-size: 14px;
+                    color: $grey-400;
+                  }
+
+                  .vat-name {
+                    strong {
+                      font-weight: 600;
+                      color: $secondary;
+                    }
+
+                    &.empty {
+                      font-style: italic;
+                      color: $warning;
+                    }
+                  }
                 }
               }
 
               .r-badges-row {
                 display: flex;
                 align-items: center;
-                gap: 6px;
+                justify-content: space-between;
                 flex-wrap: wrap;
-                margin-top: 2px;
+                margin-top: 4px;
 
-                .r-badge {
-                  font-size: 9px;
+                .badge-group {
+                  display: flex;
+                  align-items: center;
+                  gap: 6px;
+                  flex-wrap: wrap;
+                }
+
+                .r-vehicle-badge {
+                  font-size: 10px;
                   font-weight: 600;
                   padding: 2px 8px;
-                  border-radius: 4px;
-                  white-space: nowrap;
+                  border-radius: 12px;
 
-                  &.business {
-                    background: $green-100;
-                    color: $green-800;
+                  &.r-preorder-badge {
+                    background: #f3e8ff;
+                    color: #7e22ce;
                   }
-                  &.pm-transfer {
-                    background: $blue-100;
-                    color: $blue-800;
+
+                  &.r-transfer-badge {
+                    background: #ffedd5;
+                    color: #c2410c;
                   }
-                  &.public {
-                    background: $pink-100;
-                    color: $pink-800;
-                  }
-                  &.personal {
-                    background: $purple-50;
-                    color: $purple-700;
-                  }
-                  &.inv-no {
-                    background: $blue-50;
-                    color: $blue-800;
-                    font-weight: 700;
+
+                  &.r-local-badge {
+                    background: #dcfce7;
+                    color: #15803d;
                   }
                 }
 
-                .r-status {
-                  margin-left: auto;
+                .r-status-badge {
                   font-size: 10px;
                   font-weight: 600;
-                  color: $warning;
+                  padding: 2px 8px;
+                  border-radius: 12px;
 
-                  &.done {
-                    color: $primary;
+                  &.badge-primary {
+                    background: $primary;
+                    color: $white;
+                  }
+
+                  &.badge-warning {
+                    background: $warning;
+                    color: $white;
+                  }
+
+                  &.badge-success {
+                    background: $green-500;
+                    color: $white;
+                  }
+
+                  &.badge-danger {
+                    background: $error;
+                    color: $white;
+                  }
+                }
+
+                .r-tax-badge {
+                  font-size: 10px;
+                  font-weight: 600;
+                  color: $blue-600;
+                  background: $blue-50;
+                  padding: 2px 8px;
+                  border-radius: 12px;
+                }
+
+                .r-type-badge {
+                  font-size: 10px;
+                  font-weight: 600;
+                  padding: 2px 8px;
+                  border-radius: 12px;
+
+                  &.badge-personal {
+                    background: $pink-50;
+                    color: $pink-600;
+                  }
+
+                  &.badge-company {
+                    background: $green-50;
+                    color: $green-600;
+                  }
+
+                  &.badge-public {
+                    background: $red-50;
+                    color: $red-600;
+                  }
+
+                  &--done {
+                    background: $primary;
+                    color: $white;
                   }
                 }
               }
