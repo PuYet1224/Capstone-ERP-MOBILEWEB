@@ -40,8 +40,8 @@ export class Mtb024InvoiceListComponent implements OnInit, OnDestroy {
 
   private arrUnsubscribe: Subscription[] = [];
 
-  public displayGroups: DisplayGroup[] = [];
-  public openGroupSet = new Set<number>();
+  public displayItems: Mtb024InvoiceItem[] = [];
+  public allItems: Mtb024InvoiceItem[] = [];
   public allInvoices: SALOrderInvoiceCusDTO[] = [];
 
   public isOpenedFilter = false;
@@ -49,13 +49,17 @@ export class Mtb024InvoiceListComponent implements OnInit, OnDestroy {
   public includeFinished = false;
 
   public filter: State = {
-    sort: [{ field: 'Code', dir: 'desc' }],
+    take: 20,
+    skip: 0,
+    filter: undefined
   };
 
   ngOnInit(): void {
     ConfigDTO.dllpackage = 'document';
     this.cache.setItem(KeyLocalStorageEnum.DLLPACKAGE, 'document');
+    this.initFilter();
     this.loadData();
+    this.loadAllInvoices();
   }
 
   ngOnDestroy(): void {
@@ -64,39 +68,66 @@ export class Mtb024InvoiceListComponent implements OnInit, OnDestroy {
     this.arrUnsubscribe = [];
   }
 
-  //#region data loading
-  public loadData(): void {
-    this.loader.loader(true);
-    this.loadAllInvoices();
-    this.loadList();
+  private initFilter() {
+    this.filter = {
+      take: 20,
+      skip: 0,
+      filter: undefined
+    };
   }
 
-  private loadList(): void {
+  public onSearch(): void {
+    this.filter.skip = 0;
+    this.loadData();
+    this.loadAllInvoices();
+  }
+
+  public onToggleIncludeFinished(checked: boolean): void {
+    this.includeFinished = checked;
+    this.filter.skip = 0;
+    this.loadData();
+  }
+
+  public loadData(append = false): void {
+    this.loader.loader(true);
     const sub = this.api.GetListSALMaster(this.buildFilter()).subscribe(
       res => {
         if (res.StatusCode === 0) {
-          const rawGroups = res.ObjectReturn as any[];
-          const allItems: Mtb024InvoiceItem[] = [];
-          rawGroups.forEach(g => {
-            (g.ListData || []).forEach((item: any) => {
-              allItems.push({ ...item, isExpanded: false });
+          const rawResponse = res.ObjectReturn?.Data ?? res.ObjectReturn ?? [];
+          const items: Mtb024InvoiceItem[] = [];
+          if (Array.isArray(rawResponse)) {
+            rawResponse.forEach(g => {
+              if (g.ListData && Array.isArray(g.ListData)) {
+                items.push(...g.ListData);
+              } else if (g.ID) {
+                items.push(g);
+              }
             });
-          });
+          }
 
-          let filteredItems = allItems;
+          if (append) {
+            this.allItems = [...this.allItems, ...items];
+          } else {
+            this.allItems = items;
+          }
+          let filteredItems = this.allItems;
+          
           if (this.searchKeyword?.trim()) {
-            const kw = this.searchKeyword.trim().toLowerCase();
+            const keyword = this.searchKeyword.trim().toLowerCase();
+            
+            const matchingInvoices = this.allInvoices.filter(inv => 
+              (inv.InvoiceNo && inv.InvoiceNo.toLowerCase().includes(keyword)) ||
+              (inv.OrderNo && inv.OrderNo.toLowerCase().includes(keyword)) ||
+              (inv.VATCustomerName && inv.VATCustomerName.toLowerCase().includes(keyword))
+            );
+            
+            const matchingOrderCodes = matchingInvoices.map(inv => inv.OrderMaster);
 
-            // Find IDs of orders that have matching invoices
-            const matchingOrderCodes = this.allInvoices
-              .filter(inv => (inv.InvoiceNo && inv.InvoiceNo.toLowerCase().includes(kw)))
-              .map(inv => inv.OrderMaster);
-
-            filteredItems = filteredItems.filter(i => {
-              const matchesDirect = (i.ID && i.ID.toLowerCase().includes(kw)) ||
-                (i.CustomerName && i.CustomerName.toLowerCase().includes(kw)) ||
-                (i.CustomerPhone && i.CustomerPhone.includes(kw)) ||
-                (i.SaleStaffName && i.SaleStaffName.toLowerCase().includes(kw));
+            filteredItems = this.allItems.filter(i => {
+              const matchesDirect = 
+                (i.ID && i.ID.toLowerCase().includes(keyword)) ||
+                (i.CustomerName && i.CustomerName.toLowerCase().includes(keyword)) ||
+                (i.CustomerPhone && i.CustomerPhone.toLowerCase().includes(keyword));
 
               const matchesInvoice = matchingOrderCodes.includes(i.Code);
 
@@ -108,7 +139,7 @@ export class Mtb024InvoiceListComponent implements OnInit, OnDestroy {
             });
           }
 
-          this.buildDisplayGroups(filteredItems);
+          this.buildDisplayItems(filteredItems);
         } else {
           this.notification.onError(`Lỗi tải danh sách: ${res.ErrorString}`);
         }
@@ -138,15 +169,14 @@ export class Mtb024InvoiceListComponent implements OnInit, OnDestroy {
     const filters: any[] = [];
 
     const statusFilters: any[] = [
+      { field: 'Status', operator: 'eq', value: SALOrderMasterStatusRetailEnum.NEW },
       { field: 'Status', operator: 'eq', value: SALOrderMasterStatusRetailEnum.PENDING },
-      { field: 'Status', operator: 'eq', value: SALOrderMasterStatusRetailEnum.PROCESSING },
+      { field: 'Status', operator: 'eq', value: SALOrderMasterStatusRetailEnum.PROCESSING }
     ];
 
     if (this.includeFinished) {
-      statusFilters.push(
-        { field: 'Status', operator: 'eq', value: SALOrderMasterStatusRetailEnum.COMPLETE },
-        { field: 'Status', operator: 'eq', value: SALOrderMasterStatusRetailEnum.CANCEL },
-      );
+      statusFilters.push({ field: 'Status', operator: 'eq', value: SALOrderMasterStatusRetailEnum.COMPLETE });
+      statusFilters.push({ field: 'Status', operator: 'eq', value: SALOrderMasterStatusRetailEnum.CANCEL });
     }
 
     filters.push({ logic: 'or', filters: statusFilters });
@@ -189,7 +219,7 @@ export class Mtb024InvoiceListComponent implements OnInit, OnDestroy {
     };
   }
 
-  private buildDisplayGroups(allItems: Mtb024InvoiceItem[]): void {
+  private buildDisplayItems(allItems: Mtb024InvoiceItem[]): void {
     const processingItems = allItems.filter(i =>
       i.Status === SALOrderMasterStatusRetailEnum.NEW ||
       i.Status === SALOrderMasterStatusRetailEnum.PENDING ||
@@ -201,74 +231,54 @@ export class Mtb024InvoiceListComponent implements OnInit, OnDestroy {
       i.Status === SALOrderMasterStatusRetailEnum.CANCEL
     );
 
-    processingItems.forEach(item => {
-      item.invoiceCount = this.allInvoices.filter(inv => inv.OrderMaster === item.Code).length;
-    });
-    finishedItems.forEach(item => {
-      item.invoiceCount = this.allInvoices.filter(inv => inv.OrderMaster === item.Code).length;
-    });
-
-    this.displayGroups = [];
+    this.displayItems = [];
 
     if (processingItems.length > 0) {
-      this.displayGroups.push({ name: 'Đang xử lý', items: processingItems });
+      this.displayItems.push(...processingItems);
     }
 
     if (this.includeFinished && finishedItems.length > 0) {
-      this.displayGroups.push({ name: 'Kết thúc', items: finishedItems });
+      this.displayItems.push(...finishedItems);
     }
 
-    this.openGroupSet.clear();
-    this.displayGroups.forEach((_, i) => this.openGroupSet.add(i));
     this.assignInvoicesToItems();
   }
 
   private assignInvoicesToItems(): void {
-    this.displayGroups.forEach(g => {
-      g.items.forEach(item => {
-        item.invoices = this.allInvoices.filter(inv => inv.OrderMaster === item.Code);
-        item.invoiceCount = item.invoices.length;
-      });
+    this.displayItems.forEach(item => {
+      item.invoices = this.allInvoices.filter(inv => inv.OrderMaster === item.Code);
+      item.invoiceCount = item.invoices.length;
     });
   }
-  //#endregion
 
-  //#region UI actions
-  toggleGroup(idx: number): void {
-    if (this.openGroupSet.has(idx)) {
-      this.openGroupSet.delete(idx);
-    } else {
-      this.openGroupSet.add(idx);
+  public getVehicleStatus(inv: any): { label: string, class: string } | null {
+    if (inv.OrderDetailTypeData === 3) {
+      return { label: 'Xe đặt', class: 'r-preorder-badge' };
     }
+    const currentHeadCode = ConfigDTO.head?.Code;
+    if (inv.HeadTransfer != null && inv.HeadTransfer !== currentHeadCode) {
+      return { label: 'Xe điều chuyển', class: 'r-transfer-badge' };
+    }
+    return { label: 'Xe tại Head', class: 'r-local-badge' };
   }
 
-  isGroupOpen(idx: number): boolean {
-    return this.openGroupSet.has(idx);
-  }
-
-  toggleItem(item: Mtb024InvoiceItem): void {
+  public toggleItem(item: Mtb024InvoiceItem): void {
     item.isExpanded = !item.isExpanded;
     if (item.isExpanded && !item.invoices) {
       item.invoices = this.allInvoices.filter(inv => inv.OrderMaster === item.Code);
     }
   }
 
-  onSearch(): void {
-    this.isOpenedFilter = false;
-    this.displayGroups = [];
-    this.loadData();
-  }
-
-  openFilter(v: boolean): void {
+  public openFilter(v: boolean): void {
     this.isOpenedFilter = v;
   }
 
-  onNavigateBack(): void {
+  public onNavigateBack(): void {
     this.router.navigate(['/menu']);
   }
 
-  onNavigateDetail(item: SALOrderInvoiceCusDTO): void {
-    this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_INVOICE, item);
+  public onNavigateDetail(inv: SALOrderInvoiceCusDTO): void {
+    this.cache.setItem(KeyLocalStorageEnum.SAL_ORDER_INVOICE, inv);
     this.router.navigate(['detail'], { relativeTo: this.route });
   }
 
@@ -284,10 +294,10 @@ export class Mtb024InvoiceListComponent implements OnInit, OnDestroy {
 
   getVATTypeBadgeClass(vatType: number): string {
     switch (vatType) {
-      case 1: return 'personal';
-      case 2: return 'business';
-      case 3: return 'public';
-      default: return 'personal';
+      case 1: return 'badge-personal';
+      case 2: return 'badge-company';
+      case 3: return 'badge-public';
+      default: return 'badge-personal';
     }
   }
 
@@ -314,7 +324,23 @@ export class Mtb024InvoiceListComponent implements OnInit, OnDestroy {
   }
 
   getInfoCompletionClass(inv: SALOrderInvoiceCusDTO): string {
+    if (inv.Status === 2 || inv.Status === 135) return 'info-complete';
     return this.isInfoComplete(inv) ? 'info-complete' : 'info-incomplete';
+  }
+
+  getInvoiceStatusText(inv: SALOrderInvoiceCusDTO): string {
+    if (inv.Status === 134 || inv.Status === 1) {
+      return this.isInfoComplete(inv) ? 'Đủ thông tin' : 'Thiếu thông tin';
+    }
+    if (inv.Status === 135 || inv.Status === 2) return 'Đã phát hành';
+    if (inv.Status === 136 || inv.Status === 3) return 'Đã hủy';
+    return inv.StatusName || 'Thiếu thông tin';
+  }
+
+  getInvoiceStatusClass(inv: SALOrderInvoiceCusDTO): string {
+    if (inv.Status === 135 || inv.Status === 2) return 'badge-success';
+    if (inv.Status === 136 || inv.Status === 3) return 'badge-danger';
+    return this.isInfoComplete(inv) ? 'badge-primary' : 'badge-warning';
   }
 
   trackByGroup(_: number, group: DisplayGroup): string {

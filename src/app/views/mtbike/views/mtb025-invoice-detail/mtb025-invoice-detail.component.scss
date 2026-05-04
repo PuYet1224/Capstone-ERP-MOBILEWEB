@@ -38,11 +38,11 @@
 
       .order-context {
         margin: 8px 8px 0;
-        padding: 10px 12px;
+        padding: 12px 14px;
         background: $white;
-        border-radius: 8px;
+        border-radius: 10px;
         border-left: 3px solid $primary;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.03);
 
         &__row {
           display: flex;
@@ -66,38 +66,6 @@
             color: $primary;
           }
         }
-
-        &__badge {
-          font-size: 11px;
-          font-weight: 600;
-          padding: 2px 8px;
-          border-radius: 10px;
-
-          &.status-pending {
-            color: #e67e22;
-            background: rgba(230, 126, 34, 0.12);
-          }
-
-          &.status-success {
-            color: $white;
-            background: $primary;
-          }
-
-          &.status-cancel {
-            color: #e74c3c;
-            background: rgba(231, 76, 60, 0.12);
-          }
-
-          &.badge--draft {
-            color: #e67e22;
-            background: rgba(230, 126, 34, 0.12);
-          }
-
-          &.badge--issued {
-            color: $white;
-            background: $primary;
-          }
-        }
       }
 
       .readonly-banner {
@@ -110,14 +78,105 @@
         border-bottom: 1px solid #ffcc80;
       }
 
+      .transfer-banner {
+        margin: 8px;
+        padding: 12px 14px;
+        background: linear-gradient(135deg, #fff8e1 0%, #fff3e0 100%);
+        border-radius: 10px;
+        border-left: 3px solid #e65100;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+
+        .transfer-icon {
+          .material-icons {
+            font-size: 28px;
+            color: #e65100;
+          }
+        }
+
+        .transfer-info {
+          flex: 1;
+
+          .transfer-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #bf360c;
+          }
+
+          .transfer-status {
+            font-size: 11px;
+            color: $secondary;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+          }
+
+          .transfer-badge {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px;
+
+            &.status-new {
+              color: #e65100;
+              background: rgba(230, 81, 0, 0.12);
+            }
+
+            &.status-processing {
+              color: #1565c0;
+              background: rgba(21, 101, 192, 0.12);
+            }
+
+            &.status-done {
+              color: $white;
+              background: $primary;
+            }
+          }
+        }
+
+        .transfer-refresh {
+          background: none;
+          border: 1px solid rgba(0, 0, 0, 0.1);
+          border-radius: 8px;
+          padding: 6px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+
+          .material-icons {
+            font-size: 18px;
+            color: $secondary;
+          }
+
+          &:active {
+            background: rgba(0, 0, 0, 0.05);
+          }
+        }
+      }
+
+      .transfer-sksm-hint {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 11px;
+        color: #e65100;
+        font-style: italic;
+        padding: 4px 0;
+
+        .material-icons {
+          font-size: 14px;
+        }
+      }
       .customer-body {
-        background-color: transparent;
+        background-color: #f5f6f8;
         flex: 1;
         min-height: 0;
-        margin: 8px 0;
-        border-radius: 8px;
+        margin: 0;
         overflow-y: auto;
-        padding-bottom: 8px;
+        padding: 8px 0;
 
         .body-container {
           height: fit-content;
@@ -127,12 +186,12 @@
           padding: 0;
           margin: 0;
           min-width: 0;
-          gap: 8px;
+          gap: 10px;
           padding: 0 8px;
 
           .container-body {
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
             background: $white;
             display: flex;
             flex-direction: column;
@@ -140,16 +199,31 @@
             overflow: auto;
 
             .title {
-              font-weight: bold;
-              padding: 9px 8px;
+              font-weight: 700;
+              font-size: 13px;
+              padding: 10px 12px;
               border-bottom: 1px solid $border;
+              color: $secondary;
+              display: flex;
+              align-items: center;
+              gap: 6px;
+              letter-spacing: 0.2px;
+
+              &::before {
+                content: '';
+                width: 3px;
+                height: 16px;
+                background: $primary;
+                border-radius: 2px;
+                flex-shrink: 0;
+              }
             }
 
             .content {
-              padding: 8px;
+              padding: 12px;
               display: flex;
               flex-direction: column;
-              gap: 12px;
+              gap: 14px;
 
               .ps-label {
                 font-size: 13px;
@@ -223,11 +297,11 @@
           display: flex;
           align-items: center;
           gap: 8px;
-          padding: 8px;
+          padding: 10px 12px;
           height: fit-content;
           background: $white;
           border-top: 1px solid $border;
-          box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.06);
+          box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
 
           ps-kendo-button {
             button {

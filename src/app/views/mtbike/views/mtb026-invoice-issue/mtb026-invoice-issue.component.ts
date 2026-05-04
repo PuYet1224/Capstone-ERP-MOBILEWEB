@@ -54,6 +54,7 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
 
   public isOpenedIssueConfirm = false;
   public selectedInvoice: SALOrderInvoiceCusDTO | null = null;
+  public isOpenedBulkIssueConfirm = false;
 
   public readonly invoiceStatusSuccess = SALOrderInvoiceStatusEnum.Success;
 
@@ -510,7 +511,21 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
     });
   }
 
-  bulkIssueAll(): void {
+  openBulkIssueConfirm(): void {
+    if (this.pendingCount === 0) {
+      this.notification.onWarning('Không có hóa đơn chờ phát hành');
+      return;
+    }
+    this.isOpenedBulkIssueConfirm = true;
+  }
+
+  closeBulkIssueConfirm(): void {
+    this.isOpenedBulkIssueConfirm = false;
+  }
+
+  confirmBulkIssueAll(): void {
+    this.closeBulkIssueConfirm();
+    
     // Only collect invoices that are visible on screen (ready + not yet issued)
     const pendingCodes: number[] = [];
     this.displayGroups.forEach(group => {
