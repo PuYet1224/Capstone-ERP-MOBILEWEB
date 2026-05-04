@@ -246,7 +246,7 @@ export class Mtb022DocumentReceiptDetailComponent {
 
   public toggleConfirmReceived(isOpen: boolean): void {
     if (isOpen && (this.receipt as any).HasMissingDepositValue) {
-      this.notification.onWarning("Có xe trong phiếu chưa nhập số tiền đặt cọc");
+      this.notification.onWarning("Có xe trong phiếu chưa chọn hình thức thanh toán");
       return;
     }
 

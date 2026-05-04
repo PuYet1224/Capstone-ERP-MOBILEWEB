@@ -223,10 +223,10 @@
           </div>
 
           <ps-kendo-textarea
-            [label]="'Địa chỉ (*)'"
+            [label]="'Địa chỉ cụ thể (*)'"
             placeholder="Nhập địa chỉ"
-            [(ngModel)]="invoice.VATAddress"
-            (blur)="onValueChange('VATAddress')"
+            [(ngModel)]="customer.Address"
+            (blur)="onAddressBlur()"
            [disabled]="isReadOnly">
           </ps-kendo-textarea>
 

@@ -260,7 +260,16 @@ export class Mtb009SalConsultantComponent implements OnDestroy, OnInit {
 
     const temp = this.api.GetListSALMaster(apiFilter).subscribe((res) => {
       if (res.StatusCode === 0) {
-        this.listRetailMaster = res.ObjectReturn as SALOrderMasterGroup[];
+        this.listRetailMaster = (res.ObjectReturn as SALOrderMasterGroup[]).map(group => {
+          if (group.ListData) {
+            group.ListData.forEach(item => {
+              if (item.ListCareVehicle && Array.isArray(item.ListCareVehicle)) {
+                item.ListCareVehicle = [...new Set(item.ListCareVehicle)];
+              }
+            });
+          }
+          return group;
+        });
         this.openSet.clear();
         this.listRetailMaster.forEach((_, index) => {
           this.openSet.add(index);
