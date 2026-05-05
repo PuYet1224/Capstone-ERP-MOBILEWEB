@@ -255,6 +255,11 @@ export class Mtb022DocumentReceiptDetailComponent {
       return;
     }
 
+    if (isOpen && this.orderInfo.CurrentReceiptAmount > 0 && this.receipt.CollectedAmount <= this.orderInfo.CurrentReceiptAmount) {
+      this.notification.onWarning(`Số tiền phải lớn hơn số tiền thu ban đầu ${PsString.formatPrice(this.orderInfo.CurrentReceiptAmount)}`);
+      return;
+    }
+
     if (isOpen && (!this.receipt.Signature || PsString.isNullOrWhitespace(this.receipt.Signature))) {
       this.notification.onWarning("Vui lòng ký tên");
       return;

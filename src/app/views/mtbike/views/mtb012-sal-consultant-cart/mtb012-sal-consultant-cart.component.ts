@@ -38,7 +38,7 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     var temp = this.cache.getItem(KeyLocalStorageEnum.SAL_ORDER_MASTER);
     this.retailMaster = this.cache.parseValue(temp);
-    this.typeactive = this.retailMaster.Status != SALOrderMasterStatusRetailEnum.COMPLETE ? 'buy' : 'transfer';
+    this.typeactive = 'buy';
 
     this.GetListSALSelectedVehicle(this.retailMaster);
   }
@@ -51,7 +51,6 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.enableAutoSlide();
-    console.log();
   }
   //#endregion
 
