@@ -16,10 +16,10 @@
                     <span class="filter-label">Tra cứu chứng từ</span>
                     <label class="checkbox-label">
                         <input type="checkbox" [(ngModel)]="includeFinished">
-                        Bao gồm các phiếu đã kết thúc
+                        Bao gồm các chứng từ đã kết thúc
                     </label>
                 </div>
-                <ps-kendo-textbox [placeholder]="'Tên KH, SĐT, mã PBH...'"
+                <ps-kendo-textbox [placeholder]="'Tên KH, SĐT, mã CT...'"
                     [(ngModel)]="searchKeyword" (keyup.enter)="onSearch()">
                 </ps-kendo-textbox>
             </div>
@@ -33,13 +33,14 @@
 
     <!-- START: BODY -->
     <div class="body-list" #bodyList>
-        <div class="pbh-card" *ngFor="let item of displayItems; trackBy: trackByItem">
-            <!-- START: PBH Header -->
-            <div class="pbh-header" (click)="toggleItem(item)">
-                <div class="pbh-title">
-                    <span class="pbh-prefix">PBH:</span>
-                    <span class="pbh-code">{{ item.ID }}</span>
-                    <span class="pbh-receipt-count" *ngIf="item.invoiceCount > 0">
+        <div class="pbh-card" *ngFor="let item of displayItems; trackBy: trackByItem" [class.is-expanded]="item.isExpanded">
+            <div class="pbh-info-card">
+                <!-- START: PBH Header -->
+                <div class="pbh-header" (click)="toggleItem(item)">
+                    <div class="pbh-title">
+                        <span class="pbh-prefix">Mã:</span>
+                        <span class="pbh-code">{{ item.ID }}</span>
+                        <span class="pbh-receipt-count" *ngIf="item.invoiceCount > 0">
                         ({{ item.invoiceCount }} hóa đơn)
                     </span>
                     <span class="pbh-no-invoice" *ngIf="!item.invoiceCount || item.invoiceCount === 0">
@@ -79,6 +80,7 @@
                         </div>
                     </div>
                     <!-- END: PBH Body -->
+            </div>
 
                     <!-- START: INVOICE List Section -->
                     <div class="receipt-section" *ngIf="item.isExpanded">
@@ -135,15 +137,19 @@
                                         {{ getVehicleStatus(inv)?.label }}
                                     </span>
                                 </div>
-                                <span class="r-status-badge" [ngClass]="getInvoiceStatusClass(inv)">
-                                    {{ getInvoiceStatusText(inv) }}
-                                </span>
+                                <div class="r-validation-text" [ngClass]="getInvoiceStatusClass(inv)">
+                                    <span class="material-icons" *ngIf="getInvoiceStatusClass(inv) === 'badge-warning'">error_outline</span>
+                                    <span class="material-icons" *ngIf="getInvoiceStatusClass(inv) === 'badge-primary'">check_circle</span>
+                                    <span class="material-icons" *ngIf="getInvoiceStatusClass(inv) === 'badge-success'">task_alt</span>
+                                    <span class="material-icons" *ngIf="getInvoiceStatusClass(inv) === 'badge-danger'">cancel</span>
+                                    <span>{{ getInvoiceStatusText(inv) }}</span>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Empty invoice state -->
                         <div class="no-invoice-msg" *ngIf="!item.invoices || item.invoices.length === 0">
-                            Chưa có hóa đơn chứng từ. Phiếu thu cần hoàn tất trước.
+                            Chưa có dữ liệu hóa đơn chứng từ.
                         </div>
                     </div>
                     <!-- END: INVOICE List Section -->
@@ -152,7 +158,7 @@
         <!-- Empty state -->
         <div class="empty-state" *ngIf="displayItems.length === 0">
             <span class="material-icons empty-icon">description</span>
-            <span>Không tìm thấy phiếu bán hàng nào</span>
+            <span>Không tìm thấy chứng từ hóa đơn nào</span>
         </div>
     </div>
     <!-- END: BODY -->

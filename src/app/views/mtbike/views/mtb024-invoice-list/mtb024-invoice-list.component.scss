@@ -124,11 +124,26 @@
 
         // ========== PBH CARD ==========
         .pbh-card {
-          background: #e8eaed;
+          background: $white;
           border-radius: 8px;
           overflow: hidden;
           box-shadow: 0 1px 4px rgba($black, 0.08);
+          border: 1px solid $border;
           margin-bottom: 12px;
+          transition: background 0.2s ease;
+
+          &.is-expanded {
+            background: rgba($primary, 0.15);
+            border-color: transparent;
+            box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+          }
+
+          .pbh-info-card {
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none;
+            border: none;
+          }
 
           .pbh-header {
             display: flex;
@@ -218,21 +233,22 @@
 
           // ========== INVOICE SECTION ==========
           .receipt-section {
-            padding: 4px 10px 10px;
+            padding: 0;
             background: transparent;
 
             .receipt-card {
-              padding: 10px 12px;
+              padding: 12px 14px;
               background: $white;
               cursor: pointer;
               display: flex;
               flex-direction: column;
               gap: 6px;
-              border-radius: 6px;
-              margin-top: 6px;
-              border: 1px solid $border;
-              box-shadow: 0 1px 2px rgba($black, 0.04);
-              transition: background 0.15s ease, box-shadow 0.15s ease;
+              border-radius: 0;
+              margin-top: 0;
+              border: none;
+              border-top: 1px solid $border;
+              box-shadow: none;
+              transition: background 0.15s ease;
 
               &:active {
                 background: $hover;
@@ -321,30 +337,31 @@
                   }
                 }
 
-                .r-status-badge {
-                  font-size: 10px;
+                .r-validation-text {
+                  display: flex;
+                  align-items: center;
+                  gap: 4px;
+                  font-size: 11px;
                   font-weight: 600;
-                  padding: 2px 8px;
-                  border-radius: 12px;
+
+                  .material-icons {
+                    font-size: 14px;
+                  }
 
                   &.badge-primary {
-                    background: $primary;
-                    color: $white;
+                    color: $primary;
                   }
 
                   &.badge-warning {
-                    background: $warning;
-                    color: $white;
+                    color: $warning;
                   }
 
                   &.badge-success {
-                    background: $green-500;
-                    color: $white;
+                    color: $green-600;
                   }
 
                   &.badge-danger {
-                    background: $error;
-                    color: $white;
+                    color: $error;
                   }
                 }
 
