@@ -330,11 +330,11 @@ export class Mtb024InvoiceListComponent implements OnInit, OnDestroy {
 
   getInvoiceStatusText(inv: SALOrderInvoiceCusDTO): string {
     if (inv.Status === 134 || inv.Status === 1) {
-      return this.isInfoComplete(inv) ? 'Đủ thông tin' : 'Thiếu thông tin';
+      return this.isInfoComplete(inv) ? 'Hợp lệ' : 'Cần bổ sung';
     }
-    if (inv.Status === 135 || inv.Status === 2) return 'Đã phát hành';
+    if (inv.Status === 135 || inv.Status === 2) return 'Đã xuất HĐ';
     if (inv.Status === 136 || inv.Status === 3) return 'Đã hủy';
-    return inv.StatusName || 'Thiếu thông tin';
+    return inv.StatusName || 'Cần bổ sung';
   }
 
   getInvoiceStatusClass(inv: SALOrderInvoiceCusDTO): string {

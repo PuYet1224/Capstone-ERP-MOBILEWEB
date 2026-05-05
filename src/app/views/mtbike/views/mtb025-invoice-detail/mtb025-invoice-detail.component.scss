@@ -37,12 +37,10 @@
       }
 
       .order-context {
-        margin: 8px 8px 0;
         padding: 12px 14px;
         background: $white;
         border-radius: 10px;
-        border-left: 3px solid $primary;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.03);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
 
         &__row {
           display: flex;
@@ -208,15 +206,6 @@
               align-items: center;
               gap: 6px;
               letter-spacing: 0.2px;
-
-              &::before {
-                content: '';
-                width: 3px;
-                height: 16px;
-                background: $primary;
-                border-radius: 2px;
-                flex-shrink: 0;
-              }
             }
 
             .content {

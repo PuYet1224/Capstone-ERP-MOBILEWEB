@@ -8,29 +8,29 @@
   </ps-header-back>
   <!-- END: HEADER -->
 
-  <!-- START: ORDER CONTEXT -->
-  <div class="order-context" *ngIf="orderInfo.id">
-    <div class="order-context__row">
-      <span class="order-context__label">Phiếu bán hàng:</span>
-      <span class="order-context__value">{{ orderInfo.id }}</span>
-    </div>
-    <div class="order-context__row">
-      <span class="order-context__label">Khách hàng:</span>
-      <span class="order-context__value">{{ orderInfo.customerName }}</span>
-    </div>
-    <div class="order-context__row" *ngIf="orderInfo.vehicleName">
-      <span class="order-context__label">Xe:</span>
-      <span class="order-context__value">{{ orderInfo.vehicleName }}</span>
-    </div>
-    <div class="order-context__row">
-      <span class="order-context__label">Tình trạng:</span>
-      <div [innerHTML]="{ Progress: orderInfo.status, ProgressName: orderInfo.statusName | uppercase } | SALOrderMasterStatusRetail"></div>
-    </div>
-  </div>
-  <!-- END: ORDER CONTEXT -->
   <!-- START: BODY -->
   <div class="customer-body">
     <div class="body-container">
+      <!-- START: ORDER CONTEXT -->
+      <div class="order-context" *ngIf="orderInfo.id">
+        <div class="order-context__row">
+          <span class="order-context__label">Phiếu bán hàng:</span>
+          <span class="order-context__value">{{ orderInfo.id }}</span>
+        </div>
+        <div class="order-context__row">
+          <span class="order-context__label">Khách hàng:</span>
+          <span class="order-context__value">{{ orderInfo.customerName }}</span>
+        </div>
+        <div class="order-context__row" *ngIf="orderInfo.vehicleName">
+          <span class="order-context__label">Xe:</span>
+          <span class="order-context__value">{{ orderInfo.vehicleName }}</span>
+        </div>
+        <div class="order-context__row">
+          <span class="order-context__label">Tình trạng:</span>
+          <div [innerHTML]="{ Progress: orderInfo.status, ProgressName: orderInfo.statusName | uppercase } | SALOrderMasterStatusRetail"></div>
+        </div>
+      </div>
+      <!-- END: ORDER CONTEXT -->
       <!-- START: THÔNG TIN ĐƠN VỊ BÁN -->
       <div class="container-body">
         <div class="title">Thông tin đơn vị bán</div>
