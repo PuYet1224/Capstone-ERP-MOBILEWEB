@@ -712,23 +712,23 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   private syncCustomerToInvoice(): void {
     const changedProps: string[] = [];
 
-    // Sync customer name
+    // Sync customer name — GUARD: never overwrite existing name with empty
     const newName = this.customer.FullName || '';
-    if (this.invoice.VATCustomerName !== newName) {
+    if (newName && this.invoice.VATCustomerName !== newName) {
       this.invoice.VATCustomerName = newName;
       changedProps.push('VATCustomerName');
     }
 
-    // Sync phone
+    // Sync phone — GUARD: never overwrite existing phone with empty
     const newPhone = this.customer.Cellphone1 || '';
-    if (this.invoice.VATCellPhone !== newPhone) {
+    if (newPhone && this.invoice.VATCellPhone !== newPhone) {
       this.invoice.VATCellPhone = newPhone;
       changedProps.push('VATCellPhone');
     }
 
-    // Sync CCCD
+    // Sync CCCD — GUARD: never overwrite existing CCCD with empty
     const newCCCD = this.customer.CitizenCardNo || '';
-    if (this.invoice.VATCCCD !== newCCCD) {
+    if (newCCCD && this.invoice.VATCCCD !== newCCCD) {
       this.invoice.VATCCCD = newCCCD;
       changedProps.push('VATCCCD');
     }
@@ -934,7 +934,8 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         this.pendingSaves.delete(prop);
-        this.notification.onError(`Lỗi kết nối khi cập nhật ${prop}: ${err.message}`);
+        const errMsg = err?.message || err?.statusText || 'Không thể kết nối máy chủ';
+        this.notification.onError(`Lỗi kết nối khi cập nhật ${prop}: ${errMsg}`);
         this.invoice[prop] = previousVal;
       }
     });
@@ -1046,9 +1047,10 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
           this.notification.onError(`Lỗi: ${res.ErrorString}`);
         }
       },
-      error: () => {
+      error: (err) => {
         this.isLoading = false;
-        this.notification.onError('Lỗi kết nối');
+        const errMsg = err?.message || err?.statusText || 'Không thể kết nối máy chủ';
+        this.notification.onError(`Lỗi kết nối: ${errMsg}`);
       }
     });
     this.arrUnsubscribe.push(sub);

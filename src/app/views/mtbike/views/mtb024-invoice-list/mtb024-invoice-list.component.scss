@@ -114,8 +114,11 @@
       // ========== BODY LIST ==========
       .body-list {
         flex: 1;
+        min-height: 0; // Fix: allow flex-shrink — prevents overflow behind footer
         overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
         padding: 12px;
+        padding-bottom: 12px;
         display: flex;
         flex-direction: column;
         gap: 0;
@@ -437,6 +440,7 @@
       // Footer
       ps-footer-action {
         display: block;
+        flex-shrink: 0; // Fix: footer must never shrink — prevents overlap
         width: 100%;
         .footer-action {
           height: 56px;

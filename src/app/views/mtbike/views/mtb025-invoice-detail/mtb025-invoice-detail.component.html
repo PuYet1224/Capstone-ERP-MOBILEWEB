@@ -63,7 +63,7 @@
       <!-- START: TRANSFER BANNER (xe điều chuyển) -->
       <div class="transfer-banner" *ngIf="isTransfer">
         <div class="transfer-banner__icon">
-          <span class="material-icons">local_shipping</span>
+          <span class="material-icons">swap_horiz</span>
         </div>
         <div class="transfer-banner__content">
           <div class="transfer-banner__title">Xe điều chuyển từ {{ transferHeadName }}</div>
@@ -334,14 +334,6 @@
     </ps-kendo-button>
     <ps-kendo-button (onClick)="onApplyToOtherVehicles()">
       <span class="text">Áp dụng cho xe khác</span>
-    </ps-kendo-button>
-    
-    <!-- Nút Tạo phiếu nhập kho (cho xe điều chuyển) -->
-    <ps-kendo-button *ngIf="isTransfer && !isReadOnly" 
-                     [theme]="transferReceiptCode ? 'default' : 'primary'" 
-                     [disabled]="!!transferReceiptCode"
-                     (onClick)="onCreateTransferReceipt()">
-      <span class="text">{{ transferReceiptCode ? 'Đã tạo đơn nhập hàng' : 'Tạo đơn nhập hàng' }}</span>
     </ps-kendo-button>
   </ps-footer-action>
   <!-- END: FOOTER -->
