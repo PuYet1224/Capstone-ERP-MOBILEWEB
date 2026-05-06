@@ -1,4 +1,4 @@
-import { SALOrderInvoiceTypeDataEnum } from "../../enums/e-type/sal-order-invoice-type-data.enum";
+﻿import { SALOrderInvoiceTypeDataEnum } from "../../enums/e-type/sal-order-invoice-type-data.enum";
 import { SALOrderInvoiceVATTypeEnum } from "../../enums/e-type/sal-order-invoice-vat-type.enum";
 
 class SALOrderInvoiceDTO {
@@ -57,3 +57,4 @@ export class SALOrderInvoiceCusDTO extends SALOrderInvoiceDTO {
   CustomerName: string = '';
   VehicleName: string = '';
 }
+
