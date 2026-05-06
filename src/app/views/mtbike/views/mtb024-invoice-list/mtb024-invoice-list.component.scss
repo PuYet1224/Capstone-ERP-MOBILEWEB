@@ -436,6 +436,8 @@
 
       // Footer
       ps-footer-action {
+        display: block;
+        width: 100%;
         .footer-action {
           height: 56px;
           display: flex;

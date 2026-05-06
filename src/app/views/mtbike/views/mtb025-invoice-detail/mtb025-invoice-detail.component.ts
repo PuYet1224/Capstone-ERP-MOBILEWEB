@@ -1,4 +1,4 @@
-﻿import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
@@ -10,6 +10,7 @@ import { SALOrderInvoiceCusDTO } from 'src/app/models/dtos/e-dtos/sal-order-invo
 import { ResponseDTO } from 'src/app/models/dtos/reponse.dto';
 import { ConfigCacheService } from 'src/app/services/core/config-cache.service';
 import { LSListTypeDataEnum } from 'src/app/models/enums/e-type/ls-list-type-data.enum';
+import { HRListTypeDataEnum } from 'src/app/models/enums/e-type/hr-list-type-data.enum';
 import { ListDTO } from 'src/app/models/dtos/e-dtos/list.dto';
 import { PsCache } from 'src/app/services/utilities/ps-cache';
 import { KeyLocalStorageEnum } from 'src/app/models/enums/key-local-storage.enum';
@@ -42,6 +43,12 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
 
   // Options for Dropdown
   public invoiceTypes: ListDTO[] = [];
+  public listGender = [
+    { Code: 1, ListName: 'Nam' },
+    { Code: 2, ListName: 'Nữ' },
+    { Code: 7, ListName: 'Nam' },
+    { Code: 8, ListName: 'Nữ' }
+  ];
 
   // Customer data from CSLoyalCustomer
   public customer: CSLoyalCustomerCusDTO = new CSLoyalCustomerCusDTO();
@@ -53,11 +60,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   public provinceList: LSProvinceDTO[] = [];
   public wardList: LSWardDTO[] = [];
 
-  public readonly listGender = [
-    { Code: 7, ListName: 'Nam' },
-    { Code: 8, ListName: 'Nữ' }
-  ] as const;
-  public currentheader: LSHeadCusDTO = this.configService.GetHead();
+  public currentheader: LSHeadCusDTO;
 
   public orderInfo: { id: string, customerCode?: number, customerName: string, vehicleName: string, totalAmount: number, status?: number, statusName?: string } = { id: '', customerName: '', vehicleName: '', totalAmount: 0 };
 
@@ -67,6 +70,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   public transferHeadName = '';
   public transferReceiptCode: number | null = null;
   public transferReceiptStatus: number | null = null;
+  public transferReceiptStatusLabel = '';
   public orderDetailCode: number | null = null;
 
   constructor(
@@ -83,6 +87,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.currentheader = this.configService.GetHead();
     const cached = this.cache.getItem(KeyLocalStorageEnum.SAL_ORDER_INVOICE);
     if (cached) {
       const invoiceData = this.cache.parseValue(cached) as SALOrderInvoiceCusDTO;
@@ -139,6 +144,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
           const purchaserCode = this.invoice['Customer'];
 
           const purchaserName = this.invoice['CustomerName'];
+          this.detectTransfer(this.invoice);
 
           if (vatCustomerCode) {
             this.loadCustomer(vatCustomerCode);
@@ -146,10 +152,9 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
               this.isSameAsPurchaser = true;
             }
           } else {
-              if (this.invoice.VATCustomerName && purchaserName && this.invoice.VATCustomerName === purchaserName) {
-                this.isSameAsPurchaser = true;
-              } else {
-                this.isSameAsPurchaser = false;
+              this.isSameAsPurchaser = false;
+              if (!this.invoice.VATCCCD && !this.invoice.VATAddress && this.invoice.VATCustomerName === purchaserName) {
+                  this.invoice.VATCustomerName = '';
               }
               // Populate this.customer from invoice fields (VATProvince, VATWard, etc.)
               this.applyCustomerData(new CSLoyalCustomerCusDTO());
@@ -230,7 +235,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     this.customer.Cellphone1 = this.customer.Cellphone1 || this.invoice.VATCellPhone || '';
     
     setTimeout(() => {
-      this.customer.FullName = this.customer.FullName || this.invoice.VATCustomerName || this.invoice['CustomerName'] || '';
+      this.customer.FullName = this.customer.FullName || this.invoice.VATCustomerName || '';
       this.customer.Address = this.customer.Address || this.invoice.VATAddress || '';
       if (!this.customer.Province && this.invoice.VATProvince) {
         this.customer.Province = parseInt(this.invoice.VATProvince, 10);
@@ -527,7 +532,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
               id: order.ID || '',
               customerCode: order.Customer || null,
               customerName: order.CustomerName || '',
-              vehicleName: order.VehicleName || '',
+              vehicleName: (this.invoice['VehicleName'] ? `${this.invoice['VehicleName']} | ${this.invoice['VehicleColorName'] || ''}` : order.VehicleName) || '',
               totalAmount: order.TotalPayment || 0,
               status: order.Status || SALOrderMasterStatusRetailEnum.PENDING,
               statusName: order.StatusName || 'Chờ xử lý'
@@ -543,12 +548,12 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   //#region Vehicle transfer (xe điều chuyển)
   private detectTransfer(data: any): void {
     const headTransfer = data.HeadTransfer;
-    const currentHeadCode = this.currentheader?.Code;
+    const currentHeadCode = this.currentheader?.Head || this.currentheader?.Code;
 
-    if (headTransfer && currentHeadCode && headTransfer !== currentHeadCode) {
+    if (headTransfer && currentHeadCode && String(headTransfer) !== String(currentHeadCode)) {
       this.isTransfer = true;
       this.transferHeadCode = headTransfer;
-      this.orderDetailCode = data.OrderDetailCode || null;
+      this.orderDetailCode = data.OrderDetail || data.OrderDetailCode || null;
       this.transferReceiptCode = data.TransferReceiptCode || null;
       this.transferReceiptStatus = data.TransferReceiptStatus || null;
 
@@ -991,8 +996,63 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   //#region Save / Export
   onSaveForm(): void {
     if (!this.invoice.Code) return;
-    this.syncCustomerToInvoice();
-    this.notification.onSuccess('Đã lưu thông tin chứng từ hóa đơn');
+    
+    // Explicitly call Update API so the user knows it's saving
+    this.isLoading = true;
+    const param: UpdatePropertiesInterface<SALOrderInvoiceCusDTO> = {
+      DTO: this.invoice,
+      Properties: ['VATCustomerName', 'VATCellPhone', 'VATAddress'] // Send some core properties
+    };
+    
+    const sub = this.apiService.UpdateSALInvoice(param).subscribe({
+      next: (res: ResponseDTO) => {
+        this.isLoading = false;
+        if (res.StatusCode === 0) {
+          this.notification.onSuccess('Đã lưu thông tin chứng từ hóa đơn');
+        } else {
+          this.notification.onError(`Lỗi lưu thông tin: ${res.ErrorString}`);
+        }
+      },
+      error: () => {
+        this.isLoading = false;
+        this.notification.onError('Lỗi kết nối khi lưu thông tin');
+      }
+    });
+    this.arrUnsubscribe.push(sub);
+  }
+
+  onCreateTransferReceipt(): void {
+    if (!this.invoice.Code) return;
+    
+    // Validate required fields for transfer
+    if (!this.invoice.VATCustomerName?.trim() || !this.invoice.VATCellPhone?.trim()) {
+      this.notification.onWarning('Vui lòng nhập Tên KH và SĐT để tạo phiếu nhập hàng!');
+      return;
+    }
+
+    this.isLoading = true;
+    // Call UpdateSALInvoice with some dummy properties to trigger BE auto-creation
+    const param: UpdatePropertiesInterface<SALOrderInvoiceCusDTO> = {
+      DTO: this.invoice,
+      Properties: ['VATCustomerName', 'VATCellPhone'] // Forces BE to run update and create receipt
+    };
+    
+    const sub = this.apiService.UpdateSALInvoice(param).subscribe({
+      next: (res: ResponseDTO) => {
+        this.isLoading = false;
+        if (res.StatusCode === 0) {
+          this.notification.onSuccess('Đã yêu cầu tạo phiếu nhập hàng');
+          this.loadInvoice(this.invoice.Code); // Reload to fetch transferReceiptCode
+        } else {
+          this.notification.onError(`Lỗi: ${res.ErrorString}`);
+        }
+      },
+      error: () => {
+        this.isLoading = false;
+        this.notification.onError('Lỗi kết nối');
+      }
+    });
+    this.arrUnsubscribe.push(sub);
   }
 
   onUpdate(): void {
@@ -1068,6 +1128,18 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
         this.notification.onWarning('Số CCCD người đại diện không hợp lệ (tối thiểu 9 số)');
         return;
       }
+      if (!this.invoice.VATBRUName?.trim()) {
+        this.notification.onWarning('Vui lòng nhập tên Người đại diện');
+        return;
+      }
+      if (!this.customer.Province) {
+        this.notification.onWarning('Vui lòng chọn Tỉnh thành');
+        return;
+      }
+      if (!this.customer.Ward) {
+        this.notification.onWarning('Vui lòng chọn Phường xã');
+        return;
+      }
     }
 
     // Sync final data and save — NO PDF export here.
@@ -1129,7 +1201,10 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
         if (res.StatusCode === 0) {
           const all = res.ObjectReturn?.Data ?? res.ObjectReturn ?? [];
           this.siblingInvoices = (all as SALOrderInvoiceCusDTO[])
-            .filter(inv => inv.OrderMaster === this.invoice.OrderMaster && inv.Code !== this.invoice.Code);
+            .filter(inv => inv.OrderMaster === this.invoice.OrderMaster 
+                        && inv.Code !== this.invoice.Code
+                        && inv.Status !== 135
+                        && inv.Status !== SALOrderInvoiceStatusEnum.Success);
           if (this.siblingInvoices.length === 0) {
             this.notification.onWarning('Không có xe khác trong cùng phiếu bán hàng');
             return;
