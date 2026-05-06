@@ -65,6 +65,35 @@
     </ps-dialog-confirm-bottom>
     <!-- END: ISSUE CONFIRM DIALOG -->
 
+    <!-- START: BULK ISSUE CONFIRM DIALOG -->
+    <ps-dialog-confirm-bottom [open]="isOpenedBulkIssueConfirm" [title]="'Phát hành tất cả'" (close)="closeBulkIssueConfirm()">
+        <div psDialogConfirmBottomBody>
+            <div class="confirm-content">
+                <div class="confirm-icon-wrap">
+                    <span class="material-icons confirm-icon">library_books</span>
+                </div>
+                <div class="confirm-msg">
+                    Bạn có chắc muốn <strong>phát hành {{ pendingCount }} hóa đơn</strong> hợp lệ?
+                </div>
+                <div class="confirm-detail">
+                    <div class="confirm-row auto-note">
+                        <span class="material-icons auto-icon">auto_awesome</span>
+                        <span>Số hóa đơn sẽ được cấp tự động cho toàn bộ danh sách</span>
+                    </div>
+                </div>
+                <div class="confirm-warning">
+                    <span class="material-icons">warning_amber</span>
+                    <span>Sau khi phát hành, hóa đơn sẽ không thể chỉnh sửa.</span>
+                </div>
+            </div>
+        </div>
+        <div psDialogConfirmBottomFooter>
+            <ps-kendo-button [theme]="''" (onClick)="closeBulkIssueConfirm()">Hủy</ps-kendo-button>
+            <ps-kendo-button [theme]="'primary'" (onClick)="confirmBulkIssueAll()">Xác nhận phát hành</ps-kendo-button>
+        </div>
+    </ps-dialog-confirm-bottom>
+    <!-- END: BULK ISSUE CONFIRM DIALOG -->
+
     <!-- START: BODY -->
     <div class="body-list" #bodyList>
         <div class="group-section" *ngFor="let group of displayGroups; let gIdx = index; trackBy: trackByGroup">
@@ -114,12 +143,12 @@
                     <!-- START: INVOICE List Section -->
                     <div class="invoice-section" *ngIf="item.isExpanded">
                         <div class="invoice-card" *ngFor="let inv of item.invoices; let i = index; trackBy: trackByInvoice"
-                             [class.issued]="inv.Status === invoiceStatusSuccess">
+                             [class.issued]="isInvoiceSuccess(inv)">
                             <!-- Header: Vehicle + Status -->
                             <div class="inv-header">
                                 <span class="inv-vehicle-name">{{ inv.VehicleName || ('Hóa đơn #' + inv.Code) }}</span>
-                                <span class="inv-status-badge" [ngClass]="getInvoiceStatusClass(inv.Status)">
-                                    {{ getInvoiceStatusLabel(inv.Status) }}
+                                <span class="inv-status-badge" [ngClass]="getInvoiceStatusClass(inv)">
+                                    {{ getInvoiceStatusLabel(inv) }}
                                 </span>
                             </div>
                             <!-- Invoice number (only when assigned) -->
@@ -127,7 +156,7 @@
                                 Số HĐ: <strong>{{ inv.InvoiceNo }}</strong>
                             </div>
                             <!-- Actions: pending -->
-                            <div class="inv-actions" *ngIf="inv.Status !== invoiceStatusSuccess">
+                            <div class="inv-actions" *ngIf="!isInvoiceSuccess(inv)">
                                 <button class="btn-detail" (click)="onNavigateDetail(inv); $event.stopPropagation()">
                                     Xem chi tiết
                                 </button>
@@ -136,18 +165,18 @@
                                 </button>
                             </div>
                             <!-- Actions: issued -->
-                            <div class="inv-actions" *ngIf="inv.Status === invoiceStatusSuccess">
+                            <div class="inv-actions" *ngIf="isInvoiceSuccess(inv)">
                                 <button class="btn-detail" (click)="onNavigateDetail(inv); $event.stopPropagation()">
                                     Xem chi tiết
                                 </button>
                                 <button class="btn-print" (click)="printInvoice(inv); $event.stopPropagation()">
                                     <span class="material-icons" style="font-size: 14px;">receipt</span>
-                                    <span>In HĐĐT</span>
+                                    <span>In hóa đơn</span>
                                 </button>
                                 <span class="issued-label">
                                     Đã phát hành
                                     <span class="issued-date" *ngIf="inv.EffDate">
-                                        ({{ inv.EffDate | date:'dd/MM/yyyy' }})
+                                        ({{ inv.EffDate | date:'dd/MM/yyyy HH:mm' }})
                                     </span>
                                 </span>
                             </div>
@@ -174,7 +203,7 @@
         <ps-kendo-button (onClick)="openFilter(true)">
             <span class="material-icons">search</span>
         </ps-kendo-button>
-        <ps-kendo-button [theme]="'primary'" (onClick)="bulkIssueAll()" *ngIf="pendingCount > 0">
+        <ps-kendo-button [theme]="'primary'" (onClick)="openBulkIssueConfirm()" *ngIf="pendingCount > 0">
             <span class="text">Phát hành tất cả ({{ pendingCount }})</span>
         </ps-kendo-button>
     </ps-footer-action>

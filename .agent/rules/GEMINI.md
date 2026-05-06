@@ -136,3 +136,16 @@ Before ANY new API works on mobile:
 
 > This rule is **P0** -- higher priority than all other instructions.
 > Transparency with the user is non-negotiable.
+
+---
+
+## AUTO-TRIAGE (When no /slash-command is used)
+
+When user sends a message **WITHOUT** a `/slash-command`:
+
+1. Read the `request-triage` skill (`.agent/skills/request-triage/SKILL.md`)
+2. Classify the intent (BUG, NEW_FEATURE, ENHANCE, REVIEW, OPS, CHAT)
+3. For BUG/NEW_FEATURE/ENHANCE/REVIEW: load the appropriate skills and follow the mapped workflow
+4. For OPS/CHAT: respond directly without loading any skill
+
+**Skip triage** if the request is obviously simple (DB query, quick question, config change).

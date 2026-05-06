@@ -1,9 +1,8 @@
 ---
 description: Pre-commit quality check for mobile web code. Use before committing to catch common mistakes. Usage /review
 skills:
-  - fe-mobile-pipeline
-  - clean-code
-  - debug
+  - code-review
+  - coding-standard
 ---
 
 # /review — Mobile Web Code Review

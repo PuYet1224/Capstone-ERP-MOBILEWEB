@@ -12,15 +12,16 @@
     <ps-dialog-confirm-bottom [open]="isOpenedFilter" [title]="'Tìm kiếm chứng từ hóa đơn'" (close)="openFilter($event)">
         <div psDialogConfirmBottomBody>
             <div class="filter-row">
-                <ps-kendo-textbox [label]="'Tra cứu chứng từ'" [placeholder]="'Tên KH, SĐT, mã PBH...'"
+                <div class="filter-label-row">
+                    <span class="filter-label">Tra cứu chứng từ</span>
+                    <label class="checkbox-label">
+                        <input type="checkbox" [(ngModel)]="includeFinished">
+                        Bao gồm các chứng từ đã kết thúc
+                    </label>
+                </div>
+                <ps-kendo-textbox [placeholder]="'Tên KH, SĐT, mã CT...'"
                     [(ngModel)]="searchKeyword" (keyup.enter)="onSearch()">
                 </ps-kendo-textbox>
-            </div>
-            <div class="filter-row">
-                <label class="checkbox-label">
-                    <input type="checkbox" [(ngModel)]="includeFinished">
-                    Bao gồm các phiếu đã kết thúc
-                </label>
             </div>
         </div>
         <div psDialogConfirmBottomFooter>
@@ -32,37 +33,28 @@
 
     <!-- START: BODY -->
     <div class="body-list" #bodyList>
-        <div class="group-section" *ngFor="let group of displayGroups; let gIdx = index; trackBy: trackByGroup">
-            <div class="group-header" (click)="toggleGroup(gIdx)">
-                <div class="group-name">
-                    {{ group.name }} <span class="group-count">({{ group.items.length }})</span>
+        <div class="pbh-card" *ngFor="let item of displayItems; trackBy: trackByItem" [class.is-expanded]="item.isExpanded">
+            <div class="pbh-info-card">
+                <!-- START: PBH Header -->
+                <div class="pbh-header" (click)="toggleItem(item)">
+                    <div class="pbh-title">
+                        <span class="pbh-prefix">Mã:</span>
+                        <span class="pbh-code">{{ item.ID }}</span>
+                        <span class="pbh-receipt-count" *ngIf="item.invoiceCount > 0">
+                        ({{ item.invoiceCount }} hóa đơn)
+                    </span>
+                    <span class="pbh-no-invoice" *ngIf="!item.invoiceCount || item.invoiceCount === 0">
+                        (Chưa có hóa đơn)
+                    </span>
                 </div>
-                <span class="material-icons toggle-icon" [class.rotated]="isGroupOpen(gIdx)">
-                    expand_more
-                </span>
+                <div class="pbh-actions">
+                    <div [innerHTML]="{ Progress: item.Status, ProgressName: item.StatusName | uppercase } | SALOrderMasterStatusRetail"></div>
+                    <span class="material-icons expand-arrow" [class.expanded]="item.isExpanded">
+                        expand_more
+                    </span>
+                </div>
             </div>
-
-            <div class="group-content" *ngIf="isGroupOpen(gIdx)">
-                <div class="pbh-card" *ngFor="let item of group.items; trackBy: trackByItem">
-                    <!-- START: PBH Header -->
-                    <div class="pbh-header" (click)="toggleItem(item)">
-                        <div class="pbh-title">
-                            <span class="pbh-prefix">PBH:</span>
-                            <span class="pbh-code">{{ item.ID }}</span>
-                            <span class="pbh-receipt-count" *ngIf="item.invoiceCount > 0">
-                                ({{ item.invoiceCount }} hóa đơn)
-                            </span>
-                            <span class="pbh-no-invoice" *ngIf="!item.invoiceCount || item.invoiceCount === 0">
-                                (Chưa có hóa đơn)
-                            </span>
-                        </div>
-                        <div class="pbh-actions">
-                            <span class="material-icons expand-arrow" [class.expanded]="item.isExpanded">
-                                expand_more
-                            </span>
-                        </div>
-                    </div>
-                    <!-- END: PBH Header -->
+            <!-- END: PBH Header -->
 
                     <!-- START: PBH Body -->
                     <div class="pbh-body" (click)="toggleItem(item)">
@@ -88,6 +80,7 @@
                         </div>
                     </div>
                     <!-- END: PBH Body -->
+            </div>
 
                     <!-- START: INVOICE List Section -->
                     <div class="receipt-section" *ngIf="item.isExpanded">
@@ -96,35 +89,76 @@
                              (click)="onNavigateDetail(inv)">
                             <!-- Vehicle title -->
                             <div class="r-vehicle-row">
-                                {{ inv.VehicleName || ('Hóa đơn #' + inv.Code) }}
+                                <span class="r-vehicle-name">
+                                    <ng-container *ngIf="inv.InvoiceNo">{{ inv.InvoiceNo }} | </ng-container>
+                                    {{ inv.VehicleName || ('Hóa đơn #' + inv.Code) }}
+                                </span>
                             </div>
-                            <!-- Company info (business/public only) -->
-                            <div class="r-company-row" *ngIf="inv.VATCompanyName && inv.VATType != 1">
-                                {{ inv.VATCompanyName }}
-                                <span class="r-tax-code" *ngIf="inv.VATCompanyTax">MST: {{ inv.VATCompanyTax }}</span>
+                            
+                            <!-- Person info (Cá nhân) -->
+                            <div class="r-owner-row" *ngIf="!inv.VATType || inv.VATType == 1">
+                                <div class="r-owner-item">
+                                    <span class="material-icons">person</span>
+                                    <span *ngIf="inv.VATCustomerName" class="vat-name">{{ inv.VATCustomerName }}</span>
+                                    <span *ngIf="!inv.VATCustomerName" class="vat-name empty">Chưa có thông tin</span>
+                                </div>
+                                <div class="r-owner-item" *ngIf="inv.VATCellPhone">
+                                    <span class="material-icons">call</span>
+                                    <span>{{ inv.VATCellPhone }}</span>
+                                </div>
+                                <div class="r-owner-item vat-seri-item" *ngIf="inv.FrameSeri">
+                                    <span class="material-icons">tag</span>
+                                    <span>SK: {{ inv.FrameSeri }}<ng-container *ngIf="inv.EngineSeri"> - SM: {{ inv.EngineSeri }}</ng-container></span>
+                                </div>
                             </div>
+                            
+                            <!-- Company info (Doanh nghiệp / Đơn vị công) -->
+                            <div class="r-owner-row" *ngIf="inv.VATType == 2 || inv.VATType == 3">
+                                <div class="r-owner-item">
+                                    <span class="material-icons">domain</span>
+                                    <span class="vat-name">{{ inv.VATCompanyName || 'Chưa cập nhật' }}</span>
+                                </div>
+                                <div class="r-owner-item" *ngIf="inv.VATCompanyTax">
+                                    <span class="material-icons">receipt_long</span>
+                                    <span>MST: {{ inv.VATCompanyTax }}</span>
+                                </div>
+                                <div class="r-owner-item vat-seri-item" *ngIf="inv.FrameSeri">
+                                    <span class="material-icons">tag</span>
+                                    <span>SK: {{ inv.FrameSeri }}<ng-container *ngIf="inv.EngineSeri"> - SM: {{ inv.EngineSeri }}</ng-container></span>
+                                </div>
+                            </div>
+                            
                             <!-- Badges -->
                             <div class="r-badges-row">
-                                <span class="r-badge" [ngClass]="getVATTypeBadgeClass(inv.VATType)">{{ getVATTypeLabel(inv.VATType) }}</span>
-                                <span class="r-badge inv-no" *ngIf="inv.InvoiceNo">{{ inv.InvoiceNo }}</span>
-                                <span class="r-status" [class.done]="isInfoComplete(inv)">{{ isInfoComplete(inv) ? 'Hoàn tất' : 'Chưa hoàn tất' }}</span>
+                                <div class="badge-group">
+                                    <span class="r-tax-badge" *ngIf="inv.VAT != null">Thuế: {{ inv.VAT }}%</span>
+                                    <span class="r-type-badge" [ngClass]="getVATTypeBadgeClass(inv.VATType)">{{ getVATTypeLabel(inv.VATType) }}</span>
+                                    <span class="r-vehicle-badge" [ngClass]="getVehicleStatus(inv)?.class" *ngIf="getVehicleStatus(inv)">
+                                        {{ getVehicleStatus(inv)?.label }}
+                                    </span>
+                                </div>
+                                <div class="r-validation-text" [ngClass]="getInvoiceStatusClass(inv)">
+                                    <span class="material-icons" *ngIf="getInvoiceStatusClass(inv) === 'badge-warning'">error_outline</span>
+                                    <span class="material-icons" *ngIf="getInvoiceStatusClass(inv) === 'badge-primary'">check_circle</span>
+                                    <span class="material-icons" *ngIf="getInvoiceStatusClass(inv) === 'badge-success'">task_alt</span>
+                                    <span class="material-icons" *ngIf="getInvoiceStatusClass(inv) === 'badge-danger'">cancel</span>
+                                    <span>{{ getInvoiceStatusText(inv) }}</span>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Empty invoice state -->
                         <div class="no-invoice-msg" *ngIf="!item.invoices || item.invoices.length === 0">
-                            Chưa có hóa đơn chứng từ. Phiếu thu cần hoàn tất trước.
+                            Chưa có dữ liệu hóa đơn chứng từ.
                         </div>
                     </div>
                     <!-- END: INVOICE List Section -->
                 </div>
-            </div>
-        </div>
 
         <!-- Empty state -->
-        <div class="empty-state" *ngIf="displayGroups.length === 0">
+        <div class="empty-state" *ngIf="displayItems.length === 0">
             <span class="material-icons empty-icon">description</span>
-            <span>Không tìm thấy phiếu bán hàng nào</span>
+            <span>Không tìm thấy chứng từ hóa đơn nào</span>
         </div>
     </div>
     <!-- END: BODY -->

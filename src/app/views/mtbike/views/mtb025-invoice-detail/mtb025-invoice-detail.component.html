@@ -5,32 +5,38 @@
       <div class="func-title1">Chứng từ hóa đơn</div>
       <div class="func-title2">Thu thập thông tin khách hàng</div>
     </div>
+    <div class="right-side-badge">
+      <div class="info-status-badge" [ngClass]="isInfoComplete() ? 'status-valid' : 'status-missing'">
+        <span class="material-icons">{{ isInfoComplete() ? 'check_circle' : 'error_outline' }}</span>
+        {{ isInfoComplete() ? 'Hợp lệ' : 'Cần bổ sung' }}
+      </div>
+    </div>
   </ps-header-back>
   <!-- END: HEADER -->
 
-  <!-- START: ORDER CONTEXT -->
-  <div class="order-context" *ngIf="orderInfo.id">
-    <div class="order-context__row">
-      <span class="order-context__label">Phiếu bán hàng:</span>
-      <span class="order-context__value">{{ orderInfo.id }}</span>
-    </div>
-    <div class="order-context__row">
-      <span class="order-context__label">Khách hàng:</span>
-      <span class="order-context__value">{{ orderInfo.customerName }}</span>
-    </div>
-    <div class="order-context__row" *ngIf="orderInfo.vehicleName">
-      <span class="order-context__label">Xe:</span>
-      <span class="order-context__value">{{ orderInfo.vehicleName }}</span>
-    </div>
-    <div class="order-context__row">
-      <span class="order-context__label">Trạng thái:</span>
-      <span class="order-context__badge" [ngClass]="getStatusClass()">{{ getStatusLabel() }}</span>
-    </div>
-  </div>
-  <!-- END: ORDER CONTEXT -->
   <!-- START: BODY -->
   <div class="customer-body">
     <div class="body-container">
+      <!-- START: ORDER CONTEXT -->
+      <div class="order-context" *ngIf="orderInfo.id">
+        <div class="order-context__row">
+          <span class="order-context__label">Phiếu bán hàng:</span>
+          <span class="order-context__value">{{ orderInfo.id }}</span>
+        </div>
+        <div class="order-context__row">
+          <span class="order-context__label">Khách hàng:</span>
+          <span class="order-context__value">{{ orderInfo.customerName }}</span>
+        </div>
+        <div class="order-context__row" *ngIf="orderInfo.vehicleName">
+          <span class="order-context__label">Xe:</span>
+          <span class="order-context__value">{{ orderInfo.vehicleName }}</span>
+        </div>
+        <div class="order-context__row">
+          <span class="order-context__label">Tình trạng:</span>
+          <div [innerHTML]="{ Progress: orderInfo.status, ProgressName: orderInfo.statusName | uppercase } | SALOrderMasterStatusRetail"></div>
+        </div>
+      </div>
+      <!-- END: ORDER CONTEXT -->
       <!-- START: THÔNG TIN ĐƠN VỊ BÁN -->
       <div class="container-body">
         <div class="title">Thông tin đơn vị bán</div>
@@ -54,6 +60,33 @@
       </div>
       <!-- END: THÔNG TIN ĐƠN VỊ BÁN -->
 
+      <!-- START: TRANSFER BANNER (xe điều chuyển) -->
+      <div class="transfer-banner" *ngIf="isTransfer">
+        <div class="transfer-banner__icon">
+          <span class="material-icons">local_shipping</span>
+        </div>
+        <div class="transfer-banner__content">
+          <div class="transfer-banner__title">Xe điều chuyển từ {{ transferHeadName }}</div>
+          <div class="transfer-banner__status" *ngIf="transferReceiptCode">
+            Phiếu nhập: <span class="transfer-badge" [ngClass]="{
+              'status-new': transferReceiptStatus === 1,
+              'status-processing': transferReceiptStatus === 2 || transferReceiptStatus === 3,
+              'status-done': transferReceiptStatus === 4
+            }">{{ transferReceiptStatusLabel }}</span>
+          </div>
+          <div class="transfer-banner__action" *ngIf="!transferReceiptCode">
+            <button class="transfer-btn-create" (click)="onCreateTransferReceipt()">
+              <span class="material-icons">add_circle_outline</span>
+              Tạo phiếu nhập ngay
+            </button>
+          </div>
+        </div>
+        <button class="transfer-banner__refresh" (click)="refreshTransferStatus()" title="Cập nhật">
+          <span class="material-icons">refresh</span>
+        </button>
+      </div>
+      <!-- END: TRANSFER BANNER -->
+
       <!-- START: THÔNG TIN XE (SỐ KHUNG / SỐ MÁY) -->
       <div class="container-body">
         <div class="title">Thông tin xe</div>
@@ -62,12 +95,16 @@
             [label]="'Số khung (*)'"
             [(ngModel)]="invoice.FrameSeri"
             (blur)="onFrameSeriBlur()"
-           [disabled]="isReadOnly"></ps-kendo-textbox>
+           [disabled]="isReadOnly || isTransferSKSMDisabled"></ps-kendo-textbox>
           <ps-kendo-textbox
             [label]="'Số máy (*)'"
             [(ngModel)]="invoice.EngineSeri"
             (blur)="onEngineSeriBlur()"
-           [disabled]="isReadOnly"></ps-kendo-textbox>
+           [disabled]="isReadOnly || isTransferSKSMDisabled"></ps-kendo-textbox>
+          <div class="transfer-sksm-hint" *ngIf="isTransfer">
+            <span class="material-icons">info</span>
+            <span>SK/SM sẽ tự động cập nhật khi phiếu nhập kho hoàn tất</span>
+          </div>
         </div>
       </div>
       <!-- END: THÔNG TIN XE -->
@@ -87,13 +124,22 @@
            [disabled]="isReadOnly">
           </ps-kendo-dropdown-list>
 
+          <ps-kendo-checkbox
+            [label]="'Thông tin xuất hóa đơn giống thông tin người mua xe'"
+            [(ngModel)]="isSameAsPurchaser"
+            (onchecked)="onSameAsPurchaserChange($event)"
+            [disabled]="isReadOnly"
+            [style.margin-bottom.px]="12">
+          </ps-kendo-checkbox>
+
           <!-- CASE: Cá nhân (VATType == 1) -->
           <div class="input-fields personal-case" *ngIf="invoice.VATType == 1">
             <ps-kendo-masked-textbox
               [mask]="'000000000000'"
               [label]="'Số căn cước công dân (*)'"
               [(ngModel)]="invoice.VATCCCD"
-              (blur)="onValueChange('VATCCCD')"
+              (blur)="onValueChange('VATCCCD'); onCustomerSearch('VATCCCD')"
+              (keyup.enter)="onCustomerSearch('VATCCCD')"
              [disabled]="isReadOnly"></ps-kendo-masked-textbox>
             <ps-kendo-masked-textbox
               [mask]="'000000000'"
@@ -180,7 +226,8 @@
               [mask]="'000000000000'"
               [label]="'Số căn cước công dân (*)'"
               [(ngModel)]="invoice.VATCCCD"
-              (blur)="onValueChange('VATCCCD')"
+              (blur)="onValueChange('VATCCCD'); onCustomerSearch('VATCCCD')"
+              (keyup.enter)="onCustomerSearch('VATCCCD')"
              [disabled]="isReadOnly"></ps-kendo-masked-textbox>
 
             <div class="row-flex align-end">
@@ -223,10 +270,10 @@
           </div>
 
           <ps-kendo-textarea
-            [label]="'Địa chỉ (*)'"
+            [label]="'Địa chỉ cụ thể (*)'"
             placeholder="Nhập địa chỉ"
             [(ngModel)]="invoice.VATAddress"
-            (blur)="onValueChange('VATAddress')"
+            (blur)="onVATAddressBlur()"
            [disabled]="isReadOnly">
           </ps-kendo-textarea>
 
@@ -248,7 +295,8 @@
             [mask]="'0000000000'"
             [label]="'Số di động (*)'"
             [(ngModel)]="invoice.VATCellPhone"
-            (blur)="onValueChange('VATCellPhone')"
+            (blur)="onValueChange('VATCellPhone'); onCustomerSearch('VATCellPhone')"
+            (keyup.enter)="onCustomerSearch('VATCellPhone')"
            [disabled]="isReadOnly"></ps-kendo-masked-textbox>
 
           <div class="zalo-group">
@@ -284,11 +332,16 @@
     <ps-kendo-button (onClick)="onBack()">
       <span class="material-icons">arrow_back</span>
     </ps-kendo-button>
-    <ps-kendo-button *ngIf="!isReadOnly" (onClick)="onApplyToOtherVehicles()">
+    <ps-kendo-button (onClick)="onApplyToOtherVehicles()">
       <span class="text">Áp dụng cho xe khác</span>
     </ps-kendo-button>
-    <ps-kendo-button *ngIf="!isReadOnly" [theme]="'primary'" (onClick)="onUpdate()">
-      <span class="text">Lưu thông tin</span>
+    
+    <!-- Nút Tạo phiếu nhập kho (cho xe điều chuyển) -->
+    <ps-kendo-button *ngIf="isTransfer && !isReadOnly" 
+                     [theme]="transferReceiptCode ? 'default' : 'primary'" 
+                     [disabled]="!!transferReceiptCode"
+                     (onClick)="onCreateTransferReceipt()">
+      <span class="text">{{ transferReceiptCode ? 'Đã tạo đơn nhập hàng' : 'Tạo đơn nhập hàng' }}</span>
     </ps-kendo-button>
   </ps-footer-action>
   <!-- END: FOOTER -->
@@ -337,4 +390,5 @@
     <kendo-loader type="converging-dots" themeColor="primary" size="large"></kendo-loader>
   </div>
 </div>
+
 

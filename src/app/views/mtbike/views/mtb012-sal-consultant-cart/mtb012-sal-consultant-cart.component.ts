@@ -38,7 +38,7 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     var temp = this.cache.getItem(KeyLocalStorageEnum.SAL_ORDER_MASTER);
     this.retailMaster = this.cache.parseValue(temp);
-    this.typeactive = this.retailMaster.Status != SALOrderMasterStatusRetailEnum.COMPLETE ? 'buy' : 'transfer';
+    this.typeactive = 'buy';
 
     this.GetListSALSelectedVehicle(this.retailMaster);
   }
@@ -51,7 +51,6 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.enableAutoSlide();
-    console.log();
   }
   //#endregion
 
@@ -177,10 +176,15 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   }
 
   onConfirmDelete(item: LSVehicleColorCusDTO, type: string) {
+    if (item.IsOrderLock && (type == 'delete-all' || item.OrderQuantity == 1)) {
+      this.notification.onWarning('Không thể xóa xe đã chốt');
+      return;
+    }
     const param: LSVehicleColorCusDTO = new LSVehicleColorCusDTO();
     param.Master = this.retailMaster.Code;
     param.Code = item.Code;
     param.OrderTypeData = item.OrderTypeData;
+    param.IsOrderLock = item.IsOrderLock;
     if (type == 'delete-all') {
       param.OrderQuantity = item.OrderQuantity;
     } else {
@@ -233,7 +237,6 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   }
 
   public onAddVehicle(item: LSVehicleColorCusDTO) {
-    if (item.IsOrderLock) return;
     const currentHeadStock = item.ListStock[0].Quantity || 0;
     const otherHeadStock = item.ListStock[1].Quantity || 0;
 
@@ -254,7 +257,7 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
       x.Code === item.Code && x.OrderTypeData === targetType
     );
 
-    const param = this.createVehicleParam(item, 1, targetType);
+    const param = this.createVehicleParam(item, 1, targetType, item.IsOrderLock);
 
     if (targetType !== 1 && !isExistTargetType) {
       this.stockConfirmMessage = message;
@@ -270,13 +273,17 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
   public pendingStockParam: LSVehicleColorCusDTO | null = null;
 
   public onAddMultiVehicle(item: LSVehicleColorCusDTO) {
-    if (item.IsOrderLock) return;
     if (this.oldOrderQuantity === item.OrderQuantity) return;
 
+    if (item.IsOrderLock && (item.OrderQuantity == 0 || !item.OrderQuantity)) {
+      this.notification.onWarning('Không thể xóa xe đã chốt');
+      item.OrderQuantity = this.oldOrderQuantity;
+      return;
+    }
     const diff = item.OrderQuantity - this.oldOrderQuantity;
 
     if (diff < 0) {
-      const param = this.createVehicleParam(item, Math.abs(diff), item.OrderTypeData);
+      const param = this.createVehicleParam(item, Math.abs(diff), item.OrderTypeData, item.IsOrderLock);
       this.DeleteSALSelectedVehicles(param);
       return;
     }
@@ -301,7 +308,7 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
       x.Code === item.Code && x.OrderTypeData === targetType
     );
 
-    const param = this.createVehicleParam(item, diff, targetType);
+    const param = this.createVehicleParam(item, diff, targetType, item.IsOrderLock);
 
     if (targetType !== SALOrderDetailTypeDataEnum.BUY && !isExistTargetType) {
       this.stockConfirmMessage = message;
@@ -312,12 +319,13 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
     }
   }
 
-  private createVehicleParam(item: any, qty: number, typeData: number): LSVehicleColorCusDTO {
+  private createVehicleParam(item: any, qty: number, typeData: number, isLock: boolean): LSVehicleColorCusDTO {
     const param = new LSVehicleColorCusDTO();
     param.Master = this.retailMaster.Code;
     param.Code = item.Code;
     param.OrderQuantity = qty;
     param.OrderTypeData = typeData;
+    param.IsOrderLock = isLock;
     return param;
   }
 

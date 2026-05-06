@@ -286,7 +286,7 @@ export class Mtb023DocumentReceiptUpdateComponent implements OnInit, OnDestroy {
         const serverReceipt = Object.assign(new SALOrderReceiptCusDTO(), receiptData);
         this.receipt = {
           ...serverReceipt,
-          CollectedAmount: serverReceipt.CollectedAmount,
+          CollectedAmount: this.receipt.CollectedAmount || serverReceipt.CollectedAmount,
           CashAmount: this.receipt.CashAmount,
           TransferAmount: this.receipt.TransferAmount,
           PaymentMethod: this.receipt.PaymentMethod,

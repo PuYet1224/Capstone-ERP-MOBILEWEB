@@ -1,33 +1,23 @@
-@import "../../../../../assets/scss/colors";
+@import '../../../../../assets/scss/colors';
 
-::ng-deep
-{
-  body:has(sys001-login)
-  {
+::ng-deep {
+  body:has(sys001-login) {
     background-color: $white;
 
-    .background-cus
-    {
-      .elementor:first-child
-      {
+    .background-cus {
+      .elementor:first-child {
         top: 25% !important;
       }
 
-      .group-bg
-      {
+      .group-bg {
         display: none;
       }
 
-      .elementor
-      {
-        .elementor-section
-        {
-          .elementor-shape
-          {
-            svg
-            {
-              path
-              {
+      .elementor {
+        .elementor-section {
+          .elementor-shape {
+            svg {
+              path {
                 fill: $white !important;
               }
             }
@@ -37,37 +27,29 @@
     }
   }
 
-  sys001-login
-  {
-    .auth-layout
-    {
+  sys001-login {
+    .auth-layout {
       height: 100%;
       width: 100vw;
 
-      .header
-      {
+      .header {
         height: 25%;
         width: 100%;
         position: relative;
 
-        .owl-stage-outer
-        {
+        .owl-stage-outer {
           height: 100% !important;
 
-          .owl-stage
-          {
+          .owl-stage {
             height: 100%;
 
-            .owl-item
-            {
+            .owl-item {
               height: 100%;
 
-              .item
-              {
+              .item {
                 height: 100%;
 
-                img
-                {
+                img {
                   height: 100%;
                 }
               }
@@ -75,25 +57,20 @@
           }
         }
 
-        .owl-dots
-        {
+        .owl-dots {
           position: absolute;
           top: 85%;
           left: calc(50% - 38px);
 
-          .owl-dot
-          {
-            span
-            {
+          .owl-dot {
+            span {
               width: 5px;
               height: 5px;
               background-color: rgba(255, 255, 255, 0.5);
             }
 
-            &.active
-            {
-              span
-              {
+            &.active {
+              span {
                 background-color: $white;
                 width: 25px;
               }
@@ -102,8 +79,7 @@
         }
       }
 
-      .body
-      {
+      .body {
         height: calc(75% - 32px);
         width: 100%;
         display: flex;
@@ -111,57 +87,64 @@
         justify-content: center;
         padding: 0 10%;
 
-        .form-header
-        {
+        .form-header {
           width: 100%;
-          height: 20%;
+          height: 25%;
           display: flex;
           justify-content: center;
-
-          img
-          {
-            height: 100%;
+          align-items: center;
+          flex-direction: column;
+          span {
+            padding: 16px;
+            border: 1px solid $primary;
+            border-radius: 12px;
+            color: $primary;
+            background: rgba(18, 100, 51, 0.08);
+            border: 1.5px solid rgba(18, 100, 51, 0.25);
+            margin-bottom: 4px;
+            font-size: 35px;
+          }
+          .title {
+            font-size: 16px;
+            font-weight: bold;
+            color: $primary;
+          }
+          .subtitle {
+            font-size: 9px;
           }
         }
 
-        form
-        {
+        form {
           display: flex;
           flex-direction: column;
           width: 100%;
 
-          .k-textbox
-          {
+          .k-textbox {
             height: 50px;
             border: none;
             border-bottom: 1px solid $border;
             border-radius: 0;
             opacity: 1;
 
-            &.hasPrefix
-            {
+            &.hasPrefix {
               padding-left: 0;
             }
 
             &.k-input-solid.k-focus,
             &.k-forcus,
             &:focus-within,
-            &:hover
-            {
+            &:hover {
               box-shadow: none !important;
               border-color: $primary;
             }
 
-            &.k-disabled
-            {
+            &.k-disabled {
               opacity: 1;
               background-color: $disable-input;
             }
 
-            .k-input-inner
-            {
-              &::placeholder
-              {
+            .k-input-inner {
+              &::placeholder {
                 font-style: italic;
                 color: $placeholder;
               }
@@ -172,24 +155,19 @@
               padding: 0;
             }
 
-            .k-input-suffix
-            {
-              .k-button
-              {
+            .k-input-suffix {
+              .k-button {
                 height: 50px;
 
-                .k-button-icon
-                {
-                  .k-button-icon
-                  {
+                .k-button-icon {
+                  .k-button-icon {
                     color: $secondary;
                     font-size: 18px;
                   }
                 }
 
                 &.k-focus,
-                &.k-button-clear-base:focus::after
-                {
+                &.k-button-clear-base:focus::after {
                   background-color: $white !important;
                 }
               }
@@ -197,19 +175,16 @@
           }
 
           ps-kendo-button,
-          ps-kendo-button button
-          {
+          ps-kendo-button button {
             width: 100%;
             height: 50px;
           }
 
-          ps-kendo-button
-          {
+          ps-kendo-button {
             margin-top: 20px;
           }
         }
       }
     }
   }
-
 }

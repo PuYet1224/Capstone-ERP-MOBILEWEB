@@ -24,11 +24,10 @@
         <div class="list">
             <div class="item" *ngFor="let item of listHead; let i = index" [class.highlight]="i % 2" (click)="selectHead(item)">
                 <div class="image">
-                    <img src="../../../assets/images/logos/hoaiminh-logo.png" alt="">
+                      <span class="material-icons">two_wheeler</span>
                 </div>
                 <div class="group-name">
-                    <div class="short-name playfair-display">{{item.HeadName}}</div>
-                    <div class="name">{{item.TradeName}}</div>
+                    <div class="short-name">{{item.HeadName}}</div>
                 </div>
             </div>
         </div>
