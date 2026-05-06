@@ -75,10 +75,7 @@
             }">{{ transferReceiptStatusLabel }}</span>
           </div>
           <div class="transfer-banner__action" *ngIf="!transferReceiptCode">
-            <button class="transfer-btn-create" (click)="onCreateTransferReceipt()">
-              <span class="material-icons">add_circle_outline</span>
-              Tạo phiếu nhập ngay
-            </button>
+            <span class="transfer-badge status-new">Chờ đồng bộ phiếu</span>
           </div>
         </div>
       </div>

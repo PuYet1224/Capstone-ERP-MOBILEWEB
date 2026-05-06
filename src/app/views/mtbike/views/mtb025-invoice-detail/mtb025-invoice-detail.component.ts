@@ -1032,40 +1032,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     this.arrUnsubscribe.push(sub);
   }
 
-  onCreateTransferReceipt(): void {
-    if (!this.invoice.Code) return;
-    
-    // Validate required fields for transfer
-    if (!this.invoice.VATCustomerName?.trim() || !this.invoice.VATCellPhone?.trim()) {
-      this.notification.onWarning('Vui lòng nhập Tên KH và SĐT để tạo phiếu nhập hàng!');
-      return;
-    }
 
-    this.isLoading = true;
-    // Call UpdateSALInvoice with some dummy properties to trigger BE auto-creation
-    const param: UpdatePropertiesInterface<SALOrderInvoiceCusDTO> = {
-      DTO: this.invoice,
-      Properties: ['VATCustomerName', 'VATCellPhone'] // Forces BE to run update and create receipt
-    };
-    
-    const sub = this.apiService.UpdateSALInvoice(param).subscribe({
-      next: (res: ResponseDTO) => {
-        this.isLoading = false;
-        if (res.StatusCode === 0) {
-          this.notification.onSuccess('Đã yêu cầu tạo phiếu nhập hàng');
-          this.loadInvoice(this.invoice.Code); // Reload to fetch transferReceiptCode
-        } else {
-          this.notification.onError(`Lỗi: ${res.ErrorString}`);
-        }
-      },
-      error: (err) => {
-        this.isLoading = false;
-        const errMsg = err?.message || err?.statusText || 'Không thể kết nối máy chủ';
-        this.notification.onError(`Lỗi kết nối: ${errMsg}`);
-      }
-    });
-    this.arrUnsubscribe.push(sub);
-  }
 
   onUpdate(): void {
     // Validate SK/SM (mandatory for all types)
