@@ -1,9 +1,8 @@
 ---
 description: Enhance or improve an existing mobile web feature. Use when user wants to add functionality, improve UX, or optimize an existing screen. Usage /enhance
 skills:
-  - fe-mobile-pipeline
-  - mobile-design
-  - clean-code
+  - coding-standard
+  - code-review
 ---
 
 # /enhance — Improve Existing Mobile Feature

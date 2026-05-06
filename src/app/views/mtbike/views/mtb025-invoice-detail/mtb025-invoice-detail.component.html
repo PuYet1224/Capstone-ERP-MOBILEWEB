@@ -1,9 +1,15 @@
-<div class="mtb025-invoice-detail">
+﻿<div class="mtb025-invoice-detail">
   <!-- START: HEADER -->
   <ps-header-back>
     <div class="left-side">
       <div class="func-title1">Chứng từ hóa đơn</div>
       <div class="func-title2">Thu thập thông tin khách hàng</div>
+    </div>
+    <div class="right-side-badge">
+      <div class="info-status-badge" [ngClass]="isInfoComplete() ? 'status-valid' : 'status-missing'">
+        <span class="material-icons">{{ isInfoComplete() ? 'check_circle' : 'error_outline' }}</span>
+        {{ isInfoComplete() ? 'Hợp lệ' : 'Cần bổ sung' }}
+      </div>
     </div>
   </ps-header-back>
   <!-- END: HEADER -->
@@ -115,13 +121,22 @@
            [disabled]="isReadOnly">
           </ps-kendo-dropdown-list>
 
+          <ps-kendo-checkbox
+            [label]="'Thông tin xuất hóa đơn giống thông tin người mua xe'"
+            [(ngModel)]="isSameAsPurchaser"
+            (onchecked)="onSameAsPurchaserChange($event)"
+            [disabled]="isReadOnly"
+            [style.margin-bottom.px]="12">
+          </ps-kendo-checkbox>
+
           <!-- CASE: Cá nhân (VATType == 1) -->
           <div class="input-fields personal-case" *ngIf="invoice.VATType == 1">
             <ps-kendo-masked-textbox
               [mask]="'000000000000'"
               [label]="'Số căn cước công dân (*)'"
               [(ngModel)]="invoice.VATCCCD"
-              (blur)="onValueChange('VATCCCD')"
+              (blur)="onValueChange('VATCCCD'); onCustomerSearch('VATCCCD')"
+              (keyup.enter)="onCustomerSearch('VATCCCD')"
              [disabled]="isReadOnly"></ps-kendo-masked-textbox>
             <ps-kendo-masked-textbox
               [mask]="'000000000'"
@@ -208,7 +223,8 @@
               [mask]="'000000000000'"
               [label]="'Số căn cước công dân (*)'"
               [(ngModel)]="invoice.VATCCCD"
-              (blur)="onValueChange('VATCCCD')"
+              (blur)="onValueChange('VATCCCD'); onCustomerSearch('VATCCCD')"
+              (keyup.enter)="onCustomerSearch('VATCCCD')"
              [disabled]="isReadOnly"></ps-kendo-masked-textbox>
 
             <div class="row-flex align-end">
@@ -253,8 +269,8 @@
           <ps-kendo-textarea
             [label]="'Địa chỉ cụ thể (*)'"
             placeholder="Nhập địa chỉ"
-            [(ngModel)]="customer.Address"
-            (blur)="onAddressBlur()"
+            [(ngModel)]="invoice.VATAddress"
+            (blur)="onVATAddressBlur()"
            [disabled]="isReadOnly">
           </ps-kendo-textarea>
 
@@ -276,7 +292,8 @@
             [mask]="'0000000000'"
             [label]="'Số di động (*)'"
             [(ngModel)]="invoice.VATCellPhone"
-            (blur)="onValueChange('VATCellPhone')"
+            (blur)="onValueChange('VATCellPhone'); onCustomerSearch('VATCellPhone')"
+            (keyup.enter)="onCustomerSearch('VATCellPhone')"
            [disabled]="isReadOnly"></ps-kendo-masked-textbox>
 
           <div class="zalo-group">
@@ -314,6 +331,9 @@
     </ps-kendo-button>
     <ps-kendo-button *ngIf="!isReadOnly" (onClick)="onApplyToOtherVehicles()">
       <span class="text">Áp dụng cho xe khác</span>
+    </ps-kendo-button>
+    <ps-kendo-button *ngIf="!isReadOnly" [theme]="'primary'" (onClick)="onSaveForm()">
+      <span class="text">Lưu thông tin</span>
     </ps-kendo-button>
   </ps-footer-action>
   <!-- END: FOOTER -->
@@ -362,4 +382,5 @@
     <kendo-loader type="converging-dots" themeColor="primary" size="large"></kendo-loader>
   </div>
 </div>
+
 

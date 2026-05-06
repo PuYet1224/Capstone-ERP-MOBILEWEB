@@ -270,12 +270,14 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
     if (!inv.FrameSeri?.trim() || !inv.EngineSeri?.trim()) return false;
     if (!inv.VATCustomerName?.trim()) return false;
     if (!inv.VATAddress?.trim()) return false;
-    if (inv.VATType === 1) {
+    
+    const vatType = inv.VATType || 1; // Default to Cá nhân
+    if (vatType === 1) {
       const cccd = inv.VATCCCD?.replace(/\D/g, '') || '';
       const phone = inv.VATCellPhone?.replace(/\D/g, '') || '';
       return cccd.length >= 9 && phone.length >= 10;
     }
-    if (inv.VATType === 2 || inv.VATType === 3) {
+    if (vatType === 2 || vatType === 3) {
       return !!(inv.VATCompanyName?.trim() && inv.VATCompanyTax?.trim());
     }
     return false;
