@@ -62,10 +62,6 @@
             border-bottom: 1px solid rgba($border, 0.3);
             border-radius: 10px;
 
-            &.cancelled {
-              border: 1px solid $error;
-            }
-
             .vehicle-img {
               width: 90px;
               height: 80px;
@@ -98,7 +94,6 @@
 
                 &.dashed {
                   text-decoration: line-through;
-                  opacity: 0.6;
                   color: $error;
                 }
               }
@@ -109,7 +104,6 @@
 
                 &.dashed {
                   text-decoration: line-through;
-                  opacity: 0.6;
                   color: $error;
                   strong {
                     color: inherit;
