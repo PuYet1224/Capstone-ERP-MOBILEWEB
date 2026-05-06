@@ -101,9 +101,9 @@
             [(ngModel)]="invoice.EngineSeri"
             (blur)="onEngineSeriBlur()"
            [disabled]="isReadOnly || isTransferSKSMDisabled"></ps-kendo-textbox>
-          <div class="transfer-sksm-hint" *ngIf="isTransferSKSMDisabled">
-            <span class="material-icons">info_outline</span>
-            SK/SM sẽ tự động cập nhật khi phiếu nhập kho hoàn tất
+          <div class="transfer-sksm-hint" *ngIf="isTransfer">
+            <span class="material-icons">info</span>
+            <span>SK/SM sẽ tự động cập nhật khi phiếu nhập kho hoàn tất</span>
           </div>
         </div>
       </div>

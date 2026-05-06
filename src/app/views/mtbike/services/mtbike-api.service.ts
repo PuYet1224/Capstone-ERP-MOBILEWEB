@@ -1857,17 +1857,4 @@ export class MtbikeApiService {
         });
     });
   }
-
-  public CreateTransferReceipt(param: any): Observable<ResponseDTO> {
-    return new Observable<ResponseDTO>((obs) => {
-      this.api.post(MtbikeApiStaticService[this.config.GetDLL()].CreateTransferReceipt, param)
-        .subscribe((res: ResponseDTO) => {
-          obs.next(res);
-          obs.complete();
-        }, (errors) => {
-          obs.error(errors);
-          obs.complete();
-        });
-    });
-  }
 }

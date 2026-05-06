@@ -120,7 +120,6 @@ export const fpayment = {
   GetIOSeriInternal: '',
   GetCustomer: '',
   UpdateLoyalCustomer: '',
-  CreateTransferReceipt: '',
 };
 
 const namespaceMap: Record<string, any> = {

@@ -70,7 +70,6 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   public transferHeadName = '';
   public transferReceiptCode: number | null = null;
   public transferReceiptStatus: number | null = null;
-  public transferReceiptStatusLabel = '';
   public orderDetailCode: number | null = null;
 
   constructor(
