@@ -74,7 +74,7 @@
                 <div class="card-body">
                     <div class="services-header">
                         <div class="header-col col-name">CTKM</div>
-                        <div class="header-col col-percent">%</div>
+                        <!-- <div class="header-col col-percent">%</div> -->
                         <div class="header-col col-cost">Thành tiền</div>
                     </div>
                     <div class="services-list">
@@ -85,16 +85,11 @@
                                                        (onchecked)="onpromotionchecked(promotion)">
                                     </ps-kendo-checkbox>
                                     <div class="group-text">
-                                        <span>{{ i + 1 }}. {{ promotion.InternalName }}</span>
-                                        <div class="sub-title" *ngIf="promotion.TypeData == enumpmttype.PERCENTAGELIMIT">
-                                            (Tối đa
-                                            <span> {{formatprice(promotion.DiscountAmount)}}₫</span>
-                                            )
-                                        </div>
+                                        <span>{{ i + 1 }}. {{ promotion.Name }}</span>
                                     </div>
                                 </div>
 
-                                <div class="promotion-percent">{{promotion.DiscountPercentage }}</div>
+                                <!-- <div class="promotion-percent">{{promotion.DiscountPercentage }}</div> -->
                                 <div class="promotion-cost">{{ formatprice(promotion.Amount) }}₫</div>
                             </label>
                         </div>
