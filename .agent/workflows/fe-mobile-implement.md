@@ -1,9 +1,8 @@
 ---
 description: FE reads FEMobile_Guide.md, reads Figma mobile frames via MCP, and implements mobile web code. Usage /fe-mobile-implement
 skills:
-  - fe-mobile-pipeline
-  - mobile-design
-  - Capstone-domain
+  - coding-standard
+  - figma-reader
 ---
 
 # /fe-mobile-implement — Frontend Mobile Web Implementation
@@ -16,10 +15,11 @@ skills:
 5. Keep analysis in memory — use it throughout implementation
 6. If no designs found → inform user: "Không tìm thấy design reference. Tiếp tục từ guide text."
 
-## STEP 1: Read Guide
-- Scan `C:\ai.pipeline\guides\` for `FEMobile_*.md` files — auto-select if only 1
-- Read the selected guide — THIS IS YOUR SOURCE OF TRUTH
-- Identify: components, routes, API endpoints, mobile UX requirements
+## STEP 1: Read SRS / Guide
+- Scan `C:\ai.pipeline\Capstone-ERP-Project\requirements\` for `FE_MOBWEB_*.md` files (SRS)
+- Scan `C:\ai.pipeline\Capstone-ERP-Project\guides\` for `FEMobile_*.md` files
+- Read the selected SRS/guide — THIS IS YOUR SOURCE OF TRUTH
+- Identify: components, routes, API endpoints, mobile UX requirements, and business rules
 
 ## STEP 2: Create Mobile Components
 - Mobile-first layout (375px - 414px viewport)
@@ -47,11 +47,15 @@ skills:
 - Verify touch targets ≥ 44px
 - Check scroll behavior
 
-## STEP 6: Cleanup Reminder
+## STEP 6: Review & Cleanup
 ```
 ✅ Mobile FE implementation complete:
    📄 Created: {list of files}
    🔨 Build: Succeeded
+
+🔍 BƯỚC TIẾP THEO BẮT BUỘC:
+   Hãy nhắc user chạy lệnh: /review
+   Để AI tự động kiểm tra lại code vừa viết xem có sót cleanup / format không.
 
 🧹 Design references còn trong .figma-ref/{feature}/.
    Chạy /clean-designs {feature} để dọn dẹp.

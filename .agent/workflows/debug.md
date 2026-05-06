@@ -2,7 +2,6 @@
 description: Systematic debugging for mobile web. Use when builds break, runtime errors occur, or UI behaves unexpectedly. Usage /debug
 skills:
   - debug
-  - fe-mobile-pipeline
 ---
 
 # /debug — Systematic Bug Fix

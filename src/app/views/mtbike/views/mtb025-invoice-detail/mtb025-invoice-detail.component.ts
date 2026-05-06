@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+﻿import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
@@ -46,6 +46,8 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   // Customer data from CSLoyalCustomer
   public customer: CSLoyalCustomerCusDTO = new CSLoyalCustomerCusDTO();
   private customerCopy: CSLoyalCustomerCusDTO = new CSLoyalCustomerCusDTO();
+  public purchaserCustomer: CSLoyalCustomerCusDTO | null = null;
+  public isSameAsPurchaser = false;
 
   // Province / Ward cascade (Ward API accepts Province Code internally)
   public provinceList: LSProvinceDTO[] = [];
@@ -57,7 +59,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   ] as const;
   public currentheader: LSHeadCusDTO = this.configService.GetHead();
 
-  public orderInfo: { id: string, customerName: string, vehicleName: string, totalAmount: number, status?: number, statusName?: string } = { id: '', customerName: '', vehicleName: '', totalAmount: 0 };
+  public orderInfo: { id: string, customerCode?: number, customerName: string, vehicleName: string, totalAmount: number, status?: number, statusName?: string } = { id: '', customerName: '', vehicleName: '', totalAmount: 0 };
 
   // Vehicle transfer (xe điều chuyển)
   public isTransfer = false;
@@ -133,12 +135,24 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
             this.invoice.VATType = this.invoiceTypes[0].TypeOfList;
             this.invoiceCopy.VATType = this.invoiceTypes[0].TypeOfList;
           }
-          // Load customer: try VATCustomer, then Customer from JOIN, then fallback to OrderMaster lookup
-          const customerCode = this.invoice.VATCustomer || this.invoice['Customer'];
-          if (customerCode) {
-            this.loadCustomer(customerCode);
-          } else if (this.invoice.OrderMaster || this.invoice['OrderMaster']) {
-            this.loadCustomerFromOrder(this.invoice.OrderMaster || this.invoice['OrderMaster']);
+          const vatCustomerCode = this.invoice.VATCustomer;
+          const purchaserCode = this.invoice['Customer'];
+
+          const purchaserName = this.invoice['CustomerName'];
+
+          if (vatCustomerCode) {
+            this.loadCustomer(vatCustomerCode);
+            if (purchaserCode && vatCustomerCode === purchaserCode) {
+              this.isSameAsPurchaser = true;
+            }
+          } else {
+              if (this.invoice.VATCustomerName && purchaserName && this.invoice.VATCustomerName === purchaserName) {
+                this.isSameAsPurchaser = true;
+              } else {
+                this.isSameAsPurchaser = false;
+              }
+              // Populate this.customer from invoice fields (VATProvince, VATWard, etc.)
+              this.applyCustomerData(new CSLoyalCustomerCusDTO());
           }
           this.loadOrderInfo();
 
@@ -214,49 +228,52 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     this.customer.CitizenCardNo = this.customer.CitizenCardNo || this.invoice.VATCCCD || '';
     this.customer.CardNo = this.customer.CardNo || this.invoice.VATCMND || '';
     this.customer.Cellphone1 = this.customer.Cellphone1 || this.invoice.VATCellPhone || '';
-    this.customer.FullName = this.customer.FullName || this.invoice.VATCustomerName || this.invoice['CustomerName'] || '';
-    this.customer.Address = this.customer.Address || this.invoice.VATAddress || '';
-    if (!this.customer.Province && this.invoice.VATProvince) {
-      this.customer.Province = parseInt(this.invoice.VATProvince, 10);
-    }
-    if (!this.customer.Ward && this.invoice.VATWard) {
-      this.customer.Ward = parseInt(this.invoice.VATWard, 10);
-    }
-    if (!this.customer.Gender && this.invoice.VATGender) {
-      this.customer.Gender = this.invoice.VATGender;
-    }
-    if (this.customer.IsCellPhone == null && this.invoice.VATIsSamePhone != null) {
-      this.customer.IsCellPhone = this.invoice.VATIsSamePhone;
-    }
+    
+    setTimeout(() => {
+      this.customer.FullName = this.customer.FullName || this.invoice.VATCustomerName || this.invoice['CustomerName'] || '';
+      this.customer.Address = this.customer.Address || this.invoice.VATAddress || '';
+      if (!this.customer.Province && this.invoice.VATProvince) {
+        this.customer.Province = parseInt(this.invoice.VATProvince, 10);
+      }
+      if (!this.customer.Ward && this.invoice.VATWard) {
+        this.customer.Ward = parseInt(this.invoice.VATWard, 10);
+      }
+      if (!this.customer.Gender && this.invoice.VATGender) {
+        this.customer.Gender = this.invoice.VATGender;
+      }
+      if (this.customer.IsCellPhone == null && this.invoice.VATIsSamePhone != null) {
+        this.customer.IsCellPhone = this.invoice.VATIsSamePhone;
+      }
 
-    this.customerCopy = { ...this.customer };
-    // Link customer to invoice (just set value — do NOT call update API during load)
-    if (this.customer.Code && !this.invoice.VATCustomer) {
-      this.invoice.VATCustomer = this.customer.Code;
-      this.invoiceCopy.VATCustomer = this.customer.Code;
-    }
+      this.customerCopy = { ...this.customer };
+      // Link customer to invoice (just set value — do NOT call update API during load)
+      if (this.customer.Code && !this.invoice.VATCustomer) {
+        this.invoice.VATCustomer = this.customer.Code;
+        this.invoiceCopy.VATCustomer = this.customer.Code;
+      }
 
-    // Resolve Province/Ward from dropdowns or parse from address text
-    if (this.customer.Province && this.provinceList.length > 0) {
-      // Province already set (from DB or VATProvince) → load ward list
-      this.loadWards(this.customer.Province, () => {
-        // Auto-match ward from address text if ward not yet set
-        if (!this.customer.Ward && this.customer.Address) {
-          this.customer.Ward = this.matchWardFromAddress(this.customer.Address);
-        }
-        // Strip geo names from street address
-        this.customer.Address = this.stripGeoFromAddress(this.customer.Address);
-        this.customerCopy = { ...this.customer };
+      // Resolve Province/Ward from dropdowns or parse from address text
+      if (this.customer.Province && this.provinceList.length > 0) {
+        // Province already set (from DB or VATProvince) → load ward list
+        this.loadWards(this.customer.Province, () => {
+          // Auto-match ward from address text if ward not yet set
+          if (!this.customer.Ward && this.customer.Address) {
+            this.customer.Ward = this.matchWardFromAddress(this.customer.Address);
+          }
+          // Strip geo names from street address
+          this.customer.Address = this.stripGeoFromAddress(this.customer.Address);
+          this.customerCopy = { ...this.customer };
+          this.syncCustomerToInvoice();
+          this.cdr.detectChanges();
+        });
+      } else if (this.customer.Address && this.provinceList.length > 0) {
+        // No Province set but has address text → try parse
+        this.parseAddressToDropdowns(this.customer.Address);
+      } else {
         this.syncCustomerToInvoice();
         this.cdr.detectChanges();
-      });
-    } else if (this.customer.Address && this.provinceList.length > 0) {
-      // No Province set but has address text → try parse
-      this.parseAddressToDropdowns(this.customer.Address);
-    } else {
-      this.syncCustomerToInvoice();
-      this.cdr.detectChanges();
-    }
+      }
+    }, 50);
   }
 
   /**
@@ -269,13 +286,13 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     let street = fullAddress;
 
     // Remove province name (try full name first, then core name without prefix)
-    const province = this.provinceList.find(p => p.Code === this.customer.Province);
+    const province = this.provinceList.find(p => p.Code == this.customer.Province);
     if (province) {
       street = this.removeGeoName(street, province.VNProvince);
     }
 
     // Remove ward name
-    const ward = this.wardList.find(w => w.Code === this.customer.Ward);
+    const ward = this.wardList.find(w => w.Code == this.customer.Ward);
     if (ward) {
       street = this.removeGeoName(street, ward.VNWard);
     }
@@ -289,16 +306,16 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
    * (Tỉnh/Thành phố/Huyện/Quận/Thị xã/Xã/Phường/Thị trấn).
    */
   private removeGeoName(address: string, geoName: string): string {
-    const esc = this.escapeRegex(geoName);
-    // Try removing full name (e.g., "Tỉnh Hưng Yên")
-    let result = address.replace(new RegExp(`,?\\s*${esc}\\s*$`, 'i'), '');
-    if (result !== address) return result;
-
-    // Try removing just the core name without prefix
-    const coreName = this.stripGeoPrefix(geoName);
-    if (coreName !== geoName) {
-      const coreEsc = this.escapeRegex(coreName);
-      result = address.replace(new RegExp(`,?\\s*${coreEsc}\\s*$`, 'i'), '');
+    const coreName = this.stripGeoPrefix(geoName.trim());
+    const coreEsc = this.escapeRegex(coreName);
+    
+    // Look for the prefix optional + coreName at the end or anywhere
+    // e.g. ", Tỉnh Tuyên Quang", ", Tuyên Quang"
+    let result = address.replace(new RegExp(`(,\\s*)?(Tỉnh\\s+|Thành phố\\s+|Huyện\\s+|Quận\\s+|Thị xã\\s+|Xã\\s+|Phường\\s+|Thị trấn\\s+)?${coreEsc}\\s*$`, 'i'), '');
+    
+    // If not found at the very end, try anywhere
+    if (result === address) {
+      result = address.replace(new RegExp(`(,\\s*)?(Tỉnh\\s+|Thành phố\\s+|Huyện\\s+|Quận\\s+|Thị xã\\s+|Xã\\s+|Phường\\s+|Thị trấn\\s+)?${coreEsc}(,|\\s*$)`, 'i'), '');
     }
     return result;
   }
@@ -325,12 +342,12 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     const lowerAddress = fullAddress.toLowerCase();
 
     // 1st pass: exact full name match (e.g., "Xã Cương Chính" in address)
-    let matched = this.wardList.find(w => lowerAddress.includes(w.VNWard.toLowerCase()));
+    let matched = this.wardList.find(w => w.VNWard && lowerAddress.includes(w.VNWard.trim().toLowerCase()));
     if (matched) return matched.Code;
 
     // 2nd pass: match core name without prefix (e.g., "Cương Chính" in address)
     matched = this.wardList.find(w => {
-      const coreName = this.stripGeoPrefix(w.VNWard).toLowerCase();
+      const coreName = this.stripGeoPrefix(w.VNWard.trim()).toLowerCase();
       return coreName.length >= 3 && lowerAddress.includes(coreName);
     });
     return matched ? matched.Code : null;
@@ -340,21 +357,26 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
    * Parse a full address text to auto-fill Province + Ward dropdowns.
    * After matching, strip geo parts so customer.Address = street only.
    */
-  private parseAddressToDropdowns(fullAddress: string): void {
+  private parseAddressToDropdowns(fullAddress: string, updateApi: boolean = false): void {
     if (!fullAddress) return;
 
     // Find Province by matching name in address text (try core name too)
     const lowerAddress = fullAddress.toLowerCase();
-    let matchedProv = this.provinceList.find(p => lowerAddress.includes(p.VNProvince.toLowerCase()));
+    let matchedProv = this.provinceList.find(p => p.VNProvince && lowerAddress.includes(p.VNProvince.trim().toLowerCase()));
     if (!matchedProv) {
       // Try core name without prefix ("Hưng Yên" instead of "Tỉnh Hưng Yên")
       matchedProv = this.provinceList.find(p => {
-        const core = this.stripGeoPrefix(p.VNProvince).toLowerCase();
+        if (!p.VNProvince) return false;
+        const core = this.stripGeoPrefix(p.VNProvince.trim()).toLowerCase();
         return core.length >= 3 && lowerAddress.includes(core);
       });
     }
     if (!matchedProv) {
+      this.customer.Address = fullAddress;
       this.syncCustomerToInvoice();
+      if (updateApi && this.customer.Address !== this.customerCopy.Address) {
+        this.onCustomerChange('Address');
+      }
       this.cdr.detectChanges();
       return;
     }
@@ -365,39 +387,112 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
       this.customer.Ward = this.matchWardFromAddress(fullAddress);
       // Strip geo parts from address, keep only street
       this.customer.Address = this.stripGeoFromAddress(fullAddress);
+      
+      if (updateApi) {
+        if (this.customer.Province !== this.customerCopy.Province) this.onCustomerChange('Province');
+        if (this.customer.Ward !== this.customerCopy.Ward) this.onCustomerChange('Ward');
+        if (this.customer.Address !== this.customerCopy.Address) this.onCustomerChange('Address');
+      }
+      
       this.customerCopy = { ...this.customer };
       this.syncCustomerToInvoice();
       this.cdr.detectChanges();
     });
   }
 
-  onCCCDBlur(): void {
-    const cccd = this.customer.CitizenCardNo?.trim();
-    if (!cccd) return;
-    // Same value, skip
-    if (cccd === this.customerCopy.CitizenCardNo) return;
-
-    // Customer already loaded from order → just update CitizenCardNo on existing customer
-    if (this.customer.Code) {
-      this.onCustomerChange('CitizenCardNo');
-      return;
+  onSameAsPurchaserChange(isChecked: boolean): void {
+    this.isSameAsPurchaser = isChecked;
+    if (isChecked) {
+      if (this.purchaserCustomer) {
+        this.applyCustomerData({ ...this.purchaserCustomer });
+        this.notification.onSuccess('Đã lấy thông tin người mua xe');
+      } else {
+        const purchaserCode = this.invoice['Customer'] || this.orderInfo?.customerCode;
+        if (purchaserCode) {
+          this.isLoading = true;
+          const param = new CSLoyalCustomerCusDTO();
+          param.Code = purchaserCode;
+          const sub = this.apiService.GetCustomer(param).subscribe({
+            next: (res: ResponseDTO) => {
+              if (res.StatusCode === 0 && res.ObjectReturn && res.ObjectReturn.Code) {
+                this.purchaserCustomer = res.ObjectReturn;
+                this.applyCustomerData({ ...this.purchaserCustomer });
+                this.notification.onSuccess('Đã lấy thông tin người mua xe');
+              } else {
+                this.notification.onWarning('Không có thông tin người mua xe');
+                this.isSameAsPurchaser = false;
+              }
+              this.isLoading = false;
+            },
+            error: () => {
+              this.notification.onWarning('Lỗi khi lấy thông tin người mua xe');
+              this.isSameAsPurchaser = false;
+              this.isLoading = false;
+            }
+          });
+          this.arrUnsubscribe.push(sub);
+        } else {
+          this.notification.onWarning('Không có thông tin người mua xe');
+          this.isSameAsPurchaser = false;
+        }
+      }
+    } else {
+      this.resetInvoiceFields(false);
     }
+  }
 
-    // No customer loaded yet → search by CCCD to find existing customer
+  private resetInvoiceFields(silent: boolean = false): void {
+    this.customer = new CSLoyalCustomerCusDTO();
+    this.customerCopy = new CSLoyalCustomerCusDTO();
+
+    this.invoice.VATCustomer = null;
+    this.invoiceCopy.VATCustomer = null;
+    this.invoice.VATCustomerName = '';
+    this.invoice.VATCCCD = '';
+    this.invoice.VATCMND = '';
+    this.invoice.VATAddress = '';
+    this.invoice.VATProvince = '';
+    this.invoice.VATWard = '';
+    this.invoice.VATCellPhone = '';
+    this.invoice.VATEmail = '';
+    this.invoice.VATZalo = '';
+    this.invoice.VATGender = null;
+    this.invoice.VATIsSamePhone = false;
+    this.invoice.VATCompanyTax = '';
+    this.invoice.VATCompanyName = '';
+    this.invoice.VATBRUName = '';
+
+    this.invoiceCopy = { ...this.invoice };
+    
+    if (!silent) {
+      this.syncCustomerToInvoice();
+    }
+  }
+
+  onCustomerSearch(type: 'VATCCCD' | 'VATCellPhone'): void {
+    if (this.isSameAsPurchaser) return;
+
+    let value = '';
     const param = new CSLoyalCustomerCusDTO();
-    param.CitizenCardNo = cccd;
+
+    if (type === 'VATCCCD') {
+      value = this.invoice.VATCCCD?.replace(/\D/g, '') || '';
+      if (value.length < 9) return;
+      if (value === this.invoiceCopy.VATCCCD?.replace(/\D/g, '')) return;
+      param.CitizenCardNo = value;
+    } else if (type === 'VATCellPhone') {
+      value = this.invoice.VATCellPhone?.replace(/\D/g, '') || '';
+      if (value.length < 10) return;
+      if (value === this.invoiceCopy.VATCellPhone?.replace(/\D/g, '')) return;
+      param.Cellphone1 = value;
+    }
 
     const sub = this.apiService.GetCustomer(param).subscribe({
       next: (res: ResponseDTO) => {
         if (res.StatusCode === 0 && res.ObjectReturn && res.ObjectReturn.Code) {
-          this.applyCustomerData(res.ObjectReturn);
-          this.notification.onSuccess('Đã tìm thấy khách hàng');
-        } else {
-          this.notification.onWarning(res.ErrorString || 'Không tìm thấy khách hàng với CCCD này. Vui lòng nhập thủ công.');
+          this.applyCustomerData({ ...res.ObjectReturn });
+          this.notification.onSuccess('Đã tìm thấy thông tin khách hàng');
         }
-      },
-      error: () => {
-        this.notification.onWarning('Không thể tra cứu khách hàng. Vui lòng nhập thủ công.');
       }
     });
     this.arrUnsubscribe.push(sub);
@@ -430,16 +525,13 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
           if (order) {
             this.orderInfo = {
               id: order.ID || '',
+              customerCode: order.Customer || null,
               customerName: order.CustomerName || '',
               vehicleName: order.VehicleName || '',
               totalAmount: order.TotalPayment || 0,
               status: order.Status || SALOrderMasterStatusRetailEnum.PENDING,
               statusName: order.StatusName || 'Chờ xử lý'
             };
-            // Fallback: if customer wasn't loaded from invoice, try from order
-            if (!this.customerLoaded && order.Customer) {
-              this.loadCustomer(order.Customer);
-            }
           }
         }
       }
@@ -556,6 +648,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   }
 
   onProvinceChange(provinceCode: number): void {
+    if (!this.provinceList || this.provinceList.length === 0) return; // Prevent Kendo from clearing during load
     this.customer.Province = provinceCode;
     this.customer.Ward = null;
     this.wardList = [];
@@ -567,15 +660,17 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   }
 
   onWardChange(wardCode: number): void {
+    if (!this.wardList || this.wardList.length === 0) return; // Prevent Kendo from clearing during load
     this.customer.Ward = wardCode;
     this.syncCustomerToInvoice();
     this.onCustomerChange('Ward');
   }
 
-  onAddressBlur(): void {
-    if (this.customer.Address === this.customerCopy.Address) return;
-    this.syncCustomerToInvoice();
-    this.onCustomerChange('Address');
+  onVATAddressBlur(): void {
+    if (this.invoice.VATAddress === this.invoiceCopy.VATAddress) return;
+    this.invoiceCopy.VATAddress = this.invoice.VATAddress;
+    this.onValueChange('VATAddress');
+    this.parseAddressToDropdowns(this.invoice.VATAddress, true);
   }
   //#endregion
 
@@ -637,9 +732,9 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     // Build VATAddress = street + ward + province
     // customer.Address holds ONLY the street part (after geo stripping)
     const geoParts: string[] = [];
-    const ward = this.wardList.find(w => w.Code === this.customer.Ward);
+    const ward = this.wardList.find(w => w.Code == this.customer.Ward);
     if (ward) geoParts.push(ward.VNWard);
-    const province = this.provinceList.find(p => p.Code === this.customer.Province);
+    const province = this.provinceList.find(p => p.Code == this.customer.Province);
     if (province) geoParts.push(province.VNProvince);
     const geoSuffix = geoParts.join(', ');
 
@@ -671,7 +766,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
 
     // Sync Province - ONLY if list is loaded to prevent overwriting with empty
     if (this.provinceList.length > 0) {
-      const province = this.provinceList.find(p => p.Code === this.customer.Province);
+      const province = this.provinceList.find(p => p.Code == this.customer.Province);
       const newProv = province ? province.Code.toString() : '';
       if (this.invoice.VATProvince !== newProv) {
         this.invoice.VATProvince = newProv;
@@ -681,7 +776,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
 
     // Sync Ward - ONLY if list is loaded to prevent overwriting with empty
     if (this.wardList.length > 0) {
-      const ward = this.wardList.find(w => w.Code === this.customer.Ward);
+      const ward = this.wardList.find(w => w.Code == this.customer.Ward);
       const newWard = ward ? ward.Code.toString() : '';
       if (this.invoice.VATWard !== newWard) {
         this.invoice.VATWard = newWard;
@@ -726,10 +821,12 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     if (!inv.FrameSeri || !inv.EngineSeri) return false;
     if (!inv.VATCustomerName) return false;
     if (!inv.VATAddress) return false;
-    if (inv.VATType === 1) {
+    
+    const vatType = inv.VATType || 1;
+    if (vatType === 1) {
       return !!(inv.VATCCCD && inv.VATCellPhone);
     }
-    if (inv.VATType === 2 || inv.VATType === 3) {
+    if (vatType === 2 || vatType === 3) {
       return !!(inv.VATCompanyName && inv.VATCompanyTax);
     }
     return false;
@@ -892,6 +989,12 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region Save / Export
+  onSaveForm(): void {
+    if (!this.invoice.Code) return;
+    this.syncCustomerToInvoice();
+    this.notification.onSuccess('Đã lưu thông tin chứng từ hóa đơn');
+  }
+
   onUpdate(): void {
     // Validate SK/SM (mandatory for all types)
     if (!this.invoice.FrameSeri?.trim()) {
@@ -1113,3 +1216,5 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   }
   //#endregion
 }
+
+

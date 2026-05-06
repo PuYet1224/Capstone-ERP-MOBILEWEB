@@ -171,12 +171,12 @@
                                 </button>
                                 <button class="btn-print" (click)="printInvoice(inv); $event.stopPropagation()">
                                     <span class="material-icons" style="font-size: 14px;">receipt</span>
-                                    <span>In HĐĐT</span>
+                                    <span>In hóa đơn</span>
                                 </button>
                                 <span class="issued-label">
                                     Đã phát hành
                                     <span class="issued-date" *ngIf="inv.EffDate">
-                                        ({{ inv.EffDate | date:'dd/MM/yyyy' }})
+                                        ({{ inv.EffDate | date:'dd/MM/yyyy HH:mm' }})
                                     </span>
                                 </span>
                             </div>

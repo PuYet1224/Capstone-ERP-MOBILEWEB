@@ -314,10 +314,12 @@ export class Mtb024InvoiceListComponent implements OnInit, OnDestroy {
     if (!inv.FrameSeri || !inv.EngineSeri) return false;
     if (!inv.VATCustomerName) return false;
     if (!inv.VATAddress) return false;
-    if (inv.VATType === 1) {
+    
+    const vatType = inv.VATType || 1; // Default to Cá nhân
+    if (vatType === 1) {
       return !!(inv.VATCCCD && inv.VATCellPhone);
     }
-    if (inv.VATType === 2 || inv.VATType === 3) {
+    if (vatType === 2 || vatType === 3) {
       return !!(inv.VATCompanyName && inv.VATCompanyTax);
     }
     return false;

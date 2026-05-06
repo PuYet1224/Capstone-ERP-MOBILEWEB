@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+﻿import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { State } from '@progress/kendo-data-query';
 import { Subscription } from 'rxjs';
@@ -266,16 +266,24 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
     return inv.TypeOfStatus === SALOrderInvoiceStatusEnum.Cancled || inv.Status === 136; // Assuming 136 is cancelled
   }
 
+  isPaid(inv: SALOrderInvoiceCusDTO): boolean {
+    const status = inv["OrderMasterStatus"];
+    if (status === undefined || status === null) return true;
+    return status === 95 || status === 96;
+  }
+
   isInfoComplete(inv: SALOrderInvoiceCusDTO): boolean {
     if (!inv.FrameSeri?.trim() || !inv.EngineSeri?.trim()) return false;
     if (!inv.VATCustomerName?.trim()) return false;
     if (!inv.VATAddress?.trim()) return false;
-    if (inv.VATType === 1) {
+    
+    const vatType = inv.VATType || 1; // Default to Cá nhân
+    if (vatType === 1) {
       const cccd = inv.VATCCCD?.replace(/\D/g, '') || '';
       const phone = inv.VATCellPhone?.replace(/\D/g, '') || '';
       return cccd.length >= 9 && phone.length >= 10;
     }
-    if (inv.VATType === 2 || inv.VATType === 3) {
+    if (vatType === 2 || vatType === 3) {
       return !!(inv.VATCompanyName?.trim() && inv.VATCompanyTax?.trim());
     }
     return false;
@@ -323,7 +331,8 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
     this.loader.loader(true);
     
     // Get company details for the invoice header
-    const headInfo: any = this.cache.getItem(KeyLocalStorageEnum.HEAD_OBJECT);
+    const headInfoStr = this.cache.getItem(KeyLocalStorageEnum.HEAD_OBJECT);
+      const headInfo: any = headInfoStr ? this.cache.parseValue(headInfoStr) : null;
     
     const payload = {
       Code: item.Code,
@@ -383,6 +392,10 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
 
   //#region Issue invoice
   openIssueConfirm(inv: SALOrderInvoiceCusDTO): void {
+    if (!this.isPaid(inv)) {
+      this.notification.onWarning("Đơn hàng chưa thu đủ tiền, không được phép phát hành hóa đơn.");
+      return;
+    }
     if (this.isInvoiceSuccess(inv)) {
       this.notification.onWarning('Hóa đơn đã phát hành, không thể phát hành lại.');
       return;
@@ -512,6 +525,14 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
   }
 
   openBulkIssueConfirm(): void {
+    const validInvoices = this.allInvoices.filter(inv => !this.isInvoiceSuccess(inv) && this.isInfoComplete(inv) && this.isPaid(inv));
+    if (validInvoices.length === 0) {
+        this.notification.onWarning("Không có hóa đơn hợp lệ (đã thu đủ tiền) để phát hành");
+        return;
+    }
+    // Update pendingCount to match exactly what we will issue
+    this.pendingCount = validInvoices.length;
+
     if (this.pendingCount === 0) {
       this.notification.onWarning('Không có hóa đơn chờ phát hành');
       return;
@@ -564,3 +585,8 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
   }
   //#endregion
 }
+
+
+
+
+

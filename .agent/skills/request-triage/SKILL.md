@@ -1,45 +1,36 @@
 ---
 name: request-triage
 description: >
-  Analyze user's natural language request and determine the best
-  workflow/skill combination. Use when user sends casual messages
-  without a /slash-command. Lightweight classifier — not a full workflow.
+  Classify user intent and route to the correct skill/workflow combination.
+  Use when the user sends a casual message without a /slash-command.
+  Lightweight classifier — reads message, determines intent, loads appropriate skills.
+  Do NOT use when user already specified a slash command.
 ---
 
 # Request Triage — Intent Classifier
 
-## Purpose
-When user sends a message WITHOUT a `/slash-command`, classify the intent and load the correct skills/workflow automatically.
-
-## When to Skip (Direct Response)
-Do NOT triage if:
+## When to Skip
 - User already used a slash command (`/debug`, `/enhance`, etc.)
-- Request is a simple question (< 20 words, no code context)
-- Request is about data ops (DB queries, deploy, reset data)
-- Request is conversational (asking for explanation, opinion)
+- Simple question (< 20 words, no code context)
+- Data ops (DB queries, deploy, reset) or conversational
 
-## Classification Table
+## Classification
 
-| Signals (Vietnamese + English) | Intent | Skills to Load | Workflow |
-|-------------------------------|--------|---------------|----------|
-| "lỗi", "không được", "sai", "bug", "fix", "crash", error screenshot, console errors | **BUG** | `debug` | `/debug` |
-| "làm màn hình", "implement", "tạo component", "code mới", new feature request | **NEW_FEATURE** | `fe-architecture` + `standard-code` + `fe-mobile-pipeline` | `/fe-mobile-implement` |
-| "thêm", "đổi", "cải thiện", "UX", "UI change", "bỏ button", "thêm shadow" on existing screen | **ENHANCE** | `standard-code` + `mobile-design` | `/enhance` |
-| "review", "check code", "trước khi commit", "kiểm tra" | **REVIEW** | `code-review-checklist` + `clean-code` | `/review` |
-| "xóa data", "query DB", "reset", "deploy", "restart" | **OPS** | None | Direct response |
-| Question, explanation, "tại sao", "giải thích", research | **CHAT** | None | Direct response |
+| Signals | Intent | Skill | Workflow |
+|---------|--------|-------|----------|
+| "lỗi", "bug", "fix", "crash", "không được", error screenshot | **BUG** | `debug` | `/debug` |
+| "implement", "tạo component", "code mới", "làm màn hình" | **NEW_FEATURE** | `coding-standard` + `figma-reader` | `/fe-mobile-implement` |
+| "thêm", "đổi", "cải thiện", "UX", "bỏ button", existing screen changes | **ENHANCE** | `coding-standard` | `/enhance` |
+| "review", "check code", "trước khi commit", "kiểm tra" | **REVIEW** | `code-review` | `/review` |
+| "xóa data", "query DB", "deploy", "restart" | **OPS** | None | Direct response |
+| Question, "tại sao", "giải thích", research | **CHAT** | None | Direct response |
 
-## Execution Flow
+## Flow
 
-1. **Read** the user's message
-2. **Classify** using the table above
-3. **Announce** (1 line, inline — not a separate section):
-   > 🎯 **{Intent}** → Loading `{skill names}` → Following `{workflow}`
-4. **Load** the identified skill(s) via `view_file` on their SKILL.md
-5. **Execute** following the workflow steps
+1. Read the message
+2. Classify using table above
+3. Announce: `🎯 {Intent} → Loading {skills} → Following {workflow}`
+4. Load skill(s) via `view_file`
+5. Execute workflow
 
-## Rules
-- Do NOT over-classify — if unsure, ask the user
-- Do NOT add overhead for simple requests (OPS, CHAT)
-- If request spans multiple intents (e.g., "fix bug then improve UI"), handle sequentially: BUG first, ENHANCE second
-- Always respect existing GEMINI.md rules (P0 transparency, tool limits, etc.)
+> If unsure, ask the user. If multiple intents, handle sequentially (BUG first).
