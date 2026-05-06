@@ -409,6 +409,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     if (isChecked) {
       if (this.purchaserCustomer) {
         this.applyCustomerData({ ...this.purchaserCustomer });
+        this.syncCustomerToInvoice(true);
         this.notification.onSuccess('Đã lấy thông tin người mua xe');
       } else {
         const purchaserCode = this.invoice['Customer'] || this.orderInfo?.customerCode;
@@ -421,6 +422,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
               if (res.StatusCode === 0 && res.ObjectReturn && res.ObjectReturn.Code) {
                 this.purchaserCustomer = res.ObjectReturn;
                 this.applyCustomerData({ ...this.purchaserCustomer });
+                this.syncCustomerToInvoice(true);
                 this.notification.onSuccess('Đã lấy thông tin người mua xe');
               } else {
                 this.notification.onWarning('Không có thông tin người mua xe');
@@ -467,10 +469,9 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     this.invoice.VATBRUName = '';
 
     this.invoiceCopy = { ...this.invoice };
-    
-    if (!silent) {
-      this.syncCustomerToInvoice();
-    }
+        if (!silent) {
+        this.syncCustomerToInvoice(true);
+      }
   }
 
   onCustomerSearch(type: 'VATCCCD' | 'VATCellPhone'): void {
@@ -592,10 +593,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  refreshTransferStatus(): void {
-    if (!this.invoice.Code) return;
-    this.loadInvoice(this.invoice.Code);
-  }
+  // Removed refreshTransferStatus
   //#endregion
   private loadProvinces(): void {
     const sub = this.coreApiService.GetListProvince().subscribe({
@@ -659,14 +657,14 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     if (provinceCode) {
       this.loadWards(provinceCode);
     }
-    this.syncCustomerToInvoice();
+    this.syncCustomerToInvoice(true);
     this.onCustomerChange('Province');
   }
 
   onWardChange(wardCode: number): void {
     if (!this.wardList || this.wardList.length === 0) return; // Prevent Kendo from clearing during load
     this.customer.Ward = wardCode;
-    this.syncCustomerToInvoice();
+    this.syncCustomerToInvoice(true);
     this.onCustomerChange('Ward');
   }
 
@@ -694,7 +692,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
         if (res.StatusCode === 0) {
           // Only update the changed property in copy, do NOT overwrite entire customer
           this.customerCopy[prop] = this.customer[prop];
-          this.syncCustomerToInvoice();
+          this.syncCustomerToInvoice(true);
           this.notification.onSuccess('Thành công');
         } else {
           this.notification.onError(`Lỗi cập nhật: ${res.ErrorString}`);
@@ -709,8 +707,13 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     this.arrUnsubscribe.push(sub);
   }
 
-  private syncCustomerToInvoice(): void {
+  private syncCustomerToInvoice(autoSave: boolean = false): void {
     const changedProps: string[] = [];
+
+    if (this.customer.Code && this.invoice.VATCustomer !== this.customer.Code) {
+      this.invoice.VATCustomer = this.customer.Code;
+      changedProps.push('VATCustomer');
+    }
 
     // Sync customer name — GUARD: never overwrite existing name with empty
     const newName = this.customer.FullName || '';
@@ -762,6 +765,14 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     if (this.invoice.VATEmail !== newEmail) {
       this.invoice.VATEmail = newEmail;
       changedProps.push('VATEmail');
+    }
+
+    if (autoSave && changedProps.length > 0 && this.invoice.Code) {
+      const invoiceParam: UpdatePropertiesInterface<SALOrderInvoiceCusDTO> = {
+        DTO: this.invoice,
+        Properties: changedProps
+      };
+      this.apiService.UpdateSALInvoice(invoiceParam).subscribe();
     }
     if (this.invoice.VATGender !== this.customer.Gender) {
       this.invoice.VATGender = this.customer.Gender;
