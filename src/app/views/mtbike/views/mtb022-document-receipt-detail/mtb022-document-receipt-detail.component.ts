@@ -251,7 +251,7 @@ export class Mtb022DocumentReceiptDetailComponent {
     }
 
     if (isOpen && PsString.isNullOrWhitespace(this.receipt.CellPhone) && this.receipt.CollectedAmount != ((this.orderInfo.TotalPrice || 0) - (this.orderInfo.AmountPaidOthers || 0))) {
-      this.notification.onWarning("Phiếu thu thiếu sđt khách hàng");
+      this.notification.onWarning("Phiếu có xe đặt cọc cần nhập SĐT");
       return;
     }
 

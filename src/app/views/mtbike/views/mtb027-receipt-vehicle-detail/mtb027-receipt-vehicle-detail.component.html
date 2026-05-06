@@ -14,8 +14,8 @@
   <div class="vehicle-list-body">
     <div class="vehicle-card" *ngFor="let item of listVehicles; let i = index">
       <!-- Card Header -->
-      <div class="card-header" [class.cancelled]="item.IsCancelled">
-        <div class="vehicle-img">
+      <div class="card-header">
+        <div *ngIf="!item.IsCancelled" class="vehicle-img">
           <img [src]="item.ImageSetting1" [alt]="item.VehicleName" />
         </div>
         <div class="vehicle-info">

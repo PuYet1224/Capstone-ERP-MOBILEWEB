@@ -94,44 +94,63 @@
 
         <!-- ═══════════ OVERVIEW CARDS ═══════════ -->
         <div class="overview-cards">
+            <!-- REVENUE CARD -->
             <div class="card card--revenue">
                 <div class="card__icon">
-                    <span class="material-icons">bar_chart</span>
+                    <span class="material-icons">payments</span>
                 </div>
-                <div class="card__body">
-                    <span class="card__value">{{overview.RevenueSold | number}}₫</span>
-                    <span class="card__label">Doanh thu</span>
-                    <span class="card__value">{{overview.RevenueActual | number}}₫</span>
-                    <span class="card__label">Thực thu</span>
+                <div class="card__content">
+                    <div class="metric-group">
+                        <div class="metric">
+                            <span class="metric__label">Doanh thu</span>
+                            <span class="metric__value">{{overview.RevenueSold | number}}₫</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">Thực thu</span>
+                            <span class="metric__value">{{overview.RevenueActual | number}}₫</span>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <!-- SOLD CARD -->
             <div class="card card--sold">
                 <div class="card__icon">
                     <span class="material-icons">two_wheeler</span>
                 </div>
-                <div class="card__body">
-                    <span class="card__value">{{overview.TotalVehicleSold}}</span>
-                    <span class="card__label">Xe đã bán</span>
+                <div class="card__content">
+                    <span class="metric__label">Xe đã bán</span>
+                    <span class="metric__value">{{overview.TotalVehicleSold}}</span>
                 </div>
             </div>
+
+            <!-- STOCK CARD -->
             <div class="card card--stock">
                 <div class="card__icon">
                     <span class="material-icons">inventory_2</span>
                 </div>
-                <div class="card__body">
-                    <span class="card__value">{{overview.TotalStockVehicle}}</span>
-                    <span class="card__label">Tồn kho</span>
+                <div class="card__content">
+                    <span class="metric__label">Tồn kho</span>
+                    <span class="metric__value">{{overview.TotalStockVehicle}}</span>
                 </div>
             </div>
-            <div class="card card--stock">
+
+            <!-- MOVEMENT CARD -->
+            <div class="card card--movement">
                 <div class="card__icon">
-                    <span class="material-icons">route</span>
+                    <span class="material-icons">swap_horiz</span>
                 </div>
-                <div class="card__body">
-                    <span class="card__value">{{overview.TotalInternalVehicleIn}}</span>
-                    <span class="card__label">Nhập</span>
-                    <span class="card__value">{{overview.TotalInternalVehicleOut}}</span>
-                    <span class="card__label">Xuất</span>
+                <div class="card__content">
+                    <div class="metric-group">
+                        <div class="metric">
+                            <span class="metric__label">Nhập xe</span>
+                            <span class="metric__value">{{overview.TotalInternalVehicleIn}}</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">Xuất xe</span>
+                            <span class="metric__value">{{overview.TotalInternalVehicleOut}}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

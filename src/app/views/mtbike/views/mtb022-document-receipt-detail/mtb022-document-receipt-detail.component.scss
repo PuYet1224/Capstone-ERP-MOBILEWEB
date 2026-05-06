@@ -266,37 +266,42 @@
 
       // ========== STATUS BADGES ==========
       .status-badge {
-        padding: 4px 12px;
+        padding: 4px 10px;
         border-radius: 20px;
-        font-size: 11px;
+        font-size: 9px;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.3px;
-        border: 1.5px solid;
         display: inline-block;
+
+        &.status-new {
+          color: $secondary;
+          border-color: $border;
+          background: transparent;
+        }
+
+        &.status-pending {
+          color: $white;
+          border-color: $warning;
+          background: $warning;
+        }
+
+        &.status-processing {
+          color: $white;
+          border-color: $info;
+          background: $info;
+        }
 
         &.status-complete {
           color: $primary;
           border-color: $primary;
-          background: rgba($primary, 0.06);
-        }
-
-        &.status-new {
-          color: $warning;
-          border-color: $warning;
-          background: rgba($warning, 0.06);
+          background: transparent;
         }
 
         &.status-cancel {
           color: $error;
           border-color: $error;
-          background: rgba($error, 0.06);
-        }
-
-        &.status-pending {
-          color: $warning;
-          border-color: $warning;
-          background: rgba($warning, 0.06);
+          background: transparent;
         }
       }
 
