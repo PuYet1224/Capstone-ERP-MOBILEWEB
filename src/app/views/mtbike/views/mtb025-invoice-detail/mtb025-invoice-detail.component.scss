@@ -208,6 +208,11 @@
               color: white;
               background: #2e7d32;
             }
+
+            &.status-pending {
+              color: #e65100;
+              background: rgba(230, 81, 0, 0.12);
+            }
           }
         }
       }

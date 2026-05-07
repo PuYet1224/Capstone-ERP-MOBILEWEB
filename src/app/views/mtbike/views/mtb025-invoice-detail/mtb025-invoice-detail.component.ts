@@ -537,6 +537,10 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
               status: order.Status || SALOrderMasterStatusRetailEnum.PENDING,
               statusName: order.StatusName || 'Chờ xử lý'
             };
+
+            if (this.isTransfer) {
+              this.loadTransferReceipt();
+            }
           }
         }
       }
@@ -567,11 +571,79 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
         this.onValueChange('EngineSeri');
       }
 
-      // Resolve head name
       this.resolveHeadName(headTransfer);
     } else {
       this.isTransfer = false;
     }
+  }
+
+  private loadTransferReceipt(): void {
+    if (!this.invoice.OrderMaster) return;
+    const orderID = this.orderInfo?.id || this.invoice['OrderNo'] || '';
+    if (!orderID) return;
+
+    const filter: any = {
+      filter: { logic: 'and', filters: [{ field: 'RefNo', operator: 'eq', value: orderID }] },
+      sort: [{ field: 'Code', dir: 'desc' }]
+    };
+
+    const sub = this.apiService.GetListIOMasterVehicle(filter).subscribe({
+      next: (res: ResponseDTO) => {
+        if (res.StatusCode === 0 && res.ObjectReturn) {
+          const raw = res.ObjectReturn?.Data ?? res.ObjectReturn ?? [];
+          const masters = Array.isArray(raw) ? raw : [];
+
+          // Override status with real NK/XK status
+          const importReceipt = masters.find((m: any) => m.TypeOfMaster === 1);
+          const exportReceipt = masters.find((m: any) => m.TypeOfMaster === 2);
+
+          if (importReceipt) {
+            this.transferReceiptCode = importReceipt.Code;
+            this.transferReceiptStatus = importReceipt.StatusID;
+            if (importReceipt.StatusID >= 5) {
+              this.loadTransferDetail(importReceipt.Code);
+            }
+          } else if (exportReceipt) {
+            this.transferReceiptCode = exportReceipt.Code;
+            this.transferReceiptStatus = exportReceipt.StatusID;
+          }
+        }
+        this.cdr.detectChanges();
+      }
+    });
+    this.arrUnsubscribe.push(sub);
+  }
+
+  private loadTransferDetail(masterCode: number): void {
+    const filter: any = {
+      filter: { logic: 'and', filters: [{ field: 'Master', operator: 'eq', value: masterCode }] },
+      sort: [{ field: 'Master', dir: 'desc' }]
+    };
+
+    const sub = this.apiService.GetListIODetailVehicle(filter).subscribe({
+      next: (res: ResponseDTO) => {
+        if (res.StatusCode === 0 && res.ObjectReturn) {
+          const groups = Array.isArray(res.ObjectReturn) ? res.ObjectReturn : [];
+          for (const group of groups) {
+            if (group.ListDetail && Array.isArray(group.ListDetail)) {
+              for (const detail of group.ListDetail) {
+                if (detail.FrameSeri && !this.invoice.FrameSeri) {
+                  this.invoice.FrameSeri = detail.FrameSeri;
+                  this.onValueChange('FrameSeri');
+                }
+                if (detail.EngineSeri && !this.invoice.EngineSeri) {
+                  this.invoice.EngineSeri = detail.EngineSeri;
+                  this.onValueChange('EngineSeri');
+                }
+                break;
+              }
+            }
+          }
+        }
+        this.cdr.detectChanges();
+      }
+    });
+    this.arrUnsubscribe.push(sub);
   }
 
   private resolveHeadName(headCode: number): void {
@@ -585,11 +657,12 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   get transferReceiptStatusLabel(): string {
     if (!this.transferReceiptCode) return 'Chưa tạo phiếu';
     switch (this.transferReceiptStatus) {
-      case 1: return 'Mới tạo';
-      case 2: return 'Đang xử lý';
-      case 3: return 'Chờ xử lý';
-      case 4: return 'Hoàn tất';
-      default: return 'Không xác định';
+      case 1: return 'Tạo mới';
+      case 2: return 'Chờ xử lý';
+      case 3: return 'Đang xử lý';
+      case 4: return 'Đang giao nhận';
+      case 5: return 'Hoàn tất';
+      default: return 'Hoàn tất';
     }
   }
 

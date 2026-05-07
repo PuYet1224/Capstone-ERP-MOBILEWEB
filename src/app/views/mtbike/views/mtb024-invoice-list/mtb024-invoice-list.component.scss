@@ -2,10 +2,10 @@
 
 ::ng-deep {
   mtb024-invoice-list {
+    height: 100%;
+
     .mtb024-invoice-list {
       height: 100%;
-      display: flex;
-      flex-direction: column;
 
       ps-header-back {
         .ps-header {
@@ -113,15 +113,10 @@
 
       // ========== BODY LIST ==========
       .body-list {
-        flex: 1;
-        min-height: 0; // Fix: allow flex-shrink — prevents overflow behind footer
+        height: calc(100% - 112px);
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         padding: 12px;
-        padding-bottom: 12px;
-        display: flex;
-        flex-direction: column;
-        gap: 0;
         font-size: 12px;
         background: $background-primary;
 
@@ -440,7 +435,6 @@
       // Footer
       ps-footer-action {
         display: block;
-        flex-shrink: 0; // Fix: footer must never shrink — prevents overlap
         width: 100%;
         .footer-action {
           height: 56px;

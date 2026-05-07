@@ -68,10 +68,10 @@
         <div class="transfer-banner__content">
           <div class="transfer-banner__title">Xe điều chuyển từ {{ transferHeadName }}</div>
           <div class="transfer-banner__status" *ngIf="transferReceiptCode">
-            Phiếu nhập: <span class="transfer-badge" [ngClass]="{
+            Phiếu kho: <span class="transfer-badge" [ngClass]="{
               'status-new': transferReceiptStatus === 1,
               'status-processing': transferReceiptStatus === 2 || transferReceiptStatus === 3,
-              'status-done': transferReceiptStatus === 4
+              'status-done': transferReceiptStatus && transferReceiptStatus >= 4
             }">{{ transferReceiptStatusLabel }}</span>
           </div>
           <div class="transfer-banner__action" *ngIf="!transferReceiptCode">

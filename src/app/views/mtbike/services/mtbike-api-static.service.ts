@@ -120,6 +120,9 @@ export const fpayment = {
   GetIOSeriInternal: '',
   GetCustomer: '',
   UpdateLoyalCustomer: '',
+  GetListSALMaster: '',
+  GetListIOMasterVehicle: `${environment.apiServer}/api/warehouse/GetListIOMasterVehicle`,
+  GetListIODetailVehicle: `${environment.apiServer}/api/warehouse/GetListIODetailVehicle`,
 };
 
 const namespaceMap: Record<string, any> = {

@@ -8,28 +8,6 @@
     </ps-header-back>
     <!-- END: HEADER -->
 
-    <!-- START: SEARCH DIALOG -->
-    <ps-dialog-confirm-bottom [open]="isOpenedFilter" [title]="'Tìm kiếm chứng từ hóa đơn'" (close)="openFilter($event)">
-        <div psDialogConfirmBottomBody>
-            <div class="filter-row">
-                <div class="filter-label-row">
-                    <span class="filter-label">Tra cứu chứng từ</span>
-                    <label class="checkbox-label">
-                        <input type="checkbox" [(ngModel)]="includeFinished">
-                        Bao gồm các chứng từ đã kết thúc
-                    </label>
-                </div>
-                <ps-kendo-textbox [placeholder]="'Tên KH, SĐT, mã CT...'"
-                    [(ngModel)]="searchKeyword" (keyup.enter)="onSearch()">
-                </ps-kendo-textbox>
-            </div>
-        </div>
-        <div psDialogConfirmBottomFooter>
-            <ps-kendo-button [theme]="''" (onClick)="openFilter(false)">Đóng</ps-kendo-button>
-            <ps-kendo-button [theme]="'primary'" (onClick)="onSearch()">Tìm</ps-kendo-button>
-        </div>
-    </ps-dialog-confirm-bottom>
-    <!-- END: SEARCH DIALOG -->
 
     <!-- START: BODY -->
     <div class="body-list" #bodyList>
@@ -90,8 +68,8 @@
                             <!-- Vehicle title -->
                             <div class="r-vehicle-row">
                                 <span class="r-vehicle-name">
-                                    <ng-container *ngIf="inv.InvoiceNo">{{ inv.InvoiceNo }} | </ng-container>
-                                    {{ inv.VehicleName || ('Hóa đơn #' + inv.Code) }}
+                                    {{ inv.VehicleName || ('Xe #' + (i + 1)) }}
+                                    <ng-container *ngIf="inv.VehicleColorName"> | {{ inv.VehicleColorName }}</ng-container>
                                 </span>
                             </div>
                             
@@ -173,4 +151,27 @@
         </ps-kendo-button>
     </ps-footer-action>
     <!-- END: FOOTER ACTIONS -->
+
+    <!-- START: SEARCH DIALOG -->
+    <ps-dialog-confirm-bottom [open]="isOpenedFilter" [title]="'Tìm kiếm chứng từ hóa đơn'" (close)="openFilter($event)">
+        <div psDialogConfirmBottomBody>
+            <div class="filter-row">
+                <div class="filter-label-row">
+                    <span class="filter-label">Tra cứu chứng từ</span>
+                    <label class="checkbox-label">
+                        <input type="checkbox" [(ngModel)]="includeFinished">
+                        Bao gồm các chứng từ đã kết thúc
+                    </label>
+                </div>
+                <ps-kendo-textbox [placeholder]="'Tên KH, SĐT, mã CT...'"
+                    [(ngModel)]="searchKeyword" (keyup.enter)="onSearch()">
+                </ps-kendo-textbox>
+            </div>
+        </div>
+        <div psDialogConfirmBottomFooter>
+            <ps-kendo-button [theme]="''" (onClick)="openFilter(false)">Đóng</ps-kendo-button>
+            <ps-kendo-button [theme]="'primary'" (onClick)="onSearch()">Tìm</ps-kendo-button>
+        </div>
+    </ps-dialog-confirm-bottom>
+    <!-- END: SEARCH DIALOG -->
 </div>
