@@ -889,7 +889,7 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
         });
         this.OrderTotal = res.ObjectReturn.OrderTotal;
         this.CompareTotal = res.ObjectReturn.CompareTotal;
-        this.onSortChange(this.currentSortCode);
+        // this.onSortChange(this.currentSortCode);
         // this.totalQuantityCare = this.listSalVehicle[0].TotalQuantityCare || 0;
 
         if (this.totalQuantityCare == 0 && this.showpopupcompare == true) {
