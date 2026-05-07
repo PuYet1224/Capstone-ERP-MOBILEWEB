@@ -53,7 +53,7 @@
                             <div class="card-no">Số phiếu:&nbsp;<div class="no">{{card.ID}}</div>
                             </div>
                             <div class="status"
-                                [innerHTML]="{ Active: card.Status === SALOrderMasterStatusRetailEnum.NEW || card.Status === SALOrderMasterStatusRetailEnum.RETURN ? 'consultant' : undefined, Progress: card.Status, ProgressName: card.StatusName } | SALOrderMasterStatusRetail">
+                                [innerHTML]="{ Progress: card.Status, ProgressName: card.StatusName } | SALOrderMasterStatusRetail">
                             </div>
                         </div>
                         <div class="row-2" *ngIf="card.CustomerName || card.CustomerPhone">

@@ -197,14 +197,14 @@
 
     <!-- START: FOOTER ACTIONS -->
     <ps-footer-action>
-        <ps-kendo-button (onClick)="onNavigateBack()">
+        <ps-kendo-button (onClick)="onNavigateBack()" [class.flex-1]="pendingCount === 0">
             <span class="material-icons">arrow_back</span>
         </ps-kendo-button>
-        <ps-kendo-button (onClick)="openFilter(true)">
-            <span class="material-icons">search</span>
-        </ps-kendo-button>
-        <ps-kendo-button [theme]="'primary'" (onClick)="openBulkIssueConfirm()" *ngIf="pendingCount > 0">
+        <ps-kendo-button class="export-btn" [theme]="'primary'" (onClick)="openBulkIssueConfirm()" *ngIf="pendingCount > 0">
             <span class="text">Phát hành tất cả ({{ pendingCount }})</span>
+        </ps-kendo-button>
+        <ps-kendo-button class="search-btn" (onClick)="openFilter(true)" [class.flex-1]="pendingCount === 0">
+            <span class="material-icons">search</span>
         </ps-kendo-button>
     </ps-footer-action>
     <!-- END: FOOTER ACTIONS -->
