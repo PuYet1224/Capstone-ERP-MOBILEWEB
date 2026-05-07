@@ -9,7 +9,7 @@
     }
   },
   "/api/proxy-api": {
-    "target": "http://puyet01022004-001-site1.qtempurl.com/",
+    "target": "http://localhost:62567/",
     "secure": false,
     "changeOrigin": true,
     "pathRewrite": {
