@@ -579,7 +579,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   }
 
   get isTransferSKSMDisabled(): boolean {
-    return this.isTransfer && this.transferReceiptStatus !== 4;
+    return this.isTransfer;
   }
 
   get transferReceiptStatusLabel(): string {
@@ -587,7 +587,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
     switch (this.transferReceiptStatus) {
       case 1: return 'Mới tạo';
       case 2: return 'Đang xử lý';
-      case 3: return 'Chờ xuất kho';
+      case 3: return 'Chờ xử lý';
       case 4: return 'Hoàn tất';
       default: return 'Không xác định';
     }
@@ -823,6 +823,11 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
             changedProps.forEach(p => {
               (this.invoiceCopy as any)[p] = (this.invoice as any)[p];
             });
+          } else {
+            this.notification.onError(res.ErrorString);
+            changedProps.forEach(p => {
+              (this.invoice as any)[p] = (this.invoiceCopy as any)[p];
+            });
           }
         }
       });
@@ -978,6 +983,10 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
                   this.invoiceCopy[field] = this.invoice[field];
                   this.invoiceCopy[otherField] = this.invoice[otherField];
                   this.notification.onSuccess('Thành công');
+                } else {
+                  this.notification.onError(saveRes.ErrorString);
+                  this.invoice[field] = this.invoiceCopy[field];
+                  this.invoice[otherField] = this.invoiceCopy[otherField];
                 }
               }
             });
