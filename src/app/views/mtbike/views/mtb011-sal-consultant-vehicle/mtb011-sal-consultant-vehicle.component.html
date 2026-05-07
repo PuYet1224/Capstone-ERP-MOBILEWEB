@@ -281,7 +281,7 @@
             </div>
         </ng-container>
 
-        <div class="compare-btn" *ngIf="currentCompareCount > 1" (click)="comparepopup = true; onShowCompare()">
+        <div class="compare-btn" (click)="comparepopup = true; onShowCompare()">
             So sánh ({{ currentCompareCount }} xe)
         </div>
     </div>
@@ -372,7 +372,7 @@
                             <div class="values" cdkDropList cdkDropListOrientation="horizontal"
                                 (cdkDropListDropped)="onDropColumn($event)">
                                 <ng-container *ngIf="i === 0">
-                                    <div class="image-item" *ngFor="let item of row.listValue; let j = index" cdkDrag>
+                                    <div class="image-item" *ngFor="let item of row?.listValue; let j = index" cdkDrag>
                                         <img [src]="sanitizeImageUrl(item.image)" />
                                         <span class="material-icons" cdkDragHandle>
                                             open_with
