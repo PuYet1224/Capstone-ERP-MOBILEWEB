@@ -707,16 +707,23 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
     this.subLoader.loader(true);
     const sub = this.mtbikeapi.GetListSALCompareVehicleSpecs(param).subscribe(res => {
       if (res.StatusCode === 0) {
-        const vehicleIds = res.ObjectReturn.Matrix[0].listValue;
+        const matrix = res.ObjectReturn?.Matrix || [];
+        
+        if (matrix.length > 0) {
+          const vehicleIds = matrix[0]?.listValue || [];
 
-        this.compareVehicles = vehicleIds.map(id => {
-          const key = String(id);
-          return this.vehicleColorCache.get(key) || null;
-        });
+          this.compareVehicles = vehicleIds.map(id => {
+            const key = String(id);
+            return this.vehicleColorCache.get(key) || null;
+          });
 
-        this.mockSpecificationsMatrix = res.ObjectReturn.Matrix.slice(1);
-
-        this.rowLabels = this.mockSpecificationsMatrix.map(row => row.label);
+          this.mockSpecificationsMatrix = matrix.slice(1);
+          this.rowLabels = this.mockSpecificationsMatrix.map(row => row.label);
+        } else {
+          this.compareVehicles = [];
+          this.mockSpecificationsMatrix = [];
+          this.rowLabels = [];
+        }
 
         this.subLoader.loader(false);
       }
@@ -801,9 +808,7 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
   }
 
   get currentCompareCount(): number {
-    const count = this.CompareTotal || 0;
-    if (count < 2) { this.comparepopup = false; }
-    return count;
+    return this.CompareTotal || 0;
   }
 
   public onDeleteVehicle(v: any) {
@@ -863,7 +868,9 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
     };
     const sub = this.mtbikeapi.GetListSALVehicle(params).subscribe(res => {
       if (res.StatusCode === 0) {
-        this.listSalVehicle = res.ObjectReturn.Data;
+        const objReturn = res.ObjectReturn || {};
+        this.listSalVehicle = objReturn.Data || [];
+        
         this.listSalVehicle.forEach(card => {
           card.ListVehicleColor?.forEach((item: any) => {
             item.ActionHistory = [];
@@ -885,8 +892,9 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
             this.vehicleColorCache.set(String(item.Code), item);
           });
         });
-        this.OrderTotal = res.ObjectReturn.OrderTotal;
-        this.CompareTotal = res.ObjectReturn.CompareTotal;
+
+        this.OrderTotal = objReturn.OrderTotal || 0;
+        this.CompareTotal = objReturn.CompareTotal || 0;
         this.onSortChange(this.currentSortCode);
         // this.totalQuantityCare = this.listSalVehicle[0].TotalQuantityCare || 0;
 
