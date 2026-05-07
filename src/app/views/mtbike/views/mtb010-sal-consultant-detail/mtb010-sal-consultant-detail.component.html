@@ -26,7 +26,7 @@
                         <div class="status">
                             <div>Trạng thái</div>
                             <div
-                                [innerHTML]="{Active: retailDetailDTO.Status === SALOrderMasterStatusRetailEnum.NEW || retailDetailDTO.Status === SALOrderMasterStatusRetailEnum.RETURN ? 'consultant' : undefined, Progress: retailDetailDTO.Status, ProgressName: retailDetailDTO.StatusName} | SALOrderMasterStatusRetail">
+                                [innerHTML]="{ Progress: retailDetailDTO.Status, ProgressName: retailDetailDTO.StatusName} | SALOrderMasterStatusRetail">
                             </div>
                         </div>
                     </div>

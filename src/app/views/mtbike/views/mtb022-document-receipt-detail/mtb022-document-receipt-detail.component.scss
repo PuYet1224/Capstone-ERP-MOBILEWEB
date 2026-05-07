@@ -273,23 +273,24 @@
         text-transform: uppercase;
         letter-spacing: 0.3px;
         display: inline-block;
+        border: 1px solid;
 
         &.status-new {
           color: $secondary;
-          border-color: $border;
+          border-color: $secondary;
           background: transparent;
         }
 
         &.status-pending {
-          color: $white;
+          color: $warning;
           border-color: $warning;
-          background: $warning;
+          background: transparent;
         }
 
         &.status-processing {
-          color: $white;
+          color: $info;
           border-color: $info;
-          background: $info;
+          background: transparent;
         }
 
         &.status-complete {

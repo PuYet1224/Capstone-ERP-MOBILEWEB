@@ -48,7 +48,7 @@
                     </span>
                 </div>
                 <div class="pbh-actions">
-                    <div [innerHTML]="{ Progress: item.Status, ProgressName: item.StatusName | uppercase } | SALOrderMasterStatusRetail"></div>
+                    <div [innerHTML]="{ Progress: item.Status, ProgressName: item.StatusName } | SALOrderMasterStatusRetail"></div>
                     <span class="material-icons expand-arrow" [class.expanded]="item.isExpanded">
                         expand_more
                     </span>

@@ -114,30 +114,22 @@
       // ========== BODY LIST ==========
       .body-list {
         flex: 1;
-        min-height: 0; // Fix: allow flex-shrink — prevents overflow behind footer
         overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
         padding: 12px;
         padding-bottom: 12px;
         display: flex;
         flex-direction: column;
-        gap: 0;
+        gap: 8px;
         font-size: 12px;
-        background: $background-primary;
 
         // ========== PBH CARD ==========
         .pbh-card {
           background: $white;
           border-radius: 8px;
-          overflow: hidden;
           box-shadow: 0 1px 4px rgba($black, 0.08);
-          border: 1px solid $border;
-          margin-bottom: 12px;
-          transition: background 0.2s ease;
 
           &.is-expanded {
-            background: rgba($primary, 0.15);
-            border-color: transparent;
+            background: $white;
             box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
           }
 
@@ -240,8 +232,8 @@
             background: transparent;
 
             .receipt-card {
-              padding: 12px 14px;
-              background: $white;
+              padding: 8px 14px;
+              background: $hover;
               cursor: pointer;
               display: flex;
               flex-direction: column;
@@ -252,6 +244,11 @@
               border-top: 1px solid $border;
               box-shadow: none;
               transition: background 0.15s ease;
+
+              &:last-child {
+                border-bottom-left-radius: 8px;
+                border-bottom-right-radius: 8px;
+              }
 
               &:active {
                 background: $hover;
@@ -346,25 +343,43 @@
                   gap: 4px;
                   font-size: 11px;
                   font-weight: 600;
+                  border-radius: 12px;
+                  padding: 2px 6px;
 
                   .material-icons {
                     font-size: 14px;
                   }
 
                   &.badge-primary {
-                    color: $primary;
+                    background-color: #e6f4ea;
+                    color: #1e8e3e;
+                    span {
+                      color: #1e8e3e;
+                    }
                   }
 
                   &.badge-warning {
-                    color: $warning;
+                    background-color: #fce8e6;
+                    color: #d93025;
+                    span {
+                      color: #d93025;
+                    }
                   }
 
                   &.badge-success {
-                    color: $green-600;
+                    background-color: #e6f4ea;
+                    color: #1e8e3e;
+                    span {
+                      color: #1e8e3e;
+                    }
                   }
 
                   &.badge-danger {
-                    color: $error;
+                    background-color: #fce8e6;
+                    color: #d93025;
+                    span {
+                      color: #d93025;
+                    }
                   }
                 }
 

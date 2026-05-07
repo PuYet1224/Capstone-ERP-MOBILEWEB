@@ -33,7 +33,7 @@
         </div>
         <div class="order-context__row">
           <span class="order-context__label">Tình trạng:</span>
-          <div [innerHTML]="{ Progress: orderInfo.status, ProgressName: orderInfo.statusName | uppercase } | SALOrderMasterStatusRetail"></div>
+          <div [innerHTML]="{ Progress: orderInfo.status, ProgressName: orderInfo.statusName } | SALOrderMasterStatusRetail"></div>
         </div>
       </div>
       <!-- END: ORDER CONTEXT -->
@@ -106,6 +106,14 @@
       <div class="container-body">
         <div class="title">Thông tin xuất hóa đơn</div>
         <div class="content">
+          <ps-kendo-checkbox
+            [label]="'Thông tin xuất hóa đơn giống thông tin người mua xe'"
+            [(ngModel)]="isSameAsPurchaser"
+            (onchecked)="onSameAsPurchaserChange($event)"
+            [disabled]="isReadOnly"
+            >
+          </ps-kendo-checkbox>
+
           <!-- Custom Dropdown for Invoice Type -->
           <ps-kendo-dropdown-list
             [label]="'Loại hóa đơn (*)'"
@@ -117,14 +125,6 @@
             (valueChange)="onValueChange('VATType')"
            [disabled]="isReadOnly">
           </ps-kendo-dropdown-list>
-
-          <ps-kendo-checkbox
-            [label]="'Thông tin xuất hóa đơn giống thông tin người mua xe'"
-            [(ngModel)]="isSameAsPurchaser"
-            (onchecked)="onSameAsPurchaserChange($event)"
-            [disabled]="isReadOnly"
-            [style.margin-bottom.px]="12">
-          </ps-kendo-checkbox>
 
           <!-- CASE: Cá nhân (VATType == 1) -->
           <div class="input-fields personal-case" *ngIf="invoice.VATType == 1">

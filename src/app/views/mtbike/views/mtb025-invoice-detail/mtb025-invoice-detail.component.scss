@@ -42,7 +42,7 @@
                 border-radius: 12px;
                 font-size: 11px;
                 font-weight: 600;
-                
+
                 .material-icons {
                   font-size: 14px;
                 }
@@ -50,11 +50,17 @@
                 &.status-valid {
                   background-color: #e6f4ea;
                   color: #1e8e3e;
+                  span {
+                    color: #1e8e3e;
+                  }
                 }
 
                 &.status-missing {
                   background-color: #fce8e6;
                   color: #d93025;
+                  span {
+                    color: #d93025;
+                  }
                 }
               }
             }
@@ -63,10 +69,15 @@
       }
 
       .order-context {
-        padding: 12px 14px;
+        padding: 8px;
         background: $white;
         border-radius: 10px;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        box-shadow:
+          0 1px 4px rgba(0, 0, 0, 0.08),
+          0 2px 8px rgba(0, 0, 0, 0.04);
 
         &__row {
           display: flex;
@@ -246,7 +257,9 @@
 
           .container-body {
             border-radius: 10px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+            box-shadow:
+              0 1px 4px rgba(0, 0, 0, 0.08),
+              0 2px 8px rgba(0, 0, 0, 0.04);
             background: $white;
             display: flex;
             flex-direction: column;
@@ -256,7 +269,7 @@
             .title {
               font-weight: 700;
               font-size: 13px;
-              padding: 10px 12px;
+              padding: 8px;
               border-bottom: 1px solid $border;
               color: $secondary;
               display: flex;
@@ -266,11 +279,18 @@
             }
 
             .content {
-              padding: 12px;
+              padding: 8px;
               display: flex;
               flex-direction: column;
-              gap: 14px;
+              gap: 8px;
 
+              ps-kendo-checkbox {
+                .checkbox {
+                  label {
+                    font-size: 11px;
+                  }
+                }
+              }
               .ps-label {
                 font-size: 13px;
                 color: $secondary;
@@ -333,8 +353,6 @@
           }
         }
       }
-
-
 
       ps-footer-action {
         flex-shrink: 0;
