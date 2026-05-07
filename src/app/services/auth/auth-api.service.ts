@@ -66,8 +66,26 @@ export class AuthApiService {
 
   private handleFallback(u: string, obs: any) {
     var nowdate = new Date();
+    // Build a fake JWT that matches the requirements of the remote server
+    // Header
+    const header = { alg: "HS256", typ: "JWT" };
+    // Payload
+    const exp = Math.floor(Date.now() / 1000) + 36000;
+    const payload = {
+      "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier": u,
+      "name": u,
+      "profile": u,
+      "UserCode": u,
+      "iss": "http://identity.hoaiminh.vn",
+      "exp": exp
+    };
+    // Base64 encode
+    const base64Header = btoa(JSON.stringify(header));
+    const base64Payload = btoa(JSON.stringify(payload));
+    const fakeJwt = `${base64Header}.${base64Payload}.fakesignature`;
+
     const fallbackToken = {
-      access_token: 'fallback_' + u + '_' + Date.now(),
+      access_token: fakeJwt,
       expires_in: 36000,
       token_type: 'Bearer',
       refresh_token: 'fallback_refresh',
@@ -75,7 +93,7 @@ export class AuthApiService {
       is_mock: true,
       username: u
     };
-    console.log("Fallback Token Created:", fallbackToken);
+    console.log("Fallback JWT Created:", fallbackToken);
     ConfigDTO.token = fallbackToken as any;
     this.cache.setItem(KeyLocalStorageEnum.BEARER_TOKEN, fallbackToken);
     obs.next(true);
