@@ -44,8 +44,8 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   // Options for Dropdown
   public invoiceTypes: ListDTO[] = [];
   public listGender = [
-    { Code: 1, ListName: 'Nam' },
-    { Code: 2, ListName: 'Nữ' }
+    { Code: 7, ListName: 'Nam' },
+    { Code: 8, ListName: 'Nữ' }
   ];
 
   // Customer data from CSLoyalCustomer
