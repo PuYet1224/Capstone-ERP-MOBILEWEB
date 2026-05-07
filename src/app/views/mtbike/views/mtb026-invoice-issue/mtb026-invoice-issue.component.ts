@@ -1,4 +1,4 @@
-﻿import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { State } from '@progress/kendo-data-query';
 import { Subscription } from 'rxjs';
@@ -545,8 +545,6 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
   }
 
   confirmBulkIssueAll(): void {
-    this.closeBulkIssueConfirm();
-    
     // Only collect invoices that are visible on screen (ready + not yet issued)
     const pendingCodes: number[] = [];
     this.displayGroups.forEach(group => {
@@ -568,6 +566,7 @@ export class Mtb026InvoiceIssueComponent implements OnInit, OnDestroy {
     const sub = this.api.UpdateSALInvoiceIssue(pendingCodes).subscribe(
       res => {
         if (res.StatusCode === 0) {
+          this.closeBulkIssueConfirm();
           const result = res.ObjectReturn;
           this.notification.onSuccess(`Đã phát hành ${result?.SuccessCount ?? pendingCodes.length} hóa đơn thành công!`);
         } else {
