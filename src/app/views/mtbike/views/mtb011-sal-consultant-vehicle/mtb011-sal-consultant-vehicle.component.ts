@@ -45,12 +45,10 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
     this.detailVehicle.Master = retailMaster.Code;
     this.retailMaster = retailMaster;
     this.listsortcopy = this.listsort.filter(item => item.Code == 1 || item.Code == 2);
-    this.currentSortCode = 1;
     this.GetListSALVehicle(this.filter);
     this.GetListVehicleOptions();
     this.salorderdetail.Master = retailMaster.Code;
     this.salordermaster.Code = retailMaster.Code;
-    this.onSortChange(this.currentSortCode);
   }
 
   ngOnDestroy(): void {
@@ -214,7 +212,7 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
     const isNextMode2 = !!(this.selectedColorNames.length > 0 || this.isFollowFilter || this.isCartFilter || isPriceFiltered);
     const isCurrentMode2 = this.listsortcopy.length > 2;
     if (isCurrentMode2 !== isNextMode2) {
-      this.onSortChange(1);
+      this.onSortChange(this.currentSortCode);
     }
     if (isNextMode2) {
       this.listsortcopy = [...this.listsort];
@@ -549,7 +547,7 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region POPUP SORT
-  public currentSortCode: number = 1;
+  public currentSortCode: number = 0;
   public listsort: any[] = [
     { Code: 1, Name: 'A-Z' },
     { Code: 2, Name: 'Z-A' },
@@ -889,7 +887,7 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
         });
         this.OrderTotal = res.ObjectReturn.OrderTotal;
         this.CompareTotal = res.ObjectReturn.CompareTotal;
-        // this.onSortChange(this.currentSortCode);
+        this.onSortChange(this.currentSortCode);
         // this.totalQuantityCare = this.listSalVehicle[0].TotalQuantityCare || 0;
 
         if (this.totalQuantityCare == 0 && this.showpopupcompare == true) {
