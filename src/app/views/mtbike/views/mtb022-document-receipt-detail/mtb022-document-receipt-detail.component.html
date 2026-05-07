@@ -91,18 +91,18 @@
           <span class="value bold">{{ womMaster?.TotalBeforeDiscount || 0 | number }}đ</span>
         </div>
         <div class="calc-row">
-          <span class="label green">Giảm giá (Khuyến mãi):</span>
-          <span class="value green">{{ (womMaster?.DiscountAmount || 0) > 0 ? '- ' : '' }}{{ womMaster?.DiscountAmount || 0 | number }}đ</span>
-        </div>
-
-        <div class="calc-row divider-top">
-          <span class="label bold">TỔNG GIÁ TRỊ THANH TOÁN</span>
-          <span class="value bold">{{ womMaster?.TotalPayment || 0 | number }}đ</span>
-        </div>
-        <div class="calc-row">
           <span class="label">Tổng VAT:</span>
           <span class="value">{{ womMaster?.VatPrice || 0 | number }}đ</span>
         </div>
+        <div class="calc-row">
+          <span class="label green">Giảm giá (Khuyến mãi):</span>
+          <span class="value green">{{ (womMaster?.DiscountAmount || 0) > 0 ? '- ' : '' }}{{ womMaster?.DiscountAmount || 0 | number }}đ</span>
+        </div>
+<!-- 
+        <div class="calc-row divider-top">
+          <span class="label bold">TỔNG GIÁ TRỊ THANH TOÁN</span>
+          <span class="value bold">{{ womMaster?.TotalPayment || 0 | number }}đ</span>
+        </div> -->
 
         <div class="calc-row divider-top">
           <span class="label bold">TỔNG GIÁ TRỊ ĐƠN HÀNG</span>

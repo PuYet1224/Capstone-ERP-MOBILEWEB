@@ -645,7 +645,7 @@ export class Mtb025InvoiceDetailComponent implements OnInit, OnDestroy {
   }
 
   private resolveHeadName(headCode: number): void {
-    this.transferHeadName = `Head #${headCode}`;
+    this.transferHeadName = `Head ${headCode}`;
   }
 
   get isTransferSKSMDisabled(): boolean {
