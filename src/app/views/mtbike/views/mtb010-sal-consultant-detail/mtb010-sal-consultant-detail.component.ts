@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { Meta } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { ListDTO } from 'src/app/models/dtos/e-dtos/list.dto';
 import { SALOrderMasterCusDTO } from 'src/app/models/dtos/e-dtos/sal-order-master.dto';
@@ -21,9 +22,13 @@ import { Mtb009SalConsultantComponent } from '../mtb009-sal-consultant/mtb009-sa
   templateUrl: './mtb010-sal-consultant-detail.component.html',
   styleUrls: ['./mtb010-sal-consultant-detail.component.scss'],
 })
-export class Mtb010SalConsultantDetailComponent implements OnInit {
+export class Mtb010SalConsultantDetailComponent implements OnInit, OnDestroy {
+  private readonly viewportNoZoom = 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no';
+  private readonly viewportDefault = 'width=device-width, initial-scale=1';
+
   constructor(
     private router: Router,
+    private meta: Meta,
     private cache: PsCache,
     private subLoader: SystemLoaderService,
     private notification: PsKendoNotificationService,
@@ -32,6 +37,7 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.meta.updateTag({ name: 'viewport', content: this.viewportNoZoom });
     var temp = this.cache.getItem(KeyLocalStorageEnum.SAL_ORDER_MASTER);
     let retailMaster = this.cache.parseValue(temp);
     this.retailDetailDTO = { ...retailMaster };
@@ -44,6 +50,7 @@ export class Mtb010SalConsultantDetailComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
+    this.meta.updateTag({ name: 'viewport', content: this.viewportDefault });
     this.subLoader.reset();
     this.arrUnsubscribe.forEach(e => e.unsubscribe());
     this.arrUnsubscribe = [];

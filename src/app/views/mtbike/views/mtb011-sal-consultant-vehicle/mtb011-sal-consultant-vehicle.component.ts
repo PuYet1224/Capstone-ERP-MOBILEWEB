@@ -1,6 +1,6 @@
 import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl, Meta } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { State } from '@progress/kendo-data-query';
 import { Subscription } from 'rxjs';
@@ -25,6 +25,9 @@ import { MtbikeApiService } from '../../services/mtbike-api.service';
   styleUrls: ['./mtb011-sal-consultant-vehicle.component.scss'],
 })
 export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
+  private readonly viewportNoZoom = 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no';
+  private readonly viewportDefault = 'width=device-width, initial-scale=1';
+
   constructor(
     private router: Router,
     private cache: PsCache,
@@ -32,10 +35,12 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
     private notification: PsKendoNotificationService,
     private mtbikeapi: MtbikeApiService,
     private sanitizer: DomSanitizer,
+    private meta: Meta,
   ) { }
 
   //#region LIFECYCLE
   ngOnInit(): void {
+    this.meta.updateTag({ name: 'viewport', content: this.viewportNoZoom });
     var tempp = this.cache.getItem(KeyLocalStorageEnum.HEAD_OBJECT);
     this.headCode = this.cache.parseValue(tempp);
 
@@ -52,6 +57,7 @@ export class Mtb011SalConsultantVehicleComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.meta.updateTag({ name: 'viewport', content: this.viewportDefault });
     this.subLoader.reset();
     this.arrUnsubscribe.forEach(e => e.unsubscribe());
     this.arrUnsubscribe = [];

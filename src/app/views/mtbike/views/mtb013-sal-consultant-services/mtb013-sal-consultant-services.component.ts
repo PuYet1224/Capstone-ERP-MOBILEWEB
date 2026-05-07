@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { Meta } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { CSServiceMasterCusDTO } from 'src/app/models/dtos/e-dtos/cs-service-master.dto';
 import { SALOrderDetailServiceCusDTO } from 'src/app/models/dtos/e-dtos/sal-order-detail-service.dto';
@@ -21,6 +22,9 @@ import { MtbikeApiService } from '../../services/mtbike-api.service';
   styleUrls: ['./mtb013-sal-consultant-services.component.scss'],
 })
 export class Mtb013SalConsultantServicesComponent implements OnInit, OnDestroy {
+  private readonly viewportNoZoom = 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no';
+  private readonly viewportDefault = 'width=device-width, initial-scale=1';
+
   //#region chung
   public master: SALOrderMasterCusDTO;
   private arrUnsubscribe: Subscription[] = [];
@@ -48,6 +52,7 @@ export class Mtb013SalConsultantServicesComponent implements OnInit, OnDestroy {
   //#region lifecycle
   constructor(
     private router: Router,
+    private meta: Meta,
     private cache: PsCache,
     private subLoader: SystemLoaderService,
     private notification: PsKendoNotificationService,
@@ -55,6 +60,7 @@ export class Mtb013SalConsultantServicesComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.meta.updateTag({ name: 'viewport', content: this.viewportNoZoom });
     var temp = this.cache.getItem(KeyLocalStorageEnum.SAL_ORDER_MASTER);
     this.master = this.cache.parseValue(temp);
 
@@ -67,6 +73,7 @@ export class Mtb013SalConsultantServicesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.meta.updateTag({ name: 'viewport', content: this.viewportDefault });
     this.subLoader.reset();
     this.arrUnsubscribe.forEach(e => e.unsubscribe());
     this.arrUnsubscribe = [];
