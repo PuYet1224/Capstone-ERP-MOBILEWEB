@@ -354,7 +354,7 @@
             {{ selectedSiblings.has(inv.Code) ? 'check_box' : 'check_box_outline_blank' }}
           </span>
           <div class="sibling-info">
-            <div class="sibling-vehicle">🏍️ {{ inv.VehicleName || 'Xe #' + inv.Code }}</div>
+            <div class="sibling-vehicle">{{ inv.VehicleName || 'Xe #' + inv.Code }}</div>
             <div class="sibling-customer">{{ inv.VATCustomerName || 'Chưa có thông tin KH' }}</div>
           </div>
         </div>
