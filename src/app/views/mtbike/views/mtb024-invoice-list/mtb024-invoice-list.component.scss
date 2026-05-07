@@ -115,10 +115,9 @@
       .body-list {
         height: calc(100% - 112px);
         overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
         padding: 12px;
         font-size: 12px;
-        background: $background-primary;
+        background: transparent;
 
         // ========== PBH CARD ==========
         .pbh-card {
@@ -126,7 +125,6 @@
           border-radius: 8px;
           overflow: hidden;
           box-shadow: 0 1px 4px rgba($black, 0.08);
-          border: 1px solid $border;
           margin-bottom: 12px;
           transition: background 0.2s ease;
 
@@ -137,7 +135,7 @@
           }
 
           .pbh-info-card {
-            background: transparent;
+            background: $white;
             border-radius: 0;
             box-shadow: none;
             border: none;
@@ -236,7 +234,7 @@
 
             .receipt-card {
               padding: 12px 14px;
-              background: $white;
+              background: $background-primary;
               cursor: pointer;
               display: flex;
               flex-direction: column;
@@ -341,25 +339,43 @@
                   gap: 4px;
                   font-size: 11px;
                   font-weight: 600;
+                  padding: 2px 4px;
+                  border-radius: 8px;
 
                   .material-icons {
                     font-size: 14px;
                   }
 
                   &.badge-primary {
-                    color: $primary;
+                    background-color: #e6f4ea;
+                    color: #1e8e3e;
+                    span {
+                      color: #1e8e3e;
+                    }
                   }
 
                   &.badge-warning {
-                    color: $warning;
+                    background-color: #fce8e6;
+                    color: #d93025;
+                    span {
+                      color: #d93025;
+                    }
                   }
 
                   &.badge-success {
-                    color: $green-600;
+                    background-color: #e6f4ea;
+                    color: #1e8e3e;
+                    span {
+                      color: #1e8e3e;
+                    }
                   }
 
                   &.badge-danger {
-                    color: $error;
+                    background-color: #fce8e6;
+                    color: #d93025;
+                    span {
+                      color: #d93025;
+                    }
                   }
                 }
 
