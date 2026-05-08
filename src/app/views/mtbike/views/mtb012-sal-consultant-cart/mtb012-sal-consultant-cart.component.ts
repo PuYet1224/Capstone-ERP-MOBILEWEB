@@ -453,20 +453,46 @@ export class Mtb012SalConsultantCartComponent implements OnInit, OnDestroy {
     this.arrUnsubscribe.push(temp);
   }
 
+  private isLocking: boolean = false;
+
   private UpdateSALSelectedVehicleLock(param: LSVehicleColorCusDTO) {
+    if (this.isLocking) return; // Prevent double-click
+    this.isLocking = true;
+
+    // Optimistic UI: immediately toggle lock state for instant feedback
+    const targetItem = this.listVehicle.find(
+      v => v.Code === param.Code && v.OrderTypeData === param.OrderTypeData
+    );
+    if (targetItem) {
+      targetItem.IsOrderLock = param.IsOrderLock;
+    }
+
     this.loader.loader(true);
 
     const temp = this.api.UpdateSALSelectedVehicleLock(param).subscribe((res) => {
+      this.isLocking = false;
       if (res.StatusCode === 0) {
+        this.notification.onSuccess(
+          res.ObjectReturn?.Message || (param.IsOrderLock ? 'Đã chốt xe' : 'Đã bỏ chốt xe')
+        );
+        // Refresh list to get full updated data from server
         this.GetListSALSelectedVehicle(this.retailMaster);
-        this.loader.loader(false);
       } else {
-        this.notification.onError(`Lỗi xóa xe : ${res.ErrorString}`);
+        // Revert optimistic update on failure
+        if (targetItem) {
+          targetItem.IsOrderLock = !param.IsOrderLock;
+        }
+        this.loader.loader(false);
+        this.notification.onError(`Lỗi chốt xe : ${res.ErrorString}`);
+      }
+    }, (err) => {
+      this.isLocking = false;
+      // Revert optimistic update on error
+      if (targetItem) {
+        targetItem.IsOrderLock = !param.IsOrderLock;
       }
       this.loader.loader(false);
-    }, (err) => {
-      this.loader.loader(false);
-      this.notification.onError(`Lỗi xóa xe : ${err.message}`);
+      this.notification.onError(`Lỗi chốt xe : ${err.message}`);
     });
 
     this.arrUnsubscribe.push(temp);
