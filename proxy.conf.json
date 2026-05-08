@@ -9,9 +9,10 @@
     }
   },
   "/api/proxy-api": {
-    "target": "http://localhost:62567/",
+    "target": "http://puyet01022004-001-site1.qtempurl.com/",
     "secure": false,
     "changeOrigin": true,
+    "auth": "puyet1224-001:Puyet1224@",
     "pathRewrite": {
       "^/api/proxy-api": ""
     }
