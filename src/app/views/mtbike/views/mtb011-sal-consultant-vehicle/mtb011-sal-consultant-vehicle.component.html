@@ -309,7 +309,10 @@
 
     <!-- START: POPUP STOCK-->
     <ps-dialog-confirm [open]="showpopup" class="dialog-stock">
-        <div psDialogConfirmHeader>Tra cứu tồn xe</div>
+        <div psDialogConfirmHeader>
+            Tra cứu tồn xe
+            <span class="material-icons" style="cursor:pointer;float:right" (click)="showpopup = false">close</span>
+        </div>
         <div psDialogConfirmBody>
             <div class="main-title">
                 <div class="top-content">
@@ -334,7 +337,7 @@
                     <div class="bot-title">
                         TỒN KHO CỬA HÀNG
                     </div>
-                    <div class="bot-list">
+                    <div class="bot-list" *ngIf="listStock.ListStock?.length > 0">
                         <div class="item" *ngFor="let item of listStock.ListStock">
                             <div [class.out-of-stock]="item.IsOutOfStock" [class.is-local]="item.IsLocal"
                                 class="head-name">{{item.BriefName}}</div>
@@ -342,6 +345,10 @@
                                 {{item.StockQuanlity}}
                             </div>
                         </div>
+                    </div>
+                    <div class="bot-list" *ngIf="!listStock.ListStock || listStock.ListStock.length === 0"
+                         style="text-align:center;padding:16px;color:#999">
+                        Đang tải dữ liệu tồn kho...
                     </div>
                 </div>
             </div>
