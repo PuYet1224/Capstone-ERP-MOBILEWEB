@@ -29,6 +29,14 @@
         background: #ffffff;
         box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.12);
         transition: bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: visible;
+        touch-action: manipulation;
+
+        // Ensure Kendo dropdown popup inside renders correctly on mobile
+        .k-animation-container {
+          z-index: 100003 !important;
+          touch-action: manipulation;
+        }
 
         &.open {
           bottom: 0;

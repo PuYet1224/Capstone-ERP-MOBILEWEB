@@ -40,7 +40,7 @@ export class PsKendoDropdownListComponent implements ControlValueAccessor, OnCha
   @Input() disabled: boolean;
   @Input() filterable = false;
   @Input() valuePrimitive: boolean = false;
-  @Input() popupSettings: any = { animate: true };
+  @Input() popupSettings: any = { animate: true, appendTo: 'component' };
   @Output() valueChange = new EventEmitter<any>();
   @Output() selectChange = new EventEmitter<any>();
   @Output() focus = new EventEmitter<any>();
