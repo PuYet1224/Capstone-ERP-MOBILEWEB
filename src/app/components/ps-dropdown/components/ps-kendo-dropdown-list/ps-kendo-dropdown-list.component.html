@@ -6,7 +6,7 @@
                       [(ngModel)]="value" (valueChange)="handleValueChange($event)" [valuePrimitive]="valuePrimitive"
                       (selectionChange)="onSelectChange($event)" (focus)="onFocus()" [itemDisabled]="itemDisabled"
                       [popupSettings]="popupSettings" [disabled]="disabled" [filterable]="filterable"
-                      (filterChange)="handleFilter($event)" (open)="onOpen()" [adaptiveMode]="adaptiveMode">
+                      (filterChange)="handleFilter($event)" (open)="onOpen()">
     <ng-template kendoDropDownListNoDataTemplate>
       Không có lựa chọn nào
     </ng-template>
