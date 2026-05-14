@@ -603,7 +603,7 @@ export class Mtb000DashboardComponent implements OnInit {
   //Hàm xử lý nội dung nhãn của biểu đồ tròn
   public labelContentdonut = (e: any): string => {
     const title = e.category;
-    const percentage = e.dataItem.Percentage;
+    const percentage = e.value;
     return `${title} \n (${percentage}%)`;
   };
 
