@@ -229,10 +229,106 @@ html {
   }
 }
 
-// Kendo adaptive mode action sheet (full-screen on mobile)
-.k-adaptive-actionsheet,
+// Kendo adaptive mode action sheet styling (mobile devices)
+// Matches the component design of ps-kendo-dropdown-list
 .k-actionsheet-container {
   z-index: 100003 !important;
+}
+
+.k-child-animation-container {
+  z-index: 100003 !important;
+}
+
+.k-actionsheet {
+  z-index: 100003 !important;
+  border-top-left-radius: 16px !important;
+  border-top-right-radius: 16px !important;
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.15) !important;
+  max-height: 55vh !important;
+  overflow: hidden;
+  font-family: 'Mulish', sans-serif;
+
+  // Header bar
+  .k-actionsheet-titlebar {
+    background: $white;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 14px 16px;
+
+    .k-actionsheet-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: $secondary;
+    }
+
+    // Close/action buttons
+    .k-actionsheet-actions {
+      .k-button {
+        color: $primary;
+      }
+    }
+  }
+
+  // Content area with list
+  .k-actionsheet-content {
+    padding: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+
+    .k-list {
+      background: $white;
+
+      .k-list-content {
+        overflow: auto !important;
+        max-height: 45vh;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .k-list-ul {
+        .k-list-item {
+          height: 44px;
+          padding: 0 16px;
+          font-size: 13px;
+          color: $secondary;
+          border-bottom: 1px solid #f3f4f6;
+
+          &.k-focus {
+            box-shadow: none;
+          }
+
+          &.k-selected {
+            background-color: $primary !important;
+            color: $white;
+
+            .k-list-item-text {
+              color: $white;
+              font-weight: 600;
+            }
+          }
+
+          &:active {
+            background-color: $gray-light;
+          }
+
+          .k-list-item-text {
+            font-size: 13px;
+            font-family: 'Mulish', sans-serif;
+          }
+        }
+      }
+    }
+
+    .k-no-data {
+      color: $secondary;
+      font-size: 13px;
+      text-transform: uppercase;
+      padding: 20px;
+    }
+  }
+}
+
+// Overlay/backdrop for action sheet
+.k-overlay.k-actionsheet-overlay {
+  z-index: 100002 !important;
 }
 
 .required-icons {
