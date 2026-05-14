@@ -177,6 +177,7 @@ html {
 .k-animation-container {
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.5);
   border-radius: 5px;
+  z-index: 100003 !important;
 
   .k-popup {
     border: 1px solid $primary;
@@ -226,6 +227,12 @@ html {
       text-transform: uppercase;
     }
   }
+}
+
+// Kendo adaptive mode action sheet (full-screen on mobile)
+.k-adaptive-actionsheet,
+.k-actionsheet-container {
+  z-index: 100003 !important;
 }
 
 .required-icons {
