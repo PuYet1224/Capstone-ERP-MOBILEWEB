@@ -99,11 +99,7 @@
               background-color: transparent;
 
               .k-list-content {
-                overflow: hidden;
-
-                &:hover {
-                  overflow: auto;
-                }
+                overflow: auto;
 
                 .k-list-ul {
                   gap: 5px;

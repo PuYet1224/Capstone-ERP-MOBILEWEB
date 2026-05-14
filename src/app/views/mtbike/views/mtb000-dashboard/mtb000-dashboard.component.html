@@ -1,7 +1,7 @@
 <div class="mtb000-dashboard">
     <!-- START: OVERLAY -->
-    <div class="k-overlay" *ngIf="isOpenedFilter" (click)="openFilterPopup(false)" (touchend)="$event.stopPropagation()"></div>
-    <div class="filter-popup" [class.open]="isOpenedFilter" (click)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()" (touchend)="$event.stopPropagation()">
+    <div class="k-overlay" *ngIf="isOpenedFilter" (click)="openFilterPopup(false)"></div>
+    <div class="filter-popup" [class.open]="isOpenedFilter">
         <div class="popup-header">
             <div class="header-filter">
                 <span class="material-icons">filter_alt</span>
