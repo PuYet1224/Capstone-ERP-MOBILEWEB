@@ -1,68 +1,68 @@
 ---
-name: figma-reader
-description: >
-  Figma MCP live reader for Angular + Kendo UI frontend implementation.
-  Use when implementing any UI screen — reads Figma design and maps to Angular components.
-  Triggered automatically on UI tasks: implement, code, build UI, fix UI, update screen.
-  Design source priority: 1) Figma MCP live 2) pipeline design images 3) STOP.
-  Only reads BODY content — always skips sidebar, header, and footer nodes.
+skill: figma-reader
+role: FE-MOBILE
+version: 1.0
+trigger: "'analyze design', 'read figma', 'what does screen look like', 'UI', 'screen'"
 ---
 
-# Figma Reader — Body Content Only
+# Figma Reader Skill (Mobile Web)
 
-> **Auto-trigger** on every UI coding task.
-> **BODY ONLY:** Never implement sidebar, header, or footer — they're handled by the layout system.
+## Purpose
 
----
+Extract UI structure, colors, spacing, and component mapping from Figma mobile frames.
+Focused on mobile viewport (375px width).
 
-## Phase 0 — Connection Check
+## Hard Rules
 
-```
-1. Call figma_status
-   ├── CONNECTED → Phase 1 (live read)
-   └── NOT CONNECTED → Scan {PROJECT_PIPELINE}\designs\ for PNGs
-       ├── FOUND → Declare: "[From design archive — not live Figma]"
-       └── NOT FOUND → STOP. Ask user for design source.
-```
+- RULE-FG-01: ALWAYS declare data source before any design analysis
+- RULE-FG-02: NEVER say "from Figma" when reading local images
+- RULE-FG-03: NEVER output raw hex colors -- map to SCSS variable
 
----
+## Steps
 
-## Phase 1 — Read Figma (Body Node Only)
+### Phase 0 -- Connection Check
+- Action: Call `figma_status`.
+  - Connected -> proceed to Phase 1
+  - Not connected -> scan pipeline images (Phase 2)
+- Gate: Source declared before analysis.
 
-1. `figma_read → get_selection → depth: 6, detail: "compact"`
-2. **FILTER:** Find the BODY content node — skip sidebar/header/footer
-   - Skip nodes named: Sidebar, Nav, Header, Footer, Top bar, Bottom bar
-   - Select the LARGEST node, usually positioned right of sidebar, below header
-3. `figma_read → get_css → nodeId: <BODY_NODE_ID>`
-4. `figma_read → get_design → nodeId: <BODY_NODE_ID> → depth: 6`
+### Phase 1 -- Figma Live Read
+- State: "Reading from Figma Desktop (live)"
+- Action:
+  1. `figma_read operation: "get_selection" depth: 6` -- get mobile frame
+  2. Focus on mobile viewport (375px width frames)
+  3. `figma_read operation: "get_css" nodeId: <nodeId>`
+  4. `figma_read operation: "get_design" nodeId: <nodeId> depth: 6`
 
----
-
-## Phase 2 — Map to Code
-
-**Color mapping:** Read `src/assets/scss/_colors.scss` for variable names.
-Never use raw hex — map every Figma color to a `$variable`.
-
-**Component mapping:** See [references/component-mapping.md](references/component-mapping.md)
-for the Figma element → Angular component lookup table.
-
-**Filter bar rules:** See [references/filter-bar-rules.md](references/filter-bar-rules.md)
-for the decision tree when implementing filter bars.
+### Phase 2 -- Pipeline Images Fallback
+- State: "Reading from pipeline design images"
+- Action: Scan `{PROJECT_PIPELINE}\designs\{feature}\mobile\` for PNG files.
+  If found -> read and analyze.
+  If not found -> state: "No design images available. Using FE guide text only."
 
 ---
 
-## Phase 3 — Verify
+## Design-to-Code Mapping (Mobile)
 
-```
-figma_read → screenshot → nodeId: <BODY_NODE_ID>
-```
-Compare Figma screenshot vs rendered code → adjust if mismatched.
+| Figma Element | Angular Component |
+|---|---|
+| Figma color hex | SCSS variable ($primary, $error, $warning, etc.) |
+| Auto Layout vertical | `display: flex; flex-direction: column` |
+| Header bar | `<ps-header-back>` (56px fixed top) |
+| Footer bar | `<ps-footer-action>` (fixed bottom) |
+| Button | `<ps-kendo-button>` |
+| Text input | `<ps-kendo-textbox>` |
+| Dropdown | `<ps-kendo-dropdown-list>` |
+| Card list | `.card` divs inside `.body-list` (scrollable) |
+| Dialog | `<ps-dialog-confirm>` |
+| Status chip | Status pipe (e.g., SALOrderMasterStatusRetail) |
 
----
+## Mobile Extraction Checklist
 
-## What to Skip vs Code
-
-```
-❌ NEVER CODE: sidebar, header, navbar, footer, navigation — layout system handles these
-✅ ONLY CODE: cards, forms, lists, status badges, dialogs, filter bars — body content
-```
+- [ ] Card layout: flat list or grouped by status?
+- [ ] Card content: which fields shown? label-value pairs?
+- [ ] Status badges: how many variants? what colors?
+- [ ] Amount format: Vietnamese dot separator (e.g., 252.282.000d)?
+- [ ] Touch targets: all buttons/links >= 44px?
+- [ ] Expand/collapse: do cards expand to show children?
+- [ ] Footer actions: which buttons? what order?

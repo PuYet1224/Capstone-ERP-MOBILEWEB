@@ -1,60 +1,70 @@
 ---
-description: Pre-commit quality check for mobile web code. Use before committing to catch common mistakes. Usage /review
-skills:
-  - code-review
-  - coding-standard
+workflow: review
+role: FE-MOBILE
+version: 1.0
+trigger: "/review"
 ---
 
-# /review — Mobile Web Code Review
+# /review
 
-## STEP 1: Read Changed Files
-- Identify all modified/new files in the current working tree
-- Run `git diff --name-only` to list changes
+## Purpose
 
-## STEP 2: Check Each File Against Rules
+Pre-commit quality check for mobile web code. Load code-review SKILL and run full checklist against changed files.
 
-### Service Files (.service.ts)
-- [ ] API URL uses `PSGetConfigService` (not hardcoded)
-- [ ] Response reads `res.ObjectReturn.Data` (not `res.data`)
-- [ ] Error handling present (not empty subscribe)
+## Pre-conditions
 
-### Component Files (.component.ts)
-- [ ] `ChangeDetectionStrategy.OnPush` used where possible
-- [ ] Subscriptions cleaned up (takeUntil or async pipe)
-- [ ] No `console.log` left in code
-- [ ] Loading state handled (skeleton/spinner)
-- [ ] Error state handled (not blank screen)
+- [ ] Files to review are identified (git diff or explicit list)
 
-### Template Files (.component.html)
-- [ ] Safe navigation `?.` used for nullable data
-- [ ] Touch targets >= 44x44px
-- [ ] No desktop-only patterns (hover, sidebar)
-- [ ] `trackBy` used on `*ngFor`
+---
 
-### DTO Files (.dto.ts)
-- [ ] Field names match BE Response record exactly (case-sensitive)
-- [ ] All required fields present per SRS Sec. 6.2
+## Steps
 
-### Style Files (.scss)
-- [ ] Uses project color variables (not hardcoded hex)
-- [ ] Mobile-first (375px base, no min-width > 414px)
-- [ ] No `!important` unless overriding Kendo defaults
+### Step 1 -- Identify Changed Files
+- Action: Run `git diff --name-only` to list all modified/new files.
+  Group by type: .ts / .html / .scss / registration files
+- Gate: File list known. At least 1 file to review.
 
-## STEP 3: Build Check
-```powershell
-ng build
+### Step 2 -- Load Code-Review Skill
+- Action: Read `.agent/skills/code-review/SKILL.md` fully.
+  Run every checklist item against the changed files.
+- Gate: Skill loaded. All 10 rule categories checked.
+
+### Step 3 -- Check Registration Completeness
+- Action: If new component added, verify ALL 4 files updated:
+  1. `mtbike.module.ts` -- imported + declared
+  2. `mtbike.routing.ts` -- route path matches DLLPackage
+  3. `mtbike-api-static.service.ts` -- APIID keys present
+  4. `mtbike-api.service.ts` -- Observable methods present
+- Gate: Registration complete or confirmed not needed (enhancement only).
+
+### Step 4 -- Build Check (MANDATORY GATE)
+- Action: `ng build`
+  - 0 errors -> proceed to report
+  - Errors -> list ALL errors -> stop (do not auto-fix unless user asks)
+- Gate: Build status confirmed.
+
+### Step 5 -- Report
+
+Output format (from code-review SKILL):
+
+| Severity | File:Line | Issue | Fix |
+|---|---|---|---|
+| [BLOCKING] | `file.ts:45` | Missing unsubscribe | Push to arrUnsubscribe |
+| [SUGGESTION] | `file.html:12` | Function in template | Use Angular Pipe |
+| [OK] | - | Naming convention correct | - |
+
+Then summary:
+```
+[REVIEW COMPLETE]
+  Files checked: {N}
+  BLOCKING issues: {N}
+  SUGGESTIONS: {N}
+  Build: Passed / Failed
 ```
 
-## STEP 4: Report
-```
-✅ Review complete:
-   Files checked: {N}
-   Issues found: {N}
-   Issues fixed: {N}
-   Build: Passed
-```
+---
 
-## BANNED
-- DO NOT approve code that doesn't compile
-- DO NOT skip DTO field name validation
-- DO NOT ignore console.log statements
+## Banned
+- DO NOT approve code that does not compile
+- DO NOT skip the ng build step
+- DO NOT ignore BLOCKING issues -- they must be resolved before commit

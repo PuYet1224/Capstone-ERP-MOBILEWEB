@@ -1,99 +1,82 @@
 ---
-name: code-review
-description: >
-  Pre-commit quality check for Capstone ERP Mobile Web (Angular 16 + Kendo UI).
-  Use when reviewing code, running /review or /enhance, or before committing.
-  Checks enum usage, component patterns, API integration, memory leaks, and security.
-  Do NOT use for feature implementation (use coding-standard) or debugging (use debug).
+skill: code-review
+role: FE-MOBILE
+version: 1.0
+trigger: "/review, /enhance, 'audit code', 'check code'"
+allowed-tools: Read, Glob, Grep
 ---
 
-# Code Review — Angular Mobile Web
+# Code Review Checklist -- FE Mobile (Angular 16)
 
-> Read ALL component files (.ts, .html, .scss) before reviewing.
-> Compare each file against this checklist.
-> Report: 🔴 BLOCKING | 🟡 SUGGESTION | 🟢 NIT
+> Load when running /review or /enhance. Compare code against each rule.
 
 ---
 
-## 1. Enum & Constants
+## Hard Rules (BLOCKING -- must fix before deploy)
 
-- [ ] NO magic numbers in templates — use enum values
-- [ ] Enum exposed in component class: `readonly Status = StatusEnum;`
-- [ ] Enum values match DB `tbl_LSStatus.TypeOfStatus`
+### 1. Naming Convention
 
-```typescript
-// 🔴 BLOCKING
-*ngIf="item.Status !== 1"
-// ✅ CORRECT
-*ngIf="item.Status !== StatusEnum.NEW"
-```
+- [ ] Folder = `mtb{NNN}-{abbr}-{feature}/` (abbr from guide MODULE METADATA: sal/cs/wh/crm/hrm/prt/rpt)
+- [ ] Class = `Mtb{NNN}{Abbr}{Feature}Component` (Abbr capitalized: Sal/Cs/Wh/Crm/Hrm/Prt/Rpt)
+- [ ] Selector = `mtb{NNN}-{abbr}-{feature}` (matches folder?)
 
-## 2. Component Structure
+### 2. Service Usage
 
-- [ ] 3 files only: .ts, .html, .scss (NO .spec.ts)
-- [ ] `ngOnDestroy` unsubscribes ALL subscriptions
-- [ ] DTO/Enum files in `models/dtos/e-dtos/` and `models/enums/` — NOT in component folder
-- [ ] `ChangeDetectionStrategy.OnPush` used
+- [ ] Only `MtbikeApiService` used -- no custom service files
+- [ ] No `this.http` (direct HttpClient) anywhere
+- [ ] No `console.log` left in code
 
-## 3. API Integration
+### 3. Icons
 
-- [ ] Uses `MtbikeApiService` — NOT direct `HttpClient`
-- [ ] `res.StatusCode === 0` check before using data
-- [ ] ALL subscriptions tracked in `arrUnsubscribe`
-- [ ] `cdr.markForCheck()` called after async data change
-- [ ] Error handler in ALL `.subscribe()` callbacks
-- [ ] `onSuccess()` only for CUD — never for reads
-- [ ] Loader: `subLoader.loader(true)` at start, `false` in both success AND error
+- [ ] Only `<span class="material-icons">` -- no lucide-icon
 
-```typescript
-// 🔴 MEMORY LEAK
-this.api.GetList(filter).subscribe(res => { ... });
-// ✅ CORRECT
-const sub = this.api.GetList(filter).subscribe(res => { ... });
-this.arrUnsubscribe.push(sub);
-```
+### 4. Styles
 
-## 4. Template Rules
+- [ ] No `style="..."` inline attributes in HTML
+- [ ] No hardcoded hex colors in SCSS -- use `$primary`, `$error`, `$border`, etc.
+- [ ] `@import "colors"` as first line in every .scss file
+- [ ] `::ng-deep { mtb{NNN}-{abbr}-{feature} { } }` wrapper present
 
-- [ ] Uses ps-* wrappers — NOT raw Kendo components
-- [ ] BANNED tags: `<ps-layout>`, `<ps-layout-header>`, `<ps-table>` — do NOT exist
-- [ ] `trackBy` on every `*ngFor`
-- [ ] `*ngIf` instead of `[hidden]`
-- [ ] Filter bar uses standard components (ps-filter-textbox, ps-filter-status1, ps-filter-button)
+### 5. Memory Leak Prevention
 
-## 5. SCSS Rules
+- [ ] All `.subscribe()` calls push to `arrUnsubscribe`
+- [ ] `ngOnDestroy` calls `this.loader.reset()` AND unsubscribes all
+- [ ] No nested subscribes -- use switchMap/concatMap instead
 
-- [ ] `@import 'src/assets/scss/colors'` as first line
-- [ ] NO hardcoded hex values — uses `$variable`
-- [ ] Wrapped in `::ng-deep { tag-selector { ... } }`
-- [ ] No global CSS overrides (`.ps-filter-bar` display/gap/flex-wrap)
+### 6. Performance
 
-## 6. Registration
+- [ ] `*ngFor` lists have `trackBy` function
+- [ ] No function calls in template interpolation `{{ }}` -- use Pipes instead
 
-- [ ] `mtbike.module.ts` — component declared
-- [ ] `mtbike.routing.ts` — route added
-- [ ] `mtbike-api-static.service.ts` — namespace added
-- [ ] `mtbike-api.service.ts` — methods added
+### 7. Touch UX
 
-## 7. Security
+- [ ] Clickable areas (buttons, cards) >= 44px height
+- [ ] No hover-only interactions (mobile has no hover)
 
-- [ ] NO `innerHTML` with user input — use `[textContent]` or interpolation
-- [ ] NO `eval()` or dynamic script injection
-- [ ] API errors shown via notification — NOT raw in HTML
+### 8. API Integration
 
-## 8. Clean Code
+- [ ] API names match BE exactly (no shortening)
+- [ ] Response read as `res.ObjectReturn.Data` or `res.ObjectReturn as any[]`
+- [ ] Error handling present (notification shown, not silent failure)
+- [ ] Loading state managed (loader.loader(true/false) around API call)
 
-- [ ] No dead code (unused imports, methods, variables)
-- [ ] Clear region comments: `// #region LOAD DATA`
-- [ ] Method names match service method names (consistency)
-- [ ] No over-engineering — simplest solution that works
+### 9. Registration
+
+- [ ] Declared in `mtbike.module.ts`
+- [ ] Route added to `mtbike.routing.ts` (path matches DLLPackage)
+- [ ] APIID keys added to `mtbike-api-static.service.ts`
+- [ ] Observable methods added to `mtbike-api.service.ts`
+
+### 10. Build
+
+- [ ] `ng build` returns 0 errors
 
 ---
 
-## Output Format
+## Review Output Format
 
-```
-🔴 BLOCKING: [file:line] Magic number Status !== 1 in template
-🟡 SUGGESTION: [file:line] Missing error handler in subscribe
-🟢 NIT: [file:line] Consider extracting badge logic to pipe
-```
+| Severity | File:Line | Issue | Fix |
+|---|---|---|---|
+| [BLOCKING] | `file.ts:45` | Memory leak: missing unsubscribe | Push to arrUnsubscribe |
+| [SUGGESTION] | `file.html:12` | Function in template | Use Angular Pipe |
+| [OK] | - | Naming convention correct | - |

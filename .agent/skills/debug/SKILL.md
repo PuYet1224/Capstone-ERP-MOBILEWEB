@@ -1,130 +1,81 @@
 ---
-name: debug
-description: >-
-  Systematic debugging workflow for Capstone ERP Mobile Web (Angular 16 + Kendo UI 13).
-  Use when builds break, runtime errors occur, UI behaves unexpectedly, or API calls fail.
-  Guides through Stop -> Reproduce -> Localize -> Fix Root Cause -> Guard -> Verify.
-  Do NOT use for feature implementation (use fe-mobile-implement workflow instead).
+skill: debug
+role: FE-MOBILE
+version: 1.0
+trigger: "/debug, 'bug', 'not working', 'blank screen', 'build error', 'runtime error'"
 ---
 
-# Debug Skill — Mobile Web v1.0
+# Debug Skill -- FE Mobile (Angular 16)
 
-> **Purpose:** Find and fix root causes systematically. No guessing.
-> **Stack:** Angular 16 + Kendo UI 13 + mobile browser
-> **Quality bar:** Bug is fixed, root cause understood, `ng build` passes.
+## Purpose
 
----
+Systematic, layer-by-layer bug investigation. Eliminates guesswork.
+Load this skill before attempting any fix.
 
-## 1. Stop-the-Line Rule
+## Hard Rules
 
-```
-1. STOP — Do NOT continue adding features
-2. PRESERVE — Save error output, console logs, screenshots
-3. DIAGNOSE — Follow triage checklist below
-4. FIX — Root cause, not symptom
-5. GUARD — Prevent recurrence
-6. VERIFY — ng build passes + manual test OK
-```
+- R1: Read the code before guessing -- never propose a fix without reading the affected file
+- R2: Fix the root cause -- do NOT swallow errors with try/catch
+- R3: No refactoring during debugging -- one minimal fix only
+- R4: `ng build` must pass after fix before reporting done
 
 ---
 
-## 2. Triage Checklist
+## The 4-Layer Isolation Strategy
 
-### STEP 1: Reproduce
-```powershell
-ng serve                    # Does the error appear in browser?
-ng build                    # Does it compile?
-```
+Investigate in this exact order. Do NOT skip layers.
 
-### STEP 2: Localize
-```
-Which layer is failing?
-├── Angular Template
-│   ├── Binding error        → Check [property] and {{interpolation}}
-│   ├── *ngIf / *ngFor       → Check null data, missing trackBy
-│   └── Kendo component      → Check [data], [value], event bindings
-├── TypeScript Component
-│   ├── Compile error        → Check types, imports, decorators
-│   ├── Runtime null/undef   → Check API response shape
-│   └── RxJS subscription    → Check unsubscribe, takeUntil
-├── Service / API
-│   ├── 404 Not Found        → tbl_SYSFunction missing or Product != 3
-│   ├── 401 Unauthorized     → JWT expired or tbl_SYSPermissions missing
-│   ├── Empty response       → HEAD filter missing in BE handler
-│   └── Wrong data shape     → res.ObjectReturn.Data path wrong
-├── Mobile-Specific
-│   ├── Touch not working    → Check tap target size (min 44x44px)
-│   ├── Layout broken        → Check viewport meta, safe area padding
-│   ├── Scroll issues        → Check overflow, fixed positioning
-│   └── Performance slow     → Check ChangeDetection.OnPush, lazy loading
-└── Build / Config
-    ├── Module not found     → Check imports in app.module or feature module
-    ├── Circular dependency  → Check import chain
-    └── Style not applied    → Check SCSS import, ViewEncapsulation
-```
+### Layer 1 -- Network (check this first)
+- Action: Analyze the API call via `MtbikeApiService`.
+- Verify:
+  - Did API return `StatusCode === 0`?
+  - Is `res.ObjectReturn` / `res.ObjectReturn.Data` the right path?
+  - If API returned 404 → check DLL namespace chain (3 links in fe-pipeline SKILL)
+  - If API returned 500 → this is a BE bug, stop and report
+- Gate: If network layer is the cause → stop debugging UI, report BE issue.
 
-### STEP 3: Reduce
-- Remove unrelated code until only the bug remains
-- Isolate: this component or a shared service?
-- Test with hardcoded data to rule out API issues
+### Layer 2 -- State & Cache
+- Action: Trace how data flows via `PsCache` or component variables.
+- Verify:
+  - Correct `KeyLocalStorageEnum` key used?
+  - Previous screen called `cache.setItem()` before `router.navigate()`?
+  - `this.listData` properly reassigned (not mutated)?
+- Gate: If stale cache → fix the write-side, not the read-side.
 
-### STEP 4: Fix Root Cause
-```
-BAD (symptom fix):
-  → Add `|| ''` to suppress undefined
-  → Wrap in try/catch that swallows error
-  → Add `*ngIf` to hide broken section
+### Layer 3 -- Change Detection
+- Action: Check if data arrived but UI is blank.
+- Verify:
+  - `OnPush` component: array mutated instead of new reference? (`push()` vs spread `[...arr, x]`)
+  - Async outside Angular Zone → need `ChangeDetectorRef.detectChanges()`?
+- Gate: If CD layer is cause → fix reference assignment.
 
-GOOD (root cause fix):
-  → API returns null because HEAD filter missing → fix BE query
-  → DTO field name mismatch → align FE interface with BE Response
-  → Kendo Grid empty because wrong data path → fix to res.ObjectReturn.Data
-```
-
-### STEP 5: Guard
-- Add safe navigation `?.` where data could be null
-- Add loading/error states (not blank screen)
-- Verify `ng build` passes
-
-### STEP 6: Verify
-```powershell
-ng build                              # Must pass
-ng serve                              # Manual test in mobile viewport
-```
+### Layer 4 -- Render & CSS
+- Action: Check if data is present but layout is broken.
+- Verify:
+  - Parent container has `flex: 1` with `overflow-y: auto`?
+  - Hardcoded `height: 500px` instead of flex layout?
+  - `::ng-deep` wrapper scope correct?
+- Gate: If render layer → fix SCSS only, no TS changes.
 
 ---
 
-## 3. Common Mobile Bug Patterns
+## Common Anti-Patterns
 
-| Bug | Root Cause | Fix |
-|-----|-----------|-----|
-| API 404 | `tbl_SYSFunction` missing Product=3 | Register in DB + restart IIS |
-| List empty | `res.ObjectReturn.Data` path wrong | Check BE response shape |
-| Kendo Grid no data | Wrong `[data]` binding | Use `(dataStateChange)` pattern |
-| Touch unresponsive | Tap target < 44px | Increase button/link size |
-| Layout overflow | Missing `overflow-x: hidden` | Add to container CSS |
-| Status badge wrong color | Enum value mismatch FE vs BE | Align enum values |
-| Form not submitting | Missing `[formGroup]` or `(ngSubmit)` | Check reactive form setup |
-| Page blank after navigation | Module not lazy loaded | Check routing module |
+| Anti-Pattern | Symptom | Fix |
+|---|---|---|
+| Ghost subscription | Screen freezes, memory grows | Add sub to `arrUnsubscribe` in `ngOnDestroy` |
+| Infinite loop | App slow, CPU spike | Remove function call `{{ fn() }}` from template, use Pipe |
+| Race condition | Data sometimes missing | Use `switchMap` / `combineLatest` |
+| Wrong response path | Empty list, no error | Check `res.ObjectReturn` vs `res.ObjectReturn.Data` |
 
 ---
 
-## 4. Anti-Rationalization
+## Output Format
 
-| AI Excuse | Reality |
-|-----------|---------|
-| "I know what the bug is" | Reproduce first. 30% of guesses are wrong. |
-| "Let me rewrite the component" | Fix the bug. Don't refactor during debug. |
-| "I'll add a try/catch" | That hides the bug. Find root cause. |
-| "It's probably a Kendo issue" | Check your data/bindings first. Kendo is stable. |
-| "Works on desktop viewport" | Test on 375px mobile viewport. That's the target. |
+After investigation, report in this structure:
 
----
-
-## 5. Verification Checklist
-
-- [ ] Root cause identified and explained
-- [ ] Fix addresses root cause, not symptom
-- [ ] `ng build` passes
-- [ ] Bug scenario verified working on mobile viewport (375px)
-- [ ] No other functionality broken
+1. **Symptom:** {what is wrong}
+2. **Layer Isolated:** {Network | State | Change Detection | Render}
+3. **Root Cause:** {exact file:line or logic failure}
+4. **Evidence:** {why this is the root cause}
+5. **Solution:** {exact code change}
