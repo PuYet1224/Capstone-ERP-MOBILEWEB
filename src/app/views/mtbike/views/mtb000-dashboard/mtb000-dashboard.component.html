@@ -13,10 +13,12 @@
                 <!-- CỬA HÀNG -->
                 <ps-kendo-dropdown-list [label]="'Cửa hàng'" [data]="listHead" [valuePrimitive]="true"
                     [textField]="'BriefName'" [valueField]="'Code'"
+                    [adaptiveMode]="'auto'" [popupSettings]="{ animate: true }"
                     (valueChange)="onStoreChange($event)"></ps-kendo-dropdown-list>
                 <!-- KỲ -->
                 <ps-kendo-dropdown-list [label]="'Kỳ'" [data]="listpaymentmethod" [textField]="'ListName'"
                     [valueField]="'TypeOfList'" [valuePrimitive]="true" (valueChange)="onMethodChange($event)"
+                    [adaptiveMode]="'auto'" [popupSettings]="{ animate: true }"
                     [(ngModel)]="durationMethod"></ps-kendo-dropdown-list>
                 <!-- LỌC THEO NGÀY HÔM NAY -->
                 <div class="date-picker" *ngIf="durationMethod == TypePeriodDashboardEnum.TODAY">
@@ -47,24 +49,29 @@
                 <div class="monthpicker" *ngIf="durationMethod == TypePeriodDashboardEnum.MONTH">
                     <ps-kendo-dropdown-list [label]="'Năm'" [data]="listyear"
                         (valueChange)="onMonthYearChange($event, 'year')" [(ngModel)]="selectedYear"
+                        [adaptiveMode]="'auto'" [popupSettings]="{ animate: true }"
                         [valuePrimitive]="true"></ps-kendo-dropdown-list>
                     <ps-kendo-dropdown-list [label]="'Tháng'" [data]="listmonth"
                         (valueChange)="onMonthYearChange($event, 'month')" [(ngModel)]="selectedMonth"
+                        [adaptiveMode]="'auto'" [popupSettings]="{ animate: true }"
                         [valuePrimitive]="true"></ps-kendo-dropdown-list>
                 </div>
                 <!-- LỌC THEO CHU KỲ QUÝ -->
                 <div class="monthpicker" *ngIf="durationMethod == TypePeriodDashboardEnum.QUARTER">
                     <ps-kendo-dropdown-list [label]="'Năm'" [data]="listyear" [(ngModel)]="selectedYear"
                         [valuePrimitive]="true"
+                        [adaptiveMode]="'auto'" [popupSettings]="{ animate: true }"
                         (valueChange)="onMonthYearChange($event, 'year')"></ps-kendo-dropdown-list>
                     <ps-kendo-dropdown-list [label]="'Quý'" [data]="listquarter" [(ngModel)]="selectedQuater"
                         [valuePrimitive]="true"
+                        [adaptiveMode]="'auto'" [popupSettings]="{ animate: true }"
                         (valueChange)="onMonthYearChange($event, 'quater')"></ps-kendo-dropdown-list>
                 </div>
                 <!-- LỌC THEO CHU KỲ NĂM -->
                 <div class="monthpicker" *ngIf="durationMethod == TypePeriodDashboardEnum.YEAR">
                     <ps-kendo-dropdown-list [label]="'Năm'" [data]="listyear" [(ngModel)]="selectedYear"
                         [valuePrimitive]="true"
+                        [adaptiveMode]="'auto'" [popupSettings]="{ animate: true }"
                         (valueChange)="onMonthYearChange($event, 'year')"></ps-kendo-dropdown-list>
                 </div>
             </div>

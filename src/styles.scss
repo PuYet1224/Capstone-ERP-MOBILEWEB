@@ -188,7 +188,11 @@ html {
       background-color: transparent;
 
       .k-list-content {
-        overflow: auto;
+        overflow: hidden;
+
+        &:hover {
+          overflow: auto;
+        }
 
         .k-list-ul {
           .k-list-item {
